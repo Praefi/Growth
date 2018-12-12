@@ -5226,6 +5226,7 @@ int main (void) {
 				w = 3;
 				d = 2;
 				e = 3;
+				
 				if (gamemode == 9) {	//arena-abilities werden eingesetzt
 					if (ability[1] == geben) {
 						w = 1;
@@ -5338,34 +5339,38 @@ int main (void) {
 					}
 				}
 				
-				if (var_[1] == 1010) {
-					use_number = cons[1];
-					if (cons[1] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
-					if ((number_of_players == 1)&&(tac != 0)) {
+				}
+				
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
 						if (number_1 <= 5){
 							C[number_1] += 1;
 						} else if (number_1 == 6){
 							C[0] += 1;
 						}
-						if (opt == 5) {
-							A[use_number] -= 1;
-						} else {
-							A[number_1] -= 1;
-						}
+					} else if (opt == 5) {
+						A[use_number] -= 1;
+					} else {
+						A[number_1] -= 1;
 					}
-				}
-				
-				if ((tac != 0)&&(var_[2] == 1010)){
-					if (number_1 <= 5){
-						C[number_1] += 1;
-					} else if (number_1 == 6){
-						C[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((C[1]+C[2]+C[3]+C[4]+C[5]+C[0]) == 0)){
@@ -5373,15 +5378,6 @@ int main (void) {
 						C[p] = tac;
 					}
 				}
-				
-				if (var_[2] == 1010){	//##
-					if (opt == 5) {
-						A[use_number] -= 1;
-					} else {
-						A[number_1] -= 1;
-					}
-					
-				} 	
 				
 				menuoperator = 1;		//Ende der Vorbereitung
 				
@@ -5502,7 +5498,7 @@ int main (void) {
 					}
 					scanf("%u", &var_[1]);
 					
-					//printf("	Checkpoint: var[1] \n");	//test
+					//printf("	Checkpoint: var_[1] \n");	//test
 					
 					if (var_[1] == 10){
 						if (ttt != 0) {
@@ -6086,9 +6082,9 @@ int main (void) {
 					}
 				} else {
 					
-					//printf("	Checkpoint: var[1] accepted \n");	//test
+					//printf("	Checkpoint: var_[1] accepted \n");	//test
 					
-					if (var_[1] == 100){		//1, 2, 3,... durch "geben" ersetzen, go on
+					if (var_[geben] == 100){		//1, 2, 3,... durch "geben" ersetzen, go on
 						
 						var_[0] = 1;
 						
@@ -6099,6 +6095,8 @@ int main (void) {
 								
 							}
 						}
+						
+						cons[geben] = use_number;
 						
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
@@ -6184,15 +6182,15 @@ int main (void) {
 						}
 						
 						g-=1;
-						var_[1] = 1010;
+						var_[geben] = 1010;
 						if (gamemode == 10) {
-							ulcer_lifes[1] += 1;
-							ulcer_start[1] = 0;
+							ulcer_lifes[geben] += 1;
+							ulcer_start[geben] = 0;
 						}
 						continue;
 					} else {
 						
-						if (var_[2] != 1010){
+						if (var_[geben%number_of_players+1] != 1010){
 							
 							for (unsigned int i=1; i<m-1; i+=1){
 								for (unsigned int j=1; j<n-1; j+=1){
@@ -6207,15 +6205,15 @@ int main (void) {
 						
 						var_[0] = 0;
 						
-						if (var_[1] < 50){
+						if (var_[geben] < 50){
 		
-							if (var_[1] == 11){A[1] += 1; Plus (m, n, geben, Sf, limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);}
-							if (var_[1] == 12){A[1] += 1; Minus (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
-							if (var_[1] == 21){A[2] += 1; Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
-							if (var_[1] == 41){A[4] += 1; Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
-							if (var_[1] == 22){A[2] += 1; Change (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague, position);}
-							if (var_[1] == 31){A[3] += 1; Destroy (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
-							if (var_[1] == 42){
+							if (var_[geben] == 11){A[1] += 1; Plus (m, n, geben, Sf, limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);}
+							if (var_[geben] == 12){A[1] += 1; Minus (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
+							if (var_[geben] == 21){A[2] += 1; Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
+							if (var_[geben] == 41){A[4] += 1; Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
+							if (var_[geben] == 22){A[2] += 1; Change (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague, position);}
+							if (var_[geben] == 31){A[3] += 1; Destroy (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);}
+							if (var_[geben] == 42){
 								A[4] += 1;
 								if (gamemode != 6) {
 									Boost (geben, Sf, m, n, temp, gamemode);
@@ -6224,10 +6222,10 @@ int main (void) {
 								}
 							}
 						} else {
-							if (var_[1] == 51){A[5] += 1; w += 1;}		//w
-							if (var_[1] == 52){A[5] += 1; w -= 1;}		//w
-							if (var_[1] == 61){A[6] += 1; e += 1;}		//e
-							if (var_[1] == 62){A[6] += 1; if (d != 0) {d -= 1;} else {d = 10;}}		//d
+							if (var_[geben] == 51){A[5] += 1; w += 1;}		//w
+							if (var_[geben] == 52){A[5] += 1; w -= 1;}		//w
+							if (var_[geben] == 61){A[6] += 1; e += 1;}		//e
+							if (var_[geben] == 62){A[6] += 1; if (d != 0) {d -= 1;} else {d = 10;}}		//d
 						}
 						
 						if (ttt != 0) {
@@ -6367,12 +6365,12 @@ int main (void) {
 							for (unsigned int i=1; i<=(m-1)/2; i+=1){		//Spiel-Ende?
 								if ((Sf_nl_1[i][n-2] == 1)||(Sf[i][n-2] == 1)){
 									for (unsigned int k=1; k<m-1; k+=1){
-										if (Sf_nl_1[k][n-2] == 1){
-											Sf[k][n-2] = 1;
+										if (Sf_nl_1[k][n-2] == geben){
+											Sf[k][n-2] = geben;
 										}
 									}
 									show_field (Sf, m, n, gamemode, information_code, geben, Colored);
-									printf("	Sieg:	Spieler 1 \n");
+									printf("	Sieg:	Spieler %u \n", geben);
 									controll = 1;
 								}
 							}
@@ -6392,7 +6390,7 @@ int main (void) {
 						}
 						
 						if (gamemode != 6) {	//wegen hunted one
-							if (var_[1] == 42){
+							if (var_[geben] == 42){
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
 										if (gamemode == 8) {
@@ -6416,8 +6414,8 @@ int main (void) {
 						controll = 0;
 						if (gamemode == 1){
 							for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende?
-								if (Sf[m-2][letzte] == 1){
-									printf("	Sieg:	Spieler 1 \n");
+								if (Sf[m-2][letzte] == geben){
+									printf("	Sieg:	Spieler %u \n", geben);
 									show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 									controll = 1;
 									break;
@@ -6457,17 +6455,17 @@ int main (void) {
 							journey_max = 0;
 							for (unsigned int i=1; i<m-1; i+=1){
 								for (unsigned int j=1; j<n-1; j+=1){
-									if (Sf_journey[i][j] == 1){
+									if (Sf_journey[i][j] == geben){
 										journey_max += 1;
 									}
 								}
 							}
 							for (unsigned int i=1; i<m-1; i+=1){
 								for (unsigned int j=1; j<n-1; j+=1){
-									if ((Sf_od_1[i][j] == 101) && (Sf_journey[i][j] == 0) && (journey_max >= limit_at_all)){
+									if ((Sf_od_1[i][j] == 101*geben) && (Sf_journey[i][j] == 0) && (journey_max >= limit_at_all)){
 										for (unsigned int u=0; u<(m-1); u+=1){
 											for (unsigned int o=1; o<(n-1); o+=1){
-												if ((Sf_journey[u][o] == 1)&&((u+o)%2 == 0)){
+												if ((Sf_journey[u][o] == geben)&&((u+o)%2 == 0)){
 													Sf_journey[u][o] = 0;
 													journey_max -= 1;
 													if (journey_max < limit_at_all){
@@ -6481,8 +6479,8 @@ int main (void) {
 										}
 										
 									}
-									if ((Sf_od_1[i][j] == 101) && (Sf_journey[i][j] == 0) && (journey_max < limit_at_all)){
-										Sf_journey[i][j] = 1;
+									if ((Sf_od_1[i][j] == 101*geben) && (Sf_journey[i][j] == 0) && (journey_max < limit_at_all)){
+										Sf_journey[i][j] = geben;
 										journey_max += 1;
 									}
 								}
@@ -6491,12 +6489,12 @@ int main (void) {
 							
 						}
 						
-						if (var_[1] == 32){A[3] += 1; Revive_1(m, n, Sf_od_1, Sf);}
+						if (var_[geben] == 32){A[3] += 1; Revive_1(m, n, Sf_od_1, Sf);}
 						
 						num_2 = 0;
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
-								if (Sf_od_1[i][j] == 101){
+								if (Sf_od_1[i][j] == 101*geben){
 									num_2 += 1;
 								}
 							}
@@ -6506,7 +6504,7 @@ int main (void) {
 						
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
-								if (Sf_nl_1[i][j] == 1){
+								if (Sf_nl_1[i][j] == geben){
 									count_new += 1;
 								}
 							}
@@ -6516,14 +6514,14 @@ int main (void) {
 						
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
-								if ((Sf[i][j] == 1) && (Sf_od_1[i][j] == 0)){
+								if ((Sf[i][j] == geben) && (Sf_od_1[i][j] == 0)){
 									zeitgewinner += 1;
 								}
 							}
 						}
 						
 						//printf("	ent: %u \n ", ent);
-						if ((gamemode == 6)&&(count_new > (limit_new + (number_of_players-3)))) {
+						if ((gamemode == 6)&&(count_new > (limit_new + (number_of_players-3)))) {		//geben = 1 erforderlich
 							Sf_nl_1 = Index_1_hunt (ent, count_new, m, n, Sf_nl_1, Sf_od_1, limit_new, limit_at_all, zeitgewinner, Sf, number_of_players);
 							
 						} else if (count_new > limit_new){		//Abfrage auf max. 10 neue Steine, normalerweise
@@ -6558,7 +6556,7 @@ int main (void) {
 						num_3 = 0;
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
-								if (((Sf[i][j] == 1) && (Sf_od_1[i][j] == 0)) || (Sf_nl_1[i][j] == 1)){
+								if (((Sf[i][j] == geben) && (Sf_od_1[i][j] == 0)) || (Sf_nl_1[i][j] == geben)){
 									count_new += 1;
 									num_3 += 1;
 								}
@@ -6574,11 +6572,11 @@ int main (void) {
 						
 						if ((gamemode == 1)||(gamemode == 2)||(gamemode == 4)||(gamemode == 5)||(gamemode == 7)||(gamemode == 8)) {
 							
-							if (var_[1] == 52){
+							if (var_[geben] == 52){
 								lim = 0;
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
-										if ((Sf[i][j] == 1) && (Sf_od_1[i][j] == 0)){
+										if ((Sf[i][j] == geben) && (Sf_od_1[i][j] == 0)){
 											lim += 1;
 										}
 									}
@@ -6587,7 +6585,7 @@ int main (void) {
 								lim = 0;
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
-										if (Sf[i][j] == 2){
+										if (Sf[i][j] == geben%number_of_players+1){
 											lim += 1;
 										}
 									}
@@ -6723,7 +6721,7 @@ int main (void) {
 						
 						if (gamemode == 1) {
 							for (unsigned int j=1; j<n-1; j+=1){
-								if (Sf[m-3][j] == 1){
+								if (Sf[m-3][j] == geben){
 									A[0] += 1;
 									break;
 								}
@@ -6733,19 +6731,19 @@ int main (void) {
 								unsigned int a;
 								a = 0;
 								if (Sf[((m-1)/2)][j] == 7){
-									if (Sf[((m-1)/2)-1][j]==1){a += 1;}
-									if (Sf[((m-1)/2)+1][j]==1){a += 1;}
-									if (Sf[(m-1)/2][j-1]==1){a += 1;}
-									if (Sf[(m-1)/2][j+1]==1){a += 1;}
+									if (Sf[((m-1)/2)-1][j]==geben){a += 1;}
+									if (Sf[((m-1)/2)+1][j]==geben){a += 1;}
+									if (Sf[(m-1)/2][j-1]==geben){a += 1;}
+									if (Sf[(m-1)/2][j+1]==geben){a += 1;}
 									if (a >= 3){
 										A[0] += 1;
-										Sf[((m-1)/2)][j] = 1;
+										Sf[((m-1)/2)][j] = geben;
 									}
 								}
 							}
 							if (A[0] == 2){
 								printf("\n");
-								printf("	Sieg: Spieler 1 \n");
+								printf("	Sieg: Spieler %u \n", geben);
 								printf("\n");
 								show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 								break;
@@ -6779,7 +6777,7 @@ int main (void) {
 						if (gamemode == 1) {
 							for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende?
 								if (Sf[m-2][letzte] == 1){
-									printf("	Sieg:	Spieler 1 \n");
+									printf("	Sieg:	Spieler %u \n", geben);
 									controll = 1;
 									break;
 								}
@@ -6799,13 +6797,13 @@ int main (void) {
 							battle (m, n, Sf, geben);
 						}
 						
-						if (var_[2] != 1010) {
-							cons[1] = use_number;
+						if (var_[geben%number_of_players+1] != 1010) {
+							cons[geben] = use_number;
 							
 							if (gamemode == 11) {
 								for (unsigned int p=2; p<=5; p+=1) {
 									
-									dynamic_pointer_save[1][p-2] = dynamic_pointer[p];
+									dynamic_pointer_save[geben][p-2] = dynamic_pointer[p];
 									
 								}
 							}
@@ -6814,9 +6812,9 @@ int main (void) {
 						
 						use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
 						
-						if ((opt != 5)&&(var_[1] <= 62)){
+						if ((opt != 5)&&(var_[geben] <= 62)){
 							controll_1 = 0;
-							for (unsigned int z=var_[1]; z>2; z-=10){
+							for (unsigned int z=var_[geben]; z>2; z-=10){
 								controll_1 += 1;
 							}
 							number_1 = controll_1;
@@ -6999,29 +6997,38 @@ int main (void) {
 					}
 				}
 				
-				if (var_[2] == 1010) {
-					use_number = cons[2];
-					if (cons[2] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				
-				if ((tac != 0)&&(var_[1] == 1010)&&(number_of_players == 2)){
-					if (number_2 <= 5){
-						D[number_2] += 1;
-					} else if (number_2 == 6){
-						D[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_2 <= 5){
+							D[number_2] += 1;
+						} else if (number_2 == 6){
+							D[0] += 1;
+						}
+					} else if (opt == 5) {
+						B[use_number] -= 1;
+					} else {
+						B[number_2] -= 1;
 					}
-				} else if ((tac != 0)&&(var_[3] == 1010)&&(number_of_players >= 3)){
-					if (number_2 <= 5){
-						D[number_2] += 1;
-					} else if (number_2 == 6){
-						D[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((D[1]+D[2]+D[3]+D[4]+D[5]+D[0]) == 0)){
@@ -7030,31 +7037,7 @@ int main (void) {
 					}
 				}
 				
-				if (opt == 5) {
-					if (number_of_players == 2) {
-						if (var_[1] == 1010){
-							B[use_number] -= 1;	
-						}
-					} else {
-						if (var_[3] == 1010){
-							B[use_number] -= 1;	
-						}
-					}
-				} else {
-					if (number_of_players == 2){
-						if (var_[1] == 1010) {
-							B[number_2] -= 1;
-						}
-					} else {
-						if (var_[3] == 1010) {
-							B[number_2] -= 1;
-						}
-					}
-				}
-				
 				menuoperator = 1;
-				
-				
 				
 				while (menuoperator != 0) {
 				
@@ -7780,6 +7763,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[1];
 						
@@ -8532,28 +8517,38 @@ int main (void) {
 					}
 				}
 				
-				if (var_[3] == 1010) {
-					use_number = cons[3];
-					if (cons[3] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				if ((tac != 0)&&(var_[1] == 1010)&&(number_of_players == 3)){
-					if (number_3 <= 5){
-						CC[number_3] += 1;
-					} else if (number_3 == 6){
-						CC[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_3 <= 5){
+							CC[number_3] += 1;
+						} else if (number_3 == 6){
+							CC[0] += 1;
+						}
+					} else if (opt == 5) {
+						AA[use_number] -= 1;
+					} else {
+						AA[number_3] -= 1;
 					}
-				} else if ((tac != 0)&&(var_[4] == 1010)&&(number_of_players >= 4)){
-					if (number_3 <= 5){
-						CC[number_3] += 1;
-					} else if (number_3 == 6){
-						CC[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((CC[1]+CC[2]+CC[3]+CC[4]+CC[5]+CC[0]) == 0)){
@@ -8561,29 +8556,7 @@ int main (void) {
 						CC[p] = tac;
 					}
 				}
-				
-				if (opt == 5){
-					if (number_of_players == 3) {
-						if (var_[1] == 1010){
-							AA[use_number] -= 1;	
-						}
-					} else {
-						if (var_[4] == 1010){
-							AA[use_number] -= 1;	
-						}
-					}
-				} else {
-					if (number_of_players == 3){
-						if (var_[1] == 1010) {
-							AA[number_3] -= 1;
-						}
-					} else {
-						if (var_[4] == 1010) {
-							AA[number_3] -= 1;
-						}
-					}
-					
-				} 
+
 				menuoperator = 1;
 				
 				while (menuoperator != 0) {
@@ -9316,6 +9289,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[2];
 						
@@ -10081,55 +10056,43 @@ int main (void) {
 					}
 				}
 				
-				if (var_[4] == 1010) {
-					use_number = cons[4];
-					if (cons[4] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				if ((tac != 0)&&(var_[1] == 1010)&&(number_of_players == 4)){
-					if (number_4 <= 5){
-						DD[number_4] += 1;
-					} else if (number_4 == 6){
-						DD[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_4 <= 5){
+							DD[number_4] += 1;
+						} else if (number_4 == 6){
+							DD[0] += 1;
+						}
+					} else if (opt == 5) {
+						BB[use_number] -= 1;
+					} else {
+						BB[number_4] -= 1;
 					}
-				} else if ((tac != 0)&&(var_[5] == 1010)&&(number_of_players >= 5)){
-					if (number_4 <= 5){
-						DD[number_4] += 1;
-					} else if (number_4 == 6){
-						DD[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((DD[1]+DD[2]+DD[3]+DD[4]+DD[5]+DD[0]) == 0)){
 					for (unsigned int p=0; p<=5; p+=1){
 						DD[p] = tac;
-					}
-				}
-				
-				if (opt == 5) {
-					if (number_of_players == 4) {
-						if (var_[1] == 1010){
-							BB[use_number] -= 1;	
-						}
-					} else {
-						if (var_[5] == 1010){
-							BB[use_number] -= 1;	
-						}
-					}
-				} else {
-					if (number_of_players == 4){
-						if (var_[1] == 1010) {
-							BB[number_4] -= 1;
-						}
-					} else {
-						if (var_[5] == 1010) {
-							BB[number_4] -= 1;
-						}
 					}
 				}
 				
@@ -10862,6 +10825,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[3];
 						
@@ -11615,55 +11580,43 @@ int main (void) {
 					}
 				}
 				
-				if (var_[5] == 1010) {
-					use_number = cons[5];
-					if (cons[5] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				if ((tac != 0)&&(var_[1] == 1010)&&(number_of_players == 5)){
-					if (number_5 <= 5){
-						CCC[number_5] += 1;
-					} else if (number_5 == 6){
-						CCC[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_5 <= 5){
+							CCC[number_5] += 1;
+						} else if (number_5 == 6){
+							CCC[0] += 1;
+						}
+					} else if (opt == 5) {
+						AAA[use_number] -= 1;
+					} else {
+						AAA[number_5] -= 1;
 					}
-				} else if ((tac != 0)&&(var_[6] == 1010)&&(number_of_players >= 6)){
-					if (number_5 <= 5){
-						CCC[number_5] += 1;
-					} else if (number_5 == 6){
-						CCC[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((CCC[1]+CCC[2]+CCC[3]+CCC[4]+CCC[5]+CCC[0]) == 0)){
 					for (unsigned int p=0; p<=5; p+=1){
 						CCC[p] = tac;
-					}
-				}
-				
-				if (opt == 5) {
-					if (number_of_players == 5) {
-						if (var_[1] == 1010){
-							AAA[use_number] -= 1;	
-						}
-					} else {
-						if (var_[6] == 1010){
-							AAA[use_number] -= 1;	
-						}
-					} 
-				} else {
-					if (number_of_players == 5){
-						if (var_[1] == 1010) {
-							AAA[number_5] -= 1;
-						}
-					} else {
-						if (var_[6] == 1010) {
-							AAA[number_5] -= 1;
-						}
 					}
 				}
 				
@@ -12395,6 +12348,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[4];
 						
@@ -13149,55 +13104,43 @@ int main (void) {
 					}
 				}
 				
-				if (var_[6] == 1010) {
-					use_number = cons[6];
-					if (cons[6] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				if ((tac != 0)&&(var_[1] == 1010)&&(number_of_players == 6)){
-					if (number_6 <= 5){
-						DDD[number_6] += 1;
-					} else if (number_6 == 6){
-						DDD[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_6 <= 5){
+							DDD[number_6] += 1;
+						} else if (number_6 == 6){
+							DDD[0] += 1;
+						}
+					} else if (opt == 5) {
+						BBB[use_number] -= 1;
+					} else {
+						BBB[number_6] -= 1;
 					}
-				} else if ((tac != 0)&&(var_[7] == 1010)&&(number_of_players >= 7)){
-					if (number_6 <= 5){
-						DDD[number_6] += 1;
-					} else if (number_6 == 6){
-						DDD[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((DDD[1]+DDD[2]+DDD[3]+DDD[4]+DDD[5]+DDD[0]) == 0)){
 					for (unsigned int p=0; p<=5; p+=1){
 						DDD[p] = tac;
-					}
-				}
-				
-				if (opt == 5) {
-					if (number_of_players == 6) {
-						if (var_[1] == 1010){
-							BBB[use_number] -= 1;	
-						}
-					} else {
-						if (var_[7] == 1010){
-							BBB[use_number] -= 1;	
-						}
-					}
-				} else {
-					if (number_of_players == 6){
-						if (var_[1] == 1010) {
-							BBB[number_6] -= 1;
-						}
-					} else {
-						if (var_[7] == 1010) {
-							BBB[number_6] -= 1;
-						}
 					}
 				}
 				
@@ -13931,6 +13874,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[5];
 						
@@ -14682,55 +14627,43 @@ int main (void) {
 					}
 				}
 				
-				if (var_[7] == 1010) {
-					use_number = cons[7];
-					if (cons[7] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				if ((tac != 0)&&(var_[1] == 1010)&&(number_of_players == 7)){
-					if (number_7 <= 5){
-						CCCC[number_7] += 1;
-					} else if (number_7 == 6){
-						CCCC[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_7 <= 5){
+							CCCC[number_7] += 1;
+						} else if (number_7 == 6){
+							CCCC[0] += 1;
+						}
+					} else if (opt == 5) {
+						AAAA[use_number] -= 1;
+					} else {
+						AAAA[number_7] -= 1;
 					}
-				} else if ((tac != 0)&&(var_[8] == 1010)&&(number_of_players >= 8)){
-					if (number_7 <= 5){
-						CCCC[number_7] += 1;
-					} else if (number_7 == 6){
-						CCCC[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((CCCC[1]+CCCC[2]+CCCC[3]+CCCC[4]+CCCC[5]+CCCC[0]) == 0)){
 					for (unsigned int p=0; p<=5; p+=1){
 						CCCC[p] = tac;
-					}
-				}
-				
-				if (opt == 5) {
-					if (number_of_players == 7) {
-						if (var_[1] == 1010){
-							AAAA[use_number] -= 1;	
-						}
-					} else {
-						if (var_[8] == 1010){
-							AAAA[use_number] -= 1;	
-						}
-					}
-				} else {
-					if (number_of_players == 7){
-						if (var_[1] == 1010) {
-							AAAA[number_7] -= 1;
-						}
-					} else {
-						if (var_[8] == 1010) {
-							AAAA[number_7] -= 1;
-						}
 					}
 				}
 				
@@ -15462,6 +15395,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[6];
 						
@@ -16212,55 +16147,43 @@ int main (void) {
 					}
 				}
 				
-				if (var_[8] == 1010) {
-					use_number = cons[8];
-					if (cons[8] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				if ((tac != 0)&&(var_[1] == 1010)&&(number_of_players == 8)){
-					if (number_8 <= 5){
-						DDDD[number_8] += 1;
-					} else if (number_8 == 6){
-						DDDD[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_8 <= 5){
+							DDDD[number_8] += 1;
+						} else if (number_8 == 6){
+							DDDD[0] += 1;
+						}
+					} else if (opt == 5) {
+						BBBB[use_number] -= 1;
+					} else {
+						BBBB[number_8] -= 1;
 					}
-				} else if ((tac != 0)&&(var_[9] == 1010)&&(number_of_players >= 9)){
-					if (number_8 <= 5){
-						DDDD[number_8] += 1;
-					} else if (number_8 == 6){
-						DDDD[0] += 1;
-					}
+					
 				}
 				
 				if ((tac != 0)&&((DDDD[1]+DDDD[2]+DDDD[3]+DDDD[4]+DDDD[5]+DDDD[0]) == 0)){
 					for (unsigned int p=0; p<=5; p+=1){
 						DDDD[p] = tac;
-					}
-				}
-				
-				if (opt == 5) {
-					if (number_of_players == 8) {
-						if (var_[1] == 1010){
-							BBBB[use_number] -= 1;	
-						}
-					} else {
-						if (var_[9] == 1010){
-							BBBB[use_number] -= 1;	
-						}
-					}
-				} else {
-					if (number_of_players == 8){
-						if (var_[1] == 1010) {
-							BBBB[number_8] -= 1;
-						}
-					} else {
-						if (var_[9] == 1010) {
-							BBBB[number_8] -= 1;
-						}
 					}
 				}
 				
@@ -16992,6 +16915,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[7];
 						
@@ -17742,34 +17667,44 @@ int main (void) {
 					}
 				}
 				
-				if (var_[9] == 1010) {
-					use_number = cons[9];
-					if (cons[9] == 0) {
-						while ((use_number == 0)||(use_number > 6)) {
-							printf("	You are free to choose a number. \n");
-							scanf("%u", &use_number);
+				if (var_[geben] == 1010) {
+					use_number = cons[geben];
+					if (opt == 5) {
+					
+						printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+						printf("	Keep the number: 	1 \n");
+						printf("	Get the next one:	2 \n");
+						scanf("%u", &lim);
+						
+						if (lim == 2) {
+							use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_3, number_4);
+						} else if (lim != 1) {
+							printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 						}
+						lim = 0;
+					
 					}
 				}
 				
-				if ((tac != 0)&&(var_[1] == 1010)){
-					if (number_9 <= 5){
-						CCCCC[number_9] += 1;
-					} else if (number_9 == 6){
-						CCCCC[0] += 1;
+				if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
+					if (tac != 0) {
+						if (number_9 <= 5){
+							CCCCC[number_9] += 1;
+						} else if (number_9 == 6){
+							CCCCC[0] += 1;
+						}
+					} else if (opt == 5) {
+						AAAAA[use_number] -= 1;
+					} else {
+						AAAAA[number_9] -= 1;
 					}
+					
 				}
 				
 				if ((tac != 0)&&((CCCCC[1]+CCCCC[2]+CCCCC[3]+CCCCC[4]+CCCCC[5]+CCCCC[0]) == 0)){
 					for (unsigned int p=0; p<=5; p+=1){
 						CCCCC[p] = tac;
 					}
-				}
-				
-				if (var_[1] == 1010){
-					AAAAA[use_number] -= 1;	
-				} else if (var_[1] == 1010){
-					AAAAA[number_9] -= 1;
 				}
 				
 				menuoperator = 1;
@@ -18500,6 +18435,8 @@ int main (void) {
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
+						
+						cons[geben] = use_number;
 						
 						use_number = cons[8];
 						
@@ -25265,7 +25202,7 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, uns
 			printf("	Sweet escape...\n");
 		} else {
 			
-			while (((Zeile<1)||(Zeile>(m-2))) || ((Spalte<1)||(Spalte>n-2))){
+			if (((Zeile<1)||(Zeile>(m-2))) || ((Spalte<1)||(Spalte>n-2))){
 				printf("	you made a mistake, try again: \n");
 				
 				if (opague >= 1) {
@@ -25273,10 +25210,7 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, uns
 				} else {
 					show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 				}
-				
-				printf("Am Zug: Spieler %u 		(Plus)\n", geben);
-				printf(" Zeile: \n Spalte: \n");
-				scanf("%u %u", &Zeile, &Spalte);
+				Plus (m, n, geben, Sf, limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);
 			}
 		
 			for (unsigned int h=Zeile-1; h<=Zeile+1; h+=1){			//Lebender in der Nähe?
@@ -25329,16 +25263,14 @@ void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, un
 		printf("	Sweet escape...\n");
 	} else {
 		
-		while (((Zeile<1)||(Zeile>(m-2))) || ((Spalte<1)||(Spalte>n-2))){
+		if (((Zeile<1)||(Zeile>(m-2))) || ((Spalte<1)||(Spalte>n-2))){
 			printf("	you made a mistake, try again: \n");
 			if (opague >= 1) {
 				show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 			} else {
 				show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 			}
-			printf("Am Zug: Spieler %u 		(Minus)\n", geben);
-			printf(" Zeile: \n Spalte: \n");
-			scanf("%u %u", &Zeile, &Spalte);
+			Minus (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
 		}
 		
 		if (Sf[Zeile][Spalte] != geben){
@@ -25468,7 +25400,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, uns
 			printf("	Sweet escape...\n");
 		} else {
 			
-			while (((Zeile_alt<1)||(Zeile_alt>(m-2))) || ((Spalte_alt<1)||(Spalte_alt>n-2))){
+			if (((Zeile_alt<1)||(Zeile_alt>(m-2))) || ((Spalte_alt<1)||(Spalte_alt>n-2))){
 				printf("	you made a mistake, try again: \n");
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
@@ -25476,6 +25408,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, uns
 					show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 				}
 				Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
+				
 			}
 			
 			if ((gamemode == 6)&&(geben == 1)) {
@@ -25491,22 +25424,16 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, uns
 						printf("	Sweet escape...\n");
 					} else {
 					
-						while (((Zeile_neu<1)||(Zeile_neu>(m-2))) || ((Spalte_neu<1)||(Spalte_neu>n-2))){
+						if (((Zeile_neu<1)||(Zeile_neu>(m-2))) || ((Spalte_neu<1)||(Spalte_neu>n-2))){
 							printf("	you made a mistake, try again: \n");
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
 								show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 							}
-							printf("Am Zug: Spieler %u 		(Move)\n", geben);
-							printf("\n");
-							printf(" alte Zeile: %u \n alte Spalte: %u \n", Zeile_alt, Spalte_alt);
-							printf("\n");
-							printf(" neue Zeile: \n neue Spalte: \n");
-							scanf("%u %u", &Zeile_neu, &Spalte_neu);
-						}
-						
-						if (Sf[Zeile_alt][Spalte_alt] == 1) {
+							Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
+							
+						} else if (Sf[Zeile_alt][Spalte_alt] == 1) {
 							temp_move[Zeile_alt][Spalte_alt] = 1;
 							a = 0;								//Ursprung in der Nähe?
 							if ((temp_move[Zeile_neu-1][Spalte_neu]==1)||(temp_move[Zeile_neu][Spalte_neu-1]==1)||(temp_move[Zeile_neu][Spalte_neu+1]==1)||(temp_move[Zeile_neu+1][Spalte_neu]==1)){
@@ -25522,8 +25449,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, uns
 								Sf[Zeile_neu][Spalte_neu] = 1;
 								Sf[Zeile_alt][Spalte_alt] = 0;
 							}
-						}
-						if (Sf[Zeile_alt][Spalte_alt] == 11) {
+						} else if (Sf[Zeile_alt][Spalte_alt] == 11) {
 							temp_move[Zeile_alt][Spalte_alt] = 11;
 							a = 0;								//Ursprung in der Nähe?
 							if ((temp_move[Zeile_neu-1][Spalte_neu]==11)||(temp_move[Zeile_neu][Spalte_neu-1]==11)||(temp_move[Zeile_neu][Spalte_neu+1]==11)||(temp_move[Zeile_neu+1][Spalte_neu]==11)){
@@ -25555,39 +25481,35 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, uns
 						printf("	Sweet escape...\n");
 					} else {
 						
-						while (((Zeile_neu<1)||(Zeile_neu>(m-2))) || ((Spalte_neu<1)||(Spalte_neu>n-2))){
+						if (((Zeile_neu<1)||(Zeile_neu>(m-2))) || ((Spalte_neu<1)||(Spalte_neu>n-2))){
 							printf("	you made a mistake, try again: \n");
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
 								show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 							}
-							printf("Am Zug: Spieler %u 		(Move)\n", geben);
-							printf("\n");
-							printf(" alte Zeile: %u \n alte Spalte: %u \n", Zeile_alt, Spalte_alt);
-							printf("\n");
-							printf(" neue Zeile: \n neue Spalte: \n");
-							scanf("%u %u", &Zeile_neu, &Spalte_neu);
-						}
-						
-						
-						temp_move[Zeile_alt][Spalte_alt] = geben;
-						
-						a = 0;								//Ursprung in der Nähe?
-						if ((temp_move[Zeile_neu-1][Spalte_neu]==geben)||(temp_move[Zeile_neu][Spalte_neu-1]==geben)||(temp_move[Zeile_neu][Spalte_neu+1]==geben)||(temp_move[Zeile_neu+1][Spalte_neu]==geben)){
-							a = 1;
-						}
-						
-						if (a == 0){
-							printf("	you made a mistake, try again: \n");
 							Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
-						} else if (Sf[Zeile_neu][Spalte_neu] != 0){
-							printf("	you made a mistake, try again: \n");
-							Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
+							
 						} else {
-							Sf[Zeile_neu][Spalte_neu] = geben;
-							Sf[Zeile_alt][Spalte_alt] = 0;
+							temp_move[Zeile_alt][Spalte_alt] = geben;
+							
+							a = 0;								//Ursprung in der Nähe?
+							if ((temp_move[Zeile_neu-1][Spalte_neu]==geben)||(temp_move[Zeile_neu][Spalte_neu-1]==geben)||(temp_move[Zeile_neu][Spalte_neu+1]==geben)||(temp_move[Zeile_neu+1][Spalte_neu]==geben)){
+								a = 1;
+							}
+							
+							if (a == 0){
+								printf("	you made a mistake, try again: \n");
+								Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
+							} else if (Sf[Zeile_neu][Spalte_neu] != 0){
+								printf("	you made a mistake, try again: \n");
+								Move (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
+							} else {
+								Sf[Zeile_neu][Spalte_neu] = geben;
+								Sf[Zeile_alt][Spalte_alt] = 0;
+							}
 						}
+						
 					}
 				}
 			}
@@ -25716,19 +25638,16 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, u
 					printf("	Sweet escape...\n");
 				} else {
 					
-					while (((normal_Zeile<1)||(normal_Zeile>(m-2))) || ((normal_Spalte<1)||(normal_Spalte>n-2))){
+					if (((normal_Zeile<1)||(normal_Zeile>(m-2))) || ((normal_Spalte<1)||(normal_Spalte>n-2))){
 						printf("	you made a mistake, try again: \n");
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 						}
-						printf("Am Zug: Spieler %u 	(Change)\n", geben);
-						printf(" normale Zeile: \n normale Spalte: \n");
-						scanf("%u %u", &normal_Zeile, &normal_Spalte);
-					}
-					
-					if ((Sf[normal_Zeile][normal_Spalte] != 1)||((abs(normal_Spalte - heart_Spalte) + abs(normal_Zeile - heart_Zeile)) != 1)){
+						Change (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague, position);
+						
+					} else if ((Sf[normal_Zeile][normal_Spalte] != 1)||((abs(normal_Spalte - heart_Spalte) + abs(normal_Zeile - heart_Zeile)) != 1)){
 						printf("	you made a mistake, try again: \n");
 						Change (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague, position);
 					} else if (((Sf[normal_Zeile+1][normal_Spalte]%10) > 1)||((Sf[normal_Zeile-1][normal_Spalte]%10) > 1)||((Sf[normal_Zeile][normal_Spalte+1]%10) > 1)||((Sf[normal_Zeile][normal_Spalte-1]%10) > 1)) {
@@ -26031,16 +25950,15 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, u
 			printf("	Sweet escape...\n");
 		} else {
 		
-			while (((eigene_Zeile<1)||(eigene_Zeile>(m-2))) || ((eigene_Spalte<1)||(eigene_Spalte>n-2))){
+			if (((eigene_Zeile<1)||(eigene_Zeile>(m-2))) || ((eigene_Spalte<1)||(eigene_Spalte>n-2))){
 				printf("	you made a mistake, try again: \n");
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 				} else {
 					show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 				}
-				printf("Am Zug: Spieler %u 	(Change)\n", geben);
-				printf(" eigene Zeile: \n eigene Spalte: \n");
-				scanf("%u %u", &eigene_Zeile, &eigene_Spalte);
+				Change (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague, position);
+				
 			}
 			
 			if (Sf[eigene_Zeile][eigene_Spalte] != geben){
@@ -26086,16 +26004,15 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, u
 						printf("	Sweet escape...\n");
 					} else {
 					
-						while (((fremde_Zeile<1)||(fremde_Zeile>(m-2))) || ((fremde_Spalte<1)||(fremde_Spalte>n-2))){
+						if (((fremde_Zeile<1)||(fremde_Zeile>(m-2))) || ((fremde_Spalte<1)||(fremde_Spalte>n-2))){
 							printf("	you made a mistake, try again: \n");
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
 								show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 							}
-							printf("Am Zug: Spieler %u 	(Change)\n", geben);
-							printf(" fremde Zeile: \n fremde Spalte: \n");
-							scanf("%u %u", &fremde_Zeile, &fremde_Spalte);
+							Change (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague, position);
+							
 						}
 						
 						if ((gamemode != 3)&&(gamemode != 8)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//mehr-gamemode
@@ -26454,16 +26371,15 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf, 
 				printf("	Sweet escape...\n");
 			} else {
 			
-				while (((fremde_Zeile<1)||(fremde_Zeile>(m-2))) || ((fremde_Spalte<1)||(fremde_Spalte>n-2))){
+				if (((fremde_Zeile<1)||(fremde_Zeile>(m-2))) || ((fremde_Spalte<1)||(fremde_Spalte>n-2))){
 					printf("	you made a mistake, try again: \n");
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 					} else {
 						show_field (Sf, m, n, gamemode, information_code, geben, Colored);
 					}
-					printf("Am Zug: Spieler %u 	(Destroy)\n", geben);
-					printf(" fremde Zeile: \n fremde Spalte: \n");
-					scanf("%u %u", &fremde_Zeile, &fremde_Spalte);
+					Destroy (m, n, geben, Sf, gamemode, information_code, Colored, opague, Sf_opague);
+					
 				}
 				
 				a = 0;								//Eigener in der Nähe?
@@ -28203,7 +28119,6 @@ Spielfeld Index_1_fal (unsigned int ent, unsigned int count_new, unsigned int m,
 						}
 						a = 0;
 						
-						Index_Wert_1 += 1;
 						for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert neue Zellen?
 							for (unsigned int k=j-1; k<=j+1; k+=1){
 								if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -28217,8 +28132,8 @@ Spielfeld Index_1_fal (unsigned int ent, unsigned int count_new, unsigned int m,
 												}
 											}
 										}
-										if (a == 3){
-											Index_Wert_1 -= 1;
+										if (a != 3){
+											Index_Wert_1 += 1;
 															//if (ober == 70){printf("%u \n", Index_Wert_1);}	//test
 										}
 										a = 0;
@@ -28444,7 +28359,6 @@ Spielfeld Index_2_fal (unsigned int ent, unsigned int count_new, unsigned int m,
 						}
 						a = 0;
 						
-						Index_Wert_2 += 8;
 						for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert neue Zellen?
 							for (unsigned int k=j-1; k<=j+1; k+=1){
 								if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -28458,8 +28372,8 @@ Spielfeld Index_2_fal (unsigned int ent, unsigned int count_new, unsigned int m,
 												}
 											}
 										}
-										if (a == 3){
-											Index_Wert_2 -= 1;
+										if (a != 3){
+											Index_Wert_2 += 1;
 													//if (ober == 70){printf("%u \n", Index_Wert_2);}
 										}
 										a = 0;
@@ -31364,6 +31278,9 @@ void touch (Spielfeld Sf, unsigned int m, unsigned int n, unsigned int geben, Sp
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
 			if (Sf[i][j] == 7){
+				
+				//test printf("	#-Block alt:	i=%u ,	j=%u \n ", i, j);
+				
 				if (geben == 1){
 					if (((Sf_nl_1[i][j-1] == 1) || (Sf[i][j-1] == 1))&&(j != (n-2))){
 						Sf[i][j+1] = 7;
@@ -31394,14 +31311,20 @@ void touch (Spielfeld Sf, unsigned int m, unsigned int n, unsigned int geben, Sp
 					}
 				}
 				einmal = 1;
+				
+				//test printf("	#-Block neu:	i=%u ,	j=%u \n ", i, j);
+				
 				break;
+				
 			}
+			
 		}
 			if (einmal == 1){
 				break;
 			}
 	}
 	einmal = 0;
+	
 }
 
 void ahead (Spielfeld Sf, unsigned int m, unsigned int count_freq){
