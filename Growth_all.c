@@ -5116,25 +5116,25 @@ int main (void) {
 					continue;
 				}
 				
-				if ((ges[1] == 1010)&&((gamemode == 6)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12))) {	//10	//Überspringen, wenn ausgeschieden
+				if ((ges[geben] == 1010)&&((gamemode == 6)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12))) {	//10	//Überspringen, wenn ausgeschieden
 					g+=1;
-					var_[1] = 1010;
+					var_[geben] = 1010;		//eigentlich var_[geben] = 1010*geben;
 					for (unsigned int i=1; i<m-1; i+=1){
 						for (unsigned int j=1; j<n-1; j+=1){
 							if (journey == 1){
-								if (Sf_journey[i][j] == 1) {
+								if (Sf_journey[i][j] == geben) {
 									Sf_journey[i][j] = 0;
 								}
 							}
 							if (number_of_players == 2) {	//number_of_players = 1 kann hier nicht auftreten
 								cons_field_1[i][j] = cons_field_2[i][j];
-								cons[1] = cons[2];
+								cons[geben] = cons[2];	// = vorgänger
 								if (journey == 1){
 									cons_journey_1[i][j] = cons_journey_2[i][j];
 								}
 								for (unsigned int p=2; p<=5; p+=1) {
 									
-									dynamic_pointer_save[2][p-2] = dynamic_pointer_save[1][p-2];
+									dynamic_pointer_save[2][p-2] = dynamic_pointer_save[geben][p-2]; // if geben == 1 => number_of_players, sonst geben-1	(maybe a function)
 									
 								}
 							} else if (number_of_players == 3) {
@@ -5228,6 +5228,13 @@ int main (void) {
 				e = 3;
 				
 				if (gamemode == 9) {	//arena-abilities werden eingesetzt
+				
+					for (unsigned int i=4; i<=aop-1; i+=1) {
+						if (ability[i] == geben) {
+							information_code[0] = i;
+						}
+					}
+					
 					if (ability[1] == geben) {
 						w = 1;
 						d = 0;
@@ -5243,19 +5250,9 @@ int main (void) {
 						d = 1;
 						e = 4;	//abweichende e-definition
 						information_code[0] = 3;
-					} else if (ability[4] == geben) {
-						information_code[0] = 4;
-					} else if (ability[5] == geben) {
-						information_code[0] = 5;
-					} else if (ability[6] == geben) {
-						information_code[0] = 6;
-					} else if (ability[7] == geben) {
-						information_code[0] = 7;
-					} else if (ability[8] == geben) {
-						information_code[0] = 8;
 					} else if (ability[9] == geben) {
 						information_code[0] = 9;
-						
+					
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
@@ -5323,15 +5320,15 @@ int main (void) {
 						pere[geben] = 0;
 						continue;
 					} else if (((warning_system <= 5)&&((warning_system + pere[geben]) >= 9))||((warning_system >= 6)&&((warning_system + pere[geben]) >= 8))) {
-						printf("	Niederlage: Spieler 1 \n ");
+						printf("	Niederlage: Spieler %u \n ", geben);
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
-								if (Sf[i][j] == 1) {
+								if (Sf[i][j] == geben) {
 									Sf[i][j] = 0;
 								}
 							}
 						}
-						ges[1] = 1010;
+						ges[geben] = 1010*geben;
 						player_counter += 1;
 						pere[geben] = 100;
 						g += 1;
@@ -5394,12 +5391,12 @@ int main (void) {
 					
 					if (gamemode == 4) {
 						printf("\n");
-						printf("	Points player 1: 	%u Point(s) \n", P[geben]);
+						printf("	Points player %u: 	%u Point(s) \n", geben, P[geben]);
 					}
 					
 					if (gamemode == 10) {
 						printf("\n");
-						printf("	Lifes player 1: 	%u Life(s) \n", ulcer_lifes[1]);
+						printf("	Lifes player %u: 	%u Life(s) \n", geben, ulcer_lifes[1]);
 					}
 					
 					if (gamemode == 11) {
@@ -5416,31 +5413,31 @@ int main (void) {
 					}
 					
 					if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)){	//10
-						printf("	Am Zug: Spieler 1 (**)	\n");
+						printf("	Am Zug: Spieler %u (**)	\n", geben);	//if
 					} else if (gamemode == 6) {
-						printf("	Am Zug: Spieler 1 (##)	\n");
+						printf("	Am Zug: Spieler %u (##)	\n", geben);	//if
 					} else if (gamemode == 9) {
 						if (ability[1] == geben) {
-							printf("	Am Zug: Spieler 1 (UU)	\n");
+							printf("	Am Zug: Spieler %u (UU)	\n", geben);
 						} else if (ability[2] == geben) {
-							printf("	Am Zug: Spieler 1 (LL)	\n");
+							printf("	Am Zug: Spieler %u (LL)	\n", geben);
 						} else if (ability[3] == geben) {
-							printf("	Am Zug: Spieler 1 (AA)	\n");
+							printf("	Am Zug: Spieler %u (AA)	\n", geben);
 						} else if (ability[4] == geben) {
-							printf("	Am Zug: Spieler 1 (CC)	\n");
+							printf("	Am Zug: Spieler %u (CC)	\n", geben);
 						} else if (ability[5] == geben) {
-							printf("	Am Zug: Spieler 1 (II)	\n");
+							printf("	Am Zug: Spieler %u (II)	\n", geben);
 						} else if (ability[6] == geben) {
-							printf("	Am Zug: Spieler 1 (SS)	\n");
+							printf("	Am Zug: Spieler %u (SS)	\n", geben);
 						} else if (ability[7] == geben) {
-							printf("	Am Zug: Spieler 1 (PP)	\n");
+							printf("	Am Zug: Spieler %u (PP)	\n", geben);
 						} else if (ability[8] == geben) {
-							printf("	Am Zug: Spieler 1 (HH)	\n");
+							printf("	Am Zug: Spieler %u (HH)	\n", geben);
 						} else if (ability[9] == geben) {
-							printf("	Am Zug: Spieler 1 (EE)	\n");
+							printf("	Am Zug: Spieler %u (EE)	\n", geben);
 						}
 					} else if ((gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {	//10
-						printf("	Am Zug: Spieler 1 (11)	\n");
+						printf("	Am Zug: Spieler %u (%u%u)	\n", geben, geben, geben);
 					}
 					
 					if (Colored[0] == 1) {
@@ -5496,11 +5493,11 @@ int main (void) {
 					if ((ttt != 0)&&(time_saver == 0.0)) {
 						time1 = time(NULL);
 					}
-					scanf("%u", &var_[1]);
-					
-					//printf("	Checkpoint: var_[1] \n");	//test
-					
-					if (var_[1] == 10){
+					scanf("%u", &var_[geben]);
+          
+					//printf("	Checkpoint: var_[geben] \n");	//test
+
+					if (var_[geben] == 10){
 						if (ttt != 0) {
 							time3 = time(NULL);
 						}
@@ -5547,7 +5544,7 @@ int main (void) {
 								printf("	near-by:	The 4 squares around another, at the edge 3, in the corners 2, are called #near-by. \n");
 								printf("	Standard actions:	(After your choice of number and not influencing each other) \n	-Development:	If it is your turn and a free square has exactly %u of yours surrounding it, you will own it.\n", w);
 								printf("	-Losses: 	If it is your turn and a square of yours is surrounded by less than %u or more than %u of yours,\n			it will be set free.\n", d, e);	//10
-								if (gamemode == 6) {
+								if (gamemode == 6) {	//If geben == 1
 									printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", (limit_new+(number_of_players-3)), (limit_at_all+(2*(number_of_players-3))));
 								} else if ((gamemode == 10)||(gamemode == 12)) {
 									printf("	Limits: 	This gamemode is unlimited. \n");
@@ -5562,7 +5559,7 @@ int main (void) {
 								printf("\n");
 								printf("	turns at all: %u \n", g);
 								printf("\n");
-								printf("	Numbers of player 1: \n");
+								printf("	Numbers of player %u: \n", geben);
 								printf("		#1 = %u \n", A[1]);
 								printf("		#2 = %u \n", A[2]);
 								printf("		#3 = %u \n", A[3]);
@@ -5652,7 +5649,7 @@ int main (void) {
 								}
 								
 								if ((gamemode == 1)||(gamemode == 6)||(gamemode == 7)||(gamemode == 8)) {
-									printf("	Matchballs player 1: 	%u \n", A[0]);
+									printf("	Matchballs player %u: 	%u \n", geben, A[0]);
 									printf("	Matchballs player 2: 	%u \n", B[0]);
 									if (gamemode == 6) {
 										if (number_of_players >= 3){printf("	Matchballs player 3: 	%u \n", AA[0]);}
@@ -5664,19 +5661,19 @@ int main (void) {
 										if (number_of_players >= 9){printf("	Matchballs player 9: 	%u \n", AAAAA[0]);}
 									}
 								} else if (gamemode == 2) {
-									printf("	Squares collected by player 1: 	%u \n", A[0]);
+									printf("	Squares collected by player %u: 	%u \n", geben, A[0]);
 									printf("	Squares collected by player 2: 	%u \n", B[0]);
 								} else if (gamemode == 3) {
-									printf("	Times with squares <= 5, player 1: 	%u \n", A[0]);
+									printf("	Times with squares <= 5, player %u: 	%u \n", geben, A[0]);
 									printf("	Times with squares <= 5, player 2: 	%u \n", B[0]);
 								} else if (gamemode == 4) {
-									printf("	Points player 1: 		%u \n", P[1]);
+									printf("	Points player %u: 		%u \n", geben, P[1]);
 									printf("	Points Player 2: 		%u \n", P[2]);
-									printf("	Turns with more points player 1: 	%u \n", A[0]);
+									printf("	Turns with more points player %u: 	%u \n", geben, A[0]);
 									printf("	Turns with more points player 2: 	%u \n", B[0]);
 									printf("	Number of not decided #-squares: 	%u \n", P[0]);
 								} else if (gamemode == 5) {
-									printf("	Times with squares < 5, player 1: 	%u \n", A[0]);
+									printf("	Times with squares < 5, player %u: 	%u \n", geben, A[0]);
 									printf("	Times with squares < 5, player 2: 	%u \n", B[0]);
 								} else if (gamemode == 9) {
 									printf("	Number of excluded abilites: 	%u \n", exclude_counter);
@@ -5924,10 +5921,10 @@ int main (void) {
 											for (unsigned int i=2; i<m-2; i+=1){
 												for (unsigned int j=1; j<n-1; j+=1){
 													if (Sf[i][j] != 0){
-														if (Sf[i][j] == 1){
-															Sf[i][j] = 2;
-														} else if (Sf[i][j] == 2){
-															Sf[i][j] = 1;
+														if (Sf[i][j] == geben){
+															Sf[i][j] = geben%number_of_players+1;
+														} else if (Sf[i][j] == geben%number_of_players+1){
+															Sf[i][j] = geben;
 														}
 													}
 												}
@@ -5944,11 +5941,11 @@ int main (void) {
 										if (suprise == 13){
 											for (unsigned int i=1; i<m-1; i+=1){
 												for (unsigned int j=1; j<n-1; j+=1){
-													if (Sf[i][j] == 2){
+													if (Sf[i][j] == geben%number_of_players+1){
 														Sf[i][j] = 0;
 													}
 													if (i == (m-2)){
-														Sf[m-2][j] = 2;
+														Sf[m-2][j] = geben%number_of_players+1;
 													}
 												}
 											}
@@ -5993,33 +5990,33 @@ int main (void) {
 					
 					menuoperator = 0;
 					
-					if (var_[1] == 10) {
+					if (var_[geben] == 10) {
 						menuoperator = 1;
-						var_[1] = 5;		//## to avoid the mistake-note by closing the menu
+						var_[geben] = 5;		//## to avoid the mistake-note by closing the menu
 					}
 					
-					if ((tac != 0)&&(var_[1] <= 62)&&(var_[1] > 10)){
+					if ((tac != 0)&&(var_[geben] <= 62)&&(var_[geben] > 10)){
 						unsigned int tac_controll;
 						tac_controll = 0;
-						if (((var_[1]%10) > 2)||((var_[1]%10) == 0)){
-							var_[1] = 7;
+						if (((var_[geben]%10) > 2)||((var_[geben]%10) == 0)){
+							var_[geben] = 7;
 							menuoperator = 1;
 						} else {
-							for (unsigned int z=var_[1]; z>2; z-=10){
+							for (unsigned int z=var_[geben]; z>2; z-=10){
 								tac_controll += 1;
 							}
 							if (tac_controll == 6){
 								tac_controll = 0;
 							}
 							if (C[tac_controll] == 0){
-								var_[1] = 7;
+								var_[geben] = 7;
 								menuoperator = 1;
 							} else {
 								C[tac_controll] -= 1;		//Die tac-Abrechnung
 							}
 						}
-					} else if ((tac != 0)&&(var_[1] != 100)&&(var_[1] != 1010)&&(var_[1] != 0)&&(var_[1] != 5)) {
-						var_[1] = 7;
+					} else if ((tac != 0)&&(var_[geben] != 100)&&(var_[geben] != 1010)&&(var_[geben] != 0)&&(var_[geben] != 5)) {
+						var_[geben] = 7;
 					}		
 					//tac-mode
 					
@@ -6032,23 +6029,23 @@ int main (void) {
 							controll_2 += 9;
 						}
 					
-						if (var_[1] == 0){
+						if (var_[geben] == 0){
 							controll_1 = 0;
 							controll_2 = 0;
 						}
-						if (var_[1] == 100){
+						if (var_[geben] == 100){
 							controll_1 = 100;
 							controll_2 = 100;
 						}
-						if (var_[1] == 1010){
+						if (var_[geben] == 1010){
 							controll_1 = 1010;
 							controll_2 = 1010;
 						}
 					}
 					
-					if (((var_[1] > 0)&&(var_[1] < 10))||(((opt == 5)&&(var_[1] != controll_1))&&((opt == 5)&&(var_[1] != controll_2)))){
+					if (((var_[geben] > 0)&&(var_[geben] < 10))||(((opt == 5)&&(var_[geben] != controll_1))&&((opt == 5)&&(var_[geben] != controll_2)))){
 						
-						if (var_[1] != 5) {		//#-start
+						if (var_[geben] != 5) {		//#-start
 							printf("	You made a mistake, try again: \n");
 							printf("\n");
 							printf("\n");
@@ -6067,13 +6064,14 @@ int main (void) {
 
 				suprise = 0;
 				
-				if (var_[1] == 0){
+				if (var_[geben] == 0){
 					printf("	Do you really want to end the game ? \n");
 					printf("	Yes: 0		No: 1 \n");
 					scanf("%u", &lim);
 					if (lim == 0){
 						break;
 					} else if (lim == 1){
+						lim = 0;
 						continue;
 					} else {
 						printf("	0 or 1, it is so difficult to understand? \n");
@@ -6091,7 +6089,7 @@ int main (void) {
 						if (gamemode == 11) {
 							for (unsigned int p=2; p<=5; p+=1) {
 								
-								dynamic_pointer[p] = dynamic_pointer_save[number_of_players][p-2];
+								dynamic_pointer[p] = dynamic_pointer_save[number_of_players][p-2];	//if geben == 1, else geben-1
 								
 							}
 						}
@@ -6160,25 +6158,13 @@ int main (void) {
 						}
 						
 						if (opague >= 1) {
+							Sf_opague = opague_builder (Sf, m, n, geben, opague, aop);
+						}
+						
+						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
 							show_field (Sf, m, n, gamemode, information_code, geben, Colored);
-						}
-						
-						for (unsigned int p=2; p<=aop; p+=1) {
-							if (number_of_players == p) {
-								use_number = cons[p];
-								
-								if (gamemode == 11) {
-									for (unsigned int t=2; t<=5; t+=1) {
-										
-										dynamic_pointer[t] = dynamic_pointer_save[p][t-2];
-										
-									}
-								}
-								
-								break;
-							}
 						}
 						
 						g-=1;
@@ -6276,7 +6262,7 @@ int main (void) {
 								}
 							}
 							
-							if ((gamemode == 6)&&(geben == 1)) {
+							if ((gamemode == 6)&&(geben == 1)) {	//keep it
 								if (time_warning > 10.0) {	//hunted one bonus
 									time_warning -= 10.0;
 								} else {
@@ -6363,7 +6349,7 @@ int main (void) {
 						controll = 0;
 						if (gamemode == 7) {
 							for (unsigned int i=1; i<=(m-1)/2; i+=1){		//Spiel-Ende?
-								if ((Sf_nl_1[i][n-2] == 1)||(Sf[i][n-2] == 1)){
+								if ((Sf_nl_1[i][n-2] == geben)||(Sf[i][n-2] == geben)){
 									for (unsigned int k=1; k<m-1; k+=1){
 										if (Sf_nl_1[k][n-2] == geben){
 											Sf[k][n-2] = geben;
@@ -6383,18 +6369,19 @@ int main (void) {
 						num_1 = 0;
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
-								if (Sf_nl_1[i][j] == 1){
+								if (Sf_nl_1[i][j] == geben){
 									num_1 += 1;
 								}
 							}
 						}
 						
-						if (gamemode != 6) {	//wegen hunted one
+						if (gamemode != 6) {	//wegen hunted one, if (geben != 1)
+
 							if (var_[geben] == 42){
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
 										if (gamemode == 8) {
-											if (temp[i][j] == 1){
+											if (temp[i][j] == geben){
 												Sf[i][j] = 0;
 											}
 										} else if ((gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {	//mehr-gamemode
@@ -6413,7 +6400,9 @@ int main (void) {
 						
 						controll = 0;
 						if (gamemode == 1){
-							for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende?
+
+							for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende? If, because different 
+
 								if (Sf[m-2][letzte] == geben){
 									printf("	Sieg:	Spieler %u \n", geben);
 									show_field (Sf, m, n, gamemode, information_code, geben, Colored);
@@ -6429,9 +6418,9 @@ int main (void) {
 						
 						Spielfeld_Destroy (temp, m);
 					
-						Sf_od_1 = old_dying_1 (Sf, m, n, d, e, gamemode, information_code);
+						Sf_od_1 = old_dying_1 (Sf, m, n, d, e, gamemode, information_code);	// , geben)
 						
-						if ((boost_hunt_activator == 1)&&(gamemode == 6)) {
+						if ((boost_hunt_activator == 1)&&(gamemode == 6)) {	//&&geben == 1
 							for (unsigned int i=1; i<m-1; i+=1){
 								for (unsigned int j=1; j<n-1; j+=1){
 									if (Sf[i][j] == 11){
@@ -6489,7 +6478,7 @@ int main (void) {
 							
 						}
 						
-						if (var_[geben] == 32){A[3] += 1; Revive_1(m, n, Sf_od_1, Sf);}
+						if (var_[geben] == 32){A[3] += 1; Revive_1(m, n, Sf_od_1, Sf);}	//, geben)
 						
 						num_2 = 0;
 						for (unsigned int i=1; i<m-1; i+=1){
@@ -6526,7 +6515,7 @@ int main (void) {
 							
 						} else if (count_new > limit_new){		//Abfrage auf max. 10 neue Steine, normalerweise
 							if (gamemode == 1) {
-								Sf_nl_1 = Index_1 (ent, count_new, m, n, Sf, Sf_nl_1, Sf_od_1, limit_new, limit_at_all, zeitgewinner);	
+								Sf_nl_1 = Index_1 (ent, count_new, m, n, Sf, Sf_nl_1, Sf_od_1, limit_new, limit_at_all, zeitgewinner);	//, geben)
 							} else if (gamemode == 2) {
 								Sf_nl_1 = Index_1_col (ent, count_new, m, n, Sf, Sf_nl_1, Sf_od_1, limit_new, limit_at_all, zeitgewinner);	
 							} else if (gamemode == 3) {
@@ -6563,7 +6552,7 @@ int main (void) {
 							}
 						}
 						
-						if (gamemode == 6) {	//count the heart
+						if (gamemode == 6) {	//count the heart, if geben == 1
 							count_new += 1;
 							num_3 += 1;
 						}
@@ -6615,7 +6604,7 @@ int main (void) {
 							if (gamemode == 1) {
 								Sf_nl_1 = Index_1 (ent, count_new, m, n, Sf, Sf_nl_1, Sf_od_1, limit_new, limit_at_all, zeitgewinner);	
 							} else if (gamemode == 2) {
-								Sf_nl_1 = Index_1_col (ent, count_new, m, n, Sf, Sf_nl_1, Sf_od_1, limit_new, limit_at_all, zeitgewinner);	
+								Sf_nl_1 = Index_1_col (ent, count_new, m, n, Sf, Sf_nl_1, Sf_od_1, limit_new, limit_at_all, zeitgewinner);	// ,geben)
 							} else if (gamemode == 3) {
 								count_new = 0;
 							} else if (gamemode == 4) {
@@ -6645,7 +6634,7 @@ int main (void) {
 							touch (Sf, m, n, geben, Sf_nl_1, Sf_nl_2);
 						}
 						
-						Sf = change_1 (Sf, Sf_nl_1, Sf_od_1, m, n, gamemode, number_of_players, ges); 	//Change befreit
+						Sf = change_1 (Sf, Sf_nl_1, Sf_od_1, m, n, gamemode, number_of_players, ges); 	//Change befreit, ,geben)
 						
 						/*
 						get_sequence (Spielfeld Sf, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int w, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int number_of_players, unsigned int ges, unsigned int opague, Spielfeld Sf_opague, Spielfeld sequence, unsigned int seq_max, unsigned int nosv);
@@ -6707,7 +6696,7 @@ int main (void) {
 						
 						}*/
 						
-						if (gamemode == 6) {
+						if (gamemode == 6) {	//if geben == 1
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
@@ -6719,7 +6708,7 @@ int main (void) {
 							printf("\n");
 						}
 						
-						if (gamemode == 1) {
+						if (gamemode == 1) {	//if, because different
 							for (unsigned int j=1; j<n-1; j+=1){
 								if (Sf[m-3][j] == geben){
 									A[0] += 1;
@@ -6750,7 +6739,7 @@ int main (void) {
 							}
 						}
 						
-						if (gamemode == 6) {
+						if (gamemode == 6) {	//if geben==1
 							for (unsigned int p=0; p<=3; p+=1) {
 								information_code[p] = 0;
 							}
@@ -6767,6 +6756,35 @@ int main (void) {
 						
 						}
 						
+						if ((gamemode == 6)&&(geben == number_of_players)) {
+							lim = 1;
+							printf("	\n");
+							if (opague >= 1) {
+								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
+							} else {
+								show_field (Sf, m, n, gamemode, information_code, geben, Colored);
+							}
+							printf("	\n");
+							while (lim == 1) {
+								printf("	\n");
+								printf("	\n");
+								printf("	Are you ready to make your turn? \n");
+								printf("	Yes: 1 \n");
+								printf("	\n");
+								printf("	\n");
+								scanf("%u", &lim);
+								
+								if (lim != 1) {
+									lim = 1;
+								} else {
+									lim = 0;
+								}
+							}
+						}
+						if (gamemode == 6) {
+							information_code[3] = 0;
+						}
+						
 						if (gamemode == 6) {
 							for (unsigned int s = 1; s <= 20; s+=1) {	//Abstandhalter
 								printf(" \n");
@@ -6775,7 +6793,7 @@ int main (void) {
 						
 						controll = 0;
 						if (gamemode == 1) {
-							for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende?
+							for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende?	if, because different
 								if (Sf[m-2][letzte] == 1){
 									printf("	Sieg:	Spieler %u \n", geben);
 									controll = 1;
@@ -31696,4 +31714,4 @@ void impact_y_semi_square (unsigned int m, unsigned int n, unsigned int* positio
 //s=10: 10	10	9	4	6	9	10	10														s=10:	10	10	9	4	8	4	3	3	3	2	3	7	3		
 //v= 0:	0	0	-1	-3	-6	-3	-1	0	<--leer	,freier Fall,	1 Hindernis auf Grund-->	v= 0:	0	0	-1	-3	-3	-4	-4	-3	-3	-2	-3	-4	-4		für 1.
 //a= 0:	0	-1	-2	-3	3	2	1	0														a= 0:	0	-1	-2	-3	-1	-2	0	-1	0	-1	-3	0	-1
-//Nimm 2.Geschwindigkeit
+//Nimm 2.Geschwindigkeit
