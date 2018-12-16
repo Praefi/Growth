@@ -20901,7 +20901,7 @@ int main (void) {
 	
 	return 0;
 }
-/*
+
 Spielfeld Spielfeld_Create (unsigned int m, unsigned int n) {		//calloc in malloc geändert und zurückgenommen (16.06.2018),
 	Spielfeld Field[0];
 	Field[0] = calloc(m, sizeof(unsigned int*));
@@ -20910,8 +20910,8 @@ Spielfeld Spielfeld_Create (unsigned int m, unsigned int n) {		//calloc in mallo
 	}
 	return Field[0];
 }
-*/
-personal_Spielfeld Spielfeld_Create (unsigned int number_of_players, unsigned int m, unsigned int n) {		//calloc in malloc geändert und zurückgenommen (16.06.2018),
+
+personal_Spielfeld Spielfeld_Create (unsigned int number_of_players, unsigned int m, unsigned int n) {
 	personal_Spielfeld Field;
 	Field = calloc(number_of_players, sizeof(unsigned int**));
 	for (unsigned int i=0; i<=number_of_players; i+=1) {
