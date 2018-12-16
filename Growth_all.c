@@ -15,7 +15,7 @@ Spielfeld start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, uns
 unsigned int* unsigned_int_Vektor_Create (unsigned int);
 int* int_Vektor_Create (unsigned int );
 
-Spielfeld new_life_1 (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*);
+void new_life (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld);
 Spielfeld old_dying_1 (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*);
 Spielfeld change_1 (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*);
 
@@ -60,7 +60,7 @@ void Minus (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, u
 void Move (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, unsigned int*, unsigned int, Spielfeld);
 void Change (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, unsigned int*, unsigned int, Spielfeld, unsigned int*);
 void Destroy (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, unsigned int*, unsigned int, Spielfeld);
-void Revive (unsigned int, unsigned int, Spielfeld, Spielfeld, geben);
+void Revive (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
 
 void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
 
@@ -22104,33 +22104,33 @@ Spielfeld start_normal (Spielfeld Field[0], unsigned int m, unsigned int n, unsi
 	return Field[0];
 }
 
-Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode, unsigned int* information_code){
-	Spielfeld Sf_nl_[geben];
+void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode, unsigned int* information_code, geben, Sf_nl_[geben], Sf_od_[geben]){
+	Spielfeld Sf_temp;
 	unsigned int a, inhi;
 	
 	//printf("	w: %u\n", w);	//test
 	
-	Sf_nl_[geben] = Spielfeld_Create (m, n);		//inhibitor in informationcode[1], ability ist in information_code[0]
+	Sf_temp = Spielfeld_Create (m, n);		//inhibitor in informationcode[1], ability ist in information_code[0]
 	a = 0;
 	inhi = 0;
 	
 	if (gamemode != 7) {
-		for (unsigned int i=1; i<m-1; i+=1){			//Spieler 1
+		for (unsigned int i=1; i<m-1; i+=1){
 			for (unsigned int j=1; j<n-1; j+=1){
 				if ((Field[0][i][j] == 0)||(Field[0][i][j] == 71)) {	//71 = Trap, only used in survive
 					for (unsigned int h=i-1; h<=i+1; h+=1){
 						for (unsigned int k=j-1; k<=j+1; k+=1){
 							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-								if ((gamemode != 6)&&(gamemode != 9)) {
-									if (Field[0][h][k] == 1){
+								if (((gamemode != 6)||(geben != 1))&&(gamemode != 9)) {
+									if (Field[0][h][k] == geben){
 										a+=1;
 									}
-								} else if (gamemode == 6) {
+								} else if ((gamemode == 6)&&(geben == 1)) {
 									if ((Field[0][h][k] == 1)||(Field[0][h][k] == 11)){
 										a+=1;
 									}
 								} else if (gamemode == 9) {
-									if (Field[0][h][k] == 1){
+									if (Field[0][h][k] == geben){
 										a+=1;
 									}
 									if ((information_code[1] != 0)&&(information_code[1] != 100)&&(Field[0][h][k] == information_code[1])&&(information_code[0] != 6)&&(information_code[0] != 5)) {
@@ -22143,11 +22143,11 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 					if (gamemode != 9) {
 						if (w == 4){
 							if ((a == w) || (a == w+1)){
-								Sf_nl_[geben][i][j] = 1;
+								Sf_temp[i][j] = geben;
 							}
 						} else {
 							if (a == w){
-								Sf_nl_[geben][i][j] = 1;
+								Sf_temp[i][j] = geben;
 							}
 						}
 						a = 0;
@@ -22156,12 +22156,12 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 							if (information_code[0] == 1) {
 								if (w == 2){
 									if ((a == w) || (a == w+1)){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								} else {
 									if (a == w){
 										if (w == 1) {
-											Sf_nl_[geben][i][j] = 1;
+											Sf_temp[i][j] = geben;
 										} else if (w == 0) {
 											for (unsigned int h=i-1; h<=i+1; h+=1){
 												for (unsigned int k=j-1; k<=j+1; k+=1){
@@ -22177,7 +22177,7 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 												}
 											}
 											if (inhi != 10) {
-												Sf_nl_[geben][i][j] = 1;
+												Sf_temp[i][j] = geben;
 											}
 										}
 									}
@@ -22185,43 +22185,43 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 							} else if (information_code[0] == 2) {
 								if (w == 3){
 									if ((a == w) || (a == w+1)){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								}
 							} else if (information_code[0] == 3) {
 								if (w == 5){
 									if ((a == w) || (a == w+1)){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								}
 							} else if (information_code[0] == 4) {
 								if (w == 4){
 									if ((a == w) || (a == w+1)){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}  else if ((a == (w-1))&&((j == (n-2))||(j == 1)||(i == (m-2))||(i == 1))) {
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								}
 							} else {
 								if (w == 4){
 									if ((a == w) || (a == w+1)){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_nl_[geben][i][j] = 1;
+										Sf_temp[i][j] = geben;
 									}
 								}
 							}
@@ -22231,11 +22231,11 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 					}
 					
 				}
-				if ((gamemode == 10)&&(Field[0][i][j] == 2)) {
+				if ((gamemode == 10)&&((Field[0][i][j] == 2)&&(geben == 1))) {
 					for (unsigned int h=i-1; h<=i+1; h+=1){
 						for (unsigned int k=j-1; k<=j+1; k+=1){
 							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-								if (Field[0][h][k] == 1){
+								if (Field[0][h][k] == geben){
 									a+=1;
 								}
 							}
@@ -22243,11 +22243,11 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 					}
 					if (w == 4){
 						if ((a == w) || (a == w+1)){
-							Sf_nl_[geben][i][j] = 1;
+							Sf_temp[i][j] = geben;
 						}
 					} else {
 						if (a == w){
-							Sf_nl_[geben][i][j] = 1;
+							Sf_temp[i][j] = geben;
 						}
 					}
 					a = 0;
@@ -22258,31 +22258,56 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 			for (unsigned int i=1; i<m-1; i+=1){
 				for (unsigned int j=1; j<n-1; j+=1){
 					
-					if ((Field[0][i][j] == 71)&&(Sf_nl_[geben][i][j] == 1)) {
-						Field[0][i][j] = 0;
-						Sf_nl_[geben][i][j] = 0;
-						Field[0][i-1][j] = 0;
-						Sf_nl_[geben][i-1][j] = 0;
-						Field[0][i+1][j] = 0;
-						Sf_nl_[geben][i+1][j] = 0;
-						Field[0][i][j-1] = 0;
-						Sf_nl_[geben][i][j-1] = 0;
-						Field[0][i][j+1] = 0;
-						Sf_nl_[geben][i][j+1] = 0;
+					if ((Field[0][i][j] == 71)&&(Sf_temp[i][j] == geben)) {
+						
+						if (Field[0][i][j] = geben) {
+							Sf_od_[geben][i][j] = 101*geben;
+						} else {
+							Field[0][i][j] = 0;
+						}
+						Sf_temp[i][j] = 0;
+						
+						if (Field[0][i-1][j] = geben) {
+							Sf_od_[geben][i-1][j] = 101*geben;
+						} else {
+							Field[0][i-1][j] = 0;
+						}
+						Sf_temp[i-1][j] = 0;
+						
+						if (Field[0][i+1][j] = geben) {
+							Sf_od_[geben][i+1][j] = 101*geben;
+						} else {
+							Field[0][i+1][j] = 0;
+						}
+						Sf_temp[i+1][j] = 0;
+						
+						if (Field[0][i][j-1] = geben) {
+							Sf_od_[geben][i][j-1] = 101*geben;
+						} else {
+							Field[0][i][j-1] = 0;
+						}
+						Sf_temp[i][j-1] = 0;
+						
+						if (Field[0][i][j+1] = geben) {
+							Sf_od_[geben][i][j+1] = 101*geben;
+						} else {
+							Field[0][i][j+1] = 0;
+						}
+						Sf_temp[i][j+1] = 0;
 						
 					}
 				}
 			}
 		}
 		
-	} else if (gamemode == 7) {
+	} else if ((gamemode == 7)&&(geben == 1)) {		//if
 		for (unsigned int i=1; i<=(m-1)/2; i+=1){			//Spieler 1
 			for (unsigned int j=1; j<n-1; j+=1){
 				if (Field[0][i][j] == 0) {
 					for (unsigned int h=i-1; h<=i+1; h+=1){
 						for (unsigned int k=j-1; k<=j+1; k+=1){
 							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-								if (Field[0][h][k] == 1){
+								if (Field[0][h][k] == geben){
 									a+=1;
 								}
 							}
@@ -22290,11 +22315,11 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 					}				//w=3, w=2, w=4
 					if(w == 4){
 						if ((a == w) || (a == w+1) ){
-							Sf_nl_[geben][i][j] = 1;
+							Sf_temp[i][j] = geben;
 						}
 					} else {
 						if (a == w){
-							Sf_nl_[geben][i][j] = 1;
+							Sf_temp[i][j] = geben;
 						}
 					}
 					a = 0;
@@ -22303,8 +22328,15 @@ Spielfeld new_life_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsign
 			}
 		}
 	}
-		
-	return Sf_nl_[geben];
+	
+	for (unsigned int i=1; i<m-1; i+=1){
+		for (unsigned int j=1; j<n-1; j+=1){
+			if (Sf_temp[i][j] = geben) {
+				Sf_nl_[geben] = geben
+			}
+		}
+	}
+	
 }
 
 Spielfeld old_dying_1 (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code){
