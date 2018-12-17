@@ -17,9 +17,11 @@ int* int_Vektor_Create (unsigned int );
 
 void new_life (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld);
 void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld);
-void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int geben);
+void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int);
 
 void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*);
+
+unsigned int Vorgänger (unsigned int, unsigned int);
 
 void Spielfeld_Destroy (Spielfeld, unsigned int);
 
@@ -3016,89 +3018,22 @@ int main (void) {
 		
 		
 		if (journey == 1){		//gamemode 11 journey, done
-			Field_journey = Spielfeld_Create (m, n);
-			cons_journey_1 = Spielfeld_Create (m, n);
-			if (number_of_players >= 2){
-				cons_journey_2 = Spielfeld_Create (m, n);
-			}
-			if (number_of_players >= 3){
-				cons_journey_3 = Spielfeld_Create (m, n);
-			}
-			if (number_of_players >= 4){
-				cons_journey_4 = Spielfeld_Create (m, n);
-			}
-			if (number_of_players >= 5){
-				cons_journey_5 = Spielfeld_Create (m, n);
-			}
-			if (number_of_players >= 6){
-				cons_journey_6 = Spielfeld_Create (m, n);
-			}
-			if (number_of_players >= 7){
-				cons_journey_7 = Spielfeld_Create (m, n);
-			}
-			if (number_of_players >= 8){
-				cons_journey_8 = Spielfeld_Create (m, n);
-			}
-			if (number_of_players == 9){
-				cons_journey_9 = Spielfeld_Create (m, n);
-			}
-			
+			Field_journey = personal_Spielfeld_Create (m, n, number_of_players);
 		}
 		if (tac != 0){
-			for (unsigned int p=0; p<=5; p+=1){
-				C[p] = tac;
-				D[p] = tac;
+			for (unsigned int p=1; p<=number_of_players; p+=1){
+				for (unsigned int q=0; q<=5; q+=1){
+					stack_of_[p][q] = tac;
+				}
 			}
 		}
 		
 		Sf_opague = Spielfeld_Create (m, n);
 		
-		cons_field_1 = Spielfeld_Create (m, n);
-		Sf_nl_[geben] = Spielfeld_Create(m, n);
-		Sf_od_[geben] = Spielfeld_Create(m, n);
-		if (number_of_players >= 2){
-			cons_field_2 = Spielfeld_Create (m, n);
-			Sf_nl_2 = Spielfeld_Create(m, n);
-			Sf_od_2 = Spielfeld_Create(m, n);
-		}
-		if (number_of_players >= 3){
-			cons_field_3 = Spielfeld_Create (m, n);
-			Sf_nl_3 = Spielfeld_Create(m, n);
-			Sf_od_3 = Spielfeld_Create(m, n);
-		}
-		if (number_of_players >= 4){
-			cons_field_4 = Spielfeld_Create (m, n);
-			Sf_nl_4 = Spielfeld_Create(m, n);
-			Sf_od_4 = Spielfeld_Create(m, n);
-		}
-		if (number_of_players >= 5){
-			cons_field_5 = Spielfeld_Create (m, n);
-			Sf_nl_5 = Spielfeld_Create(m, n);
-			Sf_od_5 = Spielfeld_Create(m, n);
-		}
-		if (number_of_players >= 6){
-			cons_field_6 = Spielfeld_Create (m, n);
-			Sf_nl_6 = Spielfeld_Create(m, n);
-			Sf_od_6 = Spielfeld_Create(m, n);
-		}
-		if (number_of_players >= 7){
-			cons_field_7 = Spielfeld_Create (m, n);
-			Sf_nl_7 = Spielfeld_Create(m, n);
-			Sf_od_7 = Spielfeld_Create(m, n);
-		}
-		if (number_of_players >= 8){
-			cons_field_8 = Spielfeld_Create (m, n);
-			Sf_nl_8 = Spielfeld_Create(m, n);
-			Sf_od_8 = Spielfeld_Create(m, n);
-		}
-		if (number_of_players >= 9){
-			cons_field_9 = Spielfeld_Create (m, n);
-			Sf_nl_9 = Spielfeld_Create(m, n);
-			Sf_od_9 = Spielfeld_Create(m, n);
-		}
+		Sf_nl_ = personal_Spielfeld_Create(m, n, number_of_players);
+		Sf_od_ = personal_Spielfeld_Create(m, n, number_of_players);
 		
-		
-		Field[0] = Spielfeld_Create (m, n);
+		Field = personal_Spielfeld_Create (m, n);
 		Field[0] = start_normal (Field[0], m, n, gamemode, number_of_players);
 		
 		if (gamemode == 8) {
@@ -22451,6 +22386,19 @@ void change (Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben
 			Sf_nl_[geben][i][j] = 0;
 		}
 	}
+}
+
+void Vorgänger (unsigned int geben, unsigned int number_of_players) {
+	unsigned int vorher;
+	vorher = 0;
+	
+	if (geben == 1) {
+		vorher = number_of_players;
+	} else {
+		vorher = geben - 1;
+	}
+	
+	return vorgänger;
 }
 
 void show_field (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int gamemode, unsigned int* information_code, unsigned int geben, unsigned int* Colored){
