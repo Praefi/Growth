@@ -9,6 +9,7 @@
 typedef unsigned int** Spielfeld;
 typedef unsigned int*** personal_Spielfeld;
 
+personal_Spielfeld personal_Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players);
 Spielfeld Spielfeld_Create (unsigned int, unsigned int);			//mxn, m >= 6 (+2), n gerade, n >= 4 (+2)		Original: m = 10 (+2), n = 6 (+2)
 Spielfeld start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
 
@@ -16,7 +17,7 @@ unsigned int* unsigned_int_Vektor_Create (unsigned int);
 int* int_Vektor_Create (unsigned int );
 
 void new_life (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld);
-void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld);
+void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int);
 void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int);
 
 void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*);
@@ -60,7 +61,7 @@ unsigned int random_number (unsigned int, unsigned int, unsigned int, unsigned i
 void battle (unsigned int, unsigned int, Spielfeld, unsigned int);
 unsigned int chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
 
-void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld);
+void touch (Spielfeld, unsigned int, unsigned int, unsigned int, personal_Spielfeld);
 
 void ahead (Spielfeld, unsigned int, unsigned int);
 
@@ -256,15 +257,15 @@ int main (void) {
 		}
 		
 		for (unsigned int p=0; p<=2; p+=1){
-			P[p] = 0;		//possible to modify
+			Points[p] = 0;		//possible to modify
 		}
 		for (unsigned int p=0; p<=3; p+=1){
 			information_code[p] = 0;
 		}
 		for (unsigned int p=0; p<=AOP; p+=1){	//Initializise after number_of_players, go on
 			for (unsigned int q=0; q<=6; q+=1){	//6 because of a normal dice
-				numbers_of_[p][q] == 0;
-				stack_of_[p][q] == 0;
+				numbers_of_[p][q] = 0;
+				stack_of_[p][q] = 0;
 			}
 		}
 		
@@ -306,7 +307,7 @@ int main (void) {
 			ges[p] = 0;
 			var_[p] = 0;
 			cons[p] = 0;
-			number_of_[p] == 0;
+			number_[p] = 0;
 			if (p!=1) {
 				ulcer_lifes[p] = p-1;
 			}
@@ -2280,38 +2281,6 @@ int main (void) {
 							}
 						}
 						
-						for (unsigned int p=0; p<=5; p+=1){
-							
-							if (number_of_players >= 3){
-								AA[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 4){
-								BB[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 5){
-								AAA[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 6){
-								BBB[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 7){
-								AAAA[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 8){
-								BBBB[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players == 9){
-								AAAAA[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-						}
-						
 					}
 					if ((beginningmenu == back_opt+2)&&((gamemode == 12))){
 						printf("	Number of players?		(1 - 9) \n");
@@ -2385,38 +2354,6 @@ int main (void) {
 								siz_n = 17;
 								m = siz_m + 2;
 								n = siz_n + 2;
-							}
-						}
-						
-						for (unsigned int p=0; p<=5; p+=1){
-							
-							if (number_of_players >= 3){
-								AA[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 4){
-								BB[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 5){
-								AAA[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 6){
-								BBB[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 7){
-								AAAA[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players >= 8){
-								BBBB[p] = 0;
-								numbers_of_[geben][p] = 0;
-							}
-							if (number_of_players == 9){
-								AAAAA[p] = 0;
-								numbers_of_[geben][p] = 0;
 							}
 						}
 						
@@ -3033,7 +2970,7 @@ int main (void) {
 		Sf_nl_ = personal_Spielfeld_Create(m, n, number_of_players);
 		Sf_od_ = personal_Spielfeld_Create(m, n, number_of_players);
 		
-		Field = personal_Spielfeld_Create (m, n);
+		Field = personal_Spielfeld_Create (m, n, number_of_players);
 		Field[0] = start_normal (Field[0], m, n, gamemode, number_of_players);
 		
 		if (gamemode == 8) {
@@ -5088,8 +5025,8 @@ int main (void) {
 					pere[geben] = 0;
 					continue;
 				} else if ((pere[geben] != 0)&&(warning_system != 0)&&(((warning_system <= 5)&&((pere[geben]+warning_system) == 8))||((warning_system == 6)&&(pere[geben] == 1)))) {
-					Sf_od_[geben] = old_dying (Field[0], m, n, d, e, gamemode, information_code, geben);
-					Field[0] = change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
+					old_dying (Field[0], m, n, d, e, gamemode, information_code, geben);
+					change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
 					g += 1;
 					printf(" \n ");
 					printf("	You got a penalty. \n ");
@@ -5168,7 +5105,7 @@ int main (void) {
 				
 				if (gamemode == 4) {
 					printf("\n");
-					printf("	Points player %u: 	%u Point(s) \n", geben, P[geben]);
+					printf("	Points player %u: 	%u Point(s) \n", geben, Points[geben]);
 				}
 				
 				if (gamemode == 10) {
@@ -5358,10 +5295,10 @@ int main (void) {
 								}
 							} else if (gamemode == 4) {
 								for (unsigned int p=1; p<=number_of_players; p+=1) {
-									printf("	Points player %u: 		%u \n", geben, P[geben]);
+									printf("	Points player %u: 		%u \n", geben, Points[geben]);
 									printf("	Turns with more points player %u: 	%u \n", geben, numbers_of_[geben][0]);
 								}
-								printf("	Number of not decided #-squares: 	%u \n", P[0]);
+								printf("	Number of not decided #-squares: 	%u \n", Points[0]);
 							} else if (gamemode == 5) {
 								for (unsigned int p=1; p<=number_of_players; p+=1) {
 									printf("	Times with squares < 5, player %u: 	%u \n", geben, numbers_of_[geben][0]);
@@ -5921,7 +5858,7 @@ int main (void) {
 						//printf("	pere[%u]: %u \n", geben, pere[geben] );	//test
 					}
 					
-					Sf_nl_[geben] = new_life (Field[0], m, n, w, gamemode, information_code, geben);
+					new_life (Field[0], m, n, w, gamemode, information_code, geben, Sf_nl_[geben], Sf_od_[geben]);
 					
 					//show_field (Sf_nl_[geben], m, n, gamemode, information_code, geben);	// test
 					
@@ -6051,7 +5988,7 @@ int main (void) {
 					
 					Spielfeld_Destroy (temp, m);
 				
-					Sf_od_[geben] = old_dying (Field[0], m, n, d, e, gamemode, information_code, geben);	// , geben)
+					old_dying (Field[0], m, n, d, e, gamemode, information_code, geben);	// , geben)
 					
 					if ((boost_hunt_activator == 1)&&(gamemode == 6)&&(geben == 1)) {
 						for (unsigned int i=1; i<m-1; i+=1){
@@ -6087,8 +6024,8 @@ int main (void) {
 								if ((Sf_od_[geben][i][j] == 101*geben) && (Field_journey[0][i][j] == 0) && (journey_max >= limit_at_all)){
 									for (unsigned int u=0; u<(m-1); u+=1){
 										for (unsigned int o=1; o<(n-1); o+=1){
-											if ((Field_journey[u][o] == geben)&&((u+o)%2 == 0)){
-												Field_journey[u][o] = 0;
+											if ((Field_journey[0][u][o] == geben)&&((u+o)%2 == 0)){
+												Field_journey[0][u][o] = 0;
 												journey_max -= 1;
 												if (journey_max < limit_at_all){
 													break;
@@ -6111,7 +6048,7 @@ int main (void) {
 						
 					}
 					
-					if (var_[geben] == 32){numbers_of_[geben][3] += 1; Revive(m, n, Sf_od_[geben], Field[0]);}	//, geben)
+					if (var_[geben] == 32){numbers_of_[geben][3] += 1; Revive(m, n, Sf_od_[geben], Field[0], geben);}
 					
 					num_2 = 0;
 					for (unsigned int i=1; i<m-1; i+=1){
@@ -6264,10 +6201,10 @@ int main (void) {
 					ent = 0;
 					
 					if (gamemode == 4) {
-						touch (Field[0], m, n, geben, Sf_nl_[geben], Sf_nl_2);
+						touch (Field[0], m, n, geben, Sf_nl_);
 					}
 					
-					Field[0] = change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit, ,geben)
+					change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit, ,geben)
 					
 					/*
 					get_sequence (Spielfeld Field[0], Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int w, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int number_of_players, unsigned int ges, unsigned int opague, Spielfeld Sf_opague, Spielfeld sequence, unsigned int seq_max, unsigned int nosv);
@@ -6298,8 +6235,8 @@ int main (void) {
 								
 								for (unsigned int p=1; p<=sequence[0][0]; p+=1) {		//Index?
 									
-									Sf_nl_[geben] = new_life (Field[0], m, n, w, gamemode, information_code, geben);		//let Index go over it, even without reason? What will Index do? Nothing, i guess...
-									Sf_od_[geben] = old_dying (Field[0], m, n, d, e, gamemode, information_code, geben);
+									new_life (Field[0], m, n, w, gamemode, information_code, geben, Sf_nl_[geben], Sf_od_[geben]);		//let Index go over it, even without reason? What will Index do? Nothing, i guess...
+									old_dying (Field[0], m, n, d, e, gamemode, information_code, Sf_od_[geben]);
 									Field[0] = change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
 									
 									if (p == sequence[0][0]) {
@@ -7073,11 +7010,11 @@ int main (void) {
 						if (Field[0][m-2][j] == 7){
 							if ((var_[1] == 1010)||(var_[2] == 1010)){
 								if (fall_back == (n-1)/2){
-									P[0] -= 1;
+									Points[0] -= 1;
 								} else if (fall_back < (n-1)/2){
-									P[2] -= (((n-1)/2) - j);
+									Points[2] -= (((n-1)/2) - j);
 								} else if (fall_back > (n-1)/2){
-									P[1] -= (j - (n-1)/2);
+									Points[1] -= (j - (n-1)/2);
 								}
 							}
 							Field[0][1][(n-1)/2] = 7;
@@ -7093,13 +7030,13 @@ int main (void) {
 							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
 							
 							if (j == (n-1)/2){
-								P[0] += 1;
+								Points[0] += 1;
 								printf ("	It is an undecided #-square! \n");
 							} else if (j < (n-1)/2){
-								P[2] += ((n-1)/2) - j;
+								Points[2] += ((n-1)/2) - j;
 								printf ("	Points player 2:	+ %u \n", ((n-1)/2) - j);
 							} else if (j > (n-1)/2){
-								P[1] += (j - (n-1)/2);
+								Points[1] += (j - (n-1)/2);
 								printf ("	Points player 1:	+ %u \n", (j - (n-1)/2));
 							}
 							fall_back = j;
@@ -7108,7 +7045,7 @@ int main (void) {
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
 										if (Field[0][i][j] != 7){
-											Field[0][i][j] = Field_journey [i][j];
+											Field[0][i][j] = Field_journey[0][i][j];
 											Field_journey[0][i][j] = 0;
 										} else if (Field[0][i][j] == 7) {
 											Field_journey[0][i][j] = 0;
@@ -7161,19 +7098,19 @@ int main (void) {
 				fall_controll = 0;
 				
 				if ((var_[1] != 1010) && (var_[2] != 1010)){
-					if (P[1] > P[2]){
+					if (Points[1] > Points[2]){
 						A[0] += 1;
 					}
-					if (P[1] < P[2]){
+					if (Points[1] < Points[2]){
 						B[0] += 1;
 					}
 				}
 				
-				if (P[1] >= points_for_win){		//Spiel-Ende
+				if (Points[1] >= points_for_win){		//Spiel-Ende
 					printf ("	Sieg: player 1 \n");
 					break;
 				}
-				if (P[2] >= points_for_win){
+				if (Points[2] >= points_for_win){
 					printf ("	Sieg: player 2 \n");
 					break;
 				}
@@ -8300,11 +8237,11 @@ int main (void) {
 				printf("	Times with squares <= 5, player 1: 	%u \n", A[0]);
 				printf("	Times with squares <= 5, player 2: 	%u \n", B[0]);
 			} else if (gamemode == 4) {
-				printf("	Points player 1: 		%u \n", P[1]);
-				printf("	Points Player 2: 		%u \n", P[2]);
+				printf("	Points player 1: 		%u \n", Points[1]);
+				printf("	Points Player 2: 		%u \n", Points[2]);
 				printf("	Turns with more points player 1: 	%u \n", A[0]);
 				printf("	Turns with more points player 2: 	%u \n", B[0]);
-				printf("	Number of not decided #-squares: 	%u \n", P[0]);
+				printf("	Number of not decided #-squares: 	%u \n", Points[0]);
 			} else if (gamemode == 5) {
 				printf("	Times with squares < 5, player 1: 	%u \n", A[0]);
 				printf("	Times with squares < 5, player 2: 	%u \n", B[0]);
@@ -8401,13 +8338,13 @@ Spielfeld Spielfeld_Create (unsigned int m, unsigned int n) {		//calloc in mallo
 	return Spiel;
 }
 
-personal_Spielfeld Spielfeld_Create (unsigned int number_of_players, unsigned int m, unsigned int n) {
+personal_Spielfeld personal_Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players) {
 	personal_Spielfeld Field;
 	Field = calloc(number_of_players, sizeof(unsigned int**));
-	for (unsigned int i=0; i<=number_of_players; i+=1) {
-		Field[i] = calloc(m, sizeof(unsigned int*));
-		for (unsigned int j=0, j<m, j+=1) {
-			Field[i][j] = calloc(n, sizeof(unsigned int));
+	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {	//geben und i, um zugehörigkeit zu verdeutlichen
+		Field[geben] = calloc(m, sizeof(unsigned int*));
+		for (unsigned int i=0; i<m; i+=1) {
+			Field[geben][i] = calloc(n, sizeof(unsigned int));
 		}
 	}
 	return Field;
@@ -8436,8 +8373,7 @@ void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m){
 	Spiel = NULL;		//nach testen auf andere Versionen übertragen!
 }
 
-Spielfeld start_normal (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players){
-	
+Spielfeld start_normal (personal_Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players){
 	
 	if (gamemode == 1){
 		unsigned int n_2;
@@ -9643,7 +9579,7 @@ Spielfeld start_normal (Spielfeld Field[0], unsigned int m, unsigned int n, unsi
 	return Field[0];
 }
 
-void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode, unsigned int* information_code, geben, Sf_nl_[geben], Sf_od_[geben]){
+void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode, unsigned int* information_code, unsigned int geben, Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben]){
 	Spielfeld Sf_temp;
 	unsigned int a, inhi;
 	
@@ -9799,35 +9735,35 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 					
 					if ((Field[0][i][j] == 71)&&(Sf_temp[i][j] == geben)) {
 						
-						if (Field[0][i][j] = geben) {
+						if (Field[0][i][j] == geben) {
 							Sf_od_[geben][i][j] = 101*geben;
 						} else {
 							Field[0][i][j] = 0;
 						}
 						Sf_temp[i][j] = 0;
 						
-						if (Field[0][i-1][j] = geben) {
+						if (Field[0][i-1][j] == geben) {
 							Sf_od_[geben][i-1][j] = 101*geben;
 						} else {
 							Field[0][i-1][j] = 0;
 						}
 						Sf_temp[i-1][j] = 0;
 						
-						if (Field[0][i+1][j] = geben) {
+						if (Field[0][i+1][j] == geben) {
 							Sf_od_[geben][i+1][j] = 101*geben;
 						} else {
 							Field[0][i+1][j] = 0;
 						}
 						Sf_temp[i+1][j] = 0;
 						
-						if (Field[0][i][j-1] = geben) {
+						if (Field[0][i][j-1] == geben) {
 							Sf_od_[geben][i][j-1] = 101*geben;
 						} else {
 							Field[0][i][j-1] = 0;
 						}
 						Sf_temp[i][j-1] = 0;
 						
-						if (Field[0][i][j+1] = geben) {
+						if (Field[0][i][j+1] == geben) {
 							Sf_od_[geben][i][j+1] = 101*geben;
 						} else {
 							Field[0][i][j+1] = 0;
@@ -9896,15 +9832,15 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (Sf_temp[i][j] = geben) {
-				Sf_nl_[geben] = geben;
+			if (Sf_temp[i][j] == geben) {
+				Sf_nl_[geben][i][j] = geben;
 			}
 		}
 	}
 	
 }
 
-void old_dying (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, Spielfeld Sf_od_[geben]){
+void old_dying (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int geben){
 	Spielfeld Sf_temp;
 	unsigned int a, e_down, d_up;
 	
@@ -10024,7 +9960,7 @@ void change (Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben
 	}
 }
 
-void Vorganger (unsigned int geben, unsigned int number_of_players) {
+unsigned int Vorganger (unsigned int geben, unsigned int number_of_players) {
 	unsigned int vorher;
 	vorher = 0;
 	
@@ -10034,7 +9970,7 @@ void Vorganger (unsigned int geben, unsigned int number_of_players) {
 		vorher = geben - 1;
 	}
 	
-	return vorgänger;
+	return vorher;
 }
 
 void show_field (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int gamemode, unsigned int* information_code, unsigned int geben, unsigned int* Colored){
@@ -10602,7 +10538,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);		//transform Spielfeld in personal_Spielfeld[0], übergebe nur noch personal, go on
 							}
 							Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
 							
@@ -11600,7 +11536,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 	
 }
 
-void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_[geben], Spielfeld Field[0], geben){
+void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_[geben], Spielfeld Field[0], unsigned int geben){
 	unsigned int a;
 	Spielfeld temp;
 	
@@ -16133,7 +16069,7 @@ unsigned int random_number (unsigned int num_1, unsigned int num_2, unsigned int
 	return new_number;
 }
 
-void touch (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf_nl_[geben], Spielfeld Sf_nl_2){
+void touch (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int geben, personal_Spielfeld Sf_nl_){
 	unsigned int einmal;
 	einmal = 0;
 	for (unsigned int i=1; i<m-1; i+=1){
@@ -16157,16 +16093,16 @@ void touch (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int geb
 						Field[0][i][j] = 0;
 					}
 				} else if (geben == 2){
-					if (((Sf_nl_2[i][j+1] == 2) || (Field[0][i][j+1] == 2))&&(j != 1)){
+					if (((Sf_nl_[geben][i][j+1] == 2) || (Field[0][i][j+1] == 2))&&(j != 1)){
 						Field[0][i][j-1] = 7;
 						Field[0][i][j] = 0;
-					} else if (((Sf_nl_2[i+1][j] == 2) || (Field[0][i+1][j] == 2))&&(i != 1)){
+					} else if (((Sf_nl_[geben][i+1][j] == 2) || (Field[0][i+1][j] == 2))&&(i != 1)){
 						Field[0][i-1][j] = 7;
 						Field[0][i][j] = 0;
-					} else if (((Sf_nl_2[i-1][j] == 2) || (Field[0][i-1][j] == 2))&&(i != (m-2))){
+					} else if (((Sf_nl_[geben][i-1][j] == 2) || (Field[0][i-1][j] == 2))&&(i != (m-2))){
 						Field[0][i+1][j] = 7;
 						Field[0][i][j] = 0;
-					} else if (((Sf_nl_2[i][j-1] == 2) || (Field[0][i][j-1] == 2))&&(j != (n-2))){
+					} else if (((Sf_nl_[geben][i][j-1] == 2) || (Field[0][i][j-1] == 2))&&(j != (n-2))){
 						Field[0][i][j+1] = 7;
 						Field[0][i][j] = 0;
 					}
