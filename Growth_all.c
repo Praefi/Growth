@@ -58,6 +58,9 @@ int main (void) {
 	
 	//printf ("	ok 1 \n");	//test
 	
+	//Spielfeld test_;	//test
+	
+	//printf ("	ok 1.1 \n");	//test
 	
 	Spielfeld numbers_of_, stack_of_;	//ruck muss raus, done, numbers_of_==statistics, numbers_of_[geben][0]==Matchballs etc., stack_of_==stack of tac
 	Spielfeld Field, Field_journey;	//cons_field in Field, cons_journey in Field_journey, Field[0]==Das Spielfeld, Field_journey[0]==Das Journeyfeld
@@ -75,7 +78,7 @@ int main (void) {
 	unsigned int range, d_wert, indikator1, indikator2, indikator3, space_i, space_j, controll, iteration;
 	//unsigned int cons[1]_fort, cons[2]_fort, cons[3]_fort, cons[4]_fort, cons[5]_fort, cons[6]_fort, cons[7]_fort, cons[8]_fort, cons[9]_fort;
 	
-	//scanf("%u", &w); //test
+	//scanf("%u", &lim); //test
 	//printf ("	ok 2 \n");	//test
 	
 	unsigned int number_of_players, rtc, spf, scwhp, round_counter, round_counter_before, hboa, precounter, opague;
@@ -142,20 +145,20 @@ int main (void) {
 	cons_fort[9] = 0;
 	*/
 	
-	//scanf("%u", &w); //test
+	//scanf("%u", &lim); //test
 	//printf("%u \n", same[0]);	//test
 	//printf ("	ok 3 \n");	//test
 	
 	while (playtime != 0){		// Außenschleife für mehrere Spiele hintereinander
 
-		//scanf("%u", &w); //test
+		//scanf("%u", &lim); //test
 		//printf ("	ok 4 \n");	//test
 		
 		//playtime should start here
 		
 		number_of_players = 2;
 		
-		//scanf("%u", &w); //test
+		//scanf("%u", &lim); //test
 		//printf ("	ok 5.1 \n");	//test
 		
 		m = 0;	//
@@ -187,7 +190,7 @@ int main (void) {
 		range = 1;
 		erd = 1;
 		
-		//scanf("%u", &w); //test
+		//scanf("%u", &lim); //test
 		//printf ("	ok 5.2 \n");	//test
 		
 		lim = 0;
@@ -234,26 +237,27 @@ int main (void) {
 		
 		opague = 0;
 		
-		//scanf("%u", &w); //test
+		//scanf("%u", &lim); //test
 		//printf ("	ok 5.3 \n");	//test
 		for (unsigned int p=0; p<=(nosv-1); p+=1) {
 			same[p] = 0;
 		}
 		
+		//scanf("%u", &lim); //test
+		//printf ("	ok 5.3.1 \n");	//test
+		
 		for (unsigned int p=0; p<=2; p+=1){
 			Points[p] = 0;		//possible to modify
 		}
+		
+		//scanf("%u", &lim); //test
+		//printf ("	ok 5.3.2 \n");	//test
+		
 		for (unsigned int p=0; p<=3; p+=1){
 			information_code[p] = 0;
 		}
-		for (unsigned int p=0; p<=AOP; p+=1){	//Initializise after number_of_players, maybe Spielfeld_Create, go on
-			for (unsigned int q=0; q<=6; q+=1){	//6 because of a normal dice
-				numbers_of_[p][q][0] = 0;
-				stack_of_[p][q][0] = 0;
-			}
-		}
 		
-		//scanf("%u", &w); //test
+		//scanf("%u", &lim); //test
 		//printf ("	ok 5.4 \n");	//test
 		
 		position[0] = 0;
@@ -297,7 +301,7 @@ int main (void) {
 			}
 		}
 		
-		//scanf("%u", &w); //test
+		//scanf("%u", &lim); //test
 		//printf ("	ok 5.5 \n");	//test
 		
 		if (same[0] == 0) {
@@ -310,13 +314,13 @@ int main (void) {
 				printf("\n");
 			}
 			
-			//scanf("%u", &w); //test
+			//scanf("%u", &lim); //test
 			//printf ("	ok 6 \n");	//test
 			
 			while (beginningmenu == back_opt) {
 				
-				//scanf("%u", &w); //test
-				//printf ("	ok 7 \n");	//test
+				scanf("%u", &lim); //test
+				printf ("	ok 7 \n");	//test
 				while ((gamemode < 1) || (gamemode > 12)) {
 					
 					printf("	Choose your gamemode\n  \n");
@@ -2776,7 +2780,8 @@ int main (void) {
 				}
 			}
 			
-			
+			scanf("%u", &lim);	//test
+			printf("	#line 2784, before same \n");	//test
 					//Startmenü, Ende
 					
 			same[0] = 0;
@@ -2937,21 +2942,38 @@ int main (void) {
 			d_wert = same[69];
 		}
 		
+		scanf("%u", &lim);	//test
+		printf("	#line 2946, after same \n");	//test
 		
 		if (journey == 1){		//gamemode 11 journey, done
 			Field_journey = Spielfeld_Create (m, n, number_of_players);
 		}
 		
+		printf(" m= %u, n= %u \n", m, n);	//test
+		
 		Sf_opague = Spielfeld_Create (m, n, 0);
+		
+		scanf("%u", &lim);	//test
+		printf("	#line 2955, before Sf_nl \n");	//test
 		
 		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
 		Sf_od_ = Spielfeld_Create(m, n, number_of_players);
 		
+		scanf("%u", &lim);	//test
+		printf("	#line 2961, before Field \n");	//test
+		
 		Field = Spielfeld_Create (m, n, number_of_players);
 		Field = start_normal (Field, m, n, gamemode, number_of_players);
 		
-		numbers_of_ = Spielfeld_Create (6, 0, AOP);
-		stack_of_ = Spielfeld_Create (5, 0, AOP);
+		scanf("%u", &lim);	//test
+		printf("	#line 2967, before numbers_of_ \n");	//test
+		printf("	AOP= %u \n", AOP);	//test
+		
+		numbers_of_ = Spielfeld_Create (7, 1, AOP);
+		stack_of_ = Spielfeld_Create (6, 1, AOP);
+		
+		scanf("%u", &lim);	//test
+		printf("	#line 2973, before tac \n");	//test
 		
 		if (tac != 0){
 			for (unsigned int p=1; p<=number_of_players; p+=1){
@@ -2964,6 +2986,9 @@ int main (void) {
 		if (gamemode == 8) {
 			show_field (Field, m, n, gamemode, information_code, geben, Colored);
 		}
+		
+		scanf("%u", &lim);	//test
+		printf("	#line 2988, before count_freq \n");	//test
 		
 		count_freq = 1;
 		
@@ -2993,6 +3018,9 @@ int main (void) {
 			
 		}
 		
+		scanf("%u", &lim);	//test
+		printf("	#line 3007, before limit_at_all_saver \n");	//test
+		
 		limit_at_all_saver = limit_at_all;
 		
 		if ((gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {
@@ -3009,6 +3037,9 @@ int main (void) {
 				scanf("%u", &survive_different);
 			}
 		}
+		
+		scanf("%u", &lim);	//test
+		printf("	#line 3021, before while \n");	//test
 		
 		while (g != 0){
 			Spielfeld temp;
@@ -3048,6 +3079,9 @@ int main (void) {
 			}
 			
 			geben = ((g-1)%number_of_players)+1;
+			
+			scanf("%u", &lim);	//test
+			printf("	#line 3060, after geben-def \n");	//test
 			
 			/* printf("	test \n");
 			show_field (Field, m, n, gamemode, information_code, geben, Colored);	//test
@@ -4477,6 +4511,9 @@ int main (void) {
 				
 			}
 			
+			scanf("%u", &lim);	//test
+			printf("	#line 4494, komplette durchrechnung \n");	//test
+			
 			if (gamemode == 11) {	//Ausscheiden der Teams?
 				if (position[0] == 1) {	//links
 					if ((number_of_players == 2)||(number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
@@ -5690,7 +5727,7 @@ int main (void) {
 				}
 			} else {
 				
-				//printf("	Checkpoint: var_[1] accepted \n");	//test
+				printf("	Checkpoint: var_[geben] accepted \n");	//test
 				
 				if (var_[geben] == 100){		//1, 2, 3,... durch "geben" ersetzen, go on
 					
@@ -5753,7 +5790,9 @@ int main (void) {
 					var_[0] = 0;
 					
 					if (var_[geben] < 50){
-	
+						
+						printf("	Checkpoint: var_[geben]<50 accepted \n");	//test
+						
 						if (var_[geben] == 11){numbers_of_[geben][1][0] += 1; Plus (m, n, geben, Field, limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);}
 						if (var_[geben] == 12){numbers_of_[geben][1][0] += 1; Minus (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);}
 						if (var_[geben] == 21){numbers_of_[geben][2][0] += 1; Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);}
@@ -5769,17 +5808,22 @@ int main (void) {
 							}
 						}
 					} else {
+						
+						printf("	Checkpoint: var_[geben]>50 accepted \n");	//test
+						
 						if (var_[geben] == 51){numbers_of_[geben][5][0] += 1; w += 1;}		//w
 						if (var_[geben] == 52){numbers_of_[geben][5][0] += 1; w -= 1;}		//w
 						if (var_[geben] == 61){numbers_of_[geben][6][0] += 1; e += 1;}		//e
 						if (var_[geben] == 62){numbers_of_[geben][6][0] += 1; if (d != 0) {d -= 1;} else {d = 10;}}		//d
 					}
 					
+					printf("	Checkpoint: Funktions accepted \n");	//test
+					
 					if (ttt != 0) {
 						time2 = time(NULL);		//wirklich die eingabe abwarten, done
 						time_warning = ((difftime(time2, time1)) - time_saver);
 						
-						//printf("	time_warning: %f \n", time_warning);		//test
+						///printf("	time_warning: %f \n", time_warning);		//test
 						
 						if ((pere[geben] != 0)&&((pere[geben] + warning_system) <= 6)) {
 							if (pere[geben] == 1) {
@@ -5848,7 +5892,9 @@ int main (void) {
 					
 					new_life (Field, m, n, w, gamemode, information_code, geben, Sf_nl_, Sf_od_);
 					
-					//show_field (Sf_nl_, m, n, gamemode, information_code, geben);	// test
+					printf("	Checkpoint: new_life accepted \n");	//test
+					
+					show_field (Sf_nl_, m, n, gamemode, information_code, geben, Colored);	// test
 					
 					if (gamemode == 6) {
 						
@@ -8113,12 +8159,25 @@ int main (void) {
 
 Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players) {
 	Spielfeld Field;
+	
+	printf("Checkpoint: Start of Spielfeld_Create	\n ");	//test
+	
 	Field = calloc(number_of_players, sizeof(unsigned int**));
+	
+	printf("Checkpoint: 1st step of Spielfeld_Create	\n ");	//test
+	
 	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {	//geben und i, um zugehörigkeit zu verdeutlichen
 		Field[geben] = calloc(m, sizeof(unsigned int*));
+		
+		printf("Checkpoint: 2nd step of Spielfeld_Create	\n ");	//test
+		
 		for (unsigned int i=0; i<m; i+=1) {
 			Field[geben][i] = calloc(n, sizeof(unsigned int));
+			
+			printf("Checkpoint: 3rd step of Spielfeld_Create	\n ");	//test
+			
 		}
+		
 	}
 	return Field;
 }
@@ -9356,7 +9415,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 	Spielfeld Sf_temp;
 	unsigned int a, inhi;
 	
-	//printf("	w: %u\n", w);	//test
+	printf("	w: %u\n", w);	//test
 	
 	Sf_temp = Spielfeld_Create (m, n, 0);		//inhibitor in informationcode[1], ability ist in information_code[0]
 	a = 0;
@@ -9610,6 +9669,8 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 			}
 		}
 	}
+	
+	printf("end of new_life");	//test
 	
 }
 
