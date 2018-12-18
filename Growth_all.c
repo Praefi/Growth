@@ -34,24 +34,7 @@ void Revive (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
 
 void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
 
-Spielfeld Index_1 (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_2 (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_1_col (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_2_col (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_1_con (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
-Spielfeld Index_2_con (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
-Spielfeld Index_1_fal (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_2_fal (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_1_fig (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_2_fig (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_1_race (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_2_race (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_1_rain (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_2_rain (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_1_hunt (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int);
-Spielfeld Index_other_hunt (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
-Spielfeld Index_are (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
-Spielfeld Index_dyn (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*);
+void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*);
 
 Spielfeld opague_builder (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
@@ -14431,297 +14414,58 @@ Spielfeld Index_1_rain (unsigned int ent, unsigned int count_new, unsigned int m
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2_rain (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int rain, unsigned int zeitgewinner){
-	unsigned int Index_Wert_2, a, b, c, f, ind_2, ind_4, ind, ober;
-	Spielfeld Index_2_Feld;
+Spielfeld Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position, unsigned int gamemode){
+	unsigned int Index_Wert, a, b, c, f, ind, ober, heart_i, heart_j, keep;
+	Spielfeld Index_Feld;
 	
 	ind = 0;
+	keep = 0;
 	f = 0;
 	b = 0;
 	c = 0;
 	a = 0;
-	Index_Wert_2 = 0;
-	Index_2_Feld = Spielfeld_Create (m, n);
+	Index_Wert = 0;
+	Index_Feld = Spielfeld_Create (m, n, 0);
 	
-	if (zeitgewinner >= limit_at_all) {
+	if (d == 10) {	//arena
+		d = 0;
+	}
+	
+	if ((gamemode == 6)&&(geben == 1)) {
+		if (ent == limit_new) {
+			ent = (ent + (number_of_players-3));
+		} else if (ent == limit_at_all) {
+			ent = (ent + 2* (number_of_players-3));
+		}
+		
+		limit_new = (limit_new + (number_of_players-3));
+		limit_at_all = (limit_at_all + (2*(number_of_players-3)));
+	
+	}
+	
+	if (gamemode == 6) {
 		for (unsigned int i=1; i<m-1; i+=1){
 			for (unsigned int j=1; j<n-1; j+=1){
-				if (Sf_nl_2[i][j] == 2){
-					Sf_nl_2[i][j] = 0;
-				}
-			}
-		}
-	} else {
-		while ((ind != 1)&&(ind != 2)){
-			printf (" Where do you want to keep them: \n");
-			if (ent == limit_new){
-				printf(" #produce	bottom: 1		top: 2 \n");
-				scanf("%u", &ind_2);
-				ind = ind_2;
-			}
-			
-			if (ent >= (limit_at_all - 4)){
-				printf(" #reduce	bottom: 1		top: 2 \n");
-				scanf("%u", &ind_4);
-				ind = ind_4;
-			}
-		}
-		ober = 87;
-		while (count_new > ent){
-			for (unsigned int i=1; i<m-1; i+=1){
-				for (unsigned int j=1; j<n-1; j+=1){
-					if (Sf_nl_2[i][j] == 2){
-						
-						for (unsigned int h=i-1; h<=i+1; h+=1){		//Stirbt Zelle?
-							for (unsigned int k=j-1; k<=j+1; k+=1){
-								if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-									if ((Sf_nl_2[h][k] == 2) || ((Field[0][h][k] == 2) && (Sf_od_2[h][k] == 0))){
-										a+=1;
-									}
-								}
-							}	
-						}
-						if (a > 4){
-							Index_Wert_2 += 3;
-						}
-						a = 0;
-						
-						Index_Wert_2 += 8;
-						
-						for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert neue Zellen?
-							for (unsigned int k=j-1; k<=j+1; k+=1){
-								if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-									if (((Field[0][h][k] == 0) || ((Field[0][h][k] == 2)&&(Sf_od_2[h][k] == 202))) && (Sf_nl_2[h][k] == 0)){
-										for (unsigned int u=h-1; u<=h+1; u+=1){
-											for (unsigned int o=k-1; o<=k+1; o+=1){
-												if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-													if ((Sf_nl_2[u][o] == 2) || ((Field[0][u][o] == 2) && (Sf_od_2[u][o] == 0))){
-														a += 1;
-													}
-												}
-											}
-										}
-										if (a == 3){
-											Index_Wert_2 -= 1;
-										}
-										a = 0;
-									}
-								}
-							}
-						}
-						
-														//printf("%u \n", Index_Wert_2);
-						for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert ihr Tod neue Zellen?
-							for (unsigned int k=j-1; k<=j+1; k+=1){
-								if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-									if (((Field[0][h][k] == 0) || ((Field[0][h][k] == 2)&&(Sf_od_2[h][k] == 202))) && (Sf_nl_2[h][k] == 0)){
-										for (unsigned int u=h-1; u<=h+1; u+=1){
-											for (unsigned int o=k-1; o<=k+1; o+=1){
-												if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-													if ((Sf_nl_2[u][o] == 2) || ((Field[0][u][o] == 2) && (Sf_od_2[u][o] == 0))){
-														a += 1;
-													}
-												}
-											}
-										}
-										if (a == 4){
-											Index_Wert_2 += 1;
-										} 
-										a = 0;
-										
-									}
-								}
-							}
-						}
-						
-						for (unsigned int h=i-1; h<=i+1; h+=1){		//sterben eigene Zellen?
-							for (unsigned int k=j-1; k<=j+1; k+=1){
-								if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-									if (((Field[0][h][k] == 2) && (Sf_od_2[h][k] == 0)) ||(Sf_nl_2[h][k] == 2)){
-										for (unsigned int u=h-1; u<=h+1; u+=1){
-											for (unsigned int o=k-1; o<=k+1; o+=1){
-												if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-													if ((Sf_nl_2[u][o] == 2) || ((Field[0][u][o] == 2) && (Sf_od_2[u][o] == 0))){
-														a += 1;
-													}
-												}
-											}
-										}
-										if (a > 4){
-											Index_Wert_2 += 3;
-										}
-										a = 0;
-									}
-								}
-							}
-						}
-						
-						for (unsigned int h=i-1; h<=i+1; h+=1){		//tötet ihr Tod eigene Zellen?
-							for (unsigned int k=j-1; k<=j+1; k+=1){
-								if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-									if (((Field[0][h][k] == 2) && (Sf_od_2[h][k] == 0)) ||(Sf_nl_2[h][k] == 2)){
-										for (unsigned int u=h-1; u<=h+1; u+=1){
-											for (unsigned int o=k-1; o<=k+1; o+=1){
-												if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-													if ((Sf_nl_2[u][o] == 2) || ((Field[0][u][o] == 2) && (Sf_od_2[u][o] == 0))){
-														a += 1;
-													}
-												}
-											}
-										}
-										if (a < 4){
-											b = 1;
-										}
-										a = 0;							
-									}
-								}
-							}
-						}
-						if (b != 1){
-							Index_Wert_2 += 10;
-						} 
-						b = 0;
-						
-						if (j > ((n-1)/2)){
-							Index_Wert_2 += (j-(n-1)/2);
-						} else if (j < ((n-1)/2)){
-							Index_Wert_2 += (((n-1)/2)-j);
-						}
-						Index_Wert_2 += i;
-						
-						if (ind == 2) {
-							Index_Wert_2 += i;
-						}
-						if (ind == 1) {
-							Index_Wert_2 += (6-i);
-						}
-						
-						if ((i <= 2)&&((j >= ((n-3)/2))&&(j <= ((n+1)/2)))){
-							Index_Wert_2 = 1;
-						}
-						
-						if ((rain == 31)||(rain == 32)||(rain == 2)){
-							if (Field[0][i-1][j] == 7){
-								Index_Wert_2 = 80;
-							}
-						}
-						
-									//printf("%u \n", Index_Wert_2);
-						Index_2_Feld[i][j] = Index_Wert_2;
-						Index_Wert_2 = 0;
-					}
-				}
-			}
-			
-			
-			
-			if (ind == 1){
-				for (unsigned int i=1; i<m-1; i+=1){
-					if (c == 1){
-						break;
-					}
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Index_2_Feld[i][j] == ober){
-							Index_2_Feld[i][j] = 0;
-							Sf_nl_2[i][j] = 0;
-							count_new -= 1;
-							ober = 87;
-							c = 1;
-							break;
-						}
-					}
-				}
-				if (c == 0){
-					ober -= 1;
-				}
-			}
-				
-			if (ind == 2) {
-				for (unsigned int i=(m-2); i>0; i-=1){
-					if (c == 1){
-						break;
-					}
-					for (unsigned int j=(n-2); j>0; j-=1){
-						if (Index_2_Feld[i][j] == ober){
-							Index_2_Feld[i][j] = 0;
-							Sf_nl_2[i][j] = 0;
-							count_new -= 1;
-							ober = 87;
-							c = 1;
-							break;
-						}
-					}
-				}
-				if (c == 0){
-					ober -= 1;
-				}
-			}
-			c = 0;
-			
-			for (unsigned int t=1; t<m-1; t+=1){
-				if (f == 1){
+				if (Field[0][i][j] == 11) {
+					heart_i = i;
+					heart_j = j;
+					a = 1;
 					break;
 				}
-				for (unsigned int z=1; z<n-1; z+=1){
-					if (Sf_nl_2[t][z] == 2){
-						f = 1;
-						break;
-					}
-				}
 			}
-			if (f == 0){
-				break;
-			}
-			f = 0;
-		}
-	}
-	
-	
-	Spielfeld_Destroy (Index_2_Feld, m);
-	
-	return Sf_nl_2;
-}
-
-Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int number_of_players){
-	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober, heart_i, heart_j;
-	Spielfeld Index_1_Feld;
-	
-	ind = 0;
-	f = 0;
-	b = 0;
-	c = 0;
-	a = 0;
-	Index_Wert_1 = 0;
-	Index_1_Feld = Spielfeld_Create (m, n);
-	
-	if (ent == limit_new) {
-		ent = (ent + (number_of_players-3));
-	} else if (ent == limit_at_all) {
-		ent = (ent + 2* (number_of_players-3));
-	}
-	
-	limit_new = (limit_new + (number_of_players-3));
-	limit_at_all = (limit_at_all + (2*(number_of_players-3)));
-	
-	for (unsigned int i=1; i<m-1; i+=1){
-		for (unsigned int j=1; j<n-1; j+=1){
-			if (Field[0][i][j] == 11) {
-				heart_i = i;
-				heart_j = j;
-				a = 1;
+			if (a == 1) {
 				break;
 			}
 		}
-		if (a == 1) {
-			break;
-		}
+		a = 0;
+		
+		Field[0][heart_i][heart_j] = 1;	//heart versteckt
 	}
-	a = 0;
 	
 	if (zeitgewinner >= limit_at_all) {
 		for (unsigned int i=1; i<m-1; i+=1){
 			for (unsigned int j=1; j<n-1; j+=1){
-				if (Sf_nl_[geben][i][j] == 1){
+				if (Sf_nl_[geben][i][j] == geben){
 					Sf_nl_[geben][i][j] = 0;
 				}
 			}
@@ -14734,166 +14478,132 @@ Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m
 			printf (" How do you want to play: \n");
 			printf (" \n");
 			if (ent == limit_new){
-				printf(" #produce	defensive: 1		offensive: 2 \n");
-				scanf("%u", &ind_1);
-				ind = ind_1;
+				if ((gamemode == 11)||(gamemode == 9)) {
+					printf(" #produce	defensive: 1		offensive: 2 \n");
+					scanf("%u", &ind);
+				} else if (gamemode == 6) {
+					printf(" #produce	defensive: 2		offensive: 1 \n");
+					scanf("%u", &ind);
+				} else if (gamemode == 8) {
+					printf(" #produce	keep bottom: 1		keep top: 2 \n");
+					scanf("%u", &keep);
+					ind = 1;
+				}
 			}
 			
-			if (ent == limit_at_all){
-				printf(" #reduce	defensive: 1		offensive: 2 \n");
-				scanf("%u", &ind_3);
-				ind = ind_3;
+			if (ent >= (limit_at_all - 4)){		//min 5/10, watch out with hunt on 2 players
+				if ((gamemode == 11)||(gamemode == 9)) {
+					printf(" #reduce	defensive: 1		offensive: 2 \n");
+					scanf("%u", &ind);
+				} else if (gamemode == 6) {
+					printf(" #produce	defensive: 2		offensive: 1 \n");
+					scanf("%u", &ind);
+				} else if (gamemode == 8) {
+					printf(" #produce	keep bottom: 1		keep top: 2 \n");
+					scanf("%u", &keep);
+					ind = 1;
+				}
+				
 			}
 			printf (" \n");
 		}
-											//printf("ent: %u \n", ent); printf("\n");
-											//printf("ind: %u \n", ind); printf("\n");
-											//printf("count_new: %u \n", count_new); printf("\n");
 		if (ind == 1) {
-			ober = m+n;
-			while (count_new > ent){
-				for (unsigned int i=1; i<m-1; i+=1){
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Sf_nl_[geben][i][j] == 1){
-							if (j >= heart_j) {
-								if (i >= heart_i) {
-									Index_Wert_1 = (i-heart_i-heart_j+j);
-								} else if (i < heart_i) {
-									Index_Wert_1 = (heart_i-i-heart_j+j);
-								}
-							} else if (j < heart_j) {
-								if (i >= heart_i) {
-									Index_Wert_1 = (i+heart_j-heart_i-j);
-								} else if (i < heart_i) {
-									Index_Wert_1 = (heart_i+heart_j-i-j);
-								}
-							}
-							
-							Index_1_Feld[i][j] = Index_Wert_1;
-							Index_Wert_1 = 0;
-						}
-					}
-				}
-				
-				
-				
-				for (unsigned int i=1; i<m-1; i+=1){
-					if (c == 1){
-						break;
-					}
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Index_1_Feld[i][j] == ober){
-							Index_1_Feld[i][j] = 0;
-							Sf_nl_[geben][i][j] = 0;
-							count_new -= 1;
-							ober = m+n;
-							c = 1;
-							break;
-						}
-					}
-				}
-				if (c == 0){
-					ober -= 1;
-				}
-				
-				c = 0;
-				for (unsigned int t=1; t<m-1; t+=1){
-					if (f == 1){
-						break;
-					}
-					for (unsigned int z=1; z<n-1; z+=1){
-						if (Sf_nl_[geben][t][z] >= 1){
-							f = 1;
-							break;
-						}
-					}
-				}
-				if (f == 0){
-					break;
-				}
-				f = 0;
+			if (gamemode == 11) {
+				ober = 80;
+			} else if ((gamemode == 9)||(gamemode == 6)) {
+				ober = 90;
+			} else if (gamemode == 8) {
+				ober = 87;
 			}
+			
 		} else if (ind == 2) {
-			ober = 90;
-			while (count_new > ent){
+			if ((gamemode == 11)||(gamemode == 6) {
+				ober = m+n;
+			} else if ((gamemode == 9)) {
+				ober = 10;
+			}
+			
+			
+		}
+		
+		
+		while (count_new > ent){
+			if (ind == 1) {
+				
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
-						if (Sf_nl_[geben][i][j] == 1){
+						if (Sf_nl_[geben][i][j] == geben){
 							
 							for (unsigned int h=i-1; h<=i+1; h+=1){		//Stirbt Zelle?
 								for (unsigned int k=j-1; k<=j+1; k+=1){
 									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if ((Sf_nl_[geben][h][k] == 1) || (((Field[0][h][k] == 11)||(Field[0][h][k] == 1)) && (Sf_od_[geben][h][k] == 0))){
+										if ((Sf_nl_[geben][h][k] == geben) || ((Field[0][h][k] == geben) && (Sf_od_[geben][h][k] == 0))){
 											a+=1;
 										}
 									}
 								}	
 							}
-							if (a > 4){
-								Index_Wert_1 += 3;
-																	//printf("1.  %u \n", Index_Wert_1);
+							if (a > e+1){
+								Index_Wert += 3;
 							}
 							a = 0;
 							
-							Index_Wert_1 += (8*ind);
+							Index_Wert += (8*ind);
 							for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert neue Zellen?
 								for (unsigned int k=j-1; k<=j+1; k+=1){
 									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == 0) || ((Field[0][h][k] == 1)&&(Sf_od_[geben][h][k] == 101*geben))) && (Sf_nl_[geben][h][k] == 0)){
+										if (((Field[0][h][k] == 0) || ((Field[0][h][k] == geben)&&(Sf_od_[geben][h][k] == 101*geben))) && (Sf_nl_[geben][h][k] == 0)){
 											for (unsigned int u=h-1; u<=h+1; u+=1){
 												for (unsigned int o=k-1; o<=k+1; o+=1){
 													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl_[geben][u][o] == 1) || (((Field[0][u][o] == 1)||(Field[0][u][o] == 11)) && (Sf_od_[geben][u][o] == 0))){
+														if ((Sf_nl_[geben][u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od_[geben][u][o] == 0))){
 															a += 1;
 														}
 													}
 												}
 											}
-											if (a == 3){
-												Index_Wert_1 -= ind;
-																			//printf("2.  %u \n", Index_Wert_1);
+											if (a == w){
+												Index_Wert -= ind;
 											}
 											a = 0;
 										}
 									}
 								}
 							}
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Stört feindliches Wachstum?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if ((Field[0][h][k] != 1)&&(Field[0][h][k] != 11)){
-											a+=1;
+							if ((gamemode == 9)||(gamemode == 6)) {
+								for (unsigned int h=i-1; h<=i+1; h+=1){		//Stört feindliches Wachstum?
+									for (unsigned int k=j-1; k<=j+1; k+=1){
+										if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
+											
+											if (Field[0][h][k] != geben){
+												a+=1;
+											}
+											
 										}
-									}
-								}	
-							}
-							if (a != 3){
-								Index_Wert_1 += 10;
-																//printf("3.  %u \n", Index_Wert_1);
-							}
-							a = 0;
-							
-							if ((Field[0][i-1][j]!=11)&&(Field[0][i][j-1]!=11)&&(Field[0][i+1][j]!=11)&&(Field[0][i][j+1]!=11)){
-								Index_Wert_1 += 10;
+									}	
+								}
+								if (a != 3){
+									Index_Wert += 10;
+								}
+								a = 0;
+								
 							}
 							
 							for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert ihr Tod neue Zellen?
 								for (unsigned int k=j-1; k<=j+1; k+=1){
 									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if ((((Field[0][h][k] == 0) || ((Field[0][h][k] == 1)&&(Sf_od_[geben][h][k] == 101*geben))) && (Sf_nl_[geben][h][k] == 0))&&(Field[0][h][k] != 11)){
+										if (((Field[0][h][k] == 0) || ((Field[0][h][k] == geben)&&(Sf_od_[geben][h][k] == 101*geben))) && (Sf_nl_[geben][h][k] == 0)){
 											for (unsigned int u=h-1; u<=h+1; u+=1){
 												for (unsigned int o=k-1; o<=k+1; o+=1){
 													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl_[geben][u][o] == 1) || (((Field[0][u][o] == 1)||(Field[0][u][o] == 11)) && (Sf_od_[geben][u][o] == 0))){
+														if ((Sf_nl_[geben][u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od_[geben][u][o] == 0))){
 															a += 1;
 														}
 													}
 												}
 											}
-											if (a == 4){
-												Index_Wert_1 += ind;
-																			//printf("4.  %u \n", Index_Wert_1);
+											if (a == w+1){
+												Index_Wert += ind;
 											} 
 											a = 0;
 											
@@ -14905,19 +14615,18 @@ Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m
 							for (unsigned int h=i-1; h<=i+1; h+=1){		//sterben eigene Zellen?
 								for (unsigned int k=j-1; k<=j+1; k+=1){
 									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == 1) && (Sf_od_[geben][h][k] == 0)) ||(Sf_nl_[geben][h][k] == 1)){
+										if (((Field[0][h][k] == geben) && (Sf_od_[geben][h][k] == 0)) ||(Sf_nl_[geben][h][k] == geben)){
 											for (unsigned int u=h-1; u<=h+1; u+=1){
 												for (unsigned int o=k-1; o<=k+1; o+=1){
 													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if (((Sf_nl_[geben][u][o] == 1) || ((Field[0][u][o] == 1) && (Sf_od_[geben][u][o] == 0)))||(Field[0][u][o] == 11)){
+														if ((Sf_nl_[geben][u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od_[geben][u][o] == 0))){
 															a += 1;
 														}
 													}
 												}
 											}
-											if (a > 4){
-												Index_Wert_1 += 3;
-																			//printf("5.  %u \n", Index_Wert_1);
+											if (a > e+1){
+												Index_Wert += 3;
 											}
 											a = 0;
 										}
@@ -14928,17 +14637,17 @@ Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m
 							for (unsigned int h=i-1; h<=i+1; h+=1){		//tötet ihr Tod eigene Zellen?
 								for (unsigned int k=j-1; k<=j+1; k+=1){
 									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == 1) && (Sf_od_[geben][h][k] == 0)) ||(Sf_nl_[geben][h][k] == 1)){
+										if (((Field[0][h][k] == geben) && (Sf_od_[geben][h][k] == 0)) ||(Sf_nl_[geben][h][k] == geben)){
 											for (unsigned int u=h-1; u<=h+1; u+=1){
 												for (unsigned int o=k-1; o<=k+1; o+=1){
 													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if (((Sf_nl_[geben][u][o] == 1) || ((Field[0][u][o] == 1) && (Sf_od_[geben][u][o] == 0)))||(Field[0][u][o] == 11)){
+														if ((Sf_nl_[geben][u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od_[geben][u][o] == 0))){
 															a += 1;
 														}
 													}
 												}
 											}
-											if (a < 4){
+											if (a < d+1){
 												b = 1;
 											}
 											a = 0;
@@ -14947,166 +14656,196 @@ Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m
 								}
 							}
 							if (b != 1){
-								Index_Wert_1 += 10;
-																		//printf("6.  %u \n", Index_Wert_1);
+								Index_Wert += 10;
 							} 
 							b = 0;
 							
-																				//printf("	%u	%u	%u \n", i, j, Index_Wert_1);
-							Index_1_Feld[i][j] = Index_Wert_1;
-							Index_Wert_1 = 0;
-						}
-					}
-				}
-				//printf("\n");
-				
-				if (ind == 2){
-					for (unsigned int i=1; i<m-1; i+=1){
-						if (c == 1){
-							break;
-						}
-						for (unsigned int j=1; j<n-1; j+=1){
-							if (Index_1_Feld[i][j] == ober){
-								Index_1_Feld[i][j] = 0;
-								Sf_nl_[geben][i][j] = 0;
-								count_new -= 1;
-								ober = 90;
-								c = 1;
-								break;
+							if (keep == 1) {
+								Index_Wert += (6-i);
+							} else if (keep == 2) {
+								Index_Wert += i;
 							}
-						}
-					}
-					if (c == 0){
-						ober -= 1;
-					}
-				}
-				
-				if (ind == 1) {
-					for (unsigned int i=m-2; i>0; i-=1){
-						if (c == 1){
-							break;
-						}
-						for (unsigned int j=n-2; j>0; j-=1){
-							if (Index_1_Feld[i][j] == ober){
-								Index_1_Feld[i][j] = 0;
-								Sf_nl_[geben][i][j] = 0;
-								count_new -= 1;
-								ober = 90;
-								c = 1;
-								break;
-							}
-						}
-					}
-					if (c == 0){
-						ober -= 1;
-					}
-				}
-				
-				c = 0;
-																//printf("ent: %u \n", ent); printf("\n");
-																//printf("ind: %u \n", ind); printf("\n");
-																//printf("count_new: %u \n", count_new); printf("\n");
-				
-				for (unsigned int t=1; t<m-1; t+=1){
-					if (f == 1){
-						break;
-					}
-					for (unsigned int z=1; z<n-1; z+=1){
-						if (Sf_nl_[geben][t][z] == 1){
-							f = 1;
-							break;
-						}
-					}
-				}
-				if (f == 0){
-					break;
-				}
-				f = 0;
-			}
-		}
-				//zu viele generiert, da Index_field[i][j] nicht zurückgesetzt, daher count_new mehrfach reduziert.
-		
-	}
-	
-	
-	
-	Spielfeld_Destroy (Index_1_Feld, m);
-	
-	return Sf_nl_[geben];
-}
-
-Spielfeld Index_other_hunt (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl_other_hunt, unsigned int geben, unsigned int zeitgewinner, Spielfeld Field, unsigned int limit_at_all){
-	unsigned int Index_Wert_other_hunt, a, c, f, ober, heart_i, heart_j;
-	Spielfeld Index_other_hunt_Feld;		//mehr als Limit-Steine auf dem Feld, Problem analysieren und beheben!
-	
-	c = 0;
-	f = 0;
-	a = 0;
-	heart_i = 0;
-	heart_j = 0;
-	Index_Wert_other_hunt = 0;
-	Index_other_hunt_Feld = Spielfeld_Create (m, n);
-	
-	for (unsigned int i=1; i<m-1; i+=1){
-		for (unsigned int j=1; j<n-1; j+=1){
-			if (Field[0][i][j] == 11) {
-				heart_i = i;
-				heart_j = j;
-				a = 1;
-				break;
-			}
-		}
-		if (a == 1) {
-			break;
-		}
-	}
-	a = 0;
-	
-	if (zeitgewinner >= limit_at_all) {
-		for (unsigned int i=1; i<m-1; i+=1){
-			for (unsigned int j=1; j<n-1; j+=1){
-				if (Sf_nl_other_hunt[i][j] == geben) {
-					Sf_nl_other_hunt[i][j] = 0;
-				}
-			}
-		}
-	} else {
-	
-		ober = m+n;
-		while (count_new > ent){
-			for (unsigned int i=1; i<m-1; i+=1){
-				for (unsigned int j=1; j<n-1; j+=1){
-					if (Sf_nl_other_hunt[i][j] == geben){
-						if (j >= heart_j) {
-							if (i >= heart_i) {
-								Index_Wert_other_hunt = (i-heart_i-heart_j+j);
-							} else if (i < heart_i) {
-								Index_Wert_other_hunt = (heart_i-i-heart_j+j);
-							}
-						} else if (j < heart_j) {
-							if (i >= heart_i) {
-								Index_Wert_other_hunt = (i+heart_j-heart_i-j);
-							} else if (i < heart_i) {
-								Index_Wert_other_hunt = (heart_i+heart_j-i-j);
-							}
-						}
 							
-						Index_other_hunt_Feld[i][j] = Index_Wert_other_hunt;
-						Index_Wert_other_hunt = 0;
+							if (gamemode == 11) {
+								if ((i == position[1])||(j == position[0])) {
+									Index_Wert = 1;
+								}
+							} else if (gamemode == 6) {
+								if ((i+1 != heart_i)&&(i-1 != heart_i)&&(j-1 != heart_j)&&(j+1 != heart_j)){
+									Index_Wert_1 += 10;
+								}
+							} else if (gamemode == 8) {
+								if (j > ((n-1)/2)){
+									Index_Wert += (j-(n-1)/2);
+								} else if (j < ((n-1)/2)){
+									Index_Wert += (((n-1)/2)-j);
+								}
+								Index_Wert += i;
+								
+								if ((i <= 2)&&((j >= ((n-3)/2))&&(j <= ((n+1)/2)))){
+									Index_Wert = 0;
+								}
+								
+								if ((rain == 31)||(rain == 32)||(rain == 2)){
+									if (Field[0][i-1][j] == 7){
+										Index_Wert = 80;
+									}
+								}
+								
+							}
+							
+							Index_Feld[0][i][j] = Index_Wert;
+							Index_Wert = 0;
+						}
+					}
+				}
+			} else if (ind == 2) {
+				a = 0;
+				
+				for (unsigned int i=1; i<m-1; i+=1){
+					for (unsigned int j=1; j<n-1; j+=1){
+						if (Sf_nl_[geben][i][j] == geben){
+							
+							if (gamemode == 11) {
+								Index_Feld[0][i][j] = abs(i-position[1])+abs(j-position[0]);
+							} else if (gamemode == 9) {
+								for (unsigned int h=i-1; h<=i+1; h+=1){
+									for (unsigned int k=j-1; k<=j+1; k+=1){
+										if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
+											if ((Field[0][h][k] != geben)&&(Field[0][h][k] != 0)) {
+												Index_Wert += 1;
+											} else if (Field[0][h][k] == geben) {
+												a += 1;
+											}
+										}
+									}
+								}
+								
+								if ((a > d)&&(a <= e+1)) {
+									Index_Wert += 1;
+								}
+								a = 0;
+								Index_Feld[i][j] = (10 - Index_Wert);
+								Index_Wert = 0;
+							} else if (gamemode == 6) {
+								if (j >= heart_j) {
+									if (i >= heart_i) {
+										Index_Wert = (i-heart_i-heart_j+j);
+									} else if (i < heart_i) {
+										Index_Wert = (heart_i-i-heart_j+j);
+									}
+								} else if (j < heart_j) {
+									if (i >= heart_i) {
+										Index_Wert = (i+heart_j-heart_i-j);
+									} else if (i < heart_i) {
+										Index_Wert = (heart_i+heart_j-i-j);
+									}
+								}
+								
+								Index_Feld[0][i][j] = Index_Wert;
+								Index_Wert = 0;
+							}
+							
+							
+						}
 					}
 				}
 			}
 			
-			
+			if (gamemode == 6) {
+				Field[0][heart_i][heart_j] = 11;	//verstecken von heart undone
+			}
 			
 			for (unsigned int i=1; i<m-1; i+=1){
 				if (c == 1){
 					break;
 				}
 				for (unsigned int j=1; j<n-1; j+=1){
-					if (Index_other_hunt_Feld[i][j] == ober){
-						Index_other_hunt_Feld[i][j] = 0;
-						Sf_nl_other_hunt[i][j] = 0;
+				if (Index_Feld[0][i][j] == ober){
+						Index_Feld[0][i][j] = 0;
+						Sf_nl_[geben][i][j] = 0;
+						count_new -= 1;
+						if (ind  == 2) {
+							if ((gamemode == 11)||((gamemode == 6)&&(geben == 1))) {
+								ober = m+n;
+							} else if ((gamemode == 9)) {
+								ober = 10;
+							}
+						} else if (ind == 1) {
+							
+							if (gamemode == 11) {
+								ober = 80;
+							} else if ((gamemode == 9)||((gamemode == 6)&&(geben == 1))) {
+								ober = 90;
+							}
+						}
+						
+						c = 1;
+						break;
+					}
+				}
+			}
+			
+			if (c == 0){
+				ober -= 1;
+			}
+			
+			c = 0;
+															//printf("ent: %u \n", ent); printf("\n");
+															//printf("ind: %u \n", ind); printf("\n");
+															//printf("count_new: %u \n", count_new); printf("\n");
+				
+			for (unsigned int t=1; t<m-1; t+=1){
+				if (f == 1){
+					break;
+				}
+				for (unsigned int z=1; z<n-1; z+=1){
+					if (Sf_nl_[geben][t][z] == geben){
+						f = 1;
+						break;
+					}
+				}
+			}
+			if (f == 0){
+				break;
+			}
+			f = 0;			
+		}
+	} else if ((gamemode == 6)&&(geben != 1)) {
+		
+		ober = m+n;
+		while (count_new > ent){
+			for (unsigned int i=1; i<m-1; i+=1){
+				for (unsigned int j=1; j<n-1; j+=1){
+					if (Sf_nl_[geben][i][j] == geben){
+						if (j >= heart_j) {
+							if (i >= heart_i) {
+								Index_Wert = (i-heart_i-heart_j+j);
+							} else if (i < heart_i) {
+								Index_Wert = (heart_i-i-heart_j+j);
+							}
+						} else if (j < heart_j) {
+							if (i >= heart_i) {
+								Index_Wert = (i+heart_j-heart_i-j);
+							} else if (i < heart_i) {
+								Index_Wert = (heart_i+heart_j-i-j);
+							}
+						}
+							
+						Index_Feld[0][i][j] = Index_Wert;
+						Index_Wert = 0;
+					}
+				}
+			}
+			
+			for (unsigned int i=1; i<m-1; i+=1){
+				if (c == 1){
+					break;
+				}
+				for (unsigned int j=1; j<n-1; j+=1){
+					if (Index_Feld[i][j] == ober){
+						Index_Feld[i][j] = 0;
+						Sf_nl_[geben][i][j] = 0;
 						count_new -= 1;
 						ober = m+n;
 						c = 1;
@@ -15124,7 +14863,7 @@ Spielfeld Index_other_hunt (unsigned int ent, unsigned int count_new, unsigned i
 					break;
 				}
 				for (unsigned int z=1; z<n-1; z+=1){
-					if (Sf_nl_other_hunt[t][z] >= 1){
+					if (Sf_nl_[geben][t][z] >= 1){
 						f = 1;
 						break;
 					}
@@ -15135,539 +14874,9 @@ Spielfeld Index_other_hunt (unsigned int ent, unsigned int count_new, unsigned i
 			}
 			f = 0;
 		}
-	
+		
 	}
 	
-	Spielfeld_Destroy (Index_other_hunt_Feld, m);
-	
-	return Sf_nl_other_hunt;
-}
-
-Spielfeld Index_are (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben){
-	unsigned int Index_Wert, a, b, c, f, ind, ober;
-	Spielfeld Index_Feld;
-	
-	ind = 0;
-	f = 0;
-	b = 0;
-	c = 0;
-	a = 0;
-	Index_Wert = 0;
-	Index_Feld = Spielfeld_Create (m, n);
-	
-	if (d == 10) {
-		d = 0;
-	}
-	
-	if (zeitgewinner >= limit_at_all) {
-		for (unsigned int i=1; i<m-1; i+=1){
-			for (unsigned int j=1; j<n-1; j+=1){
-				if (Sf_nl[i][j] == geben){
-					Sf_nl[i][j] = 0;
-				}
-			}
-		}
-	} else {
-		
-		while ((ind != 1)&&(ind != 2)){
-			printf (" \n");
-			printf (" \n");
-			printf (" How do you want to play: \n");
-			printf (" \n");
-			if (ent == limit_new){
-				printf(" #produce	defensive: 1		offensive: 2 \n");
-				scanf("%u", &ind);
-			}
-			
-			if (ent == limit_at_all){
-				printf(" #reduce	defensive: 1		offensive: 2 \n");
-				scanf("%u", &ind);
-			}
-			printf (" \n");
-		}
-		if (ind == 1) {
-			ober = 90;
-		} else if (ind == 2) {
-			ober = 10;
-		}
-		
-		
-		while (count_new > ent){
-			if (ind == 1) {
-				for (unsigned int i=1; i<m-1; i+=1){
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Sf_nl[i][j] == geben){
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Stirbt Zelle?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if ((Sf_nl[h][k] == geben) || ((Field[0][h][k] == geben) && (Sf_od[h][k] == 0))){
-											a+=1;
-										}
-									}
-								}	
-							}
-							if (a > e+1){
-								Index_Wert += 3;
-							}
-							a = 0;
-							
-							Index_Wert += (8*ind);
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert neue Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == 0) || ((Field[0][h][k] == geben)&&(Sf_od[h][k] == (100*geben+geben)))) && (Sf_nl[h][k] == 0)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a == w){
-												Index_Wert -= ind;
-											}
-											a = 0;
-										}
-									}
-								}
-							}
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Stört feindliches Wachstum?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (Field[0][h][k] != geben){
-											a+=1;
-										}
-									}
-								}	
-							}
-							if (a != 3){
-								Index_Wert += 10;
-							}
-							a = 0;
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert ihr Tod neue Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == 0) || ((Field[0][h][k] == geben)&&(Sf_od[h][k] == (100*geben + geben)))) && (Sf_nl[h][k] == 0)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a == w+1){
-												Index_Wert += ind;
-											} 
-											a = 0;
-											
-										}
-									}
-								}
-							}
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//sterben eigene Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == geben) && (Sf_od[h][k] == 0)) ||(Sf_nl[h][k] == geben)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a > e+1){
-												Index_Wert += 3;
-											}
-											a = 0;
-										}
-									}
-								}
-							}
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//tötet ihr Tod eigene Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == geben) && (Sf_od[h][k] == 0)) ||(Sf_nl[h][k] == geben)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a < d+1){
-												b = 1;
-											}
-											a = 0;
-										}
-									}
-								}
-							}
-							if (b != 1){
-								Index_Wert += 10;
-							} 
-							b = 0;
-							
-							Index_Feld[i][j] = Index_Wert;
-							Index_Wert = 0;
-						}
-					}
-				}
-			} else if (ind == 2) {
-				a = 0;
-				for (unsigned int i=1; i<m-1; i+=1){
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Sf_nl[i][j] == geben){
-							for (unsigned int h=i-1; h<=i+1; h+=1){
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if ((Field[0][h][k] != geben)&&(Field[0][h][k] != 0)) {
-											Index_Wert += 1;
-										} else if (Field[0][h][k] == geben) {
-											a += 1;
-										}
-									}
-								}
-							}
-							
-							if ((a > d)&&(a <= e+1)) {
-								Index_Wert += 1;
-							}
-							a = 0;
-							Index_Feld[i][j] = (10 - Index_Wert);
-							Index_Wert = 0;
-						}
-					}
-				}
-			}
-				
-			if (ind == 2){
-				for (unsigned int i=1; i<m-1; i+=1){
-					if (c == 1){
-						break;
-					}
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Index_Feld[i][j] == ober){
-							Index_Feld[i][j] = 0;
-							Sf_nl[i][j] = 0;
-							count_new -= 1;
-							ober = 10;
-							c = 1;
-							break;
-						}
-					}
-				}
-				if (c == 0){
-					ober -= 1;
-				}
-			}
-			
-			if (ind == 1) {
-				for (unsigned int i=m-2; i>0; i-=1){
-					if (c == 1){
-						break;
-					}
-					for (unsigned int j=n-2; j>0; j-=1){
-						if (Index_Feld[i][j] == ober){
-							Index_Feld[i][j] = 0;
-							Sf_nl[i][j] = 0;
-							count_new -= 1;
-							ober = 90;
-							c = 1;
-							break;
-						}
-					}
-				}
-				if (c == 0){
-					ober -= 1;
-				}
-			}
-			
-			c = 0;
-															//printf("ent: %u \n", ent); printf("\n");
-															//printf("ind: %u \n", ind); printf("\n");
-															//printf("count_new: %u \n", count_new); printf("\n");
-				
-			for (unsigned int t=1; t<m-1; t+=1){
-				if (f == 1){
-					break;
-				}
-				for (unsigned int z=1; z<n-1; z+=1){
-					if (Sf_nl[t][z] == geben){
-						f = 1;
-						break;
-					}
-				}
-			}
-			if (f == 0){
-				break;
-			}
-			f = 0;			
-		}
-	}
-	
-	return Sf_nl;
-}
-
-Spielfeld Index_dyn (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position){
-	unsigned int Index_Wert, a, b, c, f, ind, ober;
-	Spielfeld Index_Feld;
-	
-	ind = 0;
-	f = 0;
-	b = 0;
-	c = 0;
-	a = 0;
-	Index_Wert = 0;
-	Index_Feld = Spielfeld_Create (m, n);
-	
-	if (zeitgewinner >= limit_at_all) {
-		for (unsigned int i=1; i<m-1; i+=1){
-			for (unsigned int j=1; j<n-1; j+=1){
-				if (Sf_nl[i][j] == geben){
-					Sf_nl[i][j] = 0;
-				}
-			}
-		}
-	} else {
-		
-		while ((ind != 1)&&(ind != 2)){
-			printf (" \n");
-			printf (" \n");
-			printf (" How do you want to play: \n");
-			printf (" \n");
-			if (ent == limit_new){
-				printf(" #produce	defensive: 1		offensive: 2 \n");
-				scanf("%u", &ind);
-			}
-			
-			if (ent == limit_at_all){
-				printf(" #reduce	defensive: 1		offensive: 2 \n");
-				scanf("%u", &ind);
-			}
-			printf (" \n");
-		}
-		if (ind == 1) {
-			ober = 80;
-		} else if (ind == 2) {
-			ober = m+n;
-		}
-		
-		
-		while (count_new > ent){
-			if (ind == 1) {
-				for (unsigned int i=1; i<m-1; i+=1){
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Sf_nl[i][j] == geben){
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Stirbt Zelle?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if ((Sf_nl[h][k] == geben) || ((Field[0][h][k] == geben) && (Sf_od[h][k] == 0))){
-											a+=1;
-										}
-									}
-								}	
-							}
-							if (a > e+1){
-								Index_Wert += 3;
-							}
-							a = 0;
-							
-							Index_Wert += (8*ind);
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert neue Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == 0) || ((Field[0][h][k] == geben)&&(Sf_od[h][k] == (100*geben+geben)))) && (Sf_nl[h][k] == 0)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a == w){
-												Index_Wert -= ind;
-											}
-											a = 0;
-										}
-									}
-								}
-							}
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//Regeneriert ihr Tod neue Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == 0) || ((Field[0][h][k] == geben)&&(Sf_od[h][k] == (100*geben + geben)))) && (Sf_nl[h][k] == 0)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a == w+1){
-												Index_Wert += ind;
-											} 
-											a = 0;
-											
-										}
-									}
-								}
-							}
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//sterben eigene Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == geben) && (Sf_od[h][k] == 0)) ||(Sf_nl[h][k] == geben)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a > e+1){
-												Index_Wert += 3;
-											}
-											a = 0;
-										}
-									}
-								}
-							}
-							
-							for (unsigned int h=i-1; h<=i+1; h+=1){		//tötet ihr Tod eigene Zellen?
-								for (unsigned int k=j-1; k<=j+1; k+=1){
-									if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-										if (((Field[0][h][k] == geben) && (Sf_od[h][k] == 0)) ||(Sf_nl[h][k] == geben)){
-											for (unsigned int u=h-1; u<=h+1; u+=1){
-												for (unsigned int o=k-1; o<=k+1; o+=1){
-													if ((u>0)&&(u<(m-1))&&(o>0)&&(o<(n-1))){
-														if ((Sf_nl[u][o] == geben) || ((Field[0][u][o] == geben) && (Sf_od[u][o] == 0))){
-															a += 1;
-														}
-													}
-												}
-											}
-											if (a < d+1){
-												b = 1;
-											}
-											a = 0;
-										}
-									}
-								}
-							}
-							if (b != 1){
-								Index_Wert += 10;
-							} 
-							b = 0;
-							
-							if ((i == position[1])||(j == position[0])) {
-								Index_Wert = 1;
-							}
-							
-							Index_Feld[i][j] = Index_Wert;
-							Index_Wert = 0;
-						}
-					}
-				}
-			} else if (ind == 2) {
-				
-				for (unsigned int i=1; i<m-1; i+=1){
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Sf_nl[i][j] == geben){
-							
-							Index_Feld[i][j] = abs(i-position[1])+abs(j-position[0]);
-							
-						}
-					}
-				}
-			}
-			
-			if (ind == 2){
-				for (unsigned int i=1; i<m-1; i+=1){
-					if (c == 1){
-						break;
-					}
-					for (unsigned int j=1; j<n-1; j+=1){
-						if (Index_Feld[i][j] == ober){
-							Index_Feld[i][j] = 0;
-							Sf_nl[i][j] = 0;
-							count_new -= 1;
-							ober = m+n;
-							c = 1;
-							break;
-						}
-					}
-				}
-				if (c == 0){
-					ober -= 1;
-				}
-			}
-			
-			if (ind == 1) {
-				for (unsigned int i=m-2; i>0; i-=1){
-					if (c == 1){
-						break;
-					}
-					for (unsigned int j=n-2; j>0; j-=1){
-						if (Index_Feld[i][j] == ober){
-							Index_Feld[i][j] = 0;
-							Sf_nl[i][j] = 0;
-							count_new -= 1;
-							ober = 80;
-							c = 1;
-							break;
-						}
-					}
-				}
-				if (c == 0){
-					ober -= 1;
-				}
-			}
-			
-			c = 0;
-															//printf("ent: %u \n", ent); printf("\n");
-															//printf("ind: %u \n", ind); printf("\n");
-															//printf("count_new: %u \n", count_new); printf("\n");
-				
-			for (unsigned int t=1; t<m-1; t+=1){
-				if (f == 1){
-					break;
-				}
-				for (unsigned int z=1; z<n-1; z+=1){
-					if (Sf_nl[t][z] == geben){
-						f = 1;
-						break;
-					}
-				}
-			}
-			if (f == 0){
-				break;
-			}
-			f = 0;			
-		}
-	}
-	
-	return Sf_nl;
 }
 
 void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben){
