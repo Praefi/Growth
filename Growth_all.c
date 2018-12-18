@@ -16,7 +16,7 @@ unsigned int* unsigned_int_Vektor_Create (unsigned int);
 int* int_Vektor_Create (unsigned int );
 
 void new_life (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld);
-void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int);
+void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld);
 void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int);
 
 void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*);
@@ -55,7 +55,7 @@ Spielfeld Index_dyn (unsigned int, unsigned int, unsigned int, unsigned int, Spi
 
 Spielfeld opague_builder (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
-unsigned int random_number (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int);
+unsigned int random_number (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*);
 
 void battle (unsigned int, unsigned int, Spielfeld, unsigned int);
 unsigned int chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
@@ -5026,7 +5026,7 @@ int main (void) {
 					pere[geben] = 0;
 					continue;
 				} else if ((pere[geben] != 0)&&(warning_system != 0)&&(((warning_system <= 5)&&((pere[geben]+warning_system) == 8))||((warning_system == 6)&&(pere[geben] == 1)))) {
-					old_dying (Field, m, n, d, e, gamemode, information_code, geben);
+					old_dying (Field, m, n, d, e, gamemode, information_code, geben, Sf_od_);
 					change (Field, Sf_nl_, Sf_od_, m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
 					g += 1;
 					printf(" \n ");
@@ -5061,7 +5061,7 @@ int main (void) {
 					scanf("%u", &lim);
 					
 					if (lim == 2) {
-						use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_[3], number_[4]);
+						use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_);
 					} else if (lim != 1) {
 						printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 					}
@@ -5989,7 +5989,7 @@ int main (void) {
 					
 					Spielfeld_Destroy (temp, m);
 				
-					old_dying (Field, m, n, d, e, gamemode, information_code, geben);	// , geben)
+					old_dying (Field, m, n, d, e, gamemode, information_code, geben, Sf_od_);	// , geben)
 					
 					if ((boost_hunt_activator == 1)&&(gamemode == 6)&&(geben == 1)) {
 						for (unsigned int i=1; i<m-1; i+=1){
@@ -6413,7 +6413,7 @@ int main (void) {
 						
 					}
 					
-					use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_[3], number_[4]);
+					use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_);
 					
 					if ((opt != 5)&&(var_[geben] <= 62)){
 						controll_1 = 0;
@@ -9659,7 +9659,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 	
 }
 
-void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int geben){
+void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int geben, Spielfeld Sf_od_){
 	Spielfeld Sf_temp;
 	unsigned int a, e_down, d_up;
 	
@@ -10319,7 +10319,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 		printf("	No match found, use 100 to correct your mistake \n");
 	} else {
 	
-		temp_move = Spielfeld_Create (m, n);
+		temp_move = Spielfeld_Create (m, n, 0);
 		
 		printf(" alte Zeile: \n alte Spalte: \n");
 		scanf("%u %u", &Zeile_alt, &Spalte_alt);
@@ -10362,9 +10362,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 							Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							
 						} else if (Field[0][Zeile_alt][Spalte_alt] == 1) {
-							temp_move[Zeile_alt][Spalte_alt] = 1;
+							temp_move[0][Zeile_alt][Spalte_alt] = 1;
 							a = 0;								//Ursprung in der Nähe?
-							if ((temp_move[Zeile_neu-1][Spalte_neu]==1)||(temp_move[Zeile_neu][Spalte_neu-1]==1)||(temp_move[Zeile_neu][Spalte_neu+1]==1)||(temp_move[Zeile_neu+1][Spalte_neu]==1)){
+							if ((temp_move[0][Zeile_neu-1][Spalte_neu]==1)||(temp_move[0][Zeile_neu][Spalte_neu-1]==1)||(temp_move[0][Zeile_neu][Spalte_neu+1]==1)||(temp_move[0][Zeile_neu+1][Spalte_neu]==1)){
 								a = 1;
 							}
 							if (a == 0){
@@ -10378,9 +10378,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 								Field[0][Zeile_alt][Spalte_alt] = 0;
 							}
 						} else if (Field[0][Zeile_alt][Spalte_alt] == 11) {
-							temp_move[Zeile_alt][Spalte_alt] = 11;
+							temp_move[0][Zeile_alt][Spalte_alt] = 11;
 							a = 0;								//Ursprung in der Nähe?
-							if ((temp_move[Zeile_neu-1][Spalte_neu]==11)||(temp_move[Zeile_neu][Spalte_neu-1]==11)||(temp_move[Zeile_neu][Spalte_neu+1]==11)||(temp_move[Zeile_neu+1][Spalte_neu]==11)){
+							if ((temp_move[0][Zeile_neu-1][Spalte_neu]==11)||(temp_move[0][Zeile_neu][Spalte_neu-1]==11)||(temp_move[0][Zeile_neu][Spalte_neu+1]==11)||(temp_move[0][Zeile_neu+1][Spalte_neu]==11)){
 								a = 1;
 							}
 							if (a == 0){
@@ -10419,10 +10419,10 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 							Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							
 						} else {
-							temp_move[Zeile_alt][Spalte_alt] = geben;
+							temp_move[0][Zeile_alt][Spalte_alt] = geben;
 							
 							a = 0;								//Ursprung in der Nähe?
-							if ((temp_move[Zeile_neu-1][Spalte_neu]==geben)||(temp_move[Zeile_neu][Spalte_neu-1]==geben)||(temp_move[Zeile_neu][Spalte_neu+1]==geben)||(temp_move[Zeile_neu+1][Spalte_neu]==geben)){
+							if ((temp_move[0][Zeile_neu-1][Spalte_neu]==geben)||(temp_move[0][Zeile_neu][Spalte_neu-1]==geben)||(temp_move[0][Zeile_neu][Spalte_neu+1]==geben)||(temp_move[0][Zeile_neu+1][Spalte_neu]==geben)){
 								a = 1;
 							}
 							
@@ -11359,7 +11359,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_, Spielfeld Field, 
 	unsigned int a;
 	Spielfeld temp;
 	
-	temp = Spielfeld_Create (m, n);
+	temp = Spielfeld_Create (m, n, 0);
 	a = 0;
 	
 	for (unsigned int i=1; i<m-1; i+=1){
@@ -15677,141 +15677,141 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 	geben_op = (geben%2)+1;
 	chain_total_1 = 0;
 	chain_total_2 = 0;
-	chain = Spielfeld_Create (m, n);
+	chain = Spielfeld_Create (m, n, 0);
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
 			if (Field[0][i][j] == geben){
-				chain_temp = Spielfeld_Create (m, n);
-				if ((Field[0][i][j+1] == geben_op)&&(chain_temp[i][j+1] != geben_op)){
-					chain_temp[i][j] = geben;
+				chain_temp = Spielfeld_Create (m, n, 0);
+				if ((Field[0][i][j+1] == geben_op)&&(chain_temp[0][i][j+1] != geben_op)){
+					chain_temp[0][i][j] = geben;
 					chain_total_1 = 1;
 					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
-					chain_temp[i][j+1] = geben_op;
+					chain_temp[0][i][j+1] = geben_op;
 					chain_total_2 = 1;
 					chain_total_2 = chain_count (i, (j+1), Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben_op){
-									chain[h][k] = geben;
+								if (chain_temp[0][h][k] == geben_op){
+									chain[0][h][k] = geben;
 								}
 							}
 						}
 					} else if (chain_total_2 > chain_total_1){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben){
-									chain[h][k] = geben_op;
+								if (chain_temp[0][h][k] == geben){
+									chain[0][h][k] = geben_op;
 								}
 							}
 						}
 					} else if ((chain_total_1 == chain_total_2)&&(chain_total_1 == 1)){
-						chain[i][j+1] = geben;
+						chain[0][i][j+1] = geben;
 					}
 					
 				}
 				
-				if ((Field[0][i][j-1] == geben_op)&&(chain_temp[i][j-1] != geben_op)){
+				if ((Field[0][i][j-1] == geben_op)&&(chain_temp[0][i][j-1] != geben_op)){
 					Spielfeld_Destroy (chain_temp, m);
-					chain_temp = Spielfeld_Create (m, n);
+					chain_temp = Spielfeld_Create (m, n, 0);
 					
-					chain_temp[i][j] = geben;
+					chain_temp[0][i][j] = geben;
 					chain_total_1 = 1;
 					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
-					chain_temp[i][j-1] = geben_op;
+					chain_temp[0][i][j-1] = geben_op;
 					chain_total_2 = 1;
 					chain_total_2 = chain_count (i, (j-1), Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben_op){
-									chain[h][k] = geben;
+								if (chain_temp[0][h][k] == geben_op){
+									chain[0][h][k] = geben;
 								}
 							}
 						}
 					} else if (chain_total_2 > chain_total_1){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben){
-									chain[h][k] = geben_op;
+								if (chain_temp[0][h][k] == geben){
+									chain[0][h][k] = geben_op;
 								}
 							}
 						}
 					} else if ((chain_total_1 == chain_total_2)&&(chain_total_1 == 1)){
-						chain[i][j-1] = geben;
+						chain[0][i][j-1] = geben;
 					}
 					
 				}
 				
-				if ((Field[0][i+1][j] == geben_op)&&(chain_temp[i+1][j] != geben_op)){
+				if ((Field[0][i+1][j] == geben_op)&&(chain_temp[0][i+1][j] != geben_op)){
 					Spielfeld_Destroy (chain_temp, m);
-					chain_temp = Spielfeld_Create (m, n);
+					chain_temp = Spielfeld_Create (m, n, 0);
 					
-					chain_temp[i][j] = geben;
+					chain_temp[0][i][j] = geben;
 					chain_total_1 = 1;
 					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
-					chain_temp[i+1][j] = geben_op;
+					chain_temp[0][i+1][j] = geben_op;
 					chain_total_2 = 1;
 					chain_total_2 = chain_count ((i+1), j, Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben_op){
-									chain[h][k] = geben;
+								if (chain_temp[0][h][k] == geben_op){
+									chain[0][h][k] = geben;
 								}
 							}
 						}
 					} else if (chain_total_2 > chain_total_1){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben){
-									chain[h][k] = geben_op;
+								if (chain_temp[0][h][k] == geben){
+									chain[0][h][k] = geben_op;
 								}
 							}
 						}
 					} else if ((chain_total_1 == chain_total_2)&&(chain_total_1 == 1)){
-						chain[i+1][j] = geben;
+						chain[0][i+1][j] = geben;
 					}
 					
 				}
 				
-				if ((Field[0][i-1][j] == geben_op)&&(chain_temp[i-1][j] != geben_op)){
+				if ((Field[0][i-1][j] == geben_op)&&(chain_temp[0][i-1][j] != geben_op)){
 					Spielfeld_Destroy (chain_temp, m);
-					chain_temp = Spielfeld_Create (m, n);
+					chain_temp = Spielfeld_Create (m, n, 0);
 					
-					chain_temp[i][j] = geben;
+					chain_temp[0][i][j] = geben;
 					chain_total_1 = 1;
 					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
-					chain_temp[i-1][j] = geben_op;
+					chain_temp[0][i-1][j] = geben_op;
 					chain_total_2 = 1;
 					chain_total_2 = chain_count ((i-1), j, Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben_op){
-									chain[h][k] = geben;
+								if (chain_temp[0][h][k] == geben_op){
+									chain[0][h][k] = geben;
 								}
 							}
 						}
 					} else if (chain_total_2 > chain_total_1){
 						for (unsigned int h=1; h<m-1; h+=1){
 							for (unsigned int k=1; k<n-1; k+=1){
-								if (chain_temp[h][k] == geben){
-									chain[h][k] = geben_op;
+								if (chain_temp[0][h][k] == geben){
+									chain[0][h][k] = geben_op;
 								}
 							}
 						}
 					} else if ((chain_total_1 == chain_total_2)&&(chain_total_1 == 1)){
-						chain[i-1][j] = geben;
+						chain[0][i-1][j] = geben;
 					}
 					
 				}
@@ -15824,9 +15824,9 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (chain[i][j] == 1){
+			if (chain[0][i][j] == 1){
 				Field[0][i][j] = 1;
-			} else if (chain[i][j] == 2){
+			} else if (chain[0][i][j] == 2){
 				Field[0][i][j] = 2;
 			}
 		}
@@ -15837,23 +15837,23 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 }
 
 unsigned int chain_count (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld chain_temp, unsigned int player, unsigned int chain_total){	//player=geben
-	if ((Field[0][i][j+1] == player)&&(chain_temp[i][j+1] != player)){
-		chain_temp[i][j+1] = player;
+	if ((Field[0][i][j+1] == player)&&(chain_temp[0][i][j+1] != player)){
+		chain_temp[0][i][j+1] = player;
 		chain_total += 1;
 		chain_total = chain_count (i, (j+1), Field, chain_temp, player, chain_total);
 	}
-	if ((Field[0][i][j-1] == player)&&(chain_temp[i][j-1] != player)){
-		chain_temp[i][j-1] = player;
+	if ((Field[0][i][j-1] == player)&&(chain_temp[0][i][j-1] != player)){
+		chain_temp[0][i][j-1] = player;
 		chain_total += 1;
 		chain_total = chain_count (i, (j-1), Field, chain_temp, player, chain_total);
 	}
-	if ((Field[0][i+1][j] == player)&&(chain_temp[i+1][j] != player)){
-		chain_temp[i+1][j] = player;
+	if ((Field[0][i+1][j] == player)&&(chain_temp[0][i+1][j] != player)){
+		chain_temp[0][i+1][j] = player;
 		chain_total += 1;
 		chain_total = chain_count ((i+1), j, Field, chain_temp, player, chain_total);
 	}
-	if ((Field[0][i-1][j] == player)&&(chain_temp[i-1][j] != player)){
-		chain_temp[i-1][j] = player;
+	if ((Field[0][i-1][j] == player)&&(chain_temp[0][i-1][j] != player)){
+		chain_temp[0][i-1][j] = player;
 		chain_total += 1;
 		chain_total = chain_count ((i-1), j, Field, chain_temp, player, chain_total);
 	}
@@ -15861,7 +15861,7 @@ unsigned int chain_count (unsigned int i, unsigned int j, Spielfeld Field, Spiel
 	return chain_total;
 }
 
-unsigned int random_number (unsigned int num_1, unsigned int num_2, unsigned int num_3, unsigned int use_number, unsigned int g, unsigned int* var_, unsigned int number_[3], unsigned int number_[4]){
+unsigned int random_number (unsigned int num_1, unsigned int num_2, unsigned int num_3, unsigned int use_number, unsigned int g, unsigned int* var_, unsigned int* number_){
 	unsigned int temp_number, new_number, c, mult, inkre, modu, zusatz;
 	
 	mult = 7;
@@ -15960,7 +15960,7 @@ void choose_heart (Spielfeld Field, unsigned int m, unsigned int n){
 	unsigned int heart_i_wanted, heart_j_wanted, a, heart_i, heart_j;
 	Spielfeld ground_temp;
 	
-	ground_temp = Spielfeld_Create (m, n);
+	ground_temp = Spielfeld_Create (m, n, 0);
 	heart_i_wanted = 0;
 	heart_j_wanted = 0;
 	a = 0;
@@ -15991,11 +15991,11 @@ void choose_heart (Spielfeld Field, unsigned int m, unsigned int n){
 	
 	if (Field[0][heart_i_wanted][heart_j_wanted] == 11) {
 		Field[0][heart_i_wanted][heart_j_wanted] = 11;
-	} else if (ground_temp[heart_i_wanted][heart_j_wanted] != 111) {
+	} else if (ground_temp[0][heart_i_wanted][heart_j_wanted] != 111) {
 		printf("	You made a mistake, try again: \n");
 		printf("\n");
 		choose_heart (Field, m, n);
-	} else if (ground_temp[heart_i_wanted][heart_j_wanted] == 111) {
+	} else if (ground_temp[0][heart_i_wanted][heart_j_wanted] == 111) {
 		Field[0][heart_i][heart_j] = 1;
 		Field[0][heart_i_wanted][heart_j_wanted] = 11;
 	}
@@ -16004,20 +16004,20 @@ void choose_heart (Spielfeld Field, unsigned int m, unsigned int n){
 }
 
 void heart_ground (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld ground_temp){
-	if ((Field[0][i][j+1] == 1)&&(ground_temp[i][j+1] != 111)){
-		ground_temp[i][j+1] = 111;
+	if ((Field[0][i][j+1] == 1)&&(ground_temp[0][i][j+1] != 111)){
+		ground_temp[0][i][j+1] = 111;
 		heart_ground (i, (j+1), Field, ground_temp);
 	}
-	if ((Field[0][i][j-1] == 1)&&(ground_temp[i][j-1] != 111)){
-		ground_temp[i][j-1] = 111;
+	if ((Field[0][i][j-1] == 1)&&(ground_temp[0][i][j-1] != 111)){
+		ground_temp[0][i][j-1] = 111;
 		heart_ground (i, (j-1), Field, ground_temp);
 	}
-	if ((Field[0][i+1][j] == 1)&&(ground_temp[i+1][j] != 111)){
-		ground_temp[i+1][j] = 111;
+	if ((Field[0][i+1][j] == 1)&&(ground_temp[0][i+1][j] != 111)){
+		ground_temp[0][i+1][j] = 111;
 		heart_ground ((i+1), j, Field, ground_temp);
 	}
-	if ((Field[0][i-1][j] == 1)&&(ground_temp[i-1][j] != 111)){
-		ground_temp[i-1][j] = 111;
+	if ((Field[0][i-1][j] == 1)&&(ground_temp[0][i-1][j] != 111)){
+		ground_temp[0][i-1][j] = 111;
 		heart_ground ((i-1), j, Field, ground_temp);
 	}
 }
@@ -16031,7 +16031,7 @@ Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsig
 	
 	extra = 1;	//alle zusätzlichen Werte neben den AOP-Spielerwerten
 	opague_counter = unsigned_int_Vektor_Create(1+AOP+extra);
-	temp = Spielfeld_Create (m, n);
+	temp = Spielfeld_Create (m, n, 0);
 	
 	for (unsigned int p=0; p<=AOP+extra; p+=1) {
 		opague_counter[p] = 0;
@@ -16056,7 +16056,7 @@ Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsig
 				
 				if ((i<(m-2))&&(Field[0][i][j] != 11)) {
 					if (Field[0][i][j] == geben) {
-						temp[i+1][j] = Field[0][i+1][j];
+						temp[0][i+1][j] = Field[0][i+1][j];
 					} else if ((Field[0][i+1][j] != 11)&&(Field[0][i+1][j] != 0)) {
 						if (Field[0][i+1][j] == 77) {
 							opague_counter[10] += 1;
@@ -16068,7 +16068,7 @@ Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsig
 				
 				if ((i>1)&&(Field[0][i][j] != 11)) {
 					if (Field[0][i][j] == geben) {
-						temp[i-1][j] = Field[0][i-1][j];
+						temp[0][i-1][j] = Field[0][i-1][j];
 					} else if ((Field[0][i-1][j] != 11)&&(Field[0][i-1][j] != 0)) {
 						if (Field[0][i-1][j] == 77) {
 							opague_counter[10] += 1;
@@ -16080,7 +16080,7 @@ Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsig
 				
 				if ((j>1)&&(Field[0][i][j] != 11)) {
 					if (Field[0][i][j] == geben) {
-						temp[i][j-1] = Field[0][i][j-1];
+						temp[0][i][j-1] = Field[0][i][j-1];
 					} else if ((Field[0][i][j-1] != 11)&&(Field[0][i][j-1] != 0)) {
 						if (Field[0][i][j-1] == 77) {
 							opague_counter[10] += 1;
@@ -16092,7 +16092,7 @@ Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsig
 				
 				if ((j<(n-2))&&(Field[0][i][j] != 11)) {
 					if (Field[0][i][j] == geben) {
-						temp[i][j+1] = Field[0][i][j+1];
+						temp[0][i][j+1] = Field[0][i][j+1];
 					} else if ((Field[0][i][j+1] != 11)&&(Field[0][i][j+1] != 0)) {
 						if (Field[0][i][j+1] == 77) {
 							opague_counter[10] += 1;
@@ -16166,7 +16166,7 @@ Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsig
 							if (Field[0][h][k] != 11) {
 								
 								if (Field[0][i][j] == geben) {
-									temp[h][k] = Field[0][h][k];
+									temp[0][h][k] = Field[0][h][k];
 								} else if ((Field[0][h][k] != 0) && (Field[0][h][k] != 77)) {
 									opague_counter[Field[0][h][k]] += 1;
 								} else if ((Field[0][h][k] != 0) && (Field[0][h][k] == 77)) {
