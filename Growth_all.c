@@ -34,7 +34,7 @@ void Revive (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
 
 void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
 
-void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int);
+void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
 Spielfeld opague_builder (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
@@ -2941,6 +2941,18 @@ int main (void) {
 		if (journey == 1){		//gamemode 11 journey, done
 			Field_journey = Spielfeld_Create (m, n, number_of_players);
 		}
+		
+		Sf_opague = Spielfeld_Create (m, n, 0);
+		
+		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
+		Sf_od_ = Spielfeld_Create(m, n, number_of_players);
+		
+		Field = Spielfeld_Create (m, n, number_of_players);
+		Field = start_normal (Field, m, n, gamemode, number_of_players);
+		
+		numbers_of_ = Spielfeld_Create (6, 0, AOP);
+		stack_of_ = Spielfeld_Create (5, 0, AOP);
+		
 		if (tac != 0){
 			for (unsigned int p=1; p<=number_of_players; p+=1){
 				for (unsigned int q=0; q<=5; q+=1){
@@ -2948,14 +2960,6 @@ int main (void) {
 				}
 			}
 		}
-		
-		Sf_opague = Spielfeld_Create (m, n, 0);
-		
-		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);
-		Sf_od_ = Spielfeld_Create(m, n, number_of_players);
-		
-		Field = Spielfeld_Create (m, n, number_of_players);
-		Field = start_normal (Field, m, n, gamemode, number_of_players);
 		
 		if (gamemode == 8) {
 			show_field (Field, m, n, gamemode, information_code, geben, Colored);
@@ -2995,7 +2999,7 @@ int main (void) {
 			information_code[0] = number_of_players;
 		}
 		
-		unsigned int g, survive_different;
+		unsigned int g, survive_different;	//its time to play
 		g = 1;
 		survive_different = 0;
 		
@@ -6070,7 +6074,7 @@ int main (void) {
 					
 					if (count_new > limit_new){		//Abfrage auf max. 10 neue Steine, normalerweise
 						if ((gamemode != 10)&&(gamemode != 12)) {
-							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode);
+							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode, number_of_players, rain);
 						} else {
 							count_new = 0;
 						}
@@ -6141,7 +6145,7 @@ int main (void) {
 					
 					if (count_new > ent){		//Abfrage auf insgesamt max. 20 Steine, normalerweise
 						if ((gamemode != 3)&&(gamemode != 10)&&(gamemode != 12)) {
-							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode);
+							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode, number_of_players, rain);
 						} else {
 							count_new = 0;
 						}
@@ -11420,7 +11424,7 @@ void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n,
 	
 }
 
-Spielfeld Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position, unsigned int gamemode){
+void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position, unsigned int gamemode, unsigned int number_of_players, unsigned int rain){
 	unsigned int Index_Wert, a, b, c, f, ind, ober, heart_i, heart_j, keep;
 	Spielfeld Index_Feld;
 	
@@ -11471,7 +11475,7 @@ Spielfeld Index (unsigned int ent, unsigned int count_new, unsigned int m, unsig
 				}
 			}
 		}
-	} else {
+	} else if ((gamemode != 6)||(geben == 1)) {
 		
 		while ((ind != 1)&&(ind != 2)){
 			printf (" \n");
@@ -11536,14 +11540,11 @@ Spielfeld Index (unsigned int ent, unsigned int count_new, unsigned int m, unsig
 			}
 			
 		} else if (ind == 2) {
-			if ((gamemode == 11)||(gamemode == 6) {
+			if ((gamemode == 11)||(gamemode == 6)||(gamemode == 3)) {
 				ober = m+n;
 			} else if ((gamemode == 9)) {
 				ober = 10;
-			} else if (gamemode == 3) {
-				ober = m+n;
 			}
-			
 		}
 		
 		
@@ -11798,7 +11799,7 @@ Spielfeld Index (unsigned int ent, unsigned int count_new, unsigned int m, unsig
 									Index_Wert += 1;
 								}
 								a = 0;
-								Index_Feld[i][j] = (10 - Index_Wert);
+								Index_Feld[0][i][j] = (10 - Index_Wert);
 								Index_Wert = 0;
 								
 							} else if (gamemode == 6) {
@@ -11841,7 +11842,7 @@ Spielfeld Index (unsigned int ent, unsigned int count_new, unsigned int m, unsig
 									}
 								}
 								
-								Index_Feld[i][j] = Index_Wert;
+								Index_Feld[0][i][j] = Index_Wert;
 								Index_Wert = 0;
 							}
 							
@@ -11953,8 +11954,8 @@ Spielfeld Index (unsigned int ent, unsigned int count_new, unsigned int m, unsig
 					break;
 				}
 				for (unsigned int j=1; j<n-1; j+=1){
-					if (Index_Feld[i][j] == ober){
-						Index_Feld[i][j] = 0;
+					if (Index_Feld[0][i][j] == ober){
+						Index_Feld[0][i][j] = 0;
 						Sf_nl_[geben][i][j] = 0;
 						count_new -= 1;
 						ober = m+n;
