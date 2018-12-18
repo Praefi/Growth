@@ -6,11 +6,10 @@
 
 // anscheinend kehren die gestorbenen zurück in das Standartspiel bei gamemode 6 (aktuell ?)
 
-typedef unsigned int** Spielfeld;
-typedef unsigned int*** personal_Spielfeld;
+typedef unsigned int*** Spielfeld;	//Spielfeld ist kubisch
 
-personal_Spielfeld personal_Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players);
-Spielfeld Spielfeld_Create (unsigned int, unsigned int);			//mxn, m >= 6 (+2), n gerade, n >= 4 (+2)		Original: m = 10 (+2), n = 6 (+2)
+Spielfeld Spielfeld_Create (unsigned int, unsigned int, unsigned int);		//mxn, m >= 6 (+2), n gerade, n >= 4 (+2)		Original: m = 10 (+2), n = 6 (+2)
+
 Spielfeld start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
 
 unsigned int* unsigned_int_Vektor_Create (unsigned int);
@@ -61,7 +60,7 @@ unsigned int random_number (unsigned int, unsigned int, unsigned int, unsigned i
 void battle (unsigned int, unsigned int, Spielfeld, unsigned int);
 unsigned int chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
 
-void touch (Spielfeld, unsigned int, unsigned int, unsigned int, personal_Spielfeld);
+void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld);
 
 void ahead (Spielfeld, unsigned int, unsigned int);
 
@@ -77,8 +76,10 @@ int main (void) {
 	//printf ("	ok 1 \n");	//test
 	
 	
-	Spielfeld Sf_opague, numbers_of_, stack_of_;	//ruck muss raus, done, Sf_opague==Opague-Spielfeld, numbers_of_==statistics, number_of_[geben][0]==Matchballs etc., stack_of_==stack of tac
-	personal_Spielfeld Field, Sf_nl_, Sf_od_, Field_journey;	//cons_field in Field, cons_journey in Field_journey, Field[0]==Das Spielfeld, Field_journey[0]==Das Journeyfeld
+	Spielfeld numbers_of_, stack_of_;	//ruck muss raus, done, numbers_of_==statistics, numbers_of_[geben][0]==Matchballs etc., stack_of_==stack of tac
+	Spielfeld Field, Field_journey;	//cons_field in Field, cons_journey in Field_journey, Field[0]==Das Spielfeld, Field_journey[0]==Das Journeyfeld
+	Spielfeld Sf_nl_, Sf_od_;
+	Spielfeld Sf_opague;	//Sf_opague[0]==Opague-Spielfeld,
 	
 	unsigned int m, n, geben, ent, controll_1, controll_2, journey, tac, playtime;
 	unsigned int beginningmenu, gamemode;
@@ -262,10 +263,10 @@ int main (void) {
 		for (unsigned int p=0; p<=3; p+=1){
 			information_code[p] = 0;
 		}
-		for (unsigned int p=0; p<=AOP; p+=1){	//Initializise after number_of_players, go on
+		for (unsigned int p=0; p<=AOP; p+=1){	//Initializise after number_of_players, maybe Spielfeld_Create, go on
 			for (unsigned int q=0; q<=6; q+=1){	//6 because of a normal dice
-				numbers_of_[p][q] = 0;
-				stack_of_[p][q] = 0;
+				numbers_of_[p][q][0] = 0;
+				stack_of_[p][q][0] = 0;
 			}
 		}
 		
@@ -2955,26 +2956,26 @@ int main (void) {
 		
 		
 		if (journey == 1){		//gamemode 11 journey, done
-			Field_journey = personal_Spielfeld_Create (m, n, number_of_players);
+			Field_journey = Spielfeld_Create (m, n, number_of_players);
 		}
 		if (tac != 0){
 			for (unsigned int p=1; p<=number_of_players; p+=1){
 				for (unsigned int q=0; q<=5; q+=1){
-					stack_of_[p][q] = tac;
+					stack_of_[p][q][0] = tac;
 				}
 			}
 		}
 		
-		Sf_opague = Spielfeld_Create (m, n);
+		Sf_opague = Spielfeld_Create (m, n, 0);
 		
-		Sf_nl_ = personal_Spielfeld_Create(m, n, number_of_players);
-		Sf_od_ = personal_Spielfeld_Create(m, n, number_of_players);
+		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);
+		Sf_od_ = Spielfeld_Create(m, n, number_of_players);
 		
-		Field = personal_Spielfeld_Create (m, n, number_of_players);
-		Field[0] = start_normal (Field[0], m, n, gamemode, number_of_players);
+		Field = Spielfeld_Create (m, n, number_of_players);
+		Field = start_normal (Field, m, n, gamemode, number_of_players);
 		
 		if (gamemode == 8) {
-			show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+			show_field (Field, m, n, gamemode, information_code, geben, Colored);
 		}
 		
 		count_freq = 1;
@@ -3062,7 +3063,7 @@ int main (void) {
 			geben = ((g-1)%number_of_players)+1;
 			
 			/* printf("	test \n");
-			show_field (Field[0], m, n, gamemode, information_code, geben, Colored);	//test
+			show_field (Field, m, n, gamemode, information_code, geben, Colored);	//test
 			printf("	test \n"); */
 			round_counter_before = round_counter;
 			round_counter = 0;
@@ -3084,13 +3085,13 @@ int main (void) {
 				}
 				
 				if (opague >= 1) {
-					Sf_opague = opague_builder (Field[0], m, n, geben, opague, AOP);
+					Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
 				}
 				
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 				} else {
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 				}
 				
 				for (unsigned int i=1; i<m-1; i+=1){
@@ -3181,7 +3182,7 @@ int main (void) {
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 				} else {
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 				}
 				
 				dynamic_pointer[6] = 0;		//impact y_horizontal
@@ -3193,7 +3194,7 @@ int main (void) {
 				dynamic_pointer[2] += dynamic_pointer[4];
 				dynamic_pointer[3] += dynamic_pointer[5];
 				
-				impact_y_semi_square (m, n, position, d_wert, range, dynamic_pointer, Field[0]);
+				impact_y_semi_square (m, n, position, d_wert, range, dynamic_pointer, Field);
 				
 				dynamic_pointer[4] += dynamic_pointer[6];
 				dynamic_pointer[5] += dynamic_pointer[7] + erd;
@@ -3201,7 +3202,7 @@ int main (void) {
 				while (abs(dynamic_pointer[1])+abs(dynamic_pointer[0]) != 0){
 					/*
 					printf("	Test-print \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);		//test
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);		//test
 					printf("	Test-print \n");
 					printf("	\n");
 					printf("	indikator1: %u \n", indikator1);
@@ -4269,7 +4270,7 @@ int main (void) {
 					dynamic_pointer[6] = 0;		//impact y_horizontal
 					dynamic_pointer[7] = 0;		//impact y_vertikal
 					
-					impact_y_semi_square (m, n, position, d_wert, range, dynamic_pointer, Field[0]);
+					impact_y_semi_square (m, n, position, d_wert, range, dynamic_pointer, Field);
 					
 					if (sgn(dynamic_pointer[2] < 0)) {		//horizontal (ohne erd)
 						if (sgn(dynamic_pointer[6]) > 0) {
@@ -4832,7 +4833,7 @@ int main (void) {
 				}
 				
 				if (round_counter == (rtc - 1)) {
-					numbers_of_[geben][0] = 1;
+					numbers_of_[geben][0][0] = 1;
 				} else if ((round_counter == rtc)&&(geben == number_of_players)) {
 					printf(" \n ");
 					printf(" \n ");
@@ -4864,7 +4865,7 @@ int main (void) {
 			printf("\n");
 			*/
 			
-			temp = Spielfeld_Create (m, n);
+			temp = Spielfeld_Create (m, n, 0);
 			
 			if ((journey == 1)&&((gamemode == 1)||(gamemode == 2)||(gamemode == 3))){	//journey-frequence
 				printf("	All turns until the journey starts: %u \n", (19 - ((g-1)%19)));
@@ -4892,7 +4893,7 @@ int main (void) {
 			//previous if(geben == 1){}
 			
 			if (opague >= 1) {
-				Sf_opague = opague_builder (Field[0], m, n, geben, opague, AOP);
+				Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
 				
 			}
 			
@@ -4964,7 +4965,7 @@ int main (void) {
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 					} else {
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 					
 					for (unsigned int i=1; i<m-1; i+=1){	//push of electric
@@ -5025,8 +5026,8 @@ int main (void) {
 					pere[geben] = 0;
 					continue;
 				} else if ((pere[geben] != 0)&&(warning_system != 0)&&(((warning_system <= 5)&&((pere[geben]+warning_system) == 8))||((warning_system == 6)&&(pere[geben] == 1)))) {
-					old_dying (Field[0], m, n, d, e, gamemode, information_code, geben);
-					change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
+					old_dying (Field, m, n, d, e, gamemode, information_code, geben);
+					change (Field, Sf_nl_, Sf_od_, m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
 					g += 1;
 					printf(" \n ");
 					printf("	You got a penalty. \n ");
@@ -5072,21 +5073,21 @@ int main (void) {
 			if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
 				if (tac != 0) {
 					if (number_[geben] <= 5){
-						numbers_of_[geben][number_[geben]] += 1;
+						numbers_of_[geben][number_[geben]][0] += 1;
 					} else if (number_[geben] == 6){
-						numbers_of_[geben][0] += 1;
+						numbers_of_[geben][0][0] += 1;
 					}
 				} else if (opt == 5) {
-					numbers_of_[geben][use_number] -= 1;
+					numbers_of_[geben][use_number][0] -= 1;
 				} else {
-					numbers_of_[geben][number_[geben]] -= 1;
+					numbers_of_[geben][number_[geben]][0] -= 1;
 				}
 				
 			}
 			
-			if ((tac != 0)&&((numbers_of_[geben][1]+numbers_of_[geben][2]+numbers_of_[geben][3]+numbers_of_[geben][4]+numbers_of_[geben][5]+numbers_of_[geben][0]) == 0)){
+			if ((tac != 0)&&((numbers_of_[geben][1][0]+numbers_of_[geben][2][0]+numbers_of_[geben][3][0]+numbers_of_[geben][4][0]+numbers_of_[geben][5][0]+numbers_of_[geben][0][0]) == 0)){
 				for (unsigned int p=0; p<=5; p+=1){
-					numbers_of_[geben][p] = tac;
+					numbers_of_[geben][p][0] = tac;
 				}
 			}
 			
@@ -5099,7 +5100,7 @@ int main (void) {
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 					} else {
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				}
 				
@@ -5161,7 +5162,7 @@ int main (void) {
 				printf("\n");
 				
 				if (tac != 0){
-					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", numbers_of_[geben][1], numbers_of_[geben][2], numbers_of_[geben][3], numbers_of_[geben][4], numbers_of_[geben][5], numbers_of_[geben][0]);
+					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", numbers_of_[geben][1][0], numbers_of_[geben][2][0], numbers_of_[geben][3][0], numbers_of_[geben][4][0], numbers_of_[geben][5][0], numbers_of_[geben][0][0]);
 					printf("\n");
 					printf("\n");
 				}
@@ -5276,32 +5277,32 @@ int main (void) {
 							for (unsigned int p=1; p<=number_of_players; p+=1) {
 								printf("	Numbers of player %u: \n", geben);
 								for (unsigned int q=1; p<=6; p+=1) {
-									printf("		#%u = %u \n", q, numbers_of_[geben][1]);
+									printf("		#%u = %u \n", q, numbers_of_[geben][1][0]);
 								}
 								printf("\n");
 							}
 							
 							if ((gamemode == 1)||(gamemode == 6)||(gamemode == 7)||(gamemode == 8)) {
 								for (unsigned int p=1; p<=number_of_players; p+=1) {
-									printf("	Matchballs player %u: 	%u \n", geben, numbers_of_[geben][0]);
+									printf("	Matchballs player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
 								}
 							} else if (gamemode == 2) {
 								for (unsigned int p=1; p<=number_of_players; p+=1) {
-									printf("	Squares collected by player %u: 	%u \n", geben, numbers_of_[geben][0]);
+									printf("	Squares collected by player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
 								}
 							} else if (gamemode == 3) {
 								for (unsigned int p=1; p<=number_of_players; p+=1) {
-									printf("	Times with squares <= 5, player %u: 	%u \n", geben, numbers_of_[geben][0]);
+									printf("	Times with squares <= 5, player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
 								}
 							} else if (gamemode == 4) {
 								for (unsigned int p=1; p<=number_of_players; p+=1) {
 									printf("	Points player %u: 		%u \n", geben, Points[geben]);
-									printf("	Turns with more points player %u: 	%u \n", geben, numbers_of_[geben][0]);
+									printf("	Turns with more points player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
 								}
 								printf("	Number of not decided #-squares: 	%u \n", Points[0]);
 							} else if (gamemode == 5) {
 								for (unsigned int p=1; p<=number_of_players; p+=1) {
-									printf("	Times with squares < 5, player %u: 	%u \n", geben, numbers_of_[geben][0]);
+									printf("	Times with squares < 5, player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
 								}
 							} else if (gamemode == 9) {
 								printf("	Number of excluded abilites: 	%u \n", exclude_counter);
@@ -5399,7 +5400,7 @@ int main (void) {
 						if (menuoperator == 5){
 							Spielfeld hint;
 							unsigned int b, a;
-							hint = Spielfeld_Create (m, n);
+							hint = Spielfeld_Create (m, n, 0);
 							printf("	New: 1 \n	Dying: 2 \n	Both: 3 \n");
 							scanf("%u", &menuoperator);
 							
@@ -5407,43 +5408,43 @@ int main (void) {
 								for (unsigned int j=1; j<(n-1); j+=1){
 									if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//10
 										if (Field[0][i][j] == geben){
-											hint[i][j] = geben;
+											hint[0][i][j] = geben;
 										} else if (Field[0][i][j] == (geben%2)+1){
-											hint[i][j] = (geben%2)+1;
+											hint[0][i][j] = (geben%2)+1;
 										} else if (Field[0][i][j] == 7){
-											hint[i][j] = 7;
+											hint[0][i][j] = 7;
 										}
 									} else if ((gamemode == 6)||(gamemode == 9)||(gamemode == 10)) {	//10
 										if (Field[0][i][j] == geben){
-											hint[i][j] = geben;
+											hint[0][i][j] = geben;
 										} else if (Field[0][i][j] != 0){
-											hint[i][j] = 17;
+											hint[0][i][j] = 17;
 										}
 									} else if (gamemode == 11) {
 										if (Field[0][i][j] == geben){
-											hint[i][j] = geben;
+											hint[0][i][j] = geben;
 										} else if (Field[0][i][j] == 77){
-											hint[i][j] = 77;
+											hint[0][i][j] = 77;
 										} else if (Field[0][i][j] != 0){
-											hint[i][j] = 17;
+											hint[0][i][j] = 17;
 										}
 									} else if (gamemode == 12) {
 										if (Field[0][i][j] == geben){
-											hint[i][j] = geben;
+											hint[0][i][j] = geben;
 										} else if (Field[0][i][j] == 81){
-											hint[i][j] = 81;
+											hint[0][i][j] = 81;
 										} else if (Field[0][i][j] == 82){
-											hint[i][j] = 82;
+											hint[0][i][j] = 82;
 										} else if (Field[0][i][j] == 83){
-											hint[i][j] = 83;
+											hint[0][i][j] = 83;
 										} else if (Field[0][i][j] == 84){
-											hint[i][j] = 84;
+											hint[0][i][j] = 84;
 										} else if (Field[0][i][j] == 75){
-											hint[i][j] = 75;
+											hint[0][i][j] = 75;
 										} else if (Field[0][i][j] == 71){
-											hint[i][j] = 71;
+											hint[0][i][j] = 71;
 										} else if (Field[0][i][j] != 0){
-											hint[i][j] = 17;
+											hint[0][i][j] = 17;
 										}
 									}
 								}
@@ -5464,7 +5465,7 @@ int main (void) {
 												}
 											}
 											if ((a > e+1) || (a <= d)){
-												hint[i][j] = 16;
+												hint[0][i][j] = 16;
 											}
 										}
 									}
@@ -5486,7 +5487,7 @@ int main (void) {
 												}
 											}
 											if (b == w){
-												hint[i][j] = 15;
+												hint[0][i][j] = 15;
 											}
 										}
 									}
@@ -5504,7 +5505,7 @@ int main (void) {
 							}
 							
 							if (opague >= 1) {
-								Sf_opague = opague_builder (Field[0], m, n, geben, opague, AOP);
+								Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
 							}
 							menuoperator = 1;
 							Spielfeld_Destroy (hint, m);
@@ -5597,7 +5598,7 @@ int main (void) {
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}	//show_field über menuoperator = 7 und stack und so löschen, (verschiebe menuoperator!=0 - Schleife) ,done
 						
 						printf("\n");
@@ -5630,11 +5631,11 @@ int main (void) {
 						if (tac_controll == 6){
 							tac_controll = 0;
 						}
-						if (numbers_of_[geben][tac_controll] == 0){
+						if (numbers_of_[geben][tac_controll][0] == 0){
 							var_[geben] = 7;
 							menuoperator = 1;
 						} else {
-							numbers_of_[geben][tac_controll] -= 1;		//Die tac-Abrechnung
+							numbers_of_[geben][tac_controll][0] -= 1;		//Die tac-Abrechnung
 						}
 					}
 				} else if ((tac != 0)&&(var_[geben] != 100)&&(var_[geben] != 1010)&&(var_[geben] != 0)&&(var_[geben] != 5)) {
@@ -5731,13 +5732,13 @@ int main (void) {
 					}
 					
 					if (opague >= 1) {
-						Sf_opague = opague_builder (Field[0], m, n, geben, opague, AOP);
+						Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
 					}
 					
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 					} else {
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 					
 					g-=1;
@@ -5766,25 +5767,25 @@ int main (void) {
 					
 					if (var_[geben] < 50){
 	
-						if (var_[geben] == 11){numbers_of_[geben][1] += 1; Plus (m, n, geben, Field[0], limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);}
-						if (var_[geben] == 12){numbers_of_[geben][1] += 1; Minus (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);}
-						if (var_[geben] == 21){numbers_of_[geben][2] += 1; Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);}
-						if (var_[geben] == 41){numbers_of_[geben][4] += 1; Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);}
-						if (var_[geben] == 22){numbers_of_[geben][2] += 1; Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);}
-						if (var_[geben] == 31){numbers_of_[geben][3] += 1; Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);}
+						if (var_[geben] == 11){numbers_of_[geben][1][0] += 1; Plus (m, n, geben, Field, limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);}
+						if (var_[geben] == 12){numbers_of_[geben][1][0] += 1; Minus (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);}
+						if (var_[geben] == 21){numbers_of_[geben][2][0] += 1; Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);}
+						if (var_[geben] == 41){numbers_of_[geben][4][0] += 1; Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);}
+						if (var_[geben] == 22){numbers_of_[geben][2][0] += 1; Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);}
+						if (var_[geben] == 31){numbers_of_[geben][3][0] += 1; Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);}
 						if (var_[geben] == 42){
-							numbers_of_[geben][4] += 1;
+							numbers_of_[geben][4][0] += 1;
 							if ((gamemode != 6)||(geben != 1)) {
-								Boost (geben, Field[0], m, n, temp, gamemode);
+								Boost (geben, Field, m, n, temp, gamemode);
 							} else if ((gamemode == 6)&&(geben == 1)) {
 								boost_hunt_activator = 1;
 							}
 						}
 					} else {
-						if (var_[geben] == 51){numbers_of_[geben][5] += 1; w += 1;}		//w
-						if (var_[geben] == 52){numbers_of_[geben][5] += 1; w -= 1;}		//w
-						if (var_[geben] == 61){numbers_of_[geben][6] += 1; e += 1;}		//e
-						if (var_[geben] == 62){numbers_of_[geben][6] += 1; if (d != 0) {d -= 1;} else {d = 10;}}		//d
+						if (var_[geben] == 51){numbers_of_[geben][5][0] += 1; w += 1;}		//w
+						if (var_[geben] == 52){numbers_of_[geben][5][0] += 1; w -= 1;}		//w
+						if (var_[geben] == 61){numbers_of_[geben][6][0] += 1; e += 1;}		//e
+						if (var_[geben] == 62){numbers_of_[geben][6][0] += 1; if (d != 0) {d -= 1;} else {d = 10;}}		//d
 					}
 					
 					if (ttt != 0) {
@@ -5858,9 +5859,9 @@ int main (void) {
 						//printf("	pere[%u]: %u \n", geben, pere[geben] );	//test
 					}
 					
-					new_life (Field[0], m, n, w, gamemode, information_code, geben, Sf_nl_[geben], Sf_od_[geben]);
+					new_life (Field, m, n, w, gamemode, information_code, geben, Sf_nl_, Sf_od_);
 					
-					//show_field (Sf_nl_[geben], m, n, gamemode, information_code, geben);	// test
+					//show_field (Sf_nl_, m, n, gamemode, information_code, geben);	// test
 					
 					if (gamemode == 6) {
 						
@@ -5914,7 +5915,7 @@ int main (void) {
 									}
 								}
 							}
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 							break;
 						}
 					}
@@ -5928,7 +5929,7 @@ int main (void) {
 										Field[0][k][n-2] = geben;
 									}
 								}
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+								show_field (Field, m, n, gamemode, information_code, geben, Colored);
 								printf("	Sieg:	Spieler %u \n", geben);
 								controll = 1;
 							}
@@ -5953,15 +5954,15 @@ int main (void) {
 							for (unsigned int i=1; i<m-1; i+=1){
 								for (unsigned int j=1; j<n-1; j+=1){
 									if (gamemode == 8) {
-										if (temp[i][j] == geben){
+										if (temp[0][i][j] == geben){
 											Field[0][i][j] = 0;
 										}
 									} else if ((gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {	//mehr-gamemode
-										if (temp[i][j] != 0){
-											Field[0][i][j] = temp[i][j];
+										if (temp[0][i][j] != 0){
+											Field[0][i][j] = temp[0][i][j];
 										}
 									} else if ((gamemode != 8)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//10
-										if (temp[i][j] == 1){
+										if (temp[0][i][j] == 1){
 											Field[0][i][j] = 2;
 										}
 									}
@@ -5975,7 +5976,7 @@ int main (void) {
 						for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende? If, because different 
 							if (Field[0][m-2][letzte] == geben){
 								printf("	Sieg:	Spieler %u \n", geben);
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+								show_field (Field, m, n, gamemode, information_code, geben, Colored);
 								controll = 1;
 								break;
 							}
@@ -5988,7 +5989,7 @@ int main (void) {
 					
 					Spielfeld_Destroy (temp, m);
 				
-					old_dying (Field[0], m, n, d, e, gamemode, information_code, geben);	// , geben)
+					old_dying (Field, m, n, d, e, gamemode, information_code, geben);	// , geben)
 					
 					if ((boost_hunt_activator == 1)&&(gamemode == 6)&&(geben == 1)) {
 						for (unsigned int i=1; i<m-1; i+=1){
@@ -6048,7 +6049,7 @@ int main (void) {
 						
 					}
 					
-					if (var_[geben] == 32){numbers_of_[geben][3] += 1; Revive(m, n, Sf_od_[geben], Field[0], geben);}
+					if (var_[geben] == 32){numbers_of_[geben][3][0] += 1; Revive(m, n, Sf_od_, Field, geben);}
 					
 					num_2 = 0;
 					for (unsigned int i=1; i<m-1; i+=1){
@@ -6081,29 +6082,29 @@ int main (void) {
 					
 					//printf("	ent: %u \n ", ent);
 					if ((gamemode == 6)&&(geben == 1)&&(count_new > (limit_new + (number_of_players-3)))) {		//geben = 1 erforderlich
-						Sf_nl_[geben] = Index_1_hunt (ent, count_new, m, n, Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner, Field[0], number_of_players);
+						Sf_nl_[geben] = Index_1_hunt (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, number_of_players);
 						
 					} else if (count_new > limit_new){		//Abfrage auf max. 10 neue Steine, normalerweise
 						if (gamemode == 1) {
-							Sf_nl_[geben] = Index_1 (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	//, geben)
+							Sf_nl_[geben] = Index_1 (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	//, geben)
 						} else if (gamemode == 2) {
-							Sf_nl_[geben] = Index_1_col (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_col (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 3) {
-							Sf_nl_[geben] = Index_1_con (ent, count_new, m, n, Field[0], Sf_nl_[geben], limit_new);
+							Sf_nl_[geben] = Index_1_con (ent, count_new, m, n, Field, Sf_nl_, limit_new);
 						} else if (gamemode == 4) {
-							Sf_nl_[geben] = Index_1_fal (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_fal (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 5) {
-							Sf_nl_[geben] = Index_1_fig (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_fig (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 7) {
-							Sf_nl_[geben] = Index_1_race (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_race (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 8) {
-							Sf_nl_[geben] = Index_1_rain (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, rain, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_rain (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, rain, zeitgewinner);	
 						} else if (gamemode == 9) {
-							Sf_nl_[geben] = Index_are (ent, count_new, m, n, Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner, Field[0], w, d, e, geben);
+							Sf_nl_[geben] = Index_are (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben);
 						} else if (gamemode == 10) {	//10
 							count_new = 0;
 						} else if (gamemode == 11) {
-							Sf_nl_[geben] = Index_dyn (ent, count_new, m, n, Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner, Field[0], w, d, e, geben, position);	//Index_dyn done
+							Sf_nl_[geben] = Index_dyn (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position);	//Index_dyn done
 						} else if (gamemode == 12) {
 							count_new = 0;
 						}
@@ -6168,29 +6169,29 @@ int main (void) {
 						}
 					}
 					if ((gamemode == 6)&&(count_new > (limit_at_all + (2*(number_of_players-3))))) {
-						Sf_nl_[geben] = Index_1_hunt (ent, count_new, m, n, Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner, Field[0], number_of_players);
+						Sf_nl_[geben] = Index_1_hunt (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, number_of_players);
 						
 					} else if (count_new > ent){		//Abfrage auf insgesamt max. 20 Steine, normalerweise
 						if (gamemode == 1) {
-							Sf_nl_[geben] = Index_1 (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1 (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 2) {
-							Sf_nl_[geben] = Index_1_col (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	// ,geben)
+							Sf_nl_[geben] = Index_1_col (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	// ,geben)
 						} else if (gamemode == 3) {
 							count_new = 0;
 						} else if (gamemode == 4) {
-							Sf_nl_[geben] = Index_1_fal (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_fal (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 5) {
-							Sf_nl_[geben] = Index_1_fig (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_fig (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 7) {
-							Sf_nl_[geben] = Index_1_race (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_race (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner);	
 						} else if (gamemode == 8) {
-							Sf_nl_[geben] = Index_1_rain (ent, count_new, m, n, Field[0], Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, rain, zeitgewinner);	
+							Sf_nl_[geben] = Index_1_rain (ent, count_new, m, n, Field, Sf_nl_, Sf_od_, limit_new, limit_at_all, rain, zeitgewinner);	
 						} else if (gamemode == 9) {
-							Sf_nl_[geben] = Index_are (ent, count_new, m, n, Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner, Field[0], w, d, e, geben);
+							Sf_nl_[geben] = Index_are (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben);
 						} else if (gamemode == 10) {	//10
 							count_new = 0;
 						} else if (gamemode == 11) {
-							Sf_nl_[geben] = Index_dyn (ent, count_new, m, n, Sf_nl_[geben], Sf_od_[geben], limit_new, limit_at_all, zeitgewinner, Field[0], w, d, e, geben, position);
+							Sf_nl_[geben] = Index_dyn (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position);
 						} else if (gamemode == 12) {
 							count_new = 0;
 						}
@@ -6201,13 +6202,13 @@ int main (void) {
 					ent = 0;
 					
 					if (gamemode == 4) {
-						touch (Field[0], m, n, geben, Sf_nl_);
+						touch (Field, m, n, geben, Sf_nl_);
 					}
 					
-					change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit, ,geben)
+					change (Field, Sf_nl_, Sf_od_, m, n, gamemode, number_of_players, ges, geben); 	//Change befreit, ,geben)
 					
 					/*
-					get_sequence (Spielfeld Field[0], Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int w, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int number_of_players, unsigned int ges, unsigned int opague, Spielfeld Sf_opague, Spielfeld sequence, unsigned int seq_max, unsigned int nosv);
+					get_sequence (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int w, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int number_of_players, unsigned int ges, unsigned int opague, Spielfeld Sf_opague, Spielfeld sequence, unsigned int seq_max, unsigned int nosv);
 					
 					if (sequence[0][0] > 0) {
 						
@@ -6216,7 +6217,7 @@ int main (void) {
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}
 						
 						while (sequence[0][0] == 100) {
@@ -6235,15 +6236,15 @@ int main (void) {
 								
 								for (unsigned int p=1; p<=sequence[0][0]; p+=1) {		//Index?
 									
-									new_life (Field[0], m, n, w, gamemode, information_code, geben, Sf_nl_[geben], Sf_od_[geben]);		//let Index go over it, even without reason? What will Index do? Nothing, i guess...
-									old_dying (Field[0], m, n, d, e, gamemode, information_code, Sf_od_[geben]);
-									Field[0] = change (Field[0], Sf_nl_[geben], Sf_od_[geben], m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
+									new_life (Field, m, n, w, gamemode, information_code, geben, Sf_nl_, Sf_od_);		//let Index go over it, even without reason? What will Index do? Nothing, i guess...
+									old_dying (Field, m, n, d, e, gamemode, information_code, Sf_od_);
+									Field[0] = change (Field, Sf_nl_, Sf_od_, m, n, gamemode, number_of_players, ges, geben); 	//Change befreit
 									
 									if (p == sequence[0][0]) {
 										if (opague >= 1) {
 											show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 										} else {
-											show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+											show_field (Field, m, n, gamemode, information_code, geben, Colored);
 										}
 									}
 								}
@@ -6270,11 +6271,11 @@ int main (void) {
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}
 						printf("\n");
 						printf("\n");
-						choose_heart (Field[0], m, n);
+						choose_heart (Field, m, n);
 						printf("\n");
 					}
 					
@@ -6282,12 +6283,12 @@ int main (void) {
 						for (unsigned int j=1; j<n-1; j+=1){
 							if (geben == 1) {
 								if (Field[0][m-3][j] == geben){
-									numbers_of_[geben][0] += 1;
+									numbers_of_[geben][0][0] += 1;
 									break;
 								}
 							} else if (geben == 2) {
 								if (Field[0][2][j] == geben){
-									numbers_of_[geben][0] += 1;
+									numbers_of_[geben][0][0] += 1;
 									break;
 								}
 							}
@@ -6303,16 +6304,16 @@ int main (void) {
 								if (Field[0][(m-1)/2][j-1]==geben){a += 1;}
 								if (Field[0][(m-1)/2][j+1]==geben){a += 1;}
 								if (a >= 3){
-									numbers_of_[geben][0] += 1;
+									numbers_of_[geben][0][0] += 1;
 									Field[0][((m-1)/2)][j] = geben;
 								}
 							}
 						}
-						if (numbers_of_[geben][0] == 2){
+						if (numbers_of_[geben][0][0] == 2){
 							printf("\n");
 							printf("	Sieg: Spieler %u \n", geben);
 							printf("\n");
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 							break;
 						}
 					}
@@ -6323,7 +6324,7 @@ int main (void) {
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}
 						printf("	\n");
 						while (lim == 1) {
@@ -6358,7 +6359,7 @@ int main (void) {
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}
 						
 						for (unsigned int s = 1; s <= 20; s+=1) {	//Abstandhalter
@@ -6394,9 +6395,9 @@ int main (void) {
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}
-						battle (m, n, Field[0], geben);
+						battle (m, n, Field, geben);
 					}
 					
 					if (var_[geben%number_of_players+1] != 1010) {
@@ -6429,12 +6430,12 @@ int main (void) {
 			
 			if (gamemode == 8) {
 				
-				Sf_opague = opague_builder (Field[0], m, n, (geben % 2)+1, opague, AOP);	//possible to modify
+				Sf_opague = opague_builder (Field, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
 				
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 				} else {
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 				}
 			
 				printf("\n");
@@ -6470,7 +6471,7 @@ int main (void) {
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 					} else {
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				} else {
 					if (rain_speed == 0){
@@ -6814,7 +6815,7 @@ int main (void) {
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}
 						if (rain_save == 6){
 							rain = 6;
@@ -6842,20 +6843,18 @@ int main (void) {
 				printf("\n");
 				
 				if (Field[0][1][((n-1)/2)] != 0){
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
-					if (Field[0][1][((n-1)/2)] == 1){
-						printf ("	Sieg: 	Spieler 1 \n");
-					} else if (Field[0][1][((n-1)/2)] == 2){
-						printf ("	Sieg: 	Spieler 2 \n");
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
+					for (unsigned int p=1; p<=number_of_players; p+=1) {
+						if (Field[0][1][((n-1)/2)] == p){
+							printf ("	Sieg: 	Spieler %u \n", p);
+						}
 					}
 					break;
 				}
-				
-				if ((Field[0][1][((n-3)/2)] == 1)||(Field[0][1][((n+1)/2)] == 1)||(Field[0][2][((n-1)/2)] == 1)){
-					A[0] += 1;
-				}
-				if ((Field[0][1][((n-3)/2)] == 2)||(Field[0][1][((n+1)/2)] == 2)||(Field[0][2][((n-1)/2)] == 2)){
-					B[0] += 1;
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					if ((Field[0][1][((n-3)/2)] == p)||(Field[0][1][((n+1)/2)] == p)||(Field[0][2][((n-1)/2)] == p)){
+						numbers_of_[p][0][0] += 1;
+					}
 				}
 				
 				for (unsigned int i=1; i<m-1; i+=1){
@@ -6919,7 +6918,7 @@ int main (void) {
 								}
 							}
 						}
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				}
 			}
@@ -6936,7 +6935,7 @@ int main (void) {
 								Field_journey[0][i][j] = 0;
 							}
 						}
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				}
 			}
@@ -6961,7 +6960,7 @@ int main (void) {
 								}
 							}
 						}
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				}
 			}
@@ -6969,14 +6968,14 @@ int main (void) {
 			if (gamemode == 7) {
 				
 				if (opague >= 1) {
-					Sf_opague = opague_builder (Field[0], m, n, (geben % 2)+1, opague, AOP);	//possible to modify
+					Sf_opague = opague_builder (Field, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
 				}
 				
 				if ((g-1)%freq == (freq-1)){
 					count_freq += 1;
 					if (count_freq == n-4){
 						printf("	Both lost! \n");
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						break;
 					}
 					printf("\n");
@@ -6984,24 +6983,24 @@ int main (void) {
 					printf("	It moved forward! \n");
 					printf("\n");
 					printf("\n");
-					ahead (Field[0], m, count_freq);
+					ahead (Field, m, count_freq);
 					
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 					} else {
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				}
 				
-				for (unsigned int i=1; i<(m-1); i+=1){
-					if (Field[0][i][n-3] == 1){
-						A[0] += 1;
-						break;
-					} else if (Field[0][i][n-3] == 2){
-						B[0] += 1;
-						break;
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					for (unsigned int i=1; i<(m-1); i+=1){
+						if (Field[0][i][n-3] == p){
+							numbers_of_[p][0][0] += 1;
+							break;
+						}
 					}
 				}
+				
 			}
 			
 			if (gamemode == 4) {
@@ -7027,7 +7026,7 @@ int main (void) {
 							printf ("	It reached the ground!\n");
 							printf ("\n");
 							
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 							
 							if (j == (n-1)/2){
 								Points[0] += 1;
@@ -7057,7 +7056,7 @@ int main (void) {
 								printf ("\n");
 								printf ("	It is time for a journey!\n");
 								printf ("\n");
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+								show_field (Field, m, n, gamemode, information_code, geben, Colored);
 							}
 							
 							break;
@@ -7085,7 +7084,7 @@ int main (void) {
 								printf ("\n");
 								printf ("	It fell down!\n");
 								printf ("\n");
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+								show_field (Field, m, n, gamemode, information_code, geben, Colored);
 								break;
 							}
 						}
@@ -7099,10 +7098,10 @@ int main (void) {
 				
 				if ((var_[1] != 1010) && (var_[2] != 1010)){
 					if (Points[1] > Points[2]){
-						A[0] += 1;
+						numbers_of_[1][0][0] += 1;
 					}
 					if (Points[1] < Points[2]){
-						B[0] += 1;
+						numbers_of_[2][0][0] += 1;
 					}
 				}
 				
@@ -7130,7 +7129,7 @@ int main (void) {
 					printf("	Sieg:	Spieler 1 \n");
 						break;
 				} else if ((ges[2]<5)&&(gamemode == 5)){
-					B[0] += 1;
+					numbers_of_[2][0] += 1;
 				}
 				/*if (ges[2] > limit_at_all){	//test
 					printf("too much\n");
@@ -7149,7 +7148,7 @@ int main (void) {
 					printf("	Sieg:	Spieler 2 \n");
 					break;
 				} else if ((ges[1]<5)&&(gamemode == 5)){
-					A[0] += 1;
+					numbers_of_[1][0] += 1;
 				}
 				/*if (ges[1] > limit_at_all){	//test
 					printf("too much\n");
@@ -7166,13 +7165,13 @@ int main (void) {
 					}
 				}
 				if (ges[2] <= 5){
-					B[0] += 1;
+				numbers_of_[2][0] += 1;
 				}
 				
 				if (ges[2] == 0){
 					printf("\n");
 					printf("	Sieg:	Spieler 1 \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 				ges[2] = 0;
@@ -7186,13 +7185,13 @@ int main (void) {
 					}
 				}
 				if (ges[1] <= 5){
-					A[0] += 1;
+					numbers_of_[1][0] += 1;
 				}
 				
 				if (ges[1] == 0){
 					printf("\n");
 					printf("	Sieg:	Spieler 2 \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 				ges[1] = 0;
@@ -7243,79 +7242,31 @@ int main (void) {
 								printf(" QUADRO-CATCH!!! \n");
 							}
 							if (Field[0][i+1][j+1] > 1) {
-								if (Field[0][i+1][j+1] == 2) {
-									B[0] += 1;
-								} else if (Field[0][i+1][j+1] == 3) {
-									AA[0] += 1;
-								} else if (Field[0][i+1][j+1] == 4) {
-									BB[0] += 1;
-								} else if (Field[0][i+1][j+1] == 5) {
-									AAA[0] += 1;
-								} else if (Field[0][i+1][j+1] == 6) {
-									BBB[0] += 1;
-								} else if (Field[0][i+1][j+1] == 7) {
-									AAAA[0] += 1;
-								} else if (Field[0][i+1][j+1] == 8) {
-									BBBB[0] += 1;
-								} else if (Field[0][i+1][j+1] == 9) {
-									AAAAA[0] += 1;
+								for (unsigned int p=2; p<=number_of_players; p+=1) {
+									if (Field[0][i+1][j+1] == p) {
+										numbers_of_[p][0][0] += 1;
+									}
 								}
 							}
 							if (Field[0][i-1][j+1] > 1) {
-								if (Field[0][i-1][j+1] == 2) {
-									B[0] += 1;
-								} else if (Field[0][i-1][j+1] == 3) {
-									AA[0] += 1;
-								} else if (Field[0][i-1][j+1] == 4) {
-									BB[0] += 1;
-								} else if (Field[0][i-1][j+1] == 5) {
-									AAA[0] += 1;
-								} else if (Field[0][i-1][j+1] == 6) {
-									BBB[0] += 1;
-								} else if (Field[0][i-1][j+1] == 7) {
-									AAAA[0] += 1;
-								} else if (Field[0][i-1][j+1] == 8) {
-									BBBB[0] += 1;
-								} else if (Field[0][i-1][j+1] == 9) {
-									AAAAA[0] += 1;
+								for (unsigned int p=2; p<=number_of_players; p+=1) {
+									if (Field[0][i+1][j+1] == p) {
+										numbers_of_[p][0][0] += 1;
+									}
 								}
 							}
 							if (Field[0][i+1][j-1] > 1) {
-								if (Field[0][i+1][j-1] == 2) {
-									B[0] += 1;
-								} else if (Field[0][i+1][j-1] == 3) {
-									AA[0] += 1;
-								} else if (Field[0][i+1][j-1] == 4) {
-									BB[0] += 1;
-								} else if (Field[0][i+1][j-1] == 5) {
-									AAA[0] += 1;
-								} else if (Field[0][i+1][j-1] == 6) {
-									BBB[0] += 1;
-								} else if (Field[0][i+1][j-1] == 7) {
-									AAAA[0] += 1;
-								} else if (Field[0][i+1][j-1] == 8) {
-									BBBB[0] += 1;
-								} else if (Field[0][i+1][j-1] == 9) {
-									AAAAA[0] += 1;
+								for (unsigned int p=2; p<=number_of_players; p+=1) {
+									if (Field[0][i+1][j+1] == p) {
+										numbers_of_[p][0][0] += 1;
+									}
 								}
 							}
 							if (Field[0][i-1][j-1] > 1) {
-								if (Field[0][i-1][j-1] == 2) {
-									B[0] += 1;
-								} else if (Field[0][i-1][j-1] == 3) {
-									AA[0] += 1;
-								} else if (Field[0][i-1][j-1] == 4) {
-									BB[0] += 1;
-								} else if (Field[0][i-1][j-1] == 5) {
-									AAA[0] += 1;
-								} else if (Field[0][i-1][j-1] == 6) {
-									BBB[0] += 1;
-								} else if (Field[0][i-1][j-1] == 7) {
-									AAAA[0] += 1;
-								} else if (Field[0][i-1][j-1] == 8) {
-									BBBB[0] += 1;
-								} else if (Field[0][i-1][j-1] == 9) {
-									AAAAA[0] += 1;
+								for (unsigned int p=2; p<=number_of_players; p+=1) {
+									if (Field[0][i+1][j+1] == p) {
+										numbers_of_[p][0][0] += 1;
+									}
 								}
 							}
 							break;
@@ -7326,7 +7277,7 @@ int main (void) {
 					}
 				}
 				if (a > 0) {
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 				
@@ -7350,45 +7301,12 @@ int main (void) {
 					printf("		Niederlage: Spieler 1 \n");
 					break;
 				}
-				if ((ges[2] == 0)&&(number_of_players >= 2)) {
-					printf("		Spieler 2, you are out. \n");
-					player_counter += 1;
-					ges[2] = 2020;
-				}
-				if ((ges[3] == 0)&&(number_of_players >= 3)) {
-					printf("		Spieler 3, you are out. \n");
-					player_counter += 1;
-					ges[3] = 3030;
-				}
-				if ((ges[4] == 0)&&(number_of_players >= 4)) {
-					printf("		Spieler 4, you are out. \n");
-					player_counter += 1;
-					ges[4] = 4040;
-				}
-				if ((ges[5] == 0)&&(number_of_players >= 5)) {
-					printf("		Spieler 5, you are out. \n");
-					player_counter += 1;
-					ges[5] = 5050;
-				}
-				if ((ges[6] == 0)&&(number_of_players >= 6)) {
-					printf("		Spieler 6, you are out. \n");
-					player_counter += 1;
-					ges[6] = 6060;
-				}
-				if ((ges[7] == 0)&&(number_of_players >= 7)) {
-					printf("		Spieler 7, you are out. \n");
-					player_counter += 1;
-					ges[7] = 7070;
-				}
-				if ((ges[8] == 0)&&(number_of_players >= 8)) {
-					printf("		Spieler 8, you are out. \n");
-					player_counter += 1;
-					ges[8] = 8080;
-				}
-				if ((ges[9] == 0)&&(number_of_players == 9)) {
-					printf("		Spieler 9, you are out. \n");
-					player_counter += 1;
-					ges[9] = 9090;
+				for (unsigned int p=2; p<=number_of_players; p+=1) {
+					if (ges[p] == 0) {
+						printf("		Spieler %u, you are out. \n", p);
+						player_counter += 1;
+						ges[p] = 1010*p;
+					}
 				}
 				
 				ges[1] = 0;
@@ -7400,7 +7318,7 @@ int main (void) {
 				
 				if (player_counter == (number_of_players - 1)) {
 					printf("		Game over. \n		Sieg: Spieler 1. \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 			}
@@ -7465,12 +7383,12 @@ int main (void) {
 				
 				if (player_counter == (number_of_players - 1)) {
 					printf("		Game over, you can see the master of the arena. \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 				if (player_counter == number_of_players) {
 					printf("		Game over, everybody died. \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 				
@@ -7729,12 +7647,12 @@ int main (void) {
 				
 				if (player_counter == (number_of_players - 1)) {
 					printf("		Game over, you can see the master of ulcer. \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 				if (player_counter == number_of_players) {
 					printf("		Game over, everybody died. \n");
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					break;
 				}
 				if ((geben == number_of_players)&&(rtp == round_counter)) {
@@ -7769,7 +7687,7 @@ int main (void) {
 								Field_journey[0][i][j] = 0;
 							}
 						}
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				}
 			}
@@ -7793,7 +7711,7 @@ int main (void) {
 								
 							}
 						}
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
 				}
 				
@@ -8125,143 +8043,52 @@ int main (void) {
 		
 		printf(" \n");
 		printf("	Show Statistics:	yes: 1		no: 0 \n");
-		scanf("%u", &lim);	
+		scanf("%u", &lim);
 		
 		if (lim == 1){
+			
 			printf("\n");
-			printf("	Numbers of player 1: \n");
-			printf("		#1 = %u \n", A[1]);
-			printf("		#2 = %u \n", A[2]);
-			printf("		#3 = %u \n", A[3]);
-			printf("		#4 = %u \n", A[4]);
-			printf("		#5 = %u \n", A[5]);
-			printf("		#6 = %u \n", A[6]);
-			printf("\n");
-			if (number_of_players >= 2){
-				printf("	Numbers of player 2: \n");
-				printf("		#1 = %u \n", B[1]);
-				printf("		#2 = %u \n", B[2]);
-				printf("		#3 = %u \n", B[3]);
-				printf("		#4 = %u \n", B[4]);
-				printf("		#5 = %u \n", B[5]);
-				printf("		#6 = %u \n", B[6]);
-				printf("\n");
-			}
-			if (number_of_players >= 3){
-				printf("	Numbers of player 3: \n");
-				printf("		#1 = %u \n", AA[1]);
-				printf("		#2 = %u \n", AA[2]);
-				printf("		#3 = %u \n", AA[3]);
-				printf("		#4 = %u \n", AA[4]);
-				printf("		#5 = %u \n", AA[5]);
-				printf("		#6 = %u \n", AA[6]);
-				printf("\n");
-			}
-			if (number_of_players >= 4){
-				printf("	Numbers of player 4: \n");
-				printf("		#1 = %u \n", BB[1]);
-				printf("		#2 = %u \n", BB[2]);
-				printf("		#3 = %u \n", BB[3]);
-				printf("		#4 = %u \n", BB[4]);
-				printf("		#5 = %u \n", BB[5]);
-				printf("		#6 = %u \n", BB[6]);
-				printf("\n");
-			}
-			if (number_of_players >= 5){
-				printf("	Numbers of player 5: \n");
-				printf("		#1 = %u \n", AAA[1]);
-				printf("		#2 = %u \n", AAA[2]);
-				printf("		#3 = %u \n", AAA[3]);
-				printf("		#4 = %u \n", AAA[4]);
-				printf("		#5 = %u \n", AAA[5]);
-				printf("		#6 = %u \n", AAA[6]);
-				printf("\n");
-			}
-			if (number_of_players >= 6){
-				printf("	Numbers of player 6: \n");
-				printf("		#1 = %u \n", BBB[1]);
-				printf("		#2 = %u \n", BBB[2]);
-				printf("		#3 = %u \n", BBB[3]);
-				printf("		#4 = %u \n", BBB[4]);
-				printf("		#5 = %u \n", BBB[5]);
-				printf("		#6 = %u \n", BBB[6]);
-				printf("\n");
-			}
-			if (number_of_players >= 7){
-				printf("	Numbers of player 7: \n");
-				printf("		#1 = %u \n", AAAA[1]);
-				printf("		#2 = %u \n", AAAA[2]);
-				printf("		#3 = %u \n", AAAA[3]);
-				printf("		#4 = %u \n", AAAA[4]);
-				printf("		#5 = %u \n", AAAA[5]);
-				printf("		#6 = %u \n", AAAA[6]);
-				printf("\n");
-			}
-			if (number_of_players >= 8){
-				printf("	Numbers of player 8: \n");
-				printf("		#1 = %u \n", BBBB[1]);
-				printf("		#2 = %u \n", BBBB[2]);
-				printf("		#3 = %u \n", BBBB[3]);
-				printf("		#4 = %u \n", BBBB[4]);
-				printf("		#5 = %u \n", BBBB[5]);
-				printf("		#6 = %u \n", BBBB[6]);
-				printf("\n");
-			}
-			if (number_of_players >= 9){
-				printf("	Numbers of player 9: \n");
-				printf("		#1 = %u \n", AAAAA[1]);
-				printf("		#2 = %u \n", AAAAA[2]);
-				printf("		#3 = %u \n", AAAAA[3]);
-				printf("		#4 = %u \n", AAAAA[4]);
-				printf("		#5 = %u \n", AAAAA[5]);
-				printf("		#6 = %u \n", AAAAA[6]);
+			for (unsigned int p=1; p<=number_of_players; p+=1) {
+				printf("	Numbers of player %u: \n", geben);
+				for (unsigned int q=1; p<=6; p+=1) {
+					printf("		#%u = %u \n", q, numbers_of_[geben][1][0]);
+				}
 				printf("\n");
 			}
 			
 			if ((gamemode == 1)||(gamemode == 6)||(gamemode == 7)||(gamemode == 8)) {
-				printf("	Matchballs player 1: 	%u \n", A[0]);
-				printf("	Matchballs player 2: 	%u \n", B[0]);
-				if (gamemode == 6) {
-					if (number_of_players >= 3){printf("	Matchballs player 3: 	%u \n", AA[0]);}
-					if (number_of_players >= 4){printf("	Matchballs player 4: 	%u \n", BB[0]);}
-					if (number_of_players >= 5){printf("	Matchballs player 5: 	%u \n", AAA[0]);}
-					if (number_of_players >= 6){printf("	Matchballs player 6: 	%u \n", BBB[0]);}
-					if (number_of_players >= 7){printf("	Matchballs player 7: 	%u \n", AAAA[0]);}
-					if (number_of_players >= 8){printf("	Matchballs player 8: 	%u \n", BBBB[0]);}
-					if (number_of_players == 9){printf("	Matchballs player 9: 	%u \n", AAAAA[0]);}
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					printf("	Matchballs player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
 				}
 			} else if (gamemode == 2) {
-				printf("	Squares collected by player 1: 	%u \n", A[0]);
-				printf("	Squares collected by player 2: 	%u \n", B[0]);
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					printf("	Squares collected by player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+				}
 			} else if (gamemode == 3) {
-				printf("	Times with squares <= 5, player 1: 	%u \n", A[0]);
-				printf("	Times with squares <= 5, player 2: 	%u \n", B[0]);
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					printf("	Times with squares <= 5, player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+				}
 			} else if (gamemode == 4) {
-				printf("	Points player 1: 		%u \n", Points[1]);
-				printf("	Points Player 2: 		%u \n", Points[2]);
-				printf("	Turns with more points player 1: 	%u \n", A[0]);
-				printf("	Turns with more points player 2: 	%u \n", B[0]);
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					printf("	Points player %u: 		%u \n", geben, Points[geben]);
+					printf("	Turns with more points player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+				}
 				printf("	Number of not decided #-squares: 	%u \n", Points[0]);
 			} else if (gamemode == 5) {
-				printf("	Times with squares < 5, player 1: 	%u \n", A[0]);
-				printf("	Times with squares < 5, player 2: 	%u \n", B[0]);
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					printf("	Times with squares < 5, player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+				}
 			} else if (gamemode == 9) {
 				printf("	Number of excluded abilites: 	%u \n", exclude_counter);
 				printf("	Offensive abilities taken: 	%u \n", number_of_players-ability[0]);
 				printf("	Defensive abilities taken: 	%u \n", ability[0]);
-			} else if (gamemode == 10) {
+			} else if (gamemode == 10) {	//10
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					printf("		Spieler %u: %u life(s) left.\n", p, ulcer_lifes[p]);
-				}
-			} else if (gamemode == 11) {	//mehr-gamemode
-				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					if ((ges[p] > 1000)||(ges[p] == 0)) {
-						printf("	Spieler %u: is out.\n", p);
-					} else if (ges[p] < 1000) {
-						printf("	Spieler %u: You own %u squares.\n", p, ges[p]);
+					if ((ges[p] < 1000)&&(ges[p] != 0)) {
+						printf("		Spieler %u: %u life(s) left.\n", p, ulcer_lifes[p]);
 					}
 				}
-			} else if (gamemode == 12) {
+			} else if ((gamemode == 11)||(gamemode == 12)) {	//mehr-gamemode
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
 					if ((ges[p] > 1000)||(ges[p] == 0)) {
 						printf("	Spieler %u: is out.\n", p);
@@ -8270,10 +8097,11 @@ int main (void) {
 					}
 				}
 			}
-			
+			printf("\n");
 			if (ttt != 0) {
-				printf("	Number of penalties given until	now: %u \n", pere[0]);
+				printf("	Number of penalties given until now: %u \n", pere[0]);
 			}
+			printf("\n");
 		}
 		
 		if (gamemode == 6) {
@@ -8286,7 +8114,7 @@ int main (void) {
 		printf("	Round: %u \n", round_counter);
 		printf("\n");
 		
-		show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+		show_field (Field, m, n, gamemode, information_code, geben, Colored);
 		
 		printf("	\n ");
 		printf("	\n ");
@@ -8329,17 +8157,8 @@ int main (void) {
 	return 0;
 }
 
-Spielfeld Spielfeld_Create (unsigned int m, unsigned int n) {		//calloc in malloc geändert und zurückgenommen (16.06.2018),
-	Spielfeld Spiel;
-	Spiel = calloc(m, sizeof(unsigned int*));
-	for (unsigned int i=0; i<m; i+=1) {
-		Spiel[i] = calloc(n, sizeof(unsigned int));
-	}
-	return Spiel;
-}
-
-personal_Spielfeld personal_Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players) {
-	personal_Spielfeld Field;
+Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players) {
+	Spielfeld Field;
 	Field = calloc(number_of_players, sizeof(unsigned int**));
 	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {	//geben und i, um zugehörigkeit zu verdeutlichen
 		Field[geben] = calloc(m, sizeof(unsigned int*));
@@ -8373,7 +8192,7 @@ void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m){
 	Spiel = NULL;		//nach testen auf andere Versionen übertragen!
 }
 
-Spielfeld start_normal (personal_Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players){
+Spielfeld start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players){
 	
 	if (gamemode == 1){
 		unsigned int n_2;
@@ -9576,16 +9395,16 @@ Spielfeld start_normal (personal_Spielfeld Field, unsigned int m, unsigned int n
 		}
 	}
 	
-	return Field[0];
+	return Field;
 }
 
-void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode, unsigned int* information_code, unsigned int geben, Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben]){
+void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode, unsigned int* information_code, unsigned int geben, Spielfeld Sf_nl_, Spielfeld Sf_od_){
 	Spielfeld Sf_temp;
 	unsigned int a, inhi;
 	
 	//printf("	w: %u\n", w);	//test
 	
-	Sf_temp = Spielfeld_Create (m, n);		//inhibitor in informationcode[1], ability ist in information_code[0]
+	Sf_temp = Spielfeld_Create (m, n, 0);		//inhibitor in informationcode[1], ability ist in information_code[0]
 	a = 0;
 	inhi = 0;
 	
@@ -9618,11 +9437,11 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 					if (gamemode != 9) {
 						if (w == 4){
 							if ((a == w) || (a == w+1)){
-								Sf_temp[i][j] = geben;
+								Sf_temp[0][i][j] = geben;
 							}
 						} else {
 							if (a == w){
-								Sf_temp[i][j] = geben;
+								Sf_temp[0][i][j] = geben;
 							}
 						}
 						a = 0;
@@ -9631,12 +9450,12 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 							if (information_code[0] == 1) {
 								if (w == 2){
 									if ((a == w) || (a == w+1)){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								} else {
 									if (a == w){
 										if (w == 1) {
-											Sf_temp[i][j] = geben;
+											Sf_temp[0][i][j] = geben;
 										} else if (w == 0) {
 											for (unsigned int h=i-1; h<=i+1; h+=1){
 												for (unsigned int k=j-1; k<=j+1; k+=1){
@@ -9652,7 +9471,7 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 												}
 											}
 											if (inhi != 10) {
-												Sf_temp[i][j] = geben;
+												Sf_temp[0][i][j] = geben;
 											}
 										}
 									}
@@ -9660,43 +9479,43 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 							} else if (information_code[0] == 2) {
 								if (w == 3){
 									if ((a == w) || (a == w+1)){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								}
 							} else if (information_code[0] == 3) {
 								if (w == 5){
 									if ((a == w) || (a == w+1)){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								}
 							} else if (information_code[0] == 4) {
 								if (w == 4){
 									if ((a == w) || (a == w+1)){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}  else if ((a == (w-1))&&((j == (n-2))||(j == 1)||(i == (m-2))||(i == 1))) {
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								}
 							} else {
 								if (w == 4){
 									if ((a == w) || (a == w+1)){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								} else {
 									if (a == w){
-										Sf_temp[i][j] = geben;
+										Sf_temp[0][i][j] = geben;
 									}
 								}
 							}
@@ -9718,11 +9537,11 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 					}
 					if (w == 4){
 						if ((a == w) || (a == w+1)){
-							Sf_temp[i][j] = geben;
+							Sf_temp[0][i][j] = geben;
 						}
 					} else {
 						if (a == w){
-							Sf_temp[i][j] = geben;
+							Sf_temp[0][i][j] = geben;
 						}
 					}
 					a = 0;
@@ -9733,42 +9552,42 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 			for (unsigned int i=1; i<m-1; i+=1){
 				for (unsigned int j=1; j<n-1; j+=1){
 					
-					if ((Field[0][i][j] == 71)&&(Sf_temp[i][j] == geben)) {
+					if ((Field[0][i][j] == 71)&&(Sf_temp[0][i][j] == geben)) {
 						
 						if (Field[0][i][j] == geben) {
 							Sf_od_[geben][i][j] = 101*geben;
 						} else {
 							Field[0][i][j] = 0;
 						}
-						Sf_temp[i][j] = 0;
+						Sf_temp[0][i][j] = 0;
 						
 						if (Field[0][i-1][j] == geben) {
 							Sf_od_[geben][i-1][j] = 101*geben;
 						} else {
 							Field[0][i-1][j] = 0;
 						}
-						Sf_temp[i-1][j] = 0;
+						Sf_temp[0][i-1][j] = 0;
 						
 						if (Field[0][i+1][j] == geben) {
 							Sf_od_[geben][i+1][j] = 101*geben;
 						} else {
 							Field[0][i+1][j] = 0;
 						}
-						Sf_temp[i+1][j] = 0;
+						Sf_temp[0][i+1][j] = 0;
 						
 						if (Field[0][i][j-1] == geben) {
 							Sf_od_[geben][i][j-1] = 101*geben;
 						} else {
 							Field[0][i][j-1] = 0;
 						}
-						Sf_temp[i][j-1] = 0;
+						Sf_temp[0][i][j-1] = 0;
 						
 						if (Field[0][i][j+1] == geben) {
 							Sf_od_[geben][i][j+1] = 101*geben;
 						} else {
 							Field[0][i][j+1] = 0;
 						}
-						Sf_temp[i][j+1] = 0;
+						Sf_temp[0][i][j+1] = 0;
 						
 					}
 				}
@@ -9790,11 +9609,11 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 					}				//w=3, w=2, w=4
 					if(w == 4){
 						if ((a == w) || (a == w+1) ){
-							Sf_temp[i][j] = 1;
+							Sf_temp[0][i][j] = 1;
 						}
 					} else {
 						if (a == w){
-							Sf_temp[i][j] = 1;
+							Sf_temp[0][i][j] = 1;
 						}
 					}
 					a = 0;
@@ -9817,11 +9636,11 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 					}			//w=3, w=2, w=4
 					if(w == 4){
 						if ((a == w) || (a == w+1) ){
-							Sf_temp[i][j] = 2;
+							Sf_temp[0][i][j] = 2;
 						}
 					} else {
 						if (a == w){
-							Sf_temp[i][j] = 2;
+							Sf_temp[0][i][j] = 2;
 						}
 					}
 					a = 0;
@@ -9832,7 +9651,7 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (Sf_temp[i][j] == geben) {
+			if (Sf_temp[0][i][j] == geben) {
 				Sf_nl_[geben][i][j] = geben;
 			}
 		}
@@ -9840,11 +9659,11 @@ void new_life (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int 
 	
 }
 
-void old_dying (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int geben){
+void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int geben){
 	Spielfeld Sf_temp;
 	unsigned int a, e_down, d_up;
 	
-	Sf_temp = Spielfeld_Create (m, n);
+	Sf_temp = Spielfeld_Create (m, n, 0);
 	a = 0;
 	e_down = 0;
 	d_up = 0;
@@ -9887,7 +9706,7 @@ void old_dying (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int
 				}
 				if (gamemode != 9) {
 					if ((a < d+1) || (a > e+1)){		//d=2, d=1, e=3, e=4
-						Sf_temp[i][j] = 101*geben;		//Code für das Eleminieren
+						Sf_temp[0][i][j] = 101*geben;		//Code für das Eleminieren
 					}
 					
 					a = 0;
@@ -9898,7 +9717,7 @@ void old_dying (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int
 					}
 					
 					if ((a < d+1) || (a > e+1)){
-						Sf_temp[i][j] = 101*geben;
+						Sf_temp[0][i][j] = 101*geben;
 					}
 					
 					if ((d_up == 1)||(d_up == 11)) {
@@ -9920,14 +9739,14 @@ void old_dying (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (Sf_temp[i][j] = 101*geben) {
-				Sf_od_[geben][i][j] = Sf_temp[i][j];
+			if (Sf_temp[0][i][j] == 101*geben) {
+				Sf_od_[geben][i][j] = Sf_temp[0][i][j];
 			}
 		}
 	}
 }
 
-void change (Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players, unsigned int* ges, unsigned int geben){	
+void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players, unsigned int* ges, unsigned int geben){	
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
@@ -9973,7 +9792,7 @@ unsigned int Vorganger (unsigned int geben, unsigned int number_of_players) {
 	return vorher;
 }
 
-void show_field (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int gamemode, unsigned int* information_code, unsigned int geben, unsigned int* Colored){
+void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int* information_code, unsigned int geben, unsigned int* Colored){
 	
 	printf("\n");
 	
@@ -10276,7 +10095,7 @@ void show_field (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned in
 		*/
 }
 
-void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0], unsigned int limit_at_all, unsigned int gamemode, unsigned int* information_code, unsigned int number_of_players, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
+void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int limit_at_all, unsigned int gamemode, unsigned int* information_code, unsigned int number_of_players, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
 	unsigned int a, b;
 	unsigned int Zeile, Spalte;
 	
@@ -10317,9 +10136,9 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 				} else {
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 				}
-				Plus (m, n, geben, Field[0], limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);
+				Plus (m, n, geben, Field, limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);
 			}
 		
 			for (unsigned int h=Zeile-1; h<=Zeile+1; h+=1){			//Lebender in der Nähe?
@@ -10362,7 +10181,7 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 	}
 }
 
-void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0], unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
+void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
 	unsigned int Zeile, Spalte;
 	
 	printf(" Zeile: \n Spalte: \n");
@@ -10377,21 +10196,21 @@ void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[
 			if (opague >= 1) {
 				show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 			} else {
-				show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+				show_field (Field, m, n, gamemode, information_code, geben, Colored);
 			}
-			Minus (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+			Minus (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 		}
 		
 		if (Field[0][Zeile][Spalte] != geben){
 			printf("	you made a mistake, try again: \n");
-			Minus (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+			Minus (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 		} else {
 			Field[0][Zeile][Spalte] = 0;
 		}
 	}
 }
 
-void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0], unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
+void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
 	unsigned int Zeile_alt, Spalte_alt, Zeile_neu, Spalte_neu;
 	unsigned int a, b;
 	Spielfeld temp_move;
@@ -10514,16 +10333,16 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 				} else {
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 				}
-				Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+				Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				
 			}
 			
 			if ((gamemode == 6)&&(geben == 1)) {
 				if ((Field[0][Zeile_alt][Spalte_alt] != 1)&&(Field[0][Zeile_alt][Spalte_alt] != 11)){
 					printf("	you made a mistake, try again: \n");
-					Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				} else {
 					
 					printf(" neue Zeile: \n neue Spalte: \n");
@@ -10538,9 +10357,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);		//transform Spielfeld in personal_Spielfeld[0], übergebe nur noch personal, go on
+								show_field (Field, m, n, gamemode, information_code, geben, Colored);		//transform Spielfeld in Spielfeld[0], übergebe nur noch personal, go on
 							}
-							Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+							Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							
 						} else if (Field[0][Zeile_alt][Spalte_alt] == 1) {
 							temp_move[Zeile_alt][Spalte_alt] = 1;
@@ -10550,10 +10369,10 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 							}
 							if (a == 0){
 								printf("	you made a mistake, try again: \n");
-								Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+								Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							} else if (Field[0][Zeile_neu][Spalte_neu] != 0){
 								printf("	you made a mistake, try again: \n");
-								Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+								Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							} else {
 								Field[0][Zeile_neu][Spalte_neu] = 1;
 								Field[0][Zeile_alt][Spalte_alt] = 0;
@@ -10566,10 +10385,10 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 							}
 							if (a == 0){
 								printf("	you made a mistake, try again: \n");
-								Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+								Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							} else if (Field[0][Zeile_neu][Spalte_neu] != 0){
 								printf("	you made a mistake, try again: \n");
-								Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+								Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							} else {
 								Field[0][Zeile_neu][Spalte_neu] = 11;
 								Field[0][Zeile_alt][Spalte_alt] = 0;
@@ -10580,7 +10399,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 			} else if ((gamemode != 6)||(geben != 1)){
 				if (Field[0][Zeile_alt][Spalte_alt] != geben){
 					printf("	you made a mistake, try again: \n");
-					Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				} else {
 					
 					printf(" neue Zeile: \n neue Spalte: \n");
@@ -10595,9 +10414,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+								show_field (Field, m, n, gamemode, information_code, geben, Colored);
 							}
-							Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+							Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							
 						} else {
 							temp_move[Zeile_alt][Spalte_alt] = geben;
@@ -10609,10 +10428,10 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 							
 							if (a == 0){
 								printf("	you made a mistake, try again: \n");
-								Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+								Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							} else if (Field[0][Zeile_neu][Spalte_neu] != 0){
 								printf("	you made a mistake, try again: \n");
-								Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+								Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 							} else {
 								Field[0][Zeile_neu][Spalte_neu] = geben;
 								Field[0][Zeile_alt][Spalte_alt] = 0;
@@ -10628,7 +10447,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0
 	}
 }
 
-void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0], unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague, unsigned int* position){
+void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague, unsigned int* position){
 	unsigned int geben_change, a, b;
 	unsigned int eigene_Zeile, fremde_Zeile, eigene_Spalte, fremde_Spalte, heart_Zeile, heart_Spalte, normal_Zeile, normal_Spalte;
 	
@@ -10737,7 +10556,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 				
 			if (a == 0){
 				printf("	it isn't possible, try a move: \n");
-				Move (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+				Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 			} else {
 				
 				printf(" normale Zeile: \n normale Spalte: \n");
@@ -10752,16 +10571,16 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 						if (opague >= 1) {
 							show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 						} else {
-							show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+							show_field (Field, m, n, gamemode, information_code, geben, Colored);
 						}
-						Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+						Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 						
 					} else if ((Field[0][normal_Zeile][normal_Spalte] != 1)||((abs(normal_Spalte - heart_Spalte) + abs(normal_Zeile - heart_Zeile)) != 1)){
 						printf("	you made a mistake, try again: \n");
-						Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+						Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 					} else if (((Field[0][normal_Zeile+1][normal_Spalte]%10) > 1)||((Field[0][normal_Zeile-1][normal_Spalte]%10) > 1)||((Field[0][normal_Zeile][normal_Spalte+1]%10) > 1)||((Field[0][normal_Zeile][normal_Spalte-1]%10) > 1)) {
 						printf("	it isn't possible, try again: \n");
-						Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+						Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 					} else {
 						Field[0][normal_Zeile][normal_Spalte] = 11;
 						Field[0][heart_Zeile][heart_Spalte] = 1;
@@ -11064,15 +10883,15 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 				} else {
-					show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+					show_field (Field, m, n, gamemode, information_code, geben, Colored);
 				}
-				Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+				Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 				
 			}
 			
 			if (Field[0][eigene_Zeile][eigene_Spalte] != geben){
 				printf("	you made a mistake, try again: \n");
-				Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+				Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 			} else {
 				
 				a = 0;								//Feind in der Nähe?
@@ -11103,7 +10922,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 				
 				if (a == 0){
 					printf("	you made a mistake, try again: \n");
-					Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+					Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 				} else {
 					
 					printf(" fremde Zeile: \n fremde Spalte: \n");
@@ -11118,16 +10937,16 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 							if (opague >= 1) {
 								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 							} else {
-								show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+								show_field (Field, m, n, gamemode, information_code, geben, Colored);
 							}
-							Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+							Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 							
 						}
 						
 						if ((gamemode != 3)&&(gamemode != 8)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//mehr-gamemode
 							if ((Field[0][fremde_Zeile][fremde_Spalte] != geben_change)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
-								Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+								Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 							} else {
 								Field[0][fremde_Zeile][fremde_Spalte] = geben;
 								Field[0][eigene_Zeile][eigene_Spalte] = geben_change;
@@ -11135,7 +10954,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 						} else if (gamemode == 3) {
 							if ((Field[0][fremde_Zeile][fremde_Spalte] != geben_change)||(abs(fremde_Spalte-eigene_Spalte)>1)||(abs(fremde_Zeile-eigene_Zeile)>1)){
 								printf("	you made a mistake, try again: \n");
-								Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+								Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 							} else {
 								Field[0][fremde_Zeile][fremde_Spalte] = geben;
 								Field[0][eigene_Zeile][eigene_Spalte] = geben_change;
@@ -11143,7 +10962,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 						} else if (gamemode == 8) {
 							if ((Field[0][fremde_Zeile][fremde_Spalte] != 7)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
-								Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+								Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 							} else {
 								Field[0][fremde_Zeile][fremde_Spalte] = geben;
 								Field[0][eigene_Zeile][eigene_Spalte] = 7;
@@ -11151,7 +10970,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 						} else if ((gamemode == 9)||(gamemode == 10)||(gamemode == 12)) {
 							if ((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
-								Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+								Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 							} else {
 								Field[0][eigene_Zeile][eigene_Spalte] = Field[0][fremde_Zeile][fremde_Spalte];
 								Field[0][fremde_Zeile][fremde_Spalte] = geben;
@@ -11159,7 +10978,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 						} else if (gamemode == 11) {
 							if ((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
-								Change (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague, position);
+								Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 							} else {
 								Field[0][eigene_Zeile][eigene_Spalte] = Field[0][fremde_Zeile][fremde_Spalte];
 								Field[0][fremde_Zeile][fremde_Spalte] = geben;
@@ -11178,7 +10997,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 	}
 }
 
-void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field[0], unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
+void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
 	unsigned int geben_destroy, a, b;
 	unsigned int fremde_Zeile, fremde_Spalte;
 	
@@ -11200,7 +11019,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 			
 			if ((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == 1)||(Field[0][fremde_Zeile][fremde_Spalte] == 11)) {
 				printf("	you made a mistake, try again: \n");
-				Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+				Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 			} else {
 				Field[0][fremde_Zeile][fremde_Spalte] = 0;
 			}
@@ -11485,9 +11304,9 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
 					} else {
-						show_field (Field[0], m, n, gamemode, information_code, geben, Colored);
+						show_field (Field, m, n, gamemode, information_code, geben, Colored);
 					}
-					Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 					
 				}
 				
@@ -11514,19 +11333,19 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 					
 				if (a == 0){
 					printf("	you made a mistake, try again: \n");
-					Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				} else if ((gamemode != 12)&&(gamemode != 11)&&(gamemode != 10)&&(gamemode != 9)&&(Field[0][fremde_Zeile][fremde_Spalte] != geben_destroy)){	//mehr-gamemode
 					printf("	you made a mistake, try again: \n");
-					Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				} else if (((gamemode == 12)||(gamemode == 9))&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben))){
 					printf("	you made a mistake, try again: \n");
-					Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				} else if ((gamemode == 10)&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(Field[0][fremde_Zeile][fremde_Spalte] == 1))){
 					printf("	you made a mistake, try again: \n");
-					Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				} else if ((gamemode == 11)&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(Field[0][fremde_Zeile][fremde_Spalte] == 77))){
 					printf("	you made a mistake, try again: \n");
-					Destroy (m, n, geben, Field[0], gamemode, information_code, Colored, opague, Sf_opague);
+					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				} else {
 					Field[0][fremde_Zeile][fremde_Spalte] = 0;
 				}
@@ -11536,7 +11355,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 	
 }
 
-void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_[geben], Spielfeld Field[0], unsigned int geben){
+void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_, Spielfeld Field, unsigned int geben){
 	unsigned int a;
 	Spielfeld temp;
 	
@@ -11546,7 +11365,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_[geben], Spielfeld 
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
 			if (Sf_od_[geben][i][j] == 101*geben){
-				temp[i][j] = 101*geben;
+				temp[0][i][j] = 101*geben;
 				for (unsigned int h=i-1; h<=i+1; h+=1){
 					for (unsigned int k=j-1; k<=j+1; k+=1){
 						if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -11557,7 +11376,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_[geben], Spielfeld 
 					}
 				}
 				if (a == 0){
-					temp[i][j] = 0;
+					temp[0][i][j] = 0;
 				}
 				a = 0;
 			}
@@ -11566,7 +11385,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_[geben], Spielfeld 
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if ((Sf_od_[geben][i][j] == 101*geben) && (temp[i][j] == 0)){
+			if ((Sf_od_[geben][i][j] == 101*geben) && (temp[0][i][j] == 0)){
 				Sf_od_[geben][i][j] = 0;
 			}
 		}
@@ -11575,7 +11394,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_[geben], Spielfeld 
 	Spielfeld_Destroy (temp, m);
 }
 
-void Boost (unsigned int geben, Spielfeld Field[0], unsigned int m, unsigned int n, Spielfeld temp, unsigned int gamemode){
+void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n, Spielfeld temp, unsigned int gamemode){
 	unsigned int geben_Boost;
 				//printf("?");
 	if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//mehr-gamemode
@@ -11592,7 +11411,7 @@ void Boost (unsigned int geben, Spielfeld Field[0], unsigned int m, unsigned int
 			for (unsigned int j=1; j<n-1; j+=1){
 				if (Field[0][i][j] == geben_Boost) {
 					if ((Field[0][i-1][j]==geben)||(Field[0][i][j-1]==geben)||(Field[0][i][j+1]==geben)||(Field[0][i+1][j]==geben)){
-						temp[i][j] = geben;
+						temp[0][i][j] = geben;
 					}
 				}
 			}
@@ -11605,7 +11424,7 @@ void Boost (unsigned int geben, Spielfeld Field[0], unsigned int m, unsigned int
 						for (unsigned int k=j-1; k<=j+1; k+=1){
 							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
 								if (Field[0][h][k] == geben){
-									temp[i][j] = geben;
+									temp[0][i][j] = geben;
 								}
 							}
 						}
@@ -11618,7 +11437,7 @@ void Boost (unsigned int geben, Spielfeld Field[0], unsigned int m, unsigned int
 			for (unsigned int j=1; j<n-1; j+=1){
 				if (Field[0][i][j] == 7) {
 					if ((Field[0][i-1][j]==geben)||(Field[0][i][j-1]==geben)||(Field[0][i][j+1]==geben)||(Field[0][i+1][j]==geben)){
-						temp[i][j] = geben;
+						temp[0][i][j] = geben;
 					}
 				}
 			}
@@ -11628,7 +11447,7 @@ void Boost (unsigned int geben, Spielfeld Field[0], unsigned int m, unsigned int
 			for (unsigned int j=1; j<n-1; j+=1){
 				if ((Field[0][i][j] != geben)&&(Field[0][i][j] != 0)) {
 					if ((Field[0][i-1][j]==geben)||(Field[0][i][j-1]==geben)||(Field[0][i][j+1]==geben)||(Field[0][i+1][j]==geben)){
-						temp[i][j] = Field[0][i][j];
+						temp[0][i][j] = Field[0][i][j];
 					}
 				}
 			}
@@ -11638,11 +11457,11 @@ void Boost (unsigned int geben, Spielfeld Field[0], unsigned int m, unsigned int
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
 			if ((gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//mehr-gamemode
-				if (temp[i][j] == geben){
+				if (temp[0][i][j] == geben){
 					Field[0][i][j] = geben;
 				}
 			} else if ((gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {
-				if (temp[i][j] != 0){
+				if (temp[0][i][j] != 0){
 					Field[0][i][j] = geben;
 				}
 			}
@@ -11651,7 +11470,7 @@ void Boost (unsigned int geben, Spielfeld Field[0], unsigned int m, unsigned int
 	
 }
 
-Spielfeld Index_1 (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_1 (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober;
 	Spielfeld Index_1_Feld;
 	
@@ -11905,7 +11724,7 @@ Spielfeld Index_1 (unsigned int ent, unsigned int count_new, unsigned int m, uns
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2 (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_2 (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_2, a, b, c, f, ind_2, ind_4, ind, ober;
 	Spielfeld Index_2_Feld;		//mehr als Limit-Steine auf dem Feld, Problem analysieren und beheben!
 	
@@ -12145,7 +11964,7 @@ Spielfeld Index_2 (unsigned int ent, unsigned int count_new, unsigned int m, uns
 	return Sf_nl_2;
 }
 
-Spielfeld Index_1_col (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_1_col (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober;
 	Spielfeld Index_1_Feld;
 	
@@ -12404,7 +12223,7 @@ Spielfeld Index_1_col (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2_col (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_2_col (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_2, a, b, c, f, ind_2, ind_4, ind, ober;
 	Spielfeld Index_2_Feld;
 	
@@ -12665,7 +12484,7 @@ Spielfeld Index_2_col (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_2;
 }
 
-Spielfeld Index_1_con (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_[geben], unsigned int limit_new){
+Spielfeld Index_1_con (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_, unsigned int limit_new){
 	unsigned int Index_Wert_1, ind, ober, c, f;
 	Spielfeld Index_1_Feld;
 	
@@ -12762,7 +12581,7 @@ Spielfeld Index_1_con (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2_con (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_2, unsigned int limit_new){
+Spielfeld Index_2_con (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, unsigned int limit_new){
 	unsigned int Index_Wert_2, ind, ober, c, f;
 	Spielfeld Index_2_Feld;
 	
@@ -12857,7 +12676,7 @@ Spielfeld Index_2_con (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_2;
 }
 
-Spielfeld Index_1_fal (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_1_fal (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober;
 	Spielfeld Index_1_Feld;
 	
@@ -13099,7 +12918,7 @@ Spielfeld Index_1_fal (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2_fal (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_2_fal (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_2, a, b, c, f, ind_2, ind_4, ind, ober;
 	Spielfeld Index_2_Feld;
 	
@@ -13340,7 +13159,7 @@ Spielfeld Index_2_fal (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_2;
 }
 
-Spielfeld Index_1_fig (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_1_fig (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober;
 	Spielfeld Index_1_Feld;
 	
@@ -13597,7 +13416,7 @@ Spielfeld Index_1_fig (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2_fig (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_2_fig (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_2, a, b, c, f, ind_2, ind_4, ind, ober;
 	Spielfeld Index_2_Feld;
 	
@@ -13853,7 +13672,7 @@ Spielfeld Index_2_fig (unsigned int ent, unsigned int count_new, unsigned int m,
 	return Sf_nl_2;
 }
 
-Spielfeld Index_1_race (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_1_race (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober;
 	Spielfeld Index_1_Feld;
 	
@@ -14109,7 +13928,7 @@ Spielfeld Index_1_race (unsigned int ent, unsigned int count_new, unsigned int m
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2_race (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
+Spielfeld Index_2_race (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner){
 	unsigned int Index_Wert_2, a, b, c, f, ind_2, ind_4, ind, ober;
 	Spielfeld Index_2_Feld;
 	
@@ -14357,7 +14176,7 @@ Spielfeld Index_2_race (unsigned int ent, unsigned int count_new, unsigned int m
 	return Sf_nl_2;
 }
 
-Spielfeld Index_1_rain (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int limit_new, unsigned int limit_at_all, unsigned int rain, unsigned int zeitgewinner){
+Spielfeld Index_1_rain (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int rain, unsigned int zeitgewinner){
 	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober;
 	Spielfeld Index_1_Feld;
 	
@@ -14612,7 +14431,7 @@ Spielfeld Index_1_rain (unsigned int ent, unsigned int count_new, unsigned int m
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_2_rain (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field[0], Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int rain, unsigned int zeitgewinner){
+Spielfeld Index_2_rain (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Field, Spielfeld Sf_nl_2, Spielfeld Sf_od_2, unsigned int limit_new, unsigned int limit_at_all, unsigned int rain, unsigned int zeitgewinner){
 	unsigned int Index_Wert_2, a, b, c, f, ind_2, ind_4, ind, ober;
 	Spielfeld Index_2_Feld;
 	
@@ -14863,7 +14682,7 @@ Spielfeld Index_2_rain (unsigned int ent, unsigned int count_new, unsigned int m
 	return Sf_nl_2;
 }
 
-Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl_[geben], Spielfeld Sf_od_[geben], unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field[0], unsigned int number_of_players){
+Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int number_of_players){
 	unsigned int Index_Wert_1, a, b, c, f, ind_1, ind_3, ind, ober, heart_i, heart_j;
 	Spielfeld Index_1_Feld;
 	
@@ -15216,7 +15035,7 @@ Spielfeld Index_1_hunt (unsigned int ent, unsigned int count_new, unsigned int m
 	return Sf_nl_[geben];
 }
 
-Spielfeld Index_other_hunt (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl_other_hunt, unsigned int geben, unsigned int zeitgewinner, Spielfeld Field[0], unsigned int limit_at_all){
+Spielfeld Index_other_hunt (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl_other_hunt, unsigned int geben, unsigned int zeitgewinner, Spielfeld Field, unsigned int limit_at_all){
 	unsigned int Index_Wert_other_hunt, a, c, f, ober, heart_i, heart_j;
 	Spielfeld Index_other_hunt_Feld;		//mehr als Limit-Steine auf dem Feld, Problem analysieren und beheben!
 	
@@ -15324,7 +15143,7 @@ Spielfeld Index_other_hunt (unsigned int ent, unsigned int count_new, unsigned i
 	return Sf_nl_other_hunt;
 }
 
-Spielfeld Index_are (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field[0], unsigned int w, unsigned int d, unsigned int e, unsigned int geben){
+Spielfeld Index_are (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben){
 	unsigned int Index_Wert, a, b, c, f, ind, ober;
 	Spielfeld Index_Feld;
 	
@@ -15602,7 +15421,7 @@ Spielfeld Index_are (unsigned int ent, unsigned int count_new, unsigned int m, u
 	return Sf_nl;
 }
 
-Spielfeld Index_dyn (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field[0], unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position){
+Spielfeld Index_dyn (unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Spielfeld Sf_nl, Spielfeld Sf_od, unsigned int limit_new, unsigned int limit_at_all, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position){
 	unsigned int Index_Wert, a, b, c, f, ind, ober;
 	Spielfeld Index_Feld;
 	
@@ -15851,7 +15670,7 @@ Spielfeld Index_dyn (unsigned int ent, unsigned int count_new, unsigned int m, u
 	return Sf_nl;
 }
 
-void battle (unsigned int m, unsigned int n, Spielfeld Field[0], unsigned int geben){
+void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben){
 	Spielfeld chain, chain_temp;
 	unsigned int geben_op, chain_total_1, chain_total_2;
 	
@@ -15867,11 +15686,11 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field[0], unsigned int ge
 				if ((Field[0][i][j+1] == geben_op)&&(chain_temp[i][j+1] != geben_op)){
 					chain_temp[i][j] = geben;
 					chain_total_1 = 1;
-					chain_total_1 = chain_count (i, j, Field[0], chain_temp, geben, chain_total_1);
+					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
 					chain_temp[i][j+1] = geben_op;
 					chain_total_2 = 1;
-					chain_total_2 = chain_count (i, (j+1), Field[0], chain_temp, geben_op, chain_total_2);
+					chain_total_2 = chain_count (i, (j+1), Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
@@ -15901,11 +15720,11 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field[0], unsigned int ge
 					
 					chain_temp[i][j] = geben;
 					chain_total_1 = 1;
-					chain_total_1 = chain_count (i, j, Field[0], chain_temp, geben, chain_total_1);
+					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
 					chain_temp[i][j-1] = geben_op;
 					chain_total_2 = 1;
-					chain_total_2 = chain_count (i, (j-1), Field[0], chain_temp, geben_op, chain_total_2);
+					chain_total_2 = chain_count (i, (j-1), Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
@@ -15935,11 +15754,11 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field[0], unsigned int ge
 					
 					chain_temp[i][j] = geben;
 					chain_total_1 = 1;
-					chain_total_1 = chain_count (i, j, Field[0], chain_temp, geben, chain_total_1);
+					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
 					chain_temp[i+1][j] = geben_op;
 					chain_total_2 = 1;
-					chain_total_2 = chain_count ((i+1), j, Field[0], chain_temp, geben_op, chain_total_2);
+					chain_total_2 = chain_count ((i+1), j, Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
@@ -15969,11 +15788,11 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field[0], unsigned int ge
 					
 					chain_temp[i][j] = geben;
 					chain_total_1 = 1;
-					chain_total_1 = chain_count (i, j, Field[0], chain_temp, geben, chain_total_1);
+					chain_total_1 = chain_count (i, j, Field, chain_temp, geben, chain_total_1);
 					
 					chain_temp[i-1][j] = geben_op;
 					chain_total_2 = 1;
-					chain_total_2 = chain_count ((i-1), j, Field[0], chain_temp, geben_op, chain_total_2);
+					chain_total_2 = chain_count ((i-1), j, Field, chain_temp, geben_op, chain_total_2);
 					
 					if (chain_total_1 > chain_total_2){
 						for (unsigned int h=1; h<m-1; h+=1){
@@ -16017,26 +15836,26 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field[0], unsigned int ge
 	
 }
 
-unsigned int chain_count (unsigned int i, unsigned int j, Spielfeld Field[0], Spielfeld chain_temp, unsigned int player, unsigned int chain_total){	//player=geben
+unsigned int chain_count (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld chain_temp, unsigned int player, unsigned int chain_total){	//player=geben
 	if ((Field[0][i][j+1] == player)&&(chain_temp[i][j+1] != player)){
 		chain_temp[i][j+1] = player;
 		chain_total += 1;
-		chain_total = chain_count (i, (j+1), Field[0], chain_temp, player, chain_total);
+		chain_total = chain_count (i, (j+1), Field, chain_temp, player, chain_total);
 	}
 	if ((Field[0][i][j-1] == player)&&(chain_temp[i][j-1] != player)){
 		chain_temp[i][j-1] = player;
 		chain_total += 1;
-		chain_total = chain_count (i, (j-1), Field[0], chain_temp, player, chain_total);
+		chain_total = chain_count (i, (j-1), Field, chain_temp, player, chain_total);
 	}
 	if ((Field[0][i+1][j] == player)&&(chain_temp[i+1][j] != player)){
 		chain_temp[i+1][j] = player;
 		chain_total += 1;
-		chain_total = chain_count ((i+1), j, Field[0], chain_temp, player, chain_total);
+		chain_total = chain_count ((i+1), j, Field, chain_temp, player, chain_total);
 	}
 	if ((Field[0][i-1][j] == player)&&(chain_temp[i-1][j] != player)){
 		chain_temp[i-1][j] = player;
 		chain_total += 1;
-		chain_total = chain_count ((i-1), j, Field[0], chain_temp, player, chain_total);
+		chain_total = chain_count ((i-1), j, Field, chain_temp, player, chain_total);
 	}
 	
 	return chain_total;
@@ -16069,7 +15888,7 @@ unsigned int random_number (unsigned int num_1, unsigned int num_2, unsigned int
 	return new_number;
 }
 
-void touch (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int geben, personal_Spielfeld Sf_nl_){
+void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf_nl_){
 	unsigned int einmal;
 	einmal = 0;
 	for (unsigned int i=1; i<m-1; i+=1){
@@ -16124,7 +15943,7 @@ void touch (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int geb
 	
 }
 
-void ahead (Spielfeld Field[0], unsigned int m, unsigned int count_freq){
+void ahead (Spielfeld Field, unsigned int m, unsigned int count_freq){
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<count_freq; j+=1){
@@ -16137,7 +15956,7 @@ void ahead (Spielfeld Field[0], unsigned int m, unsigned int count_freq){
 }
 
 
-void choose_heart (Spielfeld Field[0], unsigned int m, unsigned int n){
+void choose_heart (Spielfeld Field, unsigned int m, unsigned int n){
 	unsigned int heart_i_wanted, heart_j_wanted, a, heart_i, heart_j;
 	Spielfeld ground_temp;
 	
@@ -16161,7 +15980,7 @@ void choose_heart (Spielfeld Field[0], unsigned int m, unsigned int n){
 	}
 	a = 0;
 	
-	heart_ground (heart_i, heart_j, Field[0], ground_temp);
+	heart_ground (heart_i, heart_j, Field, ground_temp);
 	while ((heart_i_wanted == 0)||(heart_i_wanted >= m-1)||(heart_j_wanted >= n-1)||(heart_i_wanted == 0)) {
 		printf(" Choose the next position of your heart-block: \n");
 		printf("	\n");
@@ -16175,7 +15994,7 @@ void choose_heart (Spielfeld Field[0], unsigned int m, unsigned int n){
 	} else if (ground_temp[heart_i_wanted][heart_j_wanted] != 111) {
 		printf("	You made a mistake, try again: \n");
 		printf("\n");
-		choose_heart (Field[0], m, n);
+		choose_heart (Field, m, n);
 	} else if (ground_temp[heart_i_wanted][heart_j_wanted] == 111) {
 		Field[0][heart_i][heart_j] = 1;
 		Field[0][heart_i_wanted][heart_j_wanted] = 11;
@@ -16184,26 +16003,26 @@ void choose_heart (Spielfeld Field[0], unsigned int m, unsigned int n){
 	Spielfeld_Destroy (ground_temp, m);
 }
 
-void heart_ground (unsigned int i, unsigned int j, Spielfeld Field[0], Spielfeld ground_temp){
+void heart_ground (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld ground_temp){
 	if ((Field[0][i][j+1] == 1)&&(ground_temp[i][j+1] != 111)){
 		ground_temp[i][j+1] = 111;
-		heart_ground (i, (j+1), Field[0], ground_temp);
+		heart_ground (i, (j+1), Field, ground_temp);
 	}
 	if ((Field[0][i][j-1] == 1)&&(ground_temp[i][j-1] != 111)){
 		ground_temp[i][j-1] = 111;
-		heart_ground (i, (j-1), Field[0], ground_temp);
+		heart_ground (i, (j-1), Field, ground_temp);
 	}
 	if ((Field[0][i+1][j] == 1)&&(ground_temp[i+1][j] != 111)){
 		ground_temp[i+1][j] = 111;
-		heart_ground ((i+1), j, Field[0], ground_temp);
+		heart_ground ((i+1), j, Field, ground_temp);
 	}
 	if ((Field[0][i-1][j] == 1)&&(ground_temp[i-1][j] != 111)){
 		ground_temp[i-1][j] = 111;
-		heart_ground ((i-1), j, Field[0], ground_temp);
+		heart_ground ((i-1), j, Field, ground_temp);
 	}
 }
 
-Spielfeld opague_builder (Spielfeld Field[0], unsigned int m, unsigned int n, unsigned int geben, unsigned int opague, unsigned int AOP) {
+Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, unsigned int opague, unsigned int AOP) {
 	unsigned int extra;
 	unsigned int* opague_counter; 
 	Spielfeld temp;
@@ -16225,7 +16044,7 @@ Spielfeld opague_builder (Spielfeld Field[0], unsigned int m, unsigned int n, un
 			
 				if (Field[0][i][j] != 11) {
 					if (Field[0][i][j] == geben) {
-						temp[i][j] = geben;
+						temp[0][i][j] = geben;
 					} else if ((Field[0][i][j] != 0)) {
 						if (Field[0][i][j] == 77) {
 							opague_counter[10] += 1;
@@ -16321,11 +16140,11 @@ Spielfeld opague_builder (Spielfeld Field[0], unsigned int m, unsigned int n, un
 								}
 							}
 							
-							if ((opague_counter[0] == AOP+extra-1)&&(temp[i][j] == 0)) {	//bei Gleichstand zweier Objekte bleibt temp[i][j] unbesetzt, da die AOP+extra-1 von keinem erreicht wird
+							if ((opague_counter[0] == AOP+extra-1)&&(temp[0][i][j] == 0)) {	//bei Gleichstand zweier Objekte bleibt temp[0][i][j] unbesetzt, da die AOP+extra-1 von keinem erreicht wird
 								if (a == AOP+1) {
-									temp[i][j] = 77;	//für AOP=9 programmiert
+									temp[0][i][j] = 77;	//für AOP=9 programmiert
 								} else {
-									temp[i][j] = a;
+									temp[0][i][j] = a;
 								}
 							}
 							
@@ -16387,13 +16206,13 @@ Spielfeld opague_builder (Spielfeld Field[0], unsigned int m, unsigned int n, un
 								}
 							}
 							
-							if ((opague_counter[0] == AOP+extra-1)&&(temp[i][j] == 0)) {
+							if ((opague_counter[0] == AOP+extra-1)&&(temp[0][i][j] == 0)) {
 								if (a == AOP+1) {
-									temp[i][j] = 77;	//für AOP=9 programmiert
+									temp[0][i][j] = 77;	//für AOP=9 programmiert
 								} else if (a == AOP+2) {
-									temp[i][j] = 77;	//für AOP=9 programmiert go on
+									temp[0][i][j] = 77;	//für AOP=9 programmiert go on
 								} else {
-									temp[i][j] = a;
+									temp[0][i][j] = a;
 								}
 							}
 							
@@ -16409,7 +16228,7 @@ Spielfeld opague_builder (Spielfeld Field[0], unsigned int m, unsigned int n, un
 			}
 			
 			if (Field[0][i][j] == 11) {
-				temp[i][j] = 11;
+				temp[0][i][j] = 11;
 			}
 		}
 	}
@@ -16458,7 +16277,7 @@ void Reflection (int* dynamic_pointer, unsigned int a, int erd){
 	
 }
 
-void impact_y_semi_square (unsigned int m, unsigned int n, unsigned int* position, unsigned int d_wert, unsigned int range, int* dynamic_pointer, Spielfeld Field[0]){
+void impact_y_semi_square (unsigned int m, unsigned int n, unsigned int* position, unsigned int d_wert, unsigned int range, int* dynamic_pointer, Spielfeld Field){
 	
 	for (unsigned int i=0; i<m-1; i+=1) {	//Berechnung impact y
 		for (unsigned int j=0; j<n-1; j+=1) {
