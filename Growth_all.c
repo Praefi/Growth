@@ -10,7 +10,7 @@ typedef unsigned int*** Spielfeld;	//Spielfeld ist kubisch
 
 Spielfeld Spielfeld_Create (unsigned int, unsigned int, unsigned int);		//mxn, m >= 6 (+2), n gerade, n >= 4 (+2)		Original: m = 10 (+2), n = 6 (+2)
 
-Spielfeld start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
+void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
 
 unsigned int* unsigned_int_Vektor_Create (unsigned int);
 int* int_Vektor_Create (unsigned int );
@@ -23,7 +23,7 @@ void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned i
 
 unsigned int Vorganger (unsigned int, unsigned int);
 
-void Spielfeld_Destroy (Spielfeld, unsigned int);
+void Spielfeld_Destroy (Spielfeld, unsigned int, unsigned int);
 
 void Plus (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*, unsigned int, Spielfeld);
 void Minus (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, unsigned int*, unsigned int, Spielfeld);
@@ -36,7 +36,7 @@ void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsi
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
-Spielfeld opague_builder (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void opague_builder (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
 unsigned int random_number (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*);
 
@@ -2963,14 +2963,15 @@ int main (void) {
 		printf("	#line 2961, before Field \n");	//test
 		
 		Field = Spielfeld_Create (m, n, number_of_players);
-		Field = start_normal (Field, m, n, gamemode, number_of_players);
+		start_normal (Field, m, n, gamemode, number_of_players);
 		
 		scanf("%u", &lim);	//test
 		printf("	#line 2967, before numbers_of_ \n");	//test
 		printf("	AOP= %u \n", AOP);	//test
+		printf("	number_of_players= %u \n", number_of_players);	//test
 		
-		numbers_of_ = Spielfeld_Create (7, 1, AOP);
-		stack_of_ = Spielfeld_Create (6, 1, AOP);
+		numbers_of_ = Spielfeld_Create (7, 1, number_of_players);
+		stack_of_ = Spielfeld_Create (6, 1, number_of_players);
 		
 		scanf("%u", &lim);	//test
 		printf("	#line 2973, before tac \n");	//test
@@ -3106,7 +3107,7 @@ int main (void) {
 				}
 				
 				if (opague >= 1) {
-					Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
+					opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
 				}
 				
 				if (opague >= 1) {
@@ -4917,8 +4918,7 @@ int main (void) {
 			//previous if(geben == 1){}
 			
 			if (opague >= 1) {
-				Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
-				
+				opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
 			}
 			
 			if ((ttt != 0)&&(pere[geben] == 100)) {
@@ -5519,7 +5519,7 @@ int main (void) {
 							}
 							
 							if (opague >= 1) {
-								Sf_opague = opague_builder (hint, m, n, geben, opague, AOP);
+								opague_builder (hint, Sf_opague, m, n, geben, opague, AOP);
 							}
 							
 							if (opague >= 1) {
@@ -5529,10 +5529,10 @@ int main (void) {
 							}
 							
 							if (opague >= 1) {
-								Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
+								opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
 							}
 							menuoperator = 1;
-							Spielfeld_Destroy (hint, m);
+							Spielfeld_Destroy (hint, m, 0);
 							
 							//show_field (hint, m, n, gamemode, information_code, geben, Colored);		//teste die desrtoy-funktion für Spielfelder, done
 						}
@@ -5756,7 +5756,7 @@ int main (void) {
 					}
 					
 					if (opague >= 1) {
-						Sf_opague = opague_builder (Field, m, n, geben, opague, AOP);
+						opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
 					}
 					
 					if (opague >= 1) {
@@ -6020,7 +6020,7 @@ int main (void) {
 					}
 					controll = 0;
 					
-					Spielfeld_Destroy (temp, m);
+					Spielfeld_Destroy (temp, m, 0);
 				
 					old_dying (Field, m, n, d, e, gamemode, information_code, geben, Sf_od_);	// , geben)
 					
@@ -6430,7 +6430,7 @@ int main (void) {
 			
 			if (gamemode == 8) {
 				
-				Sf_opague = opague_builder (Field, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
+				opague_builder (Field, Sf_opague, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
 				
 				if (opague >= 1) {
 					show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored);
@@ -6968,7 +6968,7 @@ int main (void) {
 			if (gamemode == 7) {
 				
 				if (opague >= 1) {
-					Sf_opague = opague_builder (Field, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
+					opague_builder (Field, Sf_opague, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
 				}
 				
 				if ((g-1)%freq == (freq-1)){
@@ -8196,16 +8196,22 @@ int* int_Vektor_Create (unsigned int length) {
 	return Vektor;
 }
 
-void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m){
-	for (unsigned int i=1; i<m-1; i+=1){
-		free((Spiel[i]));
-		(Spiel[i]) = NULL;
+void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m, unsigned int number_of_players){
+	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {	//geben, i, j dienen nur zur Anschauung
+		for (unsigned int i=0; i<=m-1; i+=1){
+			free((Spiel[geben][i]));
+			(Spiel[geben][i]) = NULL;
+		}
+	}
+	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {
+		free((Spiel[geben]));
+		(Spiel[geben]) = NULL;
 	}
 	free(Spiel);
 	Spiel = NULL;		//nach testen auf andere Versionen übertragen!
 }
 
-Spielfeld start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players){
+void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players){
 	
 	if (gamemode == 1){
 		unsigned int n_2;
@@ -9408,7 +9414,6 @@ Spielfeld start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigne
 		}
 	}
 	
-	return Field;
 }
 
 void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode, unsigned int* information_code, unsigned int geben, Spielfeld Sf_nl_, Spielfeld Sf_od_){
@@ -9420,6 +9425,8 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 	Sf_temp = Spielfeld_Create (m, n, 0);		//inhibitor in informationcode[1], ability ist in information_code[0]
 	a = 0;
 	inhi = 0;
+	
+	printf("	w: %u\n", w);	//test
 	
 	if (gamemode != 7) {
 		for (unsigned int i=1; i<m-1; i+=1){
@@ -10458,7 +10465,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 			}
 		}
 		
-		Spielfeld_Destroy (temp_move, m);
+		Spielfeld_Destroy (temp_move, m, 0);
 	}
 }
 
@@ -11406,7 +11413,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_, Spielfeld Field, 
 		}
 	}
 	
-	Spielfeld_Destroy (temp, m);
+	Spielfeld_Destroy (temp, m, 0);
 }
 
 void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n, Spielfeld temp, unsigned int gamemode){
@@ -12096,7 +12103,7 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 				}
 				
 				if ((Field[0][i][j-1] == geben_op)&&(chain_temp[0][i][j-1] != geben_op)){
-					Spielfeld_Destroy (chain_temp, m);
+					Spielfeld_Destroy (chain_temp, m, 0);
 					chain_temp = Spielfeld_Create (m, n, 0);
 					
 					chain_temp[0][i][j] = geben;
@@ -12130,7 +12137,7 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 				}
 				
 				if ((Field[0][i+1][j] == geben_op)&&(chain_temp[0][i+1][j] != geben_op)){
-					Spielfeld_Destroy (chain_temp, m);
+					Spielfeld_Destroy (chain_temp, m, 0);
 					chain_temp = Spielfeld_Create (m, n, 0);
 					
 					chain_temp[0][i][j] = geben;
@@ -12164,7 +12171,7 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 				}
 				
 				if ((Field[0][i-1][j] == geben_op)&&(chain_temp[0][i-1][j] != geben_op)){
-					Spielfeld_Destroy (chain_temp, m);
+					Spielfeld_Destroy (chain_temp, m, 0);
 					chain_temp = Spielfeld_Create (m, n, 0);
 					
 					chain_temp[0][i][j] = geben;
@@ -12197,7 +12204,7 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 					
 				}
 				
-				Spielfeld_Destroy (chain_temp, m);
+				Spielfeld_Destroy (chain_temp, m, 0);
 				
 			}
 		}
@@ -12213,7 +12220,7 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 		}
 	}
 	
-	Spielfeld_Destroy (chain, m);
+	Spielfeld_Destroy (chain, m, 0);
 	
 }
 
@@ -12381,7 +12388,7 @@ void choose_heart (Spielfeld Field, unsigned int m, unsigned int n){
 		Field[0][heart_i_wanted][heart_j_wanted] = 11;
 	}
 	
-	Spielfeld_Destroy (ground_temp, m);
+	Spielfeld_Destroy (ground_temp, m, 0);
 }
 
 void heart_ground (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld ground_temp){
@@ -12403,14 +12410,14 @@ void heart_ground (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld gr
 	}
 }
 
-Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, unsigned int opague, unsigned int AOP) {
+void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsigned int n, unsigned int geben, unsigned int opague, unsigned int AOP) {
 	unsigned int extra;
 	unsigned int* opague_counter; 
 	Spielfeld temp;
 	
 	//printf("opague: %u \n", opague);		//test
 	
-	extra = 1;	//alle zusätzlichen Werte neben den AOP-Spielerwerten
+	extra = 0;	//alle zusätzlichen Werte neben den AOP-Spielerwerten
 	opague_counter = unsigned_int_Vektor_Create(1+AOP+extra);
 	temp = Spielfeld_Create (m, n, 0);
 	
@@ -12614,7 +12621,12 @@ Spielfeld opague_builder (Spielfeld Field, unsigned int m, unsigned int n, unsig
 		}
 	}
 	
-	return temp;
+	for (unsigned int i=1; i<m-1; i+=1){
+		for (unsigned int j=1; j<n-1; j+=1){
+			Sf_opague[0][i][j] = temp[0][i][j];
+		}
+	}
+	
 }
 
 int sgn (int a){	//sgn(0)=0;
