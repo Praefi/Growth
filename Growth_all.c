@@ -24,6 +24,8 @@ void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned i
 unsigned int Vorganger (unsigned int, unsigned int);
 
 void Spielfeld_Destroy (Spielfeld, unsigned int, unsigned int);
+void unsigned_int_Vektor_Destroy (unsigned int*);
+void int_Vektor_Destroy (int*);
 
 void Plus (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*, unsigned int, Spielfeld);
 void Minus (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, unsigned int*, unsigned int, Spielfeld);
@@ -124,12 +126,7 @@ int main (void) {
 	
 	dynamic_pointer = int_Vektor_Create (8);
 	
-	dynamic_pointer_save = calloc(AOP+1, sizeof(int*));
-	for (unsigned int i=0; i<=AOP; i+=1) {
-		dynamic_pointer_save[i] = calloc(4, sizeof(int));
-	}
-
-	position = calloc(2, sizeof(unsigned int));
+	position = unsigned_int_Vektor_Create (2);
 	
 	same = unsigned_int_Vektor_Create (nosv);
 	
@@ -154,7 +151,7 @@ int main (void) {
 		//scanf("%u", &lim); //test
 		//printf ("	ok 4 \n");	//test
 		
-		//playtime should start here
+		//playtime should start here, done
 		
 		number_of_players = 2;
 		
@@ -263,27 +260,20 @@ int main (void) {
 		position[0] = 0;
 		position[1] = 0;
 		
-		dynamic_pointer[0] = 0;	//s_horizontal
-		dynamic_pointer[1] = 0;	//s_vertikal
-		
-		dynamic_pointer[2] = 0;	//v_horizontal
-		dynamic_pointer[3] = 0;	//v_vertikal
-		
-		for (unsigned int p=0; p<=AOP; p+=1) {
-			dynamic_pointer_save[p][0] = 0;
-			dynamic_pointer_save[p][1] = 0;
+		for (unsigned int p=0; p<=7; p+=1) {
+			dynamic_pointer[p] = 0;
 		}
+		//[0] = s_horizontal
+		//[1] = s_vertikal
 		
-		dynamic_pointer[4] = 0;	//a_horizontal
-		dynamic_pointer[5] = 0;	//a_vertikal
+		//[2] = v_horizontal
+		//[3] = v_vertikal
 		
-		for (unsigned int p=0; p<=AOP; p+=1) {
-			dynamic_pointer_save[p][2] = 0;
-			dynamic_pointer_save[p][3] = 0;
-		}
+		//[4] = a_horizontal
+		//[5] = a_vertikal
 		
-		dynamic_pointer[6] = 0;	//y_horizontal
-		dynamic_pointer[7] = 0;	//y_vertikal
+		//[6] = y_horizontal
+		//[7] = y_vertikal
 		
 		for (unsigned int p=0; p<=9; p+=1) {
 			pere[p] = 0;
@@ -296,7 +286,7 @@ int main (void) {
 			var_[p] = 0;
 			cons[p] = 0;
 			number_[p] = 0;
-			if (p!=1) {
+			if (p!=0) {
 				ulcer_lifes[p] = p-1;
 			}
 		}
@@ -2942,6 +2932,17 @@ int main (void) {
 			d_wert = same[69];
 		}
 		
+		dynamic_pointer_save = calloc(number_of_players+1, sizeof(int*));
+		for (unsigned int i=0; i<=number_of_players; i+=1) {
+			dynamic_pointer_save[i] = calloc(4, sizeof(int));
+		}
+		
+		for (unsigned int p=0; p<=number_of_players; p+=1) {
+			for (unsigned int q=0; q<=4; q+=1) {
+				dynamic_pointer_save[p][q] = 0;
+			}
+		}
+		
 		scanf("%u", &lim);	//test
 		printf("	#line 2946, after same \n");	//test
 		
@@ -2967,7 +2968,7 @@ int main (void) {
 		
 		scanf("%u", &lim);	//test
 		printf("	#line 2967, before numbers_of_ \n");	//test
-		printf("	AOP= %u \n", AOP);	//test
+		//printf("	AOP= %u \n", AOP);	//test
 		printf("	number_of_players= %u \n", number_of_players);	//test
 		
 		numbers_of_ = Spielfeld_Create (7, 1, number_of_players);
@@ -4294,7 +4295,7 @@ int main (void) {
 					
 					impact_y_semi_square (m, n, position, d_wert, range, dynamic_pointer, Field);
 					
-					if (sgn(dynamic_pointer[2] < 0)) {		//horizontal (ohne erd)
+					if (sgn(dynamic_pointer[2]) < 0) {		//horizontal (ohne erd)
 						if (sgn(dynamic_pointer[6]) > 0) {
 							for (int r=1; r<=abs(erd); r+=1) {
 								dynamic_pointer[2] += 1;
@@ -4303,7 +4304,7 @@ int main (void) {
 								}
 							}
 						}
-					} else if (sgn(dynamic_pointer[2] > 0)) {		//dynamic_pointer[2] = v_horizontal
+					} else if (sgn(dynamic_pointer[2]) > 0) {		//dynamic_pointer[2] = v_horizontal
 						if (sgn(dynamic_pointer[6]) < 0) {
 							for (int r=1; r<=abs(erd); r+=1) {
 								dynamic_pointer[2] -= 1;
@@ -4314,7 +4315,7 @@ int main (void) {
 						}
 					}
 					
-					if (sgn(dynamic_pointer[4] < 0)) {		//horizontal (ohne erd)
+					if (sgn(dynamic_pointer[4]) < 0) {		//horizontal (ohne erd)
 						if (sgn(dynamic_pointer[6]) > 0) {
 							for (int r=1; r<=abs(erd); r+=1) {
 								dynamic_pointer[4] += 1;
@@ -4334,7 +4335,7 @@ int main (void) {
 							}
 						}
 						
-					} else if (sgn(dynamic_pointer[4] > 0)) {		//dynamic_pointer[4] = a_horizontal
+					} else if (sgn(dynamic_pointer[4]) > 0) {		//dynamic_pointer[4] = a_horizontal
 						if (sgn(dynamic_pointer[6]) < 0) {
 							for (int r=1; r<=abs(erd); r+=1) {
 								dynamic_pointer[4] -= 1;
@@ -4426,7 +4427,7 @@ int main (void) {
 							}
 						}
 						
-					} else if (sgn(dynamic_pointer[5] > 0)) {		//dynamic_pointer[5] = a_vertikal
+					} else if (sgn(dynamic_pointer[5]) > 0) {		//dynamic_pointer[5] = a_vertikal
 						if (sgn(dynamic_pointer[7]+erd) < 0) {	//<= wegen-erd-Kompensierung, zurückgenommen wegen eventuell negativer erd
 							for (int r=1; r<=abs(erd); r+=1) {
 								dynamic_pointer[5] -= 1;
@@ -8154,6 +8155,15 @@ int main (void) {
 		
 	}
 	
+	//Aufräumphase!!!
+	int_Vektor_Destroy (dynamic_pointer);
+	for (unsigned int p=0; p<=number_of_players; p+=1) {
+		int_Vektor_Destroy (dynamic_pointer_save[p]);
+	}
+	int_Vektor_Destroy (dynamic_pointer_save);
+	unsigned_int_Vektor_Destroy (position);
+	
+	
 	return 0;
 }
 
@@ -8163,6 +8173,10 @@ Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_
 	printf("Checkpoint: Start of Spielfeld_Create	\n ");	//test
 	
 	Field = calloc(number_of_players, sizeof(unsigned int**));
+	
+	if (Field == NULL) {
+		printf("	Kein freier Speicher wurde gefunden! \n ");
+	}
 	
 	printf("Checkpoint: 1st step of Spielfeld_Create	\n ");	//test
 	
@@ -8194,6 +8208,16 @@ int* int_Vektor_Create (unsigned int length) {
 	Vektor = calloc(length, sizeof(int));
 	
 	return Vektor;
+}
+
+void int_Vektor_Destroy (int* Vektor) {
+	free(Vektor);
+	Vektor = NULL;
+}
+
+void unsigned_int_Vektor_Destroy (unsigned int* Vektor) {
+	free(Vektor);
+	Vektor = NULL;
 }
 
 void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m, unsigned int number_of_players){
