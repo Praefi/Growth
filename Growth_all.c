@@ -2972,17 +2972,17 @@ int main (void) {
 		
 		//show_field (Field, m, n, gamemode, information_code, geben, Colored, 0);	//test
 		
-		scanf("%u", &pause);	//test
-		printf("	#line 2967, before numbers_of_ \n");	//test
-		//printf("	AOP= %u \n", AOP);	//test
-		printf("	number_of_players= %u \n", number_of_players);	//test
+		// scanf("%u", &pause);	//test
+		// printf("	#line 2967, before numbers_of_ \n");	//test
+		// printf("	AOP= %u \n", AOP);	//test
+		// printf("	number_of_players= %u \n", number_of_players);	//test
 		
-		scanf("%u", &pause);	//test
-		Spielfeld FieldTest;
-		FieldTest = calloc(1, sizeof(unsigned int**));
-		printf("Checkpoint: 1	\n ");	//test
-		FieldTest[0] = calloc(1, sizeof(unsigned int*));
-		printf("Checkpoint: 2	\n ");	//test
+		// scanf("%u", &pause);	//test
+		// Spielfeld FieldTest;
+		// FieldTest = calloc(1, sizeof(unsigned int**));
+		// printf("Checkpoint: 1	\n ");	//test
+		// FieldTest[0] = calloc(1, sizeof(unsigned int*));
+		// printf("Checkpoint: 2	\n ");	//test
 		
 		
 		
@@ -5910,7 +5910,7 @@ int main (void) {
 					
 					// printf("	Checkpoint: new_life accepted \n");	//test
 					
-					show_field (Sf_nl_, m, n, gamemode, information_code, geben, Colored, geben);	// test
+					// show_field (Sf_nl_, m, n, gamemode, information_code, geben, Colored, geben);	// test
 					
 					if (gamemode == 6) {
 						
@@ -6038,9 +6038,9 @@ int main (void) {
 					
 					Spielfeld_Destroy (temp, m, 0);
 				
-					old_dying (Field, m, n, d, e, gamemode, information_code, geben, Sf_od_);	// , geben)
+					old_dying (Field, m, n, d, e, gamemode, information_code, geben, Sf_od_);
 					
-					show_field (Sf_od_, m, n, gamemode, information_code, geben, Colored, geben);
+					show_field (Sf_od_, m, n, gamemode, information_code, geben, Colored, geben);	//test
 					
 					if ((boost_hunt_activator == 1)&&(gamemode == 6)&&(geben == 1)) {
 						for (unsigned int i=1; i<m-1; i+=1){
@@ -8187,7 +8187,7 @@ int main (void) {
 Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players) {
 	Spielfeld Field;
 	
-	printf("Checkpoint: Start of Spielfeld_Create	\n ");	//test
+	// printf("Checkpoint: Start of Spielfeld_Create	\n ");	//test
 	
 	Field = calloc(number_of_players, sizeof(unsigned int**));
 	
@@ -8195,19 +8195,19 @@ Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_
 		printf("	Kein freier Speicher wurde gefunden! \n ");
 	}
 	
-	printf("Checkpoint: 1st step of Spielfeld_Create	\n ");	//test
+	// printf("Checkpoint: 1st step of Spielfeld_Create	\n ");	//test
 	
 	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {	//geben und i, um zugehörigkeit zu verdeutlichen
 	
-		printf("Checkpoint: 1.5nd step of Spielfeld_Create	\n ");	//test
+		// printf("Checkpoint: 1.5nd step of Spielfeld_Create	\n ");	//test
 		Field[geben] = calloc(m, sizeof(unsigned int*));
 		
-		printf("Checkpoint: 2nd step of Spielfeld_Create	\n ");	//test
+		// printf("Checkpoint: 2nd step of Spielfeld_Create	\n ");	//test
 		
 		for (unsigned int i=0; i<m; i+=1) {
 			Field[geben][i] = calloc(n, sizeof(unsigned int));
 			
-			printf("Checkpoint: 3rd step of Spielfeld_Create	\n ");	//test
+			// printf("Checkpoint: 3rd step of Spielfeld_Create	\n ");	//test
 			
 		}
 		
@@ -9471,13 +9471,13 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 	Spielfeld Sf_temp;
 	unsigned int a, inhi;
 	
-	printf("	w: %u\n", w);	//test
+	// printf("	w: %u\n", w);	//test
 	
 	Sf_temp = Spielfeld_Create (m, n, 0);		//inhibitor in informationcode[1], ability ist in information_code[0]
 	a = 0;
 	inhi = 0;
 	
-	printf("	w: %u\n", w);	//test
+	// printf("	w: %u\n", w);	//test
 	
 	if (gamemode != 7) {
 		for (unsigned int i=1; i<m-1; i+=1){
@@ -9728,7 +9728,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 		}
 	}
 	
-	printf("end of new_life");	//test
+	// printf("end of new_life");	//test
 	
 }
 
@@ -9813,7 +9813,7 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
 			if (Sf_temp[0][i][j] == 101*geben) {
-				Sf_od_[geben][i][j] = Sf_temp[0][i][j];
+				Sf_od_[geben][i][j] = 101*geben;
 			}
 		}
 	}
@@ -9824,13 +9824,11 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (Field[0][i][j] == 1){
+			if (Field[0][i][j] == geben){
 				if (Sf_od_[geben][i][j] == 101*geben){
 					Field[0][i][j] = 0;
-					if ((gamemode == 10)&&(number_of_players >= geben%number_of_players+1)&&(ges[geben%number_of_players+1] != 1010*geben)) {
+					if ((gamemode == 10)&&(ges[geben%number_of_players+1] != 1010*geben)) {
 						Field[0][i][j] = geben%number_of_players+1;
-					} else if ((gamemode == 10)&&(number_of_players < geben%number_of_players+1)&&(ges[geben] != 1010*geben)){	//tritt nie ein!
-						Field[0][i][j] = 1;
 					}
 				}
 			} else if (Field[0][i][j] == 0){
