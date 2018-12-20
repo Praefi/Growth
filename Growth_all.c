@@ -2936,6 +2936,9 @@ int main (void) {
 			d_wert = same[69];
 		}
 		
+		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
+		Sf_od_ = Spielfeld_Create(m, n, number_of_players);
+		
 		dynamic_pointer_save = calloc(number_of_players+1, sizeof(int*));
 		for (unsigned int i=0; i<=number_of_players; i+=1) {
 			dynamic_pointer_save[i] = calloc(4, sizeof(int));
@@ -2961,9 +2964,6 @@ int main (void) {
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2955, before Sf_nl \n");	//test
 		
-		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
-		Sf_od_ = Spielfeld_Create(m, n, number_of_players);
-		
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2961, before Field \n");	//test
 		
@@ -2979,18 +2979,19 @@ int main (void) {
 		
 		// scanf("%u", &pause);	//test
 		// Spielfeld FieldTest;
-		// FieldTest = calloc(1, sizeof(unsigned int**));
+		// FieldTest = (unsigned int **) calloc(1, sizeof(unsigned int*));
 		// printf("Checkpoint: 1	\n ");	//test
-		// FieldTest[0] = calloc(1, sizeof(unsigned int*));
+		// FieldTest[0] = (unsigned int **) calloc(1, sizeof(unsigned int*));
 		// printf("Checkpoint: 2	\n ");	//test
-		
+		// FieldTest[0][0] = (unsigned int *) calloc(1, sizeof(unsigned int));
+		// printf("Checkpoint: 2	\n ");	//test
 		
 		
 		numbers_of_ = Spielfeld_Create (7, 1, number_of_players);
 		stack_of_ = Spielfeld_Create (6, 1, number_of_players);
 		
-		scanf("%u", &pause);	//test
-		printf("	#line 2973, before tac \n");	//test
+		// scanf("%u", &pause);	//test
+		// printf("	#line 2973, before tac \n");	//test
 		
 		if (tac != 0){
 			for (unsigned int p=1; p<=number_of_players; p+=1){
@@ -5299,7 +5300,7 @@ int main (void) {
 							printf("	near-by:	The 4 squares around another, at the edge 3, in the corners 2, are called #near-by. \n");
 							printf("	Standard actions:	(After your choice of number and not influencing each other) \n	-Development:	If it is your turn and a free square has exactly %u of yours surrounding it, you will own it.\n", w);
 							printf("	-Losses: 	If it is your turn and a square of yours is surrounded by less than %u or more than %u of yours,\n			it will be set free.\n", d, e);	//10
-							if (gamemode == 6) {	//If geben == 1
+							if ((gamemode == 6)&&(geben == 1)) {	//If geben == 1
 								printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", (limit_new+(number_of_players-3)), (limit_at_all+(2*(number_of_players-3))));
 							} else if ((gamemode == 10)||(gamemode == 12)) {
 								printf("	Limits: 	This gamemode is unlimited. \n");
@@ -5752,7 +5753,7 @@ int main (void) {
 					if (gamemode == 11) {
 						for (unsigned int p=2; p<=5; p+=1) {
 							
-							dynamic_pointer[p] = dynamic_pointer_save[Vorganger(geben, number_of_players)][p-2];	//if geben == 1, else geben-1
+							dynamic_pointer[p] = dynamic_pointer_save[Vorganger(geben, number_of_players)][p-2];	//if
 							
 						}
 					}
@@ -6021,14 +6022,22 @@ int main (void) {
 					}
 					
 					controll = 0;
-					if (gamemode == 1){
-						for (unsigned int letzte=1; letzte<n-1; letzte+=1){		//Spiel-Ende? If, because different 
-							if (Field[0][m-2][letzte] == geben){
-								printf("	Sieg:	Spieler %u \n", geben);
-								show_field (Field, m, n, gamemode, information_code, geben, Colored, 0);
-								controll = 1;
-								break;
+					if (gamemode == 1) {
+						for (unsigned int j=1; j<n-1; j+=1){
+							if (geben == 1) {
+								if (Field[0][m-2][j] == geben){
+									printf("	Sieg:	Spieler %u \n", geben);
+									controll = 1;
+									break;
+								}
+							} else if (geben == 2) {
+								if (Field[0][1][j] == geben){
+									printf("	Sieg:	Spieler %u \n", geben);
+									controll = 1;
+									break;
+								}
 							}
+							
 						}
 						if (controll == 1){
 							break;
@@ -6157,7 +6166,7 @@ int main (void) {
 						}
 					}
 					
-					if (gamemode == 6) {	//count the heart, if geben == 1
+					if ((gamemode == 6)&&(geben == 1)) {	//count the heart, if geben == 1
 						count_new += 1;
 						num_3 += 1;
 					}
@@ -6223,7 +6232,7 @@ int main (void) {
 						touch (Field, m, n, geben, Sf_nl_);
 					}
 					
-					change (Field, Sf_nl_, Sf_od_, m, n, gamemode, number_of_players, ges, geben); 	//Change befreit, ,geben)
+					change (Field, Sf_nl_, Sf_od_, m, n, gamemode, number_of_players, ges, geben); 	//Change setzt auf null
 					
 					/*
 					get_sequence (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int w, unsigned int d, unsigned int e, unsigned int gamemode, unsigned int* information_code, unsigned int number_of_players, unsigned int ges, unsigned int opague, Spielfeld Sf_opague, Spielfeld sequence, unsigned int seq_max, unsigned int nosv);
@@ -6387,15 +6396,15 @@ int main (void) {
 					
 					controll = 0;
 					if (gamemode == 1) {
-						for (unsigned int Ende=1; Ende<n-1; Ende+=1){
+						for (unsigned int j=1; j<n-1; j+=1){
 							if (geben == 1) {
-								if (Field[0][m-2][Ende] == geben){
+								if (Field[0][m-2][j] == geben){
 									printf("	Sieg:	Spieler %u \n", geben);
 									controll = 1;
 									break;
 								}
 							} else if (geben == 2) {
-								if (Field[0][1][Ende] == geben){
+								if (Field[0][1][j] == geben){
 									printf("	Sieg:	Spieler %u \n", geben);
 									controll = 1;
 									break;
@@ -6443,6 +6452,8 @@ int main (void) {
 					}
 				}
 			}
+			
+			//normal_end
 			
 			printf("\n");
 			
@@ -8175,10 +8186,15 @@ int main (void) {
 	//Aufräumphase!!!
 	int_Vektor_Destroy (dynamic_pointer);
 	for (unsigned int p=0; p<=number_of_players; p+=1) {
-		int_Vektor_Destroy (dynamic_pointer_save[p]);
+		free (dynamic_pointer_save[p]);
 	}
-	int_Vektor_Destroy (dynamic_pointer_save);
+	free (dynamic_pointer_save);
 	unsigned_int_Vektor_Destroy (position);
+	
+	Spielfeld_Destroy (Field, m, 0);
+	Spielfeld_Destroy (Sf_od_, m, 0);
+	Spielfeld_Destroy (Sf_nl_, m, 0);
+	Spielfeld_Destroy (Sf_opague, m, 0);
 	
 	
 	return 0;
@@ -9818,6 +9834,8 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 		}
 	}
 	
+	printf("	101*geben=%u, geben=%u \n", 101*geben, geben);
+	
 }
 
 void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players, unsigned int* ges, unsigned int geben){	
@@ -9842,6 +9860,8 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 			}
 		}
 	}
+	
+	printf("change:	101*geben=%u, geben=%u \n", 101*geben, geben);
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
@@ -11441,7 +11461,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_, Spielfeld Field, 
 				for (unsigned int h=i-1; h<=i+1; h+=1){
 					for (unsigned int k=j-1; k<=j+1; k+=1){
 						if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-							if ((Field[0][h][k] == 1) && (Sf_od_[geben][h][k] != 101*geben)){
+							if ((Field[0][h][k] == geben) && (Sf_od_[geben][h][k] != 101*geben)){
 								a+=1;
 							}
 						}
