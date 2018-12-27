@@ -5282,7 +5282,7 @@ int main (void) {
 							printf("	turns at all: %u \n", g);
 							
 							show_statistics (number_of_players, gamemode, numbers_of_, Points, exclude_counter, ulcer_lifes, ges, pere);
-							
+						}
 						if (menuoperator == 3){
 							if ((gamemode != 10)&&(gamemode != 12)) {
 								printf("	Plus: Change a free square in the surrounding of yours in one of yours.\n");
@@ -12755,4 +12755,4 @@ void show_statistics () {
 //s=10: 10	10	9	4	6	9	10	10														s=10:	10	10	9	4	8	4	3	3	3	2	3	7	3		
 //v= 0:	0	0	-1	-3	-6	-3	-1	0	<--leer	,freier Fall,	1 Hindernis auf Grund-->	v= 0:	0	0	-1	-3	-3	-4	-4	-3	-3	-2	-3	-4	-4		für 1.
 //a= 0:	0	-1	-2	-3	3	2	1	0														a= 0:	0	-1	-2	-3	-1	-2	0	-1	0	-1	-3	0	-1
-//Nimm 2.Geschwindigkeit
+//Nimm 2.Geschwindigkeit
