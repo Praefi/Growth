@@ -132,6 +132,10 @@ int main (void) {
 	
 	same = unsigned_int_Vektor_Create (nosv);
 	
+	for (unsigned int p=0; p<=(nosv-1); p+=1) {	//before playtime, because otherwise you will delete the same-Option.
+		same[p] = 0;
+	}
+	
 	/*
 	cons_fort[1] = 0;
 	cons_fort[2] = 0;
@@ -240,9 +244,7 @@ int main (void) {
 		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.3 \n");	//test
-		for (unsigned int p=0; p<=(nosv-1); p+=1) {
-			same[p] = 0;
-		}
+		
 		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.3.1 \n");	//test
@@ -5163,15 +5165,37 @@ int main (void) {
 				}
 				
 				printf("\n");
-				
+				// show_whos_turn (gamemode, geben, number_of_players, ability);
 				if (Colored[0] == 1) {
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[geben]);
 				}
 				
 				if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)){	//10
-					printf("	Am Zug: Spieler %u (**)	\n", geben);	//if
+					if (geben == 1) {
+						printf("	Am Zug: Spieler %u (**)	\n", geben);
+					} else if (geben == 2) {
+						printf("	Am Zug: Spieler %u (OO)	\n", geben);
+					}
 				} else if (gamemode == 6) {
-					printf("	Am Zug: Spieler %u (##)	\n", geben);	//if
+					if (geben == 1) {
+						printf("	Am Zug: Spieler %u (##)	\n", geben);
+					} else if (geben == 2) {
+						printf("	Am Zug: Spieler %u (AA)	\n", geben);
+					} else if (geben == 3) {
+						printf("	Am Zug: Spieler %u (BB)	\n", geben);
+					} else if (geben == 4) {
+						printf("	Am Zug: Spieler %u (CC)	\n", geben);
+					} else if (geben == 5) {
+						printf("	Am Zug: Spieler %u (DD)	\n", geben);
+					} else if (geben == 6) {
+						printf("	Am Zug: Spieler %u (EE)	\n", geben);
+					} else if (geben == 7) {
+						printf("	Am Zug: Spieler %u (FF)	\n", geben);
+					} else if (geben == 8) {
+						printf("	Am Zug: Spieler %u (GG)	\n", geben);
+					} else if (geben == 9) {
+						printf("	Am Zug: Spieler %u (HH)	\n", geben);
+					}
 				} else if (gamemode == 9) {
 					if (ability[1] == geben) {
 						printf("	Am Zug: Spieler %u (UU)	\n", geben);
@@ -8071,41 +8095,41 @@ int main (void) {
 		}
 		
 		printf(" \n");
-		printf("	Show Statistics:	yes: 1		no: 0 \n");
+		printf("	Show statistics:	yes: 1		no: 0 \n");
 		scanf("%u", &lim);
 		
 		if (lim == 1){
 			
 			printf("\n");
 			for (unsigned int p=1; p<=number_of_players; p+=1) {
-				printf("	Numbers of player %u: \n", geben);
+				printf("	Numbers of player %u: \n", p);
 				for (unsigned int q=1; p<=6; p+=1) {
-					printf("		#%u = %u \n", q, numbers_of_[geben][1][0]);
+					printf("		#%u = %u \n", q, numbers_of_[p][1][0]);
 				}
 				printf("\n");
 			}
 			
 			if ((gamemode == 1)||(gamemode == 6)||(gamemode == 7)||(gamemode == 8)) {
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					printf("	Matchballs player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+					printf("	Matchballs player %u: 	%u \n", p, numbers_of_[p][0][0]);
 				}
 			} else if (gamemode == 2) {
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					printf("	Squares collected by player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+					printf("	Squares collected by player %u: 	%u \n", p, numbers_of_[p][0][0]);
 				}
 			} else if (gamemode == 3) {
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					printf("	Times with squares <= 5, player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+					printf("	Times with squares <= 5, player %u: 	%u \n", p, numbers_of_[p][0][0]);
 				}
 			} else if (gamemode == 4) {
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					printf("	Points player %u: 		%u \n", geben, Points[geben]);
-					printf("	Turns with more points player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+					printf("	Points player %u: 		%u \n", p, Points[p]);
+					printf("	Turns with more points player %u: 	%u \n", p, numbers_of_[p][0][0]);
 				}
 				printf("	Number of not decided #-squares: 	%u \n", Points[0]);
 			} else if (gamemode == 5) {
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					printf("	Times with squares < 5, player %u: 	%u \n", geben, numbers_of_[geben][0][0]);
+					printf("	Times with squares < 5, player %u: 	%u \n", p, numbers_of_[p][0][0]);
 				}
 			} else if (gamemode == 9) {
 				printf("	Number of excluded abilites: 	%u \n", exclude_counter);
@@ -8162,9 +8186,11 @@ int main (void) {
 			printf(" \n ");
 			printf(" \n ");
 			
-			printf("	Do you want to play a revenge? \n ");
+			printf("	Do you want to play a revanche? \n ");
 			printf("	yes: 1		No: 0 \n ");
 			scanf("%u", &same[0]);
+			
+			printf("	same[0] = %u \n", same[0]);	//test
 			
 			if (same[0] > 1) {
 				printf("	it was a -1-, wasn't it?");
@@ -8181,21 +8207,19 @@ int main (void) {
 			
 		}
 		
+		//Aufräumphase!!!
+		int_Vektor_Destroy (dynamic_pointer);
+		for (unsigned int p=0; p<=number_of_players; p+=1) {
+			free (dynamic_pointer_save[p]);
+		}
+		free (dynamic_pointer_save);
+		unsigned_int_Vektor_Destroy (position);
+
+		Spielfeld_Destroy (Field, m, 0);
+		Spielfeld_Destroy (Sf_od_, m, 0);
+		Spielfeld_Destroy (Sf_nl_, m, 0);
+		Spielfeld_Destroy (Sf_opague, m, 0);
 	}
-	
-	//Aufräumphase!!!
-	int_Vektor_Destroy (dynamic_pointer);
-	for (unsigned int p=0; p<=number_of_players; p+=1) {
-		free (dynamic_pointer_save[p]);
-	}
-	free (dynamic_pointer_save);
-	unsigned_int_Vektor_Destroy (position);
-	
-	Spielfeld_Destroy (Field, m, 0);
-	Spielfeld_Destroy (Sf_od_, m, 0);
-	Spielfeld_Destroy (Sf_nl_, m, 0);
-	Spielfeld_Destroy (Sf_opague, m, 0);
-	
 	
 	return 0;
 }
