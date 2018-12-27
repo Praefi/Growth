@@ -6049,7 +6049,7 @@ int main (void) {
 				
 					old_dying (Field, m, n, d, e, gamemode, information_code, geben, Sf_od_);
 					
-					show_field (Sf_od_, m, n, gamemode, information_code, geben, Colored, geben);	//test
+					// show_field (Sf_od_, m, n, gamemode, information_code, geben, Colored, geben);	//test
 					
 					if ((boost_hunt_activator == 1)&&(gamemode == 6)&&(geben == 1)) {
 						for (unsigned int i=1; i<m-1; i+=1){
@@ -9834,7 +9834,7 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 		}
 	}
 	
-	printf("	101*geben=%u, geben=%u \n", 101*geben, geben);
+	// printf("	101*geben=%u, geben=%u \n", 101*geben, geben);	//test
 	
 }
 
@@ -9861,7 +9861,7 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 		}
 	}
 	
-	printf("change:	101*geben=%u, geben=%u \n", 101*geben, geben);
+	// printf("change:	101*geben=%u, geben=%u \n", 101*geben, geben); //test
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
