@@ -20,7 +20,8 @@ void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned in
 void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int);
 
 void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*, unsigned int);
-void show_whose_turn (unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*)
+void show_whose_turn (unsigned int, unsigned int, unsigned int*, unsigned int*);
+void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int);
 
 unsigned int Vorganger (unsigned int, unsigned int);
 
@@ -2584,7 +2585,7 @@ int main (void) {
 							printf("	Electric. \n");
 						}
 						if (exclude_counter == 0) {
-							printf("	No Ability excluded. \n");
+							printf("	No ability excluded. \n");
 						}
 						printf("	Number of players: %u \n", number_of_players);
 					} else if (gamemode == 10) {
@@ -5166,7 +5167,8 @@ int main (void) {
 				}
 				
 				printf("\n");
-				// show_whose_turn (gamemode, geben, number_of_players, ability, Colored);
+				
+				show_whose_turn (gamemode, geben, ability, Colored);
 				
 				if (tac != 0){
 					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", numbers_of_[geben][1][0], numbers_of_[geben][2][0], numbers_of_[geben][3][0], numbers_of_[geben][4][0], numbers_of_[geben][5][0], numbers_of_[geben][0][0]);
@@ -5275,15 +5277,12 @@ int main (void) {
 							} else if (gamemode != 6) {
 								printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", limit_new, limit_at_all);
 							}
-						}
-				
-						if (menuoperator == 2){
+						} else if (menuoperator == 2){
 							printf("\n");
 							printf("	turns at all: %u \n", g);
 							
-							show_statistics (number_of_players, gamemode, numbers_of_, Points, exclude_counter, ulcer_lifes, ges, pere);
-						}
-						if (menuoperator == 3){
+							show_statistics (number_of_players, gamemode, numbers_of_, Points, exclude_counter, ulcer_lifes, ges, pere, ability, ttt);
+						} else if (menuoperator == 3){
 							if ((gamemode != 10)&&(gamemode != 12)) {
 								printf("	Plus: Change a free square in the surrounding of yours in one of yours.\n");
 							} else {
@@ -5338,9 +5337,7 @@ int main (void) {
 							}
 							
 							printf("\n");
-						}
-						
-						if (menuoperator == 4){
+						} else if (menuoperator == 4){
 							if ((gamemode != 10)&&(gamemode != 12)) {
 								printf("	Limit of development:	%u \n", limit_new);
 								if (gamemode != 3) {
@@ -5348,9 +5345,7 @@ int main (void) {
 									printf("	Limit in total with >2-new< taken: %u -0/-1/-2/-3/-4.\n", limit_at_all);
 								}
 							}
-						}
-						
-						if (menuoperator == 5){
+						} else if (menuoperator == 5){
 							Spielfeld hint;
 							unsigned int b, a;
 							hint = Spielfeld_Create (m, n, 0);
@@ -5464,9 +5459,7 @@ int main (void) {
 							Spielfeld_Destroy (hint, m, 0);
 							
 							//show_field (hint, m, n, gamemode, information_code, geben, Colored, 0);		//teste die desrtoy-funktion für Spielfelder, done
-						}
-						
-						if (menuoperator == 6){
+						} else if (menuoperator == 6){
 							if (suprise == 0) {
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
@@ -7988,6 +7981,8 @@ int main (void) {
 		
 		if (lim == 1){
 			
+			show_statistics (number_of_players, gamemode, numbers_of_, Points, exclude_counter, ulcer_lifes, ges, pere, ability, ttt);
+			
 		}
 		
 		if (gamemode == 6) {
@@ -8008,9 +8003,7 @@ int main (void) {
 		scanf ("%u", &playtime);
 		if (playtime == 0) {
 			printf("				     ___ \n ");
-		}
-		
-		if (playtime > 1) {
+		} else if (playtime > 1) {
 			printf("	it was a -1-, wasn't it?");
 		}
 		if (playtime >= 1) {
@@ -8023,7 +8016,7 @@ int main (void) {
 			printf("	yes: 1		No: 0 \n ");
 			scanf("%u", &same[0]);
 			
-			printf("	same[0] = %u \n", same[0]);	//test
+			// printf("	same[0] = %u \n", same[0]);	//test
 			
 			if (same[0] > 1) {
 				printf("	it was a -1-, wasn't it?");
@@ -8042,16 +8035,55 @@ int main (void) {
 		
 		//Aufräumphase!!!
 		int_Vektor_Destroy (dynamic_pointer);
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 1\n");	//test
+		
 		for (unsigned int p=0; p<=number_of_players; p+=1) {
 			free (dynamic_pointer_save[p]);
 		}
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 2\n");	//test
+		
 		free (dynamic_pointer_save);
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 3\n");	//test
+		
 		unsigned_int_Vektor_Destroy (position);
-
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 4\n");	//test
+		
 		Spielfeld_Destroy (Field, m, 0);
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 5\n");	//test
+		
 		Spielfeld_Destroy (Sf_od_, m, 0);
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 6\n");	//test
+		
 		Spielfeld_Destroy (Sf_nl_, m, 0);
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 7\n");	//test
+		
 		Spielfeld_Destroy (Sf_opague, m, 0);
+		
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 8k, 8\n");	//test
+		
 	}
 	
 	return 0;
@@ -12616,7 +12648,7 @@ void impact_y_semi_square (unsigned int m, unsigned int n, unsigned int* positio
 	
 }
 
-void show_whose_turn (unsigned int gamemode, unsigned int geben, unsigned int number_of_players, unsigned int* ability, unsigned int* Colored) {
+void show_whose_turn (unsigned int gamemode, unsigned int geben, unsigned int* ability, unsigned int* Colored) {
 	
 	if (Colored[0] == 1) {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[geben]);
@@ -12680,13 +12712,13 @@ void show_whose_turn (unsigned int gamemode, unsigned int geben, unsigned int nu
 	
 }
 
-void show_statistics () {
+void show_statistics (unsigned int number_of_players, unsigned int gamemode, Spielfeld numbers_of_, unsigned int* Points, unsigned int exclude_counter, unsigned int* ulcer_lifes, unsigned int* ges, unsigned int* pere, unsigned int* ability, unsigned int ttt) {
 
 	printf("\n");
 	for (unsigned int p=1; p<=number_of_players; p+=1) {
 		printf("	Numbers of player %u: \n", p);
-		for (unsigned int q=1; p<=6; p+=1) {
-			printf("		#%u = %u \n", q, numbers_of_[p][1][0]);
+		for (unsigned int q=1; q<=6; q+=1) {
+			printf("		#%u = %u \n", q, numbers_of_[p][q][0]);
 		}
 		printf("\n");
 	}
@@ -12755,4 +12787,4 @@ void show_statistics () {
 //s=10: 10	10	9	4	6	9	10	10														s=10:	10	10	9	4	8	4	3	3	3	2	3	7	3		
 //v= 0:	0	0	-1	-3	-6	-3	-1	0	<--leer	,freier Fall,	1 Hindernis auf Grund-->	v= 0:	0	0	-1	-3	-3	-4	-4	-3	-3	-2	-3	-4	-4		für 1.
 //a= 0:	0	-1	-2	-3	3	2	1	0														a= 0:	0	-1	-2	-3	-1	-2	0	-1	0	-1	-3	0	-1
-//Nimm 2.Geschwindigkeit
+//Nimm 2.Geschwindigkeit
