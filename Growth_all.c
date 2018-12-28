@@ -86,7 +86,7 @@ int main (void) {
 	unsigned int beginningmenu, gamemode;
 	unsigned int fall_controll, fall_back, turns_per_drop, speed_of_fall, count_freq, rain, rain_drops, rain_save, rain_obj, rain_speed, rain_speed_save;
 	unsigned int w, d, e;
-	unsigned int opt, siz_m, siz_n, limit_new, limit_at_all, lim, suprise, sup_num, menuoperator, points_for_win, freq;
+	unsigned int opt, limit_new, limit_at_all, lim, suprise, sup_num, menuoperator, points_for_win, freq;
 	unsigned int use_number, num_1, num_2, num_3, num_temp, number_rain;
 	unsigned int count_new, einmal, boost_hunt_activator, zeitgewinner;
 	unsigned int nosv, AOP;		//number of saved variables; amount of players
@@ -110,7 +110,7 @@ int main (void) {
 	//unsigned int same_counter;
 	
 	//same: 0, m, n, journey, tac, gamemode, fall_controll, turns_per_drop, speed_of_fall, count_freq, rain, rain_drops, rain_obj, rain_speed,	//14
-	//		opt, siz_m, siz_n, limit_new, limit_at_all, points_for_win, freq, use_number,	//8
+	//		opt, limit_new, limit_at_all, points_for_win, freq, use_number,	//6
 	//		number_of_players, rtc, spf, scwhp, hboa, ttt, warning_system, exclude_counter, rtp, information_code[4], ability[10], Colored[10], ulcer_lifes[10] ohne [0]	//42
 	
 	double time_saver, time_warning;
@@ -136,7 +136,7 @@ int main (void) {
 	
 	playtime = 1;	//playing game after game after...
 	
-	nosv = 70;	//Number_of_saved_variables, drücke abhängig von AOP aus go on
+	nosv = 68;	//Number_of_saved_variables, drücke abhängig von AOP aus go on
 	//same_counter = 0; 		//for variable length of same
 	
 	dynamic_pointer = int_Vektor_Create (8);
@@ -172,7 +172,7 @@ int main (void) {
 		
 		//playtime should start here, done
 		
-		number_of_players = 2;
+		number_of_players = 2;	//normally
 		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.1 \n");	//test
@@ -215,8 +215,6 @@ int main (void) {
 		opt = 0;
 		tac = 0;
 		journey = 0;
-		siz_m = 0;		//	
-		siz_n = 0;		//
 		
 		ent = 0;
 		num_temp = 0;
@@ -402,683 +400,684 @@ int main (void) {
 						
 						if (gamemode == 1){
 							printf(" Zeilen: >=6				(normal: 10) \n Spalten: >=4, mod2==0				(normal: 6) \n");
-							scanf("%u %u", &siz_m, &siz_n);
+							scanf("%u %u", &m, &n);
 							printf("\n");
-						
-							if ((siz_m<6)||(siz_n<4)||(siz_n%2==1)){
+							
+							if ((m<6)||(n<4)||(n%2==1)){
 								printf("	You missed the assertions !!! \n");
 								printf("\n");
-								siz_m = 10;
-								siz_n = 6;
+								m = 12;
+								n = 8;
 							} else {
-								m = siz_m + 2;
-								n = siz_n + 2;
+								m += 2;
+								n += 2;
 							}
 						} else if (gamemode == 2) {
 							printf(" Zeilen: >=7, mod2==1				(normal: 9) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-							scanf("%u %u", &siz_m, &siz_n);
+							scanf("%u %u", &m, &n);
 							printf("\n");
-						
-							if ((siz_m<7)||(siz_n<7)||(siz_n%2==0)||(siz_m%2==0)){
+							
+							if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
 								printf("	You missed the assertions !!! \n");
 								printf("\n");
-								siz_m = 9;
-								siz_n = 11;
+								m = 11;
+								n = 13;
 							} else {
-								m = siz_m + 2;
-								n = siz_n + 2;
+								m += 2;
+								n += 2;
 							}
 						} else if (gamemode == 3) {
 							printf(" Zeilen: >=6				(normal: 10) \n Spalten: >=4, mod2==0				(normal: 16) \n");
-							scanf("%u %u", &siz_m, &siz_n);
+							scanf("%u %u", &m, &n);
 							printf("\n");
-						
-							if ((siz_m<6)||(siz_n<4)||(siz_n%2==1)){
+							
+							if ((m<6)||(n<4)||(n%2==1)){
 								printf("	You missed the assertions !!! \n");
 								printf("\n");
-								siz_m = 10;
-								siz_n = 16;
+								m = 12;
+								n = 18;
 							} else {
-								m = siz_m + 2;
-								n = siz_n + 2;
+								m += 2;
+								n += 2;
 							}
 						} else if (gamemode == 4) {
 							printf(" Zeilen: >=3				(normal: 6) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-							scanf("%u %u", &siz_m, &siz_n);
+							scanf("%u %u", &m, &n);
 							printf("\n");
-						
-							if ((siz_m<3)||(siz_n<7)||(siz_n%2==0)){
+							
+							if ((m<3)||(n<7)||(n%2==0)){
 								printf("	You missed the assertions !!! \n");
 								printf("\n");
-								siz_m = 6;
-								siz_n = 11;
+								m = 8;
+								n = 13;
 							} else {
-								m = siz_m + 2;
-								n = siz_n + 2;
+								m += 2;
+								n += 2;
 							}
 						} else if (gamemode == 5) {
 							printf(" Zeilen: >=6				(normal: 6) \n Spalten: >=4, mod2==0				(normal: 6) \n");
-							scanf("%u %u", &siz_m, &siz_n);
+							scanf("%u %u", &m, &n);
 							printf("\n");
-						
-							if ((siz_m<6)||(siz_n<4)||(siz_n%2==1)){
+							
+							if ((m<6)||(n<4)||(n%2==1)){
 								printf("	You missed the assertions !!! \n");
 								printf("\n");
-								siz_m = 6;
-								siz_n = 6;
+								m = 8;
+								n = 8;
 							} else {
-								m = siz_m + 2;
-								n = siz_n + 2;
+								m += 2;
+								n += 2;
 							}
 						} else if (gamemode == 6) {
 							if (number_of_players == 2) {
 								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 9) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<3)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<3)||(n<7)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 7;
-									siz_n = 9;
+									m = 9;
+									n = 11;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 3) {
 								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=9, mod2==1				(normal: 13) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<3)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<3)||(n<9)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 7;
-									siz_n = 13;
+									m = 9;
+									n = 15;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 4) {
-								printf(" Zeilen: >=7, mod2==1				(normal: 10) \n Spalten: >=9, mod2==1				(normal: 13) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=9, mod2==1				(normal: 13) \n");
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<7)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<7)||(n<9)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 11;
-									siz_n = 13;
+									m = 13;
+									n = 15;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 5) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 13) \n Spalten: >=9, mod2==1				(normal: 13) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 13;
-									siz_n = 13;
+									m = 15;
+									n = 15;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 6) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 13) \n Spalten: >=10, mod2==0				(normal: 16) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<10)||(siz_m%2==0)||(siz_n%2==1)){
+								
+								if ((m<9)||(n<10)||(n%2==1)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 13;
-									siz_n = 16;
+									m = 15;
+									n = 18;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 7) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=13, mod2==1				(normal: 19) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<13)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<13)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 15;
-									siz_n = 19;
+									m = 17;
+									n = 21;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 8) {
 								printf(" Zeilen: >=10, mod2==0				(normal: 16) \n Spalten: >=13, mod2==1				(normal: 21) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<13)||(siz_m%2==1)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<13)||(n%2==0)||(m%2==1)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 16;
-									siz_n = 21;
+									m = 18;
+									n = 23;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 9) {
 								printf(" Zeilen: >=13, mod2==1				(normal: 21) \n Spalten: >=13, mod2==1				(normal: 21) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<13)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<13)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 21;
-									siz_n = 21;
+									m = 23;
+									n = 23;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							}
 						} else if (gamemode == 7) {
 							printf(" Zeilen: >=7				(normal: 7) \n Spalten: >=5, mod2==1				(normal: 19) \n");
-							scanf("%u %u", &siz_m, &siz_n);
+							scanf("%u %u", &m, &n);
 							printf("\n");
-						
-							if ((siz_m<7)||(siz_n<5)||(siz_n%2==0)){
+							
+							if ((m<7)||(n<5)||(n%2==0)){
 								printf("	You missed the assertions !!! \n");
 								printf("\n");
-								siz_m = 7;
-								siz_n = 19;
+								m = 9;
+								n = 21;
 							} else {
-								m = siz_m + 2;
-								n = siz_n + 2;
+								m += 2;
+								n += 2;
 							}
 						} else if (gamemode == 8) {
 							printf(" Zeilen: >=3				(normal: 6) \n");
-							scanf("%u", &siz_m);
+							scanf("%u %u", &m, &n);
 							printf("\n");
-						
-							if (siz_m<3){
+							
+							if (m<3){
 								printf("	You missed the assertions !!! \n");
 								printf("\n");
-								siz_m = 6;
+								m = 8;
 							} else {
-								m = siz_m + 2;
+								m += 2;
+								n += 2;
 							}
 						} else if (gamemode == 9) {
 							if (number_of_players == 2) {
 								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 7) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<3)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<3)||(n<7)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 7;
-									siz_n = 7;
+									m = 9;
+									n = 9;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 3) {
 								printf(" Zeilen: >=7, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 7) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<7)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 7;
-									siz_n = 7;
+									m = 9;
+									n = 9;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 4) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 9) \n Spalten: >=9, mod2==1				(normal: 9) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 9;
-									siz_n = 9;
+									m = 11;
+									n = 11;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 5) {
 								printf(" Zeilen: >=8, mod2==0				(normal: 10) \n Spalten: >=8, mod2==0				(normal: 10) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<8)||(siz_n<8)||(siz_m%2==1)||(siz_n%2==1)){
+								
+								if ((m<8)||(n<8)||(n%2==1)||(m%2==1)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 10;
-									siz_n = 10;
+									m = 12;
+									n = 12;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 6) {
 								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=13, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<7)||(siz_n<13)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<7)||(n<13)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 11;
-									siz_n = 11;
+									m = 13;
+									n = 13;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 7) {
 								printf(" Zeilen: >=8, mod2==0				(normal: 12) \n Spalten: >=12, mod2==0				(normal: 12) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<4)||(siz_n<12)||(siz_m%2==1)||(siz_n%2==1)){
+								
+								if ((m<4)||(n<12)||(n%2==1)||(m%2==1)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 12;
-									siz_n = 12;
+									m = 14;
+									n = 14;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 8) {
 								printf(" Zeilen: >=12, mod2==0				(normal: 14) \n Spalten: >=12, mod2==0				(normal: 14) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<12)||(siz_n<12)||(siz_m%2==1)||(siz_n%2==1)){
+								
+								if ((m<12)||(n<12)||(n%2==1)||(m%2==1)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 14;
-									siz_n = 14;
+									m = 16;
+									n = 16;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 9) {
 								printf(" Zeilen: >=12, mod2==0				(normal: 14) \n Spalten: >=12, mod2==0				(normal: 14) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<12)||(siz_n<12)||(siz_m%2==1)||(siz_n%2==1)){
+								
+								if ((m<12)||(n<12)||(n%2==1)||(m%2==1)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 14;
-									siz_n = 14;
+									m = 16;
+									n = 16;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							}
 						} else if (gamemode == 10) {
 							if (number_of_players == 2) {
 								printf(" Zeilen: >=6				(normal: 6) \n Spalten: >=6				(normal: 6) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<6)||(siz_n<6)){
+								
+								if ((m<6)||(n<6)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 6;
-									siz_n = 6;
+									m = 8;
+									n = 8;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 3) {
 								printf(" Zeilen: >=7				(normal: 7) \n Spalten: >=7				(normal: 7) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<7)||(siz_n<7)){
+								
+								if ((m<7)||(n<7)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 7;
-									siz_n = 7;
+									m = 9;
+									n = 9;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 4) {
 								printf(" Zeilen: >=9				(normal: 9) \n Spalten: >=9				(normal: 9) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)){
+								
+								if ((m<9)||(n<9)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 9;
-									siz_n = 9;
+									m = 11;
+									n = 11;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 5) {
 								printf(" Zeilen: >=10				(normal: 10) \n Spalten: >=10				(normal: 10) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<10)||(siz_n<10)){
+								
+								if ((m<10)||(n<10)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 10;
-									siz_n = 10;
+									m = 12;
+									n = 12;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 6) {
 								printf(" Zeilen: >=11				(normal: 11) \n Spalten: >=11				(normal: 11) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<11)||(siz_n<11)){
+								
+								if ((m<11)||(n<11)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 11;
-									siz_n = 11;
+									m = 13;
+									n = 13;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 7) {
 								printf(" Zeilen: >=12				(normal: 12) \n Spalten: >=12				(normal: 12) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<12)||(siz_n<12)){
+								
+								if ((m<12)||(n<12)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 12;
-									siz_n = 12;
+									m = 14;
+									n = 14;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 8) {
 								printf(" Zeilen: >=13				(normal: 13) \n Spalten: >=13				(normal: 13) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<13)||(siz_n<13)){
+								
+								if ((m<13)||(n<13)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 13;
-									siz_n = 13;
+									m = 15;
+									n = 15;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 9) {
 								printf(" Zeilen: >=14				(normal: 14) \n Spalten: >=14				(normal: 14) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<14)||(siz_n<14)){
+								
+								if ((m<14)||(n<14)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 14;
-									siz_n = 14;
+									m = 16;
+									n = 16;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							}
 							
 						} else if (gamemode == 11) {
 							if (number_of_players == 2) {
 								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<3)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<3)||(n<7)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 7;
-									siz_n = 11;
+									m = 9;
+									n = 11;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 3) {
 								printf(" Zeilen: >=5, mod2==1				(normal: 9) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<5)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<5)||(n<7)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 9;
-									siz_n = 11;
+									m = 11;
+									n = 13;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 4) {
 								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<7)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 11;
-									siz_n = 11;
+									m = 13;
+									n = 13;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 5) {
 								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=7, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<7)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 11;
-									siz_n = 15;
+									m = 13;
+									n = 17;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 6) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=9, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 15;
-									siz_n = 15;
+									m = 17;
+									n = 17;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 7) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=9, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 15;
-									siz_n = 15;
+									m = 17;
+									n = 17;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 8) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 17;
-									siz_n = 17;
+									m = 19;
+									n = 19;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 9) {
 								printf(" Zeilen: >=11, mod2==1				(normal: 17) \n Spalten: >=11, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<11)||(siz_n<11)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<11)||(n<11)||(n%2==0)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 17;
-									siz_n = 17;
+									m = 19;
+									n = 19;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							}
 						} else if (gamemode == 12) {
 							if (number_of_players == 1) {
 								printf(" Zeilen: >=3				(normal: 10) \n Spalten: >=3				(normal: 10) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<3)||(siz_n<3)){
+								
+								if ((m<3)||(n<3)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 10;
-									siz_n = 10;
+									m = 12;
+									n = 12;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 2) {
 								printf(" Zeilen: >=3				(normal: 11) \n Spalten: >=6				(normal: 11) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<3)||(siz_n<6)){
+								
+								if ((m<6)||(n<6)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 11;
-									siz_n = 11;
+									m = 13;
+									n = 13;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 3) {
 								printf(" Zeilen: >=6				(normal: 12) \n Spalten: >=6				(normal: 12) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<6)||(siz_n<6)){
+								
+								if ((m<6)||(n<6)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 12;
-									siz_n = 12;
+									m = 14;
+									n = 14;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 4) {
 								printf(" Zeilen: >=6				(normal: 13) \n Spalten: >=6				(normal: 13) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<6)||(siz_n<6)){
+								
+								if ((m<6)||(n<6)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 13;
-									siz_n = 13;
+									m = 15;
+									n = 15;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 5) {
 								printf(" Zeilen: >=7, mod2==1				(normal: 15) \n Spalten: >=7, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<7)||(siz_n<7)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<7)||(n<7)||(m%2==0)||(n%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 15;
-									siz_n = 15;
+									m = 17;
+									n = 17;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 6) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=6				(normal: 15) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<6)||(siz_m%2==0)){
+								
+								if ((m<9)||(n<6)||(m%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 15;
-									siz_n = 15;
+									m = 17;
+									n = 17;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 7) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(m%2==0)||(n%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 17;
-									siz_n = 17;
+									m = 19;
+									n = 19;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 8) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(m%2==0)||(n%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 17;
-									siz_n = 17;
+									m = 19;
+									n = 19;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							} else if (number_of_players == 9) {
 								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &siz_m, &siz_n);
+								scanf("%u %u", &m, &n);
 								printf("\n");
-							
-								if ((siz_m<9)||(siz_n<9)||(siz_m%2==0)||(siz_n%2==0)){
+								
+								if ((m<9)||(n<9)||(m%2==0)||(n%2==0)){
 									printf("	You missed the assertions !!! \n");
 									printf("\n");
-									siz_m = 17;
-									siz_n = 17;
+									m = 19;
+									n = 19;
 								} else {
-									m = siz_m + 2;
-									n = siz_n + 2;
+									m += 2;
+									n += 2;
 								}
 							}
 						}
@@ -1981,297 +1980,101 @@ int main (void) {
 						
 					}
 					if ((beginningmenu == back_opt+2)&&((gamemode == 6)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11))){
-						printf("	Number of players?		(2 - 9) \n");
-						scanf("%u", &number_of_players);
 						
-						while ((number_of_players < 2) || (number_of_players > 9)){
-							printf("	Number of players?		(2 - 9) \n");
-							scanf("%u", &number_of_players);
-						}
-						
-						if (gamemode == 6) {
-							if (number_of_players == 3){
-								
-								siz_m = 7;
-								siz_n = 13;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 4){
-							
-								siz_m = 11;
-								siz_n = 13;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 5){
-								
-								siz_m = 13;
-								siz_n = 13;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 6){
-								
-								siz_m = 13;
-								siz_n = 16;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 7){
-								
-								siz_m = 15;
-								siz_n = 19;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 8){
-								
-								siz_m = 16;
-								siz_n = 21;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 9){
-								
-								siz_m = 21;
-								siz_n = 21;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-						} else if (gamemode == 9) {
-							
-							if (number_of_players == 3){
-								
-								siz_m = 9;
-								siz_n = 9;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 4){
-								
-								siz_m = 11;
-								siz_n = 11;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 5){
-								
-								siz_m = 12;
-								siz_n = 12;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 6){
-								
-								siz_m = 13;
-								siz_n = 13;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 7){
-								
-								siz_m = 14;
-								siz_n = 14;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 8){
-								
-								siz_m = 16;
-								siz_n = 16;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 9){
-								
-								siz_m = 16;
-								siz_n = 16;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-						} else if (gamemode == 10) {
-							
-							if (number_of_players == 3){
-								
-								siz_m = 7;
-								siz_n = 7;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 4){
-								
-								siz_m = 9;
-								siz_n = 9;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 5){
-								
-								siz_m = 10;
-								siz_n = 10;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 6){
-								
-								siz_m = 11;
-								siz_n = 11;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 7){
-								
-								siz_m = 12;
-								siz_n = 12;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 8){
-								
-								siz_m = 13;
-								siz_n = 13;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 9){
-								
-								siz_m = 14;
-								siz_n = 14;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-						} else if (gamemode == 11) {
-							
-							if (number_of_players == 3){
-								
-								siz_m = 9;
-								siz_n = 11;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 4){
-								
-								siz_m = 11;
-								siz_n = 11;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 5){
-								
-								siz_m = 11;
-								siz_n = 15;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 6){
-								
-								siz_m = 15;
-								siz_n = 15;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 7){
-								
-								siz_m = 15;
-								siz_n = 15;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 8){
-								
-								siz_m = 17;
-								siz_n = 17;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 9){
-								
-								siz_m = 17;
-								siz_n = 17;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-						}
-						
-					}
-					if ((beginningmenu == back_opt+2)&&((gamemode == 12))){
-						printf("	Number of players?		(1 - 9) \n");
-						scanf("%u", &number_of_players);
+						number_of_players = 0;
 						
 						while ((number_of_players < 1) || (number_of_players > 9)){
 							printf("	Number of players?		(1 - 9) \n");
 							scanf("%u", &number_of_players);
 						}
 						
-						if (gamemode == 12) {
-							if (number_of_players == 1){
-								
-								siz_m = 10;
-								siz_n = 10;
-								m = siz_m + 2;
-								n = siz_n + 2;
+						if (gamemode == 6) {
+							if (number_of_players == 2) {
+								m = Initialisierung_m (gamemode);
+								n = Initialisierung_n (gamemode);
+							} else {
+								for (unsigned int p=1; p<=AOP; p++) {
+									if (p == number_of_players) {
+										m = 2*p + 1 + 2;
+										if ((number_of_players == 4)||(number_of_players == 5)||(number_of_players == 9)) {
+											m+=2;
+										} else if (number_of_players == 8) {
+											m--;
+										}
+										
+										n = 3*p + 2;
+										if ((number_of_players == 4)||(number_of_players == 5)||(number_of_players == 6)||(number_of_players == 7)) {
+											n-=((p+1)/3);
+										} else if (number_of_players == 9) {
+											n+=(4-3*(p%3)-10*(p/7));
+										}
+										break;
+									}
+								}
 							}
-							if (number_of_players == 2){
-								
-								siz_m = 11;
-								siz_n = 11;
-								m = siz_m + 2;
-								n = siz_n + 2;
+						} else if (gamemode == 9) {
+							if (number_of_players == 2) {
+								m = Initialisierung_m (gamemode);
+								n = Initialisierung_n (gamemode);
+							} else {
+								for (unsigned int p=1; p<=AOP; p++) {
+									if (p == number_of_players) {
+										m = 6 + p + (p-1)/3 - p/7 + p/8 - p/9 + 2;
+										n = 6 + p + (p-1)/3 - p/7 + p/8 - p/9 + 2;
+										break;
+									}
+								}
 							}
-							if (number_of_players == 3){
-								
-								siz_m = 12;
-								siz_n = 12;
-								m = siz_m + 2;
-								n = siz_n + 2;
+						} else if (gamemode == 10) {
+							if (number_of_players == 2) {
+								m = Initialisierung_m (gamemode);
+								n = Initialisierung_n (gamemode);
+							} else {
+								for (unsigned int p=1; p<=AOP; p++) {
+									if (p == number_of_players) {
+										m = 5 + p + 2;
+										n = 5 + p + 2;
+										if (number_of_players == 3) {
+											m--;
+											n--;
+										}
+										break;
+									}
+								}
 							}
-							if (number_of_players == 4){
-								
-								siz_m = 13;
-								siz_n = 13;
-								m = siz_m + 2;
-								n = siz_n + 2;
+						} else if (gamemode == 11) {
+							if (number_of_players == 2) {
+								m = Initialisierung_m (gamemode);
+								n = Initialisierung_n (gamemode);
+							} else {
+								for (unsigned int p=1; p<=AOP; p++) {
+									if (p == number_of_players) {
+										m = 9 + 2*(p/4) + 4*(p/6) + 2;
+										n = 11 + 4*(p/5) + 2*(p/8) + 2;
+										break;
+									}
+								}
 							}
-							if (number_of_players == 5){
-								
-								siz_m = 15;
-								siz_n = 15;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 6){
-								
-								siz_m = 15;
-								siz_n = 15;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 7){
-								
-								siz_m = 17;
-								siz_n = 17;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 8){
-								
-								siz_m = 17;
-								siz_n = 17;
-								m = siz_m + 2;
-								n = siz_n + 2;
-							}
-							if (number_of_players == 9){
-								
-								siz_m = 17;
-								siz_n = 17;
-								m = siz_m + 2;
-								n = siz_n + 2;
+						} else if (gamemode == 12) {
+							
+							for (unsigned int p=1; p<=AOP; p++) {
+								if (p == number_of_players) {
+									m = 9 + p + 2;
+									n = 9 + p + 2;
+									
+									if ((number_of_players == 5)||(number_of_players == 7)) {
+										m++;
+										n++;
+									} else if (number_of_players == 9) {
+										m--;
+										n--;
+									}
+									break;
+								}
 							}
 						}
 						
-					}
-					if ((beginningmenu == back_opt+3)&&((gamemode == 9)||(gamemode == 10))) {
+					} else if ((beginningmenu == back_opt+3)&&((gamemode == 9)||(gamemode == 10))) {
 						printf("	Rounds to play: 			(normal: 30) \n");
 						scanf("%u", &rtp);
 						if (rtp == 0) {
@@ -2281,12 +2084,10 @@ int main (void) {
 							printf("	K.O.-Mode deactivated \n");
 							ulcer_start[0] = 0;
 						}
-					}
-					if ((beginningmenu == back_opt+1)&&(gamemode == 7)){
+					} else if ((beginningmenu == back_opt+1)&&(gamemode == 7)){
 						printf("	Frequence: 			(normal: 6) \n");
 						scanf("%u", &freq);
-					}
-					if ((beginningmenu == back_opt+1)&&(gamemode == 8)){
+					} else if ((beginningmenu == back_opt+1)&&(gamemode == 8)){
 						printf("	Only Object: 	yes [1]		no [0] \n");
 						scanf("%u", &rain_obj);
 						if ((rain_obj != 1)&&(rain_obj != 0)) {
@@ -2322,9 +2123,7 @@ int main (void) {
 							rain_speed = 1;
 						}
 						printf("\n");
-					}
-					
-					if ((beginningmenu == back_opt+1)&&(gamemode == 10)) {
+					} else if ((beginningmenu == back_opt+1)&&(gamemode == 10)) {
 						
 						printf("	This only works if the number of players is correct! \n");
 						printf("\n");
@@ -2336,8 +2135,7 @@ int main (void) {
 							ulcer_lifes[p] = lim;
 							printf("\n");
 						}
-					}
-					if ((beginningmenu == back_opt+4)&&(gamemode == 10)) {
+					} else if ((beginningmenu == back_opt+4)&&(gamemode == 10)) {
 						if (ulcer_start[0] == 0) {
 							printf("	K.O.-Mode activated. \n");
 							printf("	Rounds are unlimited. \n");
@@ -2349,14 +2147,7 @@ int main (void) {
 							ulcer_start[0] = 0;
 						}
 						
-					}
-					/*
-					printf("	Gravity	  : %u \n", back_opt+1);
-					printf("	Number of players: %u \n", back_opt+2);
-					printf("	Range	 : %u \n", back_opt+3);
-					printf("	Coefficient : %u \n", back_opt+4);
-					*/
-					if ((beginningmenu == back_opt+1)&&(gamemode == 11)) {
+					} else if ((beginningmenu == back_opt+1)&&(gamemode == 11)) {
 						printf("	The Gravity is pulling down the object. \n");
 						printf("	Gravity:	-5 to 5		(normal: 1) \n");
 						scanf("%d", &erd);
@@ -2364,8 +2155,7 @@ int main (void) {
 							printf("	That makes no sense, i will give you the 1. \n");
 							erd = 1;
 						}
-					}
-					if ((beginningmenu == back_opt+3)&&(gamemode == 11)) {
+					} else if ((beginningmenu == back_opt+3)&&(gamemode == 11)) {
 						printf("	The Range of the impact moving the object. \n");
 						printf("	Range:	0-5		(normal: 1) \n");
 						scanf("%u", &range);
@@ -2373,8 +2163,7 @@ int main (void) {
 							printf("	That makes no sense, i will give you the 1. \n");
 							range = 1;
 						}
-					}
-					if ((beginningmenu == back_opt+4)&&(gamemode == 11)) {
+					} else if ((beginningmenu == back_opt+4)&&(gamemode == 11)) {
 						printf("	The Coefficient influences the way and strength of the impact moving the object. \n");
 						printf("	Coefficient:	0-5		(normal: 1) \n");
 						scanf("%u", &d_wert);
@@ -2382,9 +2171,7 @@ int main (void) {
 							printf("	That makes no sense, i will give you the 1. \n");
 							d_wert = 1;
 						}
-					}
-					
-					if ((beginningmenu == back_opt+1)&&(gamemode == 12)) {
+					} else if ((beginningmenu == back_opt+1)&&(gamemode == 12)) {
 						for (unsigned int p=1; p<=3; p+=1) {
 							information_code[p] = 2;
 						}
@@ -2402,8 +2189,7 @@ int main (void) {
 							printf("	-Waves:		Yes: 1		No: 0 \n");
 							scanf("%u", &information_code[3]);
 						}
-					}
-					if (beginningmenu == back_opt){	//auch hier!
+					} else if (beginningmenu == back_opt){	//auch hier!
 						gamemode = 0;
 						break;
 					}
@@ -2552,7 +2338,7 @@ int main (void) {
 					}
 					printf(" \n ");
 					printf(" \n");
-					printf(" 	Zeilen:  %u \n	Spalten: %u \n", siz_m, siz_n);
+					printf(" 	Zeilen:  %u \n	Spalten: %u \n", m-2, n-2);
 					printf(" \n");
 					if (journey == 1){
 						printf("	journey   activated \n");
@@ -2726,8 +2512,8 @@ int main (void) {
 			same[13] = rain_obj;
 			same[14] = rain_speed;
 			same[15] = opt;
-			same[16] = siz_m;
-			same[17] = siz_n;
+			same[16] = range;
+			same[17] = d_wert;
 			same[18] = limit_new;
 			same[19] = limit_at_all;
 			same[20] = ulcer_lifes[2];
@@ -2788,8 +2574,6 @@ int main (void) {
 			} else {
 				same[67] = erd;
 			}
-			same[68] = range;
-			same[69] = d_wert;
 			
 		} else if (same[0] == 1) {
 			same[0] = 0;
@@ -2808,8 +2592,8 @@ int main (void) {
 			rain_obj = same[13];
 			rain_speed = same[14];
 			opt = same[15];
-			siz_m = same[16];
-			siz_n = same[17];
+			range = same[16];
+			d_wert = same[17];
 			limit_new = same[18];
 			limit_at_all = same[19];
 			ulcer_lifes[2] = same[20];
@@ -2864,8 +2648,7 @@ int main (void) {
 			} else {
 				erd = same[67];
 			}
-			range = same[68];
-			d_wert = same[69];
+			
 		}
 		
 		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
