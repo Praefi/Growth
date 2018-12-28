@@ -40,7 +40,14 @@ void Revive (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
 
 void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
 
+void Initialisierung (unsigned int, unsigned int*);
+unsigned int Initialisierung_limit_at_all (unsigned int);
+unsigned int Initialisierung_limit_new (unsigned int);
+unsigned int Initialisierung_m (unsigned int);
+unsigned int Initialisierung_n (unsigned int);
+
 void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
@@ -334,95 +341,11 @@ int main (void) {
 					//Players?
 				}
 				
-				if (gamemode == 1) {
-					m = 12;
-					n = 8;
-					siz_m = 10;
-					siz_n = 6;
-					limit_at_all = 20;
-					limit_new = 10;
-				} else if (gamemode == 2) {
-					m = 11;
-					n = 13;
-					siz_m = 9;
-					siz_n = 11;
-					limit_at_all = 20;
-					limit_new = 10;
-				} else if (gamemode == 3) {
-					m = 12;
-					n = 18;
-					siz_m = 10;
-					siz_n = 16;
-					limit_at_all = 30;
-					limit_new = 15;
-				} else if (gamemode == 4) {
-					m = 8;
-					n = 13;
-					siz_m = 6;
-					siz_n = 11;
-					limit_at_all = 14;
-					limit_new = 7;
-				} else if (gamemode == 5) {
-					m = 8;
-					n = 8;
-					siz_m = 6;
-					siz_n = 6;
-					limit_at_all = 10;
-					limit_new = 5;
-				} else if (gamemode == 6) {
-					m = 9;
-					n = 11;
-					siz_m = 7;
-					siz_n = 9;
-					limit_at_all = 12;
-					limit_new = 6;
-				} else if (gamemode == 7) {
-					m = 9;
-					n = 21;
-					siz_m = 7;
-					siz_n = 19;
-					limit_at_all = 14;
-					limit_new = 7;
-				} else if (gamemode == 8) {
-					m = 8;
-					n = 15;
-					siz_m = 6;
-					siz_n = 13;
-					limit_at_all = 14;
-					limit_new = 7;
-				} else if (gamemode == 9) {
-					m = 9;
-					n = 9;
-					siz_m = 7;
-					siz_n = 7;
-					limit_at_all = 16;
-					limit_new = 8;
-				} else if (gamemode == 10) {
-					m = 8;
-					n = 8;
-					siz_m = 6;
-					siz_n = 6;
-					limit_at_all = 16;
-					limit_new = 8;
-				} else if (gamemode == 11) {
-					m = 9;
-					n = 13;
-					siz_m = 7;
-					siz_n = 11;
-					limit_at_all = 20;
-					limit_new = 10;
-				} else if (gamemode == 12) {
-					m = 13;
-					n = 13;
-					siz_m = 11;
-					siz_n = 11;
-					limit_at_all = 20;
-					limit_new = 10;
-					
-					for (unsigned int p=1; p<=3; p+=1) {
-						information_code[p] = 1;
-					}
-				}
+				Initialisierung (gamemode, information_code);
+				limit_at_all = Initialisierung_limit_at_all (gamemode);
+				limit_new = Initialisierung_limit_new (gamemode);
+				m = Initialisierung_m (gamemode);
+				n = Initialisierung_n (gamemode);
 				
 				while (beginningmenu != 1){
 			
@@ -5232,120 +5155,12 @@ int main (void) {
 								}
 							}
 						} else if (menuoperator == 5){
-							Spielfeld hint;
-							unsigned int b, a;
-							hint = Spielfeld_Create (m, n, 0);
-							printf("	New: 1 \n	Dying: 2 \n	Both: 3 \n");
-							scanf("%u", &menuoperator);
 							
-							for (unsigned int i=1; i<(m-1); i+=1){
-								for (unsigned int j=1; j<(n-1); j+=1){
-									if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//10
-										if (Field[0][i][j] == geben){
-											hint[0][i][j] = geben;
-										} else if (Field[0][i][j] == (geben%2)+1){
-											hint[0][i][j] = (geben%2)+1;
-										} else if (Field[0][i][j] == 7){
-											hint[0][i][j] = 7;
-										}
-									} else if ((gamemode == 6)||(gamemode == 9)||(gamemode == 10)) {	//10
-										if (Field[0][i][j] == geben){
-											hint[0][i][j] = geben;
-										} else if (Field[0][i][j] != 0){
-											hint[0][i][j] = 17;
-										}
-									} else if (gamemode == 11) {
-										if (Field[0][i][j] == geben){
-											hint[0][i][j] = geben;
-										} else if (Field[0][i][j] == 77){
-											hint[0][i][j] = 77;
-										} else if (Field[0][i][j] != 0){
-											hint[0][i][j] = 17;
-										}
-									} else if (gamemode == 12) {
-										if (Field[0][i][j] == geben){
-											hint[0][i][j] = geben;
-										} else if (Field[0][i][j] == 81){
-											hint[0][i][j] = 81;
-										} else if (Field[0][i][j] == 82){
-											hint[0][i][j] = 82;
-										} else if (Field[0][i][j] == 83){
-											hint[0][i][j] = 83;
-										} else if (Field[0][i][j] == 84){
-											hint[0][i][j] = 84;
-										} else if (Field[0][i][j] == 75){
-											hint[0][i][j] = 75;
-										} else if (Field[0][i][j] == 71){
-											hint[0][i][j] = 71;
-										} else if (Field[0][i][j] != 0){
-											hint[0][i][j] = 17;
-										}
-									}
-								}
-							}
+							get_hints (gamemode, Field, geben, w, d, e, m, n, information_code, Sf_opague, opague, Colored, AOP);
 							
-							if ((menuoperator == 2)||(menuoperator == 3)){
-								for (unsigned int i=1; i<(m-1); i+=1){
-									for (unsigned int j=1; j<(n-1); j+=1){
-										if (Field[0][i][j] == geben){
-											a = 0;
-											for (unsigned int h=(i-1); h<=(i+1); h+=1){
-												for (unsigned int k=(j-1); k<=(j+1); k+=1){
-													if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-														if (Field[0][h][k] == geben){
-															a += 1;
-														}
-													}
-												}
-											}
-											if ((a > e+1) || (a <= d)){
-												hint[0][i][j] = 16;
-											}
-										}
-									}
-								}
-							}
-							
-							if ((menuoperator == 1)||(menuoperator == 3)){
-								for (unsigned int i=1; i<(m-1); i+=1){
-									for (unsigned int j=1; j<(n-1); j+=1){
-										if (Field[0][i][j] == 0){
-											b = 0;
-											for (unsigned int h=(i-1); h<=(i+1); h+=1){
-												for (unsigned int k=(j-1); k<=(j+1); k+=1){
-													if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-														if (Field[0][h][k] == geben){
-															b += 1;
-														}
-													}
-												}
-											}
-											if (b == w){
-												hint[0][i][j] = 15;
-											}
-										}
-									}
-								}
-							}
-							
-							if (opague >= 1) {
-								opague_builder (hint, Sf_opague, m, n, geben, opague, AOP);
-							}
-							
-							if (opague >= 1) {
-								show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored, 0);
-							} else {
-								show_field (hint, m, n, gamemode, information_code, geben, Colored, 0);
-							}
-							
-							if (opague >= 1) {
-								opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
-							}
-							menuoperator = 1;
-							Spielfeld_Destroy (hint, m, 0);
-							
-							//show_field (hint, m, n, gamemode, information_code, geben, Colored, 0);		//teste die desrtoy-funktion für Spielfelder, done
+							//show_field (hint, m, n, gamemode, information_code, geben, Colored, 0);		//teste die destroy-funktion für Spielfelder, done
 						} else if (menuoperator == 6){
+							
 							if (suprise == 0) {
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
@@ -5449,6 +5264,8 @@ int main (void) {
 					menuoperator = 1;
 					var_[geben] = 5;		//## to avoid the mistake-note by closing the menu
 				}
+				
+				
 				
 				if ((tac != 0)&&(var_[geben] <= 62)&&(var_[geben] > 10)){
 					unsigned int tac_controll;
@@ -12262,7 +12079,7 @@ void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsig
 	
 	//printf("opague: %u \n", opague);		//test
 	
-	extra = 0;	//alle zusätzlichen Werte neben den AOP-Spielerwerten
+	extra = 1;	//alle zusätzlichen Werte neben den AOP-Spielerwerten
 	opague_counter = unsigned_int_Vektor_Create(1+AOP+extra);
 	temp = Spielfeld_Create (m, n, 0);
 	
@@ -12798,6 +12615,234 @@ void show_the_numbers (unsigned int gamemode, unsigned int w, unsigned int d, un
 	
 	printf("\n");
 }
+
+void get_hints (unsigned int gamemode, Spielfeld Field, unsigned int geben, unsigned int w, unsigned int d, unsigned int e, unsigned int m, unsigned int n, unsigned int* information_code, Spielfeld Sf_opague, unsigned int opague, unsigned int* Colored, unsigned int AOP) {
+	
+	Spielfeld hint;
+	unsigned int b, a, menuoperator;
+	hint = Spielfeld_Create (m, n, 0);
+	
+	b = 0;
+	a = 0;
+	menuoperator = 0;
+	
+	printf("	New: 1 \n	Dying: 2 \n	Both: 3 \n");
+	scanf("%u", &menuoperator);
+	
+	for (unsigned int i=1; i<(m-1); i+=1){
+		for (unsigned int j=1; j<(n-1); j+=1){
+			if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//10
+				if (Field[0][i][j] == geben){
+					hint[0][i][j] = geben;
+				} else if (Field[0][i][j] == (geben%2)+1){
+					hint[0][i][j] = (geben%2)+1;
+				} else if (Field[0][i][j] == 7){
+					hint[0][i][j] = 7;
+				}
+			} else if ((gamemode == 6)||(gamemode == 9)||(gamemode == 10)) {	//10
+				if (Field[0][i][j] == geben){
+					hint[0][i][j] = geben;
+				} else if (Field[0][i][j] != 0){
+					hint[0][i][j] = 17;
+				}
+			} else if (gamemode == 11) {
+				if (Field[0][i][j] == geben){
+					hint[0][i][j] = geben;
+				} else if (Field[0][i][j] == 77){
+					hint[0][i][j] = 77;
+				} else if (Field[0][i][j] != 0){
+					hint[0][i][j] = 17;
+				}
+			} else if (gamemode == 12) {
+				if (Field[0][i][j] == geben){
+					hint[0][i][j] = geben;
+				} else if (Field[0][i][j] == 81){
+					hint[0][i][j] = 81;
+				} else if (Field[0][i][j] == 82){
+					hint[0][i][j] = 82;
+				} else if (Field[0][i][j] == 83){
+					hint[0][i][j] = 83;
+				} else if (Field[0][i][j] == 84){
+					hint[0][i][j] = 84;
+				} else if (Field[0][i][j] == 75){
+					hint[0][i][j] = 75;
+				} else if (Field[0][i][j] == 71){
+					hint[0][i][j] = 71;
+				} else if (Field[0][i][j] != 0){
+					hint[0][i][j] = 17;
+				}
+			}
+		}
+	}
+	
+	if ((menuoperator == 2)||(menuoperator == 3)){
+		for (unsigned int i=1; i<(m-1); i+=1){
+			for (unsigned int j=1; j<(n-1); j+=1){
+				if (Field[0][i][j] == geben){
+					a = 0;
+					for (unsigned int h=(i-1); h<=(i+1); h+=1){
+						for (unsigned int k=(j-1); k<=(j+1); k+=1){
+							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
+								if (Field[0][h][k] == geben){
+									a += 1;
+								}
+							}
+						}
+					}
+					if ((a > e+1) || (a <= d)){
+						hint[0][i][j] = 16;
+					}
+				}
+			}
+		}
+	}
+	
+	if ((menuoperator == 1)||(menuoperator == 3)){
+		for (unsigned int i=1; i<(m-1); i+=1){
+			for (unsigned int j=1; j<(n-1); j+=1){
+				if (Field[0][i][j] == 0){
+					b = 0;
+					for (unsigned int h=(i-1); h<=(i+1); h+=1){
+						for (unsigned int k=(j-1); k<=(j+1); k+=1){
+							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
+								if (Field[0][h][k] == geben){
+									b += 1;
+								}
+							}
+						}
+					}
+					if (b == w){
+						hint[0][i][j] = 15;
+					}
+				}
+			}
+		}
+	}
+	
+	if (opague >= 1) {
+		opague_builder (hint, Sf_opague, m, n, geben, opague, AOP);
+	}
+	
+	if (opague >= 1) {
+		show_field (Sf_opague, m, n, gamemode, information_code, geben, Colored, 0);
+	} else {
+		show_field (hint, m, n, gamemode, information_code, geben, Colored, 0);
+	}
+	
+	if (opague >= 1) {
+		opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
+	}
+	
+	Spielfeld_Destroy (hint, m, 0);
+	
+}
+
+void Initialisierung (unsigned int gamemode, unsigned int* information_code) {
+	
+	if (gamemode == 12) {
+		
+		for (unsigned int p=1; p<=3; p+=1) {
+			information_code[p] = 1;
+		}
+	}
+	
+}
+
+unsigned int Initialisierung_limit_new (unsigned int gamemode) {
+	
+	unsigned int Ausgabe;
+	
+	Ausgabe = 0;
+	
+	if ((gamemode == 1)||(gamemode == 2)||(gamemode == 11)) {
+		Ausgabe = 10;
+	} else if (gamemode == 3) {
+		Ausgabe = 15;
+	} else if ((gamemode == 4)||(gamemode == 7)||(gamemode == 8)) {
+		Ausgabe = 7;
+	} else if (gamemode == 5) {
+		Ausgabe = 5;
+	} else if (gamemode == 6) {
+		Ausgabe = 6;
+	} else if (gamemode == 10) {
+		Ausgabe = 8;
+	} else {
+		Ausgabe = 0;
+	}
+	
+	return Ausgabe;
+}
+
+unsigned int Initialisierung_limit_at_all (unsigned int gamemode) {
+	
+	unsigned int Ausgabe;
+	
+	Ausgabe = 0;
+	
+	if ((gamemode == 1)||(gamemode == 2)||(gamemode == 11)) {
+		Ausgabe = 20;
+	} else if ((gamemode == 4)||(gamemode == 7)||(gamemode == 8)) {
+		Ausgabe = 14;
+	} else if (gamemode == 5) {
+		Ausgabe = 10;
+	} else if (gamemode == 6) {
+		Ausgabe = 12;
+	} else if (gamemode == 10) {
+		Ausgabe = 16;
+	} else {
+		Ausgabe = 0;
+	}
+	
+	return Ausgabe;
+}
+
+unsigned int Initialisierung_n (unsigned int gamemode) {
+	
+	unsigned int Ausgabe;
+	
+	Ausgabe = 0;
+	
+	if ((gamemode == 1)||(gamemode == 5)||(gamemode == 10)) {
+		Ausgabe = 8;
+	} else if ((gamemode == 2)||(gamemode == 4)||(gamemode == 11)||(gamemode == 12)) {
+		Ausgabe = 13;
+	} else if (gamemode == 3) {
+		Ausgabe = 18;
+	} else if (gamemode == 6) {
+		Ausgabe = 11;
+	} else if (gamemode == 7) {
+		Ausgabe = 21;
+	} else if (gamemode == 8) {
+		Ausgabe = 15;
+	} else if (gamemode == 9) {
+		Ausgabe = 9;
+	}
+	
+	return Ausgabe;
+}
+
+unsigned int Initialisierung_m (unsigned int gamemode) {
+	
+	unsigned int Ausgabe;
+	
+	Ausgabe = 0;
+	
+	if ((gamemode == 1)||(gamemode == 3)) {
+		Ausgabe = 12;
+	} else if (gamemode == 2) {
+		Ausgabe = 11;
+	} else if ((gamemode == 4)||(gamemode == 5)||(gamemode == 8)||(gamemode == 10)) {
+		Ausgabe = 8;
+	} else if ((gamemode == 6)||(gamemode == 7)||(gamemode == 9)||(gamemode == 11)) {
+		Ausgabe = 9;
+	} else if (gamemode == 12) {
+		Ausgabe = 13;
+	}
+	
+	return Ausgabe;
+}
+
+
 
 //dynamic (gamemode)	, done		(just notes following)
 //Geschwindigkeit (vertikal, horizontal)
