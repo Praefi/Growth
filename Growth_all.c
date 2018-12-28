@@ -22,6 +22,7 @@ void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsign
 void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*, unsigned int);
 void show_whose_turn (unsigned int, unsigned int, unsigned int*, unsigned int*);
 void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int);
+void show_options_of_actions (unsigned int, unsigned int*, unsigned int);
 
 unsigned int Vorganger (unsigned int, unsigned int);
 
@@ -2780,8 +2781,9 @@ int main (void) {
 			
 			// scanf("%u", &pause);	//test
 			// printf("	#line 2784, before same \n");	//test
-					//Startmenü, Ende
-					
+			
+			//Startmenü, Ende
+			
 			same[0] = 0;
 			same[1] = m;
 			same[2] = n;
@@ -5185,35 +5187,8 @@ int main (void) {
 				
 				//#-end
 				
-				printf("	1) Plus:	11	Minus:	12 \n");
-				printf("	2) Move:	21	Change:	22 \n");
-				printf("	3) Destroy:	31	Revive:	32 \n");
-				printf("	4) Move:	41	Boost:	42 \n");
-				if (((gamemode != 9)&&(gamemode != 10))||((gamemode == 10)&&(geben == 1))) {	//10
-					printf("	5) 4/5-new:	51	2-new:	52 \n");
-					printf("	6) 4-max:	61	1-min:	62 \n");
-				} else if (gamemode == 9) {
-					if (information_code[0] == 1) {
-						printf("	5) 2/3-new:	51	0-new:	52 \n");
-						printf("	6) 2-max:	61	-1-min:	62 \n");
-					} else if (information_code[0] == 2) {
-						printf("	5) 3/4-new:	51	1-new:	52 \n");
-						printf("	6) 3-max:	61	0-min:	62 \n");
-					} else if (information_code[0] == 3) {
-						printf("	5) 5/6-new:	51	3-new:	52 \n");
-						printf("	6) 5-max:	61	0-min:	62 \n");
-					} else {
-						printf("	5) 4/5-new:	51	2-new:	52 \n");
-						printf("	6) 4-max:	61	1-min:	62 \n");
-					}
-				} else if ((gamemode == 10)&&(geben != 1)) {	//10
-					printf("	5) 3/4-new:	51	1-new:	52 \n");
-					printf("	6) 3-max:	61	0-min:	62 \n");
-				}
-				printf("							\n");
-				printf("		Go back: 100 \n");
-				printf("		Menu: 10 \n");
-				printf("		End game: 0 \n");
+				show_options_of_actions (gamemode, information_code, geben);
+				
 				if ((ttt != 0)&&(time_saver == 0.0)) {
 					time1 = time(NULL);
 				}
@@ -9378,7 +9353,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 	
 	// printf("	w: %u\n", w);	//test
 	
-	Sf_temp = Spielfeld_Create (m, n, 0);		//inhibitor in informationcode[1], ability ist in information_code[0]
+	Sf_temp = Spielfeld_Create (m, n, 0);		//inhibitor in information_code[1], ability ist in information_code[0]
 	a = 0;
 	inhi = 0;
 	
@@ -12769,6 +12744,40 @@ void show_statistics (unsigned int number_of_players, unsigned int gamemode, Spi
 		printf("	Number of penalties given until now: %u \n", pere[0]);
 	}
 	printf("\n");
+	
+}
+
+void show_options_of_actions (unsigned int gamemode, unsigned int* information_code, unsigned int geben) {
+	
+	printf("	1) Plus:	11	Minus:	12 \n");
+	printf("	2) Move:	21	Change:	22 \n");
+	printf("	3) Destroy:	31	Revive:	32 \n");
+	printf("	4) Move:	41	Boost:	42 \n");
+	if (((gamemode != 9)&&(gamemode != 10))||((gamemode == 10)&&(geben == 1))) {	//10
+		printf("	5) 4/5-new:	51	2-new:	52 \n");
+		printf("	6) 4-max:	61	1-min:	62 \n");
+	} else if (gamemode == 9) {
+		if (information_code[0] == 1) {
+			printf("	5) 2/3-new:	51	0-new:	52 \n");
+			printf("	6) 2-max:	61	-1-min:	62 \n");
+		} else if (information_code[0] == 2) {
+			printf("	5) 3/4-new:	51	1-new:	52 \n");
+			printf("	6) 3-max:	61	0-min:	62 \n");
+		} else if (information_code[0] == 3) {
+			printf("	5) 5/6-new:	51	3-new:	52 \n");
+			printf("	6) 5-max:	61	0-min:	62 \n");
+		} else {
+			printf("	5) 4/5-new:	51	2-new:	52 \n");
+			printf("	6) 4-max:	61	1-min:	62 \n");
+		}
+	} else if ((gamemode == 10)&&(geben != 1)) {	//10
+		printf("	5) 3/4-new:	51	1-new:	52 \n");
+		printf("	6) 3-max:	61	0-min:	62 \n");
+	}
+	printf("							\n");
+	printf("		Go back: 100 \n");
+	printf("		Menu: 10 \n");
+	printf("		End game: 0 \n");
 	
 }
 
