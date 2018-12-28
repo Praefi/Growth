@@ -23,6 +23,7 @@ void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned i
 void show_whose_turn (unsigned int, unsigned int, unsigned int*, unsigned int*);
 void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int);
 void show_options_of_actions (unsigned int, unsigned int*, unsigned int);
+void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
 unsigned int Vorganger (unsigned int, unsigned int);
 
@@ -38,6 +39,8 @@ void Destroy (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int,
 void Revive (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
 
 void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
+
+void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
@@ -5208,110 +5211,18 @@ int main (void) {
 						scanf("%u", &menuoperator);
 						
 						if (menuoperator == 1){
-							if (gamemode == 1) {
-								printf("	How to win? 	Own a square on your last line or force your opponent to lose all his/her ones.\n");
-							} else if (gamemode == 2) {
-								printf("	How to win? 	Be at 2 of the 3 targets with three of your squares near-by.\n");
-							} else if (gamemode == 3) {
-								printf("	How to win? 	Take over all your opponent's squares by winning contact-battles.\n");
-								printf("	Contact-battles? 	All near-by squares in a row with the contact-square build a chain, beat your opponent in the length.\n");
-							} else if (gamemode == 4) {
-								printf("	How to win? 	Get more points than your opponent.\n");
-								printf("	Note:	Touch the #-square in the near-by to move it to the opposite side. \n");
-							} else if (gamemode == 5) {
-								printf("	How to win? 	Force your opponent to lose all his/her squares.\n");
-							} else if (gamemode == 6) {
-								if (geben == 1) {
-									printf("	How to win? 	Protect your heart-block so no enemy can touch it.\n");
-								} else {
-									printf("	How to win? 	Catch the heart-block of the hunted one before it disappears.\n");
-								}
-							} else if (gamemode == 7) {
-								printf("	How to win? 	Reach the end of the field or force your opponent to lose all his/her ones.\n");
-								printf("	Note:	Every %u turns in total the #-line will go ahead and destroys everything in it's way.\n Also you are not allowed to cross the mid-line. \n", freq);
-							} else if (gamemode == 8) {
-								printf("	How to win? 	Reach [1][7] of the field or force your opponent to lose all his/her squares.\n");
-								printf("	Note:	Falling down the #-squares will push, destroy, explode, or teleport, transform into yours by contact. \n");
-							} else if ((gamemode == 9)||(gamemode == 10)) {	//10
-								printf("	How to win? 	Force your opponent to lose all his/her squares while keeping yours alive.\n");
-							} else if (gamemode == 11) {
-								printf("	How to win? 	Push the ball against your opponent's side.\n");
-							} else if (gamemode == 12) {
-								printf("	How to win? 	Stay alive.\n");
-							}
-							printf("	Surrounding:	The 8 squares around another, at the edge 5, in the corners 3, are called #surrounding. \n");
-							printf("	near-by:	The 4 squares around another, at the edge 3, in the corners 2, are called #near-by. \n");
-							printf("	Standard actions:	(After your choice of number and not influencing each other) \n	-Development:	If it is your turn and a free square has exactly %u of yours surrounding it, you will own it.\n", w);
-							printf("	-Losses: 	If it is your turn and a square of yours is surrounded by less than %u or more than %u of yours,\n			it will be set free.\n", d, e);	//10
-							if ((gamemode == 6)&&(geben == 1)) {	//If geben == 1
-								printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", (limit_new+(number_of_players-3)), (limit_at_all+(2*(number_of_players-3))));
-							} else if ((gamemode == 10)||(gamemode == 12)) {
-								printf("	Limits: 	This gamemode is unlimited. \n");
-							} else if (gamemode == 3) {
-								printf("	Limits: 	Your development is limited by %u per round. \n", limit_new);
-							} else if (gamemode != 6) {
-								printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", limit_new, limit_at_all);
-							}
+							About_the_game (gamemode, geben, limit_at_all, limit_new, number_of_players, freq, w, d, e);
+							
 						} else if (menuoperator == 2){
 							printf("\n");
 							printf("	turns at all: %u \n", g);
 							
 							show_statistics (number_of_players, gamemode, numbers_of_, Points, exclude_counter, ulcer_lifes, ges, pere, ability, ttt);
+							
 						} else if (menuoperator == 3){
-							if ((gamemode != 10)&&(gamemode != 12)) {
-								printf("	Plus: Change a free square in the surrounding of yours in one of yours.\n");
-							} else {
-								printf("	Plus: Change a square in the surrounding of yours in one of yours.\n");
-							}
-							printf("	Minus: Delete one of your squares.\n");
-							printf("	Move: The position of one of yours will change with a free, near-by square.\n");
-							printf("	Revive: Your lost squares having no living squares of yours surrounding them at the beginning of your turn,\n		will be revived.\n");
-							printf("	%u/%u-new: A free square has to be surrounded by %u or %u of yours during the development.\n", w+1, w+2, w+1, w+2);
-							printf("	%u-new: A free square has to be surrounded by %u of yours during the development.\n", w-1, w-1);
-							printf("	%u-max: A square of yours will survive even by %u of your squares surrounding it.\n", e+1, e+1);
-							if (d == 0) {
-								printf("	-1-min: A square of yours will survive even by only -1 of your squares surrounding it.\n");
-							} else {
-								printf("	%u-min: A square of yours will survive even by only %u of your squares surrounding it.\n", d-1, d-1);
-							}
 							
-							if ((gamemode == 1)||(gamemode == 2)||(gamemode == 4)||(gamemode == 5)||(gamemode == 7)||(gamemode == 9)||(gamemode == 10)) {	//10
-								printf("	Change: A square of yours and a near-by square of your enemy will change positions.\n");
-								printf("	Destroy: Delete a near-by square of your enemy.\n");
-								printf("	Boost: Use all near-by squares of your enemy as your own for the development.\n");
-								
-							} else if (gamemode == 3) {
-								printf("	Change: A square of yours and a square of your enemy in the surrounding will change positions.\n");
-								printf("	Destroy: Delete a surrounding square of your enemy.\n");
-								printf("	Boost: Use all surrounding squares of your enemy as your own for the development.\n");
-								
-							} else if (gamemode == 8) {
-								printf("	Change: A square of yours and a near-by #-square will change positions.\n");
-								printf("	Destroy: Delete a square of your enemy, but not in the last two lines.\n");
-								printf("	Boost: Use all near-by #-squares as your own for the development.\n");
-								
-							} else if (gamemode == 6) {
-								if (geben == 1) {
-									printf("	Change: The heart-block and a square of yours will change positions.\n");
-									printf("	Destroy: Delete a square of your enemy.\n");
-									printf("	Boost: Touching the heart_block no square of yours can die.\n");
-								} else {
-									printf("	Change: A square of yours and a near-by square of the hunted one will change positions.\n");
-									printf("	Destroy: Delete a near-by square of your enemy.\n");
-									printf("	Boost: Use all near-by squares of the hunted one as your own for the development.\n");
-								}
-								
-							} else if (gamemode == 11) {
-								printf("	Change: A square of yours and a near-by square of your enemy or the near-by ball will change positions.\n");
-								printf("	Destroy: Delete a near-by square of your enemy.\n");
-								printf("	Boost: Use all near-by squares of your enemy and the near-by ball as your own for the development.\n");
-							} else if (gamemode == 12) {
-								printf("	Change: A square of yours and a near-by square of your enemy or a near-by object will change positions.\n");
-								printf("	Destroy: Delete a near-by square of your enemy or a near-by object.\n");
-								printf("	Boost: Use all near-by squares of your enemy and near-by objects as your own for the development.\n");
-							}
+							show_the_numbers (gamemode, w, d, e, geben);
 							
-							printf("\n");
 						} else if (menuoperator == 4){
 							if ((gamemode != 10)&&(gamemode != 12)) {
 								printf("	Limit of development:	%u \n", limit_new);
@@ -12779,6 +12690,113 @@ void show_options_of_actions (unsigned int gamemode, unsigned int* information_c
 	printf("		Menu: 10 \n");
 	printf("		End game: 0 \n");
 	
+}
+
+void About_the_game (unsigned int gamemode, unsigned int geben, unsigned int limit_at_all, unsigned int limit_new, unsigned int number_of_players, unsigned int freq, unsigned int w, unsigned int d, unsigned int e) {
+	
+	if (gamemode == 1) {
+		printf("	How to win? 	Own a square on your last line or force your opponent to lose all his/her ones.\n");
+	} else if (gamemode == 2) {
+		printf("	How to win? 	Be at 2 of the 3 targets with three of your squares near-by.\n");
+	} else if (gamemode == 3) {
+		printf("	How to win? 	Take over all your opponent's squares by winning contact-battles.\n");
+		printf("	Contact-battles? 	All near-by squares in a row with the contact-square build a chain, beat your opponent in the length.\n");
+	} else if (gamemode == 4) {
+		printf("	How to win? 	Get more points than your opponent.\n");
+		printf("	Note:	Touch the #-square in the near-by to move it to the opposite side. \n");
+	} else if (gamemode == 5) {
+		printf("	How to win? 	Force your opponent to lose all his/her squares.\n");
+	} else if (gamemode == 6) {
+		if (geben == 1) {
+			printf("	How to win? 	Protect your heart-block so no enemy can touch it.\n");
+		} else {
+			printf("	How to win? 	Catch the heart-block of the hunted one before it disappears.\n");
+		}
+	} else if (gamemode == 7) {
+		printf("	How to win? 	Reach the end of the field or force your opponent to lose all his/her ones.\n");
+		printf("	Note:	Every %u turns in total the #-line will go ahead and destroys everything in it's way.\n Also you are not allowed to cross the mid-line. \n", freq);
+	} else if (gamemode == 8) {
+		printf("	How to win? 	Reach [1][7] of the field or force your opponent to lose all his/her squares.\n");
+		printf("	Note:	Falling down the #-squares will push, destroy, explode, or teleport, transform into yours by contact. \n");
+	} else if ((gamemode == 9)||(gamemode == 10)) {	//10
+		printf("	How to win? 	Force your opponent to lose all his/her squares while keeping yours alive.\n");
+	} else if (gamemode == 11) {
+		printf("	How to win? 	Push the ball against your opponent's side.\n");
+	} else if (gamemode == 12) {
+		printf("	How to win? 	Stay alive.\n");
+	}
+	printf("	Surrounding:	The 8 squares around another, at the edge 5, in the corners 3, are called #surrounding. \n");
+	printf("	near-by:	The 4 squares around another, at the edge 3, in the corners 2, are called #near-by. \n");
+	printf("	Standard actions:	(After your choice of number and not influencing each other) \n	-Development:	If it is your turn and a free square has exactly %u of yours surrounding it, you will own it.\n", w);
+	printf("	-Losses: 	If it is your turn and a square of yours is surrounded by less than %u or more than %u of yours,\n			it will be set free.\n", d, e);	//10
+	if ((gamemode == 6)&&(geben == 1)) {	//If geben == 1
+		printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", (limit_new+(number_of_players-3)), (limit_at_all+(2*(number_of_players-3))));
+	} else if ((gamemode == 10)||(gamemode == 12)) {
+		printf("	Limits: 	This gamemode is unlimited. \n");
+	} else if (gamemode == 3) {
+		printf("	Limits: 	Your development is limited by %u per round. \n", limit_new);
+	} else if (gamemode != 6) {
+		printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", limit_new, limit_at_all);
+	}
+	
+}
+
+void show_the_numbers (unsigned int gamemode, unsigned int w, unsigned int d, unsigned int e, unsigned int geben) {
+	
+	if ((gamemode != 10)&&(gamemode != 12)) {
+		printf("	Plus: Change a free square in the surrounding of yours in one of yours.\n");
+	} else {
+		printf("	Plus: Change a square in the surrounding of yours in one of yours.\n");
+	}
+	printf("	Minus: Delete one of your squares.\n");
+	printf("	Move: The position of one of yours will change with a free, near-by square.\n");
+	printf("	Revive: Your lost squares having no living squares of yours surrounding them at the beginning of your turn,\n		will be revived.\n");
+	printf("	%u/%u-new: A free square has to be surrounded by %u or %u of yours during the development.\n", w+1, w+2, w+1, w+2);
+	printf("	%u-new: A free square has to be surrounded by %u of yours during the development.\n", w-1, w-1);
+	printf("	%u-max: A square of yours will survive even by %u of your squares surrounding it.\n", e+1, e+1);
+	if (d == 0) {
+		printf("	-1-min: A square of yours will survive even by only -1 of your squares surrounding it.\n");
+	} else {
+		printf("	%u-min: A square of yours will survive even by only %u of your squares surrounding it.\n", d-1, d-1);
+	}
+	
+	if ((gamemode == 1)||(gamemode == 2)||(gamemode == 4)||(gamemode == 5)||(gamemode == 7)||(gamemode == 9)||(gamemode == 10)) {	//10
+		printf("	Change: A square of yours and a near-by square of your enemy will change positions.\n");
+		printf("	Destroy: Delete a near-by square of your enemy.\n");
+		printf("	Boost: Use all near-by squares of your enemy as your own for the development.\n");
+		
+	} else if (gamemode == 3) {
+		printf("	Change: A square of yours and a square of your enemy in the surrounding will change positions.\n");
+		printf("	Destroy: Delete a surrounding square of your enemy.\n");
+		printf("	Boost: Use all surrounding squares of your enemy as your own for the development.\n");
+		
+	} else if (gamemode == 8) {
+		printf("	Change: A square of yours and a near-by #-square will change positions.\n");
+		printf("	Destroy: Delete a square of your enemy, but not in the last two lines.\n");
+		printf("	Boost: Use all near-by #-squares as your own for the development.\n");
+		
+	} else if (gamemode == 6) {
+		if (geben == 1) {
+			printf("	Change: The heart-block and a square of yours will change positions.\n");
+			printf("	Destroy: Delete a square of your enemy.\n");
+			printf("	Boost: Touching the heart_block no square of yours can die.\n");
+		} else {
+			printf("	Change: A square of yours and a near-by square of the hunted one will change positions.\n");
+			printf("	Destroy: Delete a near-by square of your enemy.\n");
+			printf("	Boost: Use all near-by squares of the hunted one as your own for the development.\n");
+		}
+		
+	} else if (gamemode == 11) {
+		printf("	Change: A square of yours and a near-by square of your enemy or the near-by ball will change positions.\n");
+		printf("	Destroy: Delete a near-by square of your enemy.\n");
+		printf("	Boost: Use all near-by squares of your enemy and the near-by ball as your own for the development.\n");
+	} else if (gamemode == 12) {
+		printf("	Change: A square of yours and a near-by square of your enemy or a near-by object will change positions.\n");
+		printf("	Destroy: Delete a near-by square of your enemy or a near-by object.\n");
+		printf("	Boost: Use all near-by squares of your enemy and near-by objects as your own for the development.\n");
+	}
+	
+	printf("\n");
 }
 
 //dynamic (gamemode)	, done		(just notes following)
