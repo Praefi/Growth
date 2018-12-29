@@ -3,6 +3,7 @@
 #include <math.h>
 #include <time.h>
 #include <windows.h>
+#include <ctype.h>
 
 // anscheinend kehren die gestorbenen zurück in das Standartspiel bei gamemode 6 (aktuell ?)
 
@@ -50,6 +51,11 @@ void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, uns
 void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int);
 unsigned int get_m (unsigned int, unsigned int);
 unsigned int get_n (unsigned int, unsigned int);
+unsigned int get_unsigned_numeric_input_with_not_more_than_4_letters (unsigned int);
+unsigned int get_unsigned_numeric_input_with_not_more_than_2_letters (unsigned int);
+unsigned int get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (unsigned int, unsigned int);
+unsigned int get_unsigned_numeric_input_with_not_more_than_1_letter (unsigned int);
+int get_signed_numeric_input_with_not_more_than_1_letter (int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
@@ -336,7 +342,7 @@ int main (void) {
 
 					
 					printf("	Classic: 1\n	Collect: 2\n	Contact: 3\n	Fall   : 4\n	Fight  : 5\n	Hunt   : 6\n	Race   : 7\n	Rain   : 8\n	Arena  : 9\n  	Ulcer  : 10\n   	Dynamic: 11\n   	Survive: 12\n  \n");
-					scanf("%u", &gamemode);
+					gamemode = get_unsigned_numeric_input_with_not_more_than_2_letters (gamemode);
 					printf("\n");
 					//Players?
 				}
@@ -388,7 +394,7 @@ int main (void) {
 					}
 					
 					printf("\n");
-					scanf("%u", &beginningmenu);
+					beginningmenu = get_unsigned_numeric_input_with_not_more_than_2_letters (beginningmenu);
 					printf("\n");
 				
 					if (beginningmenu == 1){
@@ -420,7 +426,7 @@ int main (void) {
 						opt = 0;
 						printf("	Do not activate Random, it will replace the Tactics-Mode! \n");
 						printf("	Stack of every number until refresh: \n");
-						scanf("%u", &tac);
+						tac = get_unsigned_numeric_input_with_not_more_than_2_letters (tac);
 						printf("\n");
 					}
 				
@@ -430,7 +436,9 @@ int main (void) {
 						printf("	Do not activate Tactics, it will replace the Random-Mode! \n");
 						printf("	Random activated \n");
 						printf("	A Player :	Give me three random numbers from 1 to 60 \n");
-						scanf("%u %u %u", &number_[1], &number_[2], &number_[3]);
+						number_[1] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[1]);
+						number_[2] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[2]);
+						number_[3] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[3]);
 						printf("\n");
 						if ((number_[1]==0)||(number_[2]==0)||(number_[3]==0)||(number_[1]>60)||(number_[2]>60)||(number_[3]>60)){
 							printf("	You missed the assertion(s) !!! \n");
@@ -439,7 +447,7 @@ int main (void) {
 						} else {
 							printf("\n");
 							printf("	The other Player :	Give me a random number from 1 to 60 \n");
-							scanf("%u", &number_[4]);
+							number_[4] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[4]);
 							printf("\n");
 							if ((number_[4]<1)||(number_[4]>60)){
 								printf("	You missed the assertion(s) !!! \n");
@@ -491,12 +499,14 @@ int main (void) {
 						printf("	Random activated \n");
 						printf("	Please get all a number from 0 to %u, not the same, it will have no effect further on. \n", number_of_players-1);
 						printf("	Give me three random numbers from 1 to 60 \n");
-						scanf("%u %u %u", &number_[1], &number_[2], &number_[3]);
+						number_[1] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[1]);
+						number_[2] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[2]);
+						number_[3] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[3]);
 						if ((number_[1]==0)||(number_[2]==0)||(number_[3]==0)||(number_[1]>60)||(number_[2]>60)||(number_[3]>60)){
 							printf("	You missed the assertion(s) !!! \n");
 						} else {
 							printf("	Give me another random number from 1 to 60 \n");
-							scanf("%u", &number_[4]);
+							number_[4] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[4]);
 							if ((number_[4]<1)||(number_[4]>60)){
 								printf("	You missed the assertion(s) !!! \n");
 							} else {
@@ -643,22 +653,23 @@ int main (void) {
 						if ((gamemode == 1)||(gamemode == 2)) {
 							printf("	limit_new < limit_at_all - 4 	!	\n");
 							printf("	Change limit_new: 1 \n	Change limit_at_all: 2 \n	Change both: 3 \n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							printf("\n");
 						
 							if (lim == 1){
 								printf("	limit_new:		(normal: 10) \n");
-								scanf("%u", &limit_new);
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
 								printf("\n");
 							}
 							if (lim == 2){
 								printf("	limit_at_all:		(normal: 20) \n");
-								scanf("%u", &limit_at_all);
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
 								printf("\n");
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 10) \n	limit_at_all:				(normal: 20) \n");
-								scanf("%u %u", &limit_new, &limit_at_all);
+								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
+								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
 								printf("\n");
 							}
 							if (limit_new >= limit_at_all - 4) {
@@ -667,36 +678,38 @@ int main (void) {
 							
 						} else if (gamemode == 3) {
 							printf("	limit_new: 1		limit_at_all: 2		both: 3\n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if (lim == 1){
 								printf("	limit_new: 			(normal: 15) \n");
-								scanf("%u", &limit_new);
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
 							}
 							if (lim == 2){
 								printf("	limit_at_all: 			(normal: 30) \n");
-								scanf("%u", &limit_at_all);
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 15) \n	limit_at_all:				(normal: 30) \n");
-								scanf("%u %u", &limit_new, &limit_at_all);
+								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
+								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
 							}
 						} else if ((gamemode == 4)||(gamemode == 7)||(gamemode == 8)) {
 							printf("	limit_new < limit_at_all - 4 	!	\n");
 							printf("	limit_new: 1		limit_at_all: 2		both: 3\n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if (lim == 1){
 								printf("	limit_new: 			(normal: 7) \n");
-								scanf("%u", &limit_new);
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
 							}
 							if (lim == 2){
 								printf("	limit_at_all: 			(normal: 14) \n");
-								scanf("%u", &limit_at_all);
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 7) \n	limit_at_all:				(normal: 14) \n");
-								scanf("%u %u", &limit_new, &limit_at_all);
+								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
+								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -704,19 +717,20 @@ int main (void) {
 						} else if (gamemode == 5) {
 							printf("	limit_new < limit_at_all - 4 	!	\n");
 							printf("	limit_new: 1		limit_at_all: 2		both: 3\n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if (lim == 1){
 								printf("	limit_new: 			(normal: 5) \n");
-								scanf("%u", &limit_new);
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
 							}
 							if (lim == 2){
 								printf("	limit_at_all: 			(normal: 10) \n");
-								scanf("%u", &limit_at_all);
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 5) \n	limit_at_all:				(normal: 10) \n");
-								scanf("%u %u", &limit_new, &limit_at_all);
+								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
+								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -725,19 +739,20 @@ int main (void) {
 							printf("	The limits of the hunted one will be calculated seperatly.\n");
 							printf("	limit_new < limit_at_all - 4 	!	\n");
 							printf("	limit_new: 1		limit_at_all: 2		both: 3\n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if (lim == 1){
 								printf("	limit_new: 			(normal: 6) \n");
-								scanf("%u", &limit_new);
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
 							}
 							if (lim == 2){
 								printf("	limit_at_all: 			(normal: 12) \n");
-								scanf("%u", &limit_at_all);
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 6) \n	limit_at_all:				(normal: 12) \n");
-								scanf("%u %u", &limit_new, &limit_at_all);
+								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
+								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -746,19 +761,20 @@ int main (void) {
 							printf("	limit_new can change with your ability.\n");
 							printf("	limit_new < limit_at_all - 4 	!	\n");
 							printf("	limit_new: 1		limit_at_all: 2		both: 3\n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if (lim == 1){
 								printf("	limit_new: 			(normal: 8) \n");
-								scanf("%u", &limit_new);
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
 							}
 							if (lim == 2){
 								printf("	limit_at_all: 			(normal: 16) \n");
-								scanf("%u", &limit_at_all);
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 8) \n	limit_at_all:				(normal: 16) \n");
-								scanf("%u %u", &limit_new, &limit_at_all);
+								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
+								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -772,25 +788,25 @@ int main (void) {
 							
 							printf("	limit_new < limit_at_all - 4 	!	\n");
 							printf("	limit_new: 1		limit_at_all: 2		both: 3\n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if (lim == 1){
 								
 								printf("	limit_new: 			(normal: 10) \n");
-								scanf("%u", &limit_new);
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
 								
 							}
 							if (lim == 2){
 								
 								printf("	limit_at_all: 			(normal: 20) \n");
-								scanf("%u", &limit_at_all);
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
 								
 							}
 							if (lim == 3){
 								
 								printf("	limit_new:				(normal: 10) \n	limit_at_all:				(normal: 20) \n");
-								scanf("%u %u", &limit_new, &limit_at_all);
-								
+								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
+								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -814,7 +830,7 @@ int main (void) {
 							printf("\n");
 							if ((gamemode == 1)||(gamemode == 2)) {
 								printf("	Choose the limit of time: 				(normal: 20sec) \n");
-								scanf("%u", &ttt);
+								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters (ttt);
 								if (ttt == 0) {
 									printf("	That's impossible! You'll take 20sec. \n");
 									ttt = 20;
@@ -823,7 +839,7 @@ int main (void) {
 								printf("\n");
 								
 								printf("	Choose the penalty: 		relaxed: 1, 	normal: 2, 	serious: 3, 	strict: 4, 	hard: 5, 	elite: 6, 	no mercy: 7 \n");
-								scanf("%u", &warning_system);
+								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter (warning_system);
 								if ((warning_system == 0)||(warning_system > 7)) {
 									printf("	Let's say normal. \n");
 									warning_system = 2;
@@ -833,7 +849,7 @@ int main (void) {
 								
 							} else if ((gamemode == 3)||(gamemode == 9)||(gamemode == 11)) {
 								printf("	Choose the limit of time: 				(normal: 30sec) \n");
-								scanf("%u", &ttt);
+								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters (ttt);
 								if (ttt == 0) {
 									printf("	That's impossible! You'll take 30sec. \n");
 									ttt = 30;
@@ -842,7 +858,7 @@ int main (void) {
 								printf("\n");
 								
 								printf("	Choose the penalty: 		relaxed: 1, 	normal: 2, 	serious: 3, 	strict: 4, 	hard: 5, 	elite: 6, 	no mercy: 7 \n");
-								scanf("%u", &warning_system);
+								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter (warning_system);
 								if ((warning_system == 0)||(warning_system > 7)) {
 									printf("	Let's say normal. \n");
 									warning_system = 2;
@@ -852,7 +868,7 @@ int main (void) {
 								
 							} else if ((gamemode == 4)||(gamemode == 7)||(gamemode == 8)||(gamemode == 10)||(gamemode == 12)) {
 								printf("	Choose the limit of time: 				(normal: 25sec) \n");
-								scanf("%u", &ttt);
+								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters (ttt);
 								if (ttt == 0) {
 									printf("	That's impossible! You'll take 25sec. \n");
 									ttt = 25;
@@ -861,7 +877,7 @@ int main (void) {
 								printf("\n");
 								
 								printf("	Choose the penalty: 		relaxed: 1, 	normal: 2, 	serious: 3, 	strict: 4, 	hard: 5, 	elite: 6, 	no mercy: 7 \n");
-								scanf("%u", &warning_system);
+								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter (warning_system);
 								if ((warning_system == 0)||(warning_system > 7)) {
 									printf("	Let's say normal. \n");
 									warning_system = 2;
@@ -870,7 +886,7 @@ int main (void) {
 								printf("\n");
 							} else if (gamemode == 5) {
 								printf("	Choose the limit of time: 				(normal: 15sec) \n");
-								scanf("%u", &ttt);
+								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters (ttt);
 								if (ttt == 0) {
 									printf("	That's impossible! You'll take 15sec. \n");
 									ttt = 15;
@@ -879,7 +895,7 @@ int main (void) {
 								printf("\n");
 								
 								printf("	Choose the penalty: 		relaxed: 1, 	normal: 2, 	serious: 3, 	strict: 4, 	hard: 5, 	elite: 6, 	no mercy: 7 \n");
-								scanf("%u", &warning_system);
+								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter (warning_system);
 								if ((warning_system == 0)||(warning_system > 7)) {
 									printf("	Let's say normal. \n");
 									warning_system = 2;
@@ -892,7 +908,7 @@ int main (void) {
 								printf("	The time for choosing his heart is unlimited. \n");
 								printf("	\n");
 								printf("	Choose the limit of time: 				(normal: 35sec) \n");
-								scanf("%u", &ttt);
+								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters (ttt);
 								if (ttt == 0) {
 									printf("	That's impossible! You'll take 35sec. \n");
 									ttt = 35;
@@ -901,7 +917,7 @@ int main (void) {
 								printf("\n");
 								
 								printf("	Choose the penalty: 		relaxed: 1, 	normal: 2, 	serious: 3, 	strict: 4, 	hard: 5, 	elite: 6, 	no mercy: 7 \n");
-								scanf("%u", &warning_system);
+								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter (warning_system);
 								if ((warning_system == 0)||(warning_system > 7)) {
 									printf("	Let's say normal. \n");
 									warning_system = 2;
@@ -993,7 +1009,7 @@ int main (void) {
 								printf(" \n");
 								printf("	Back: 14 \n");
 								printf(" \n");
-								scanf("%u", &lim);
+								lim = get_unsigned_numeric_input_with_not_more_than_2_letters (lim);
 								if ((lim != 0)&&(lim <= 13)&&(Color_choice[lim-1] == 0)) {
 									if (lim == 1) {
 										Colored[p] = 15;	//change 6, brown, back to 7, grey, done	//maybe 6 is white	//now white, 15
@@ -1063,13 +1079,12 @@ int main (void) {
 								printf(" 	Use the #Surrounding or the #near-by additional to the place itself? \n\n");
 								printf(" 	#Surrounding: 1			#near-by: 2 \n");
 								
-								scanf("%u", &lim);
-								
+								lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 								
 								printf(" 	Show even or uneven counts? \n\n");
 								printf(" 	Uneven: 1		Even: 2	\n");
 								
-								scanf("%u", &opague);
+								opague = get_unsigned_numeric_input_with_not_more_than_1_letter (opague);
 								
 								opague += 10*lim;
 							}
@@ -1085,7 +1100,7 @@ int main (void) {
 					
 					if ((beginningmenu == back_opt+1)&&(gamemode == 4)){
 						printf("	Points for win: (>0)			(normal: 3) \n");
-						scanf("%u", &points_for_win);
+						points_for_win = get_unsigned_numeric_input_with_not_more_than_1_letter (points_for_win);
 						
 						if (points_for_win == 0) {
 							printf("	You missed the assertion(s) !!! \n");
@@ -1095,7 +1110,7 @@ int main (void) {
 					}
 					if ((beginningmenu == back_opt+2)&&(gamemode == 4)){
 						printf("	Turns per drop: (>=2)			(normal: 3) \n");
-						scanf("%u", &turns_per_drop);
+						turns_per_drop = get_unsigned_numeric_input_with_not_more_than_1_letter (turns_per_drop);
 						
 						if (turns_per_drop < 2) {
 							printf("	You missed the assertion(s) !!! \n");
@@ -1105,7 +1120,7 @@ int main (void) {
 					}
 					if ((beginningmenu == back_opt+3)&&(gamemode == 4)){
 						printf("	Speed of the #-square: 	(>0)		(normal: 1) \n");
-						scanf("%u", &speed_of_fall);
+						speed_of_fall = get_unsigned_numeric_input_with_not_more_than_1_letter (speed_of_fall);
 						
 						if (speed_of_fall == 0) {
 							printf("	You missed the assertion(s) !!! \n");
@@ -1114,28 +1129,28 @@ int main (void) {
 					}
 					if ((beginningmenu == back_opt+1)&&(gamemode == 6)){
 						printf("	Rounds to catch? >=5			(normal: 30) \n");
-						scanf("%u", &rtc);
+						rtc = get_unsigned_numeric_input_with_not_more_than_1_letter (rtc);
 						if (rtc < 5) {
 							printf("	You missed the assertion(s) !!! \n");
 							rtc = 30;
 						}
 						
 						printf("	Show-Position-Frequence in Rounds:			(normal: 5) \n");
-						scanf("%u", &spf);
+						spf = get_unsigned_numeric_input_with_not_more_than_1_letter (spf);
 						if (spf < 1) {
 							printf("	You missed the assertion(s) !!! \n");
 							spf = 5;
 						}
 						
 						printf("	Show the heart_block or all?: 		(normal: all) \n		heart_block: 0 \n		all: 1 \n		\n");
-						scanf("%u", &hboa);
+						hboa = get_unsigned_numeric_input_with_not_more_than_1_letter (hboa);
 						if (hboa >= 2) {
 							printf("	You missed the assertion(s) !!! \n");
 							hboa = 1;
 						}
 						
 						printf("	Show contact with hunted person: 		(normal: 1) \n		No: 0 \n		Only if necessary : 1 \n		Always: 2 \n		\n");
-						scanf("%u", &scwhp);
+						scwhp = get_unsigned_numeric_input_with_not_more_than_1_letter (scwhp);
 						if (scwhp > 2) {
 							printf("	You missed the assertion(s) !!! \n");
 							scwhp = 1;
@@ -1223,7 +1238,7 @@ int main (void) {
 							printf(" \n");
 							printf("	Back: 10 \n");
 							printf(" \n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if ((lim == 1)&&(ability[1] == 0)) {
 								ability[1] = 100;
@@ -1305,9 +1320,9 @@ int main (void) {
 						
 						number_of_players = 0;
 						
-						while ((number_of_players < 1) || (number_of_players > 9)){
+						while ((number_of_players < 1) || (number_of_players > AOP)){
 							printf("	Number of players?		(1 - 9) \n");
-							scanf("%u", &number_of_players);
+							number_of_players = get_unsigned_numeric_input_with_not_more_than_1_letter (number_of_players);	//watch out, if AOP gets >= 10
 						}
 						
 						if (gamemode == 6) {
@@ -1398,7 +1413,7 @@ int main (void) {
 						
 					} else if ((beginningmenu == back_opt+3)&&((gamemode == 9)||(gamemode == 10))) {
 						printf("	Rounds to play: 			(normal: 30) \n");
-						scanf("%u", &rtp);
+						rtp = get_unsigned_numeric_input_with_not_more_than_2_letters (rtp);
 						if (rtp == 0) {
 							rtp = 30;
 						}
@@ -1408,17 +1423,17 @@ int main (void) {
 						}
 					} else if ((beginningmenu == back_opt+1)&&(gamemode == 7)){
 						printf("	Frequence: 			(normal: 6) \n");
-						scanf("%u", &freq);
+						freq = get_unsigned_numeric_input_with_not_more_than_1_letter (freq);
 					} else if ((beginningmenu == back_opt+1)&&(gamemode == 8)){
 						printf("	Only Object: 	yes [1]		no [0] \n");
-						scanf("%u", &rain_obj);
+						rain_obj = get_unsigned_numeric_input_with_not_more_than_1_letter (rain_obj);
 						if ((rain_obj != 1)&&(rain_obj != 0)) {
 							printf("	You missed the assertion(s) !!! \n");
 							rain_obj = 0;
 						}
 						
 						printf("	Raindrops per turn:		1, 	2, 	4, 	5, 	6 	? \n");
-						scanf("%u", &rain_drops);
+						rain_drops = get_unsigned_numeric_input_with_not_more_than_1_letter (rain_drops);
 						if ((rain_drops == 0) || (rain_drops > 6) || (rain_drops == 3)){
 							printf("	You missed the assertion(s) !!! \n");
 							rain_drops = 1;
@@ -1427,10 +1442,10 @@ int main (void) {
 						
 						printf("	Characteristics of the Raindrops: \n");
 						printf("		Push: 1 \n		Destroy: 2 \n		Explode: 3 \n		Transform: 4 \n		Teleport: 5 \n		Mixed: 6 \n");
-						scanf("%u", &rain);
+						rain = get_unsigned_numeric_input_with_not_more_than_1_letter (rain);
 						if (rain == 3){
 							printf("		Explode: 31		or		Explode & survival: 32 \n");
-							scanf("%u", &rain);
+							rain = get_unsigned_numeric_input_with_not_more_than_1_letter (rain);
 						}
 						printf("\n");
 						if ((rain == 0)||(rain > 6)) {
@@ -1439,7 +1454,7 @@ int main (void) {
 						}
 						
 						printf("	Distance in squares the rain should fall per turn:  		(<=6), 0 = 0,5 \n");
-						scanf("%u", &rain_speed);
+						rain_speed = get_unsigned_numeric_input_with_not_more_than_1_letter (rain_speed);
 						if (rain_speed > 6){
 							printf("	You missed the assertion(s) !!! \n");
 							rain_speed = 1;
@@ -1453,7 +1468,7 @@ int main (void) {
 						for (unsigned int p=1; p<=number_of_players; p+=1) {
 							printf("\n");
 							printf("	Lifes PLayer: %u		(normal %u) \n", p, p-1);
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							ulcer_lifes[p] = lim;
 							printf("\n");
 						}
@@ -1472,7 +1487,7 @@ int main (void) {
 					} else if ((beginningmenu == back_opt+1)&&(gamemode == 11)) {
 						printf("	The Gravity is pulling down the object. \n");
 						printf("	Gravity:	-5 to 5		(normal: 1) \n");
-						scanf("%d", &erd);
+						erd = get_signed_numeric_input_with_not_more_than_1_letter (erd);
 						if ((erd < -5)||(erd > 5)) {
 							printf("	That makes no sense, i will give you the 1. \n");
 							erd = 1;
@@ -1480,7 +1495,7 @@ int main (void) {
 					} else if ((beginningmenu == back_opt+3)&&(gamemode == 11)) {
 						printf("	The Range of the impact moving the object. \n");
 						printf("	Range:	0-5		(normal: 1) \n");
-						scanf("%u", &range);
+						range = get_unsigned_numeric_input_with_not_more_than_1_letter (range);
 						if (range > 5) {
 							printf("	That makes no sense, i will give you the 1. \n");
 							range = 1;
@@ -1488,7 +1503,7 @@ int main (void) {
 					} else if ((beginningmenu == back_opt+4)&&(gamemode == 11)) {
 						printf("	The Coefficient influences the way and strength of the impact moving the object. \n");
 						printf("	Coefficient:	0-5		(normal: 1) \n");
-						scanf("%u", &d_wert);
+						d_wert = get_unsigned_numeric_input_with_not_more_than_1_letter (d_wert);
 						if (d_wert > 5) {
 							printf("	That makes no sense, i will give you the 1. \n");
 							d_wert = 1;
@@ -1501,15 +1516,15 @@ int main (void) {
 						
 						while (information_code[1]>1) {
 							printf("	-Traps:		Yes: 1		No: 0 \n");
-							scanf("%u", &information_code[1]);
+							information_code[1] = get_unsigned_numeric_input_with_not_more_than_1_letter (information_code[1]);
 						}
 						while (information_code[2]>1) {
 							printf("	-Bombs:		Yes: 1		No: 0 \n");
-							scanf("%u", &information_code[2]);
+							information_code[2] = get_unsigned_numeric_input_with_not_more_than_1_letter (information_code[2]);
 						}
 						while (information_code[3]>1) {
 							printf("	-Waves:		Yes: 1		No: 0 \n");
-							scanf("%u", &information_code[3]);
+							information_code[3] = get_unsigned_numeric_input_with_not_more_than_1_letter (information_code[3]);
 						}
 					} else if (beginningmenu == back_opt){	//auch hier!
 						gamemode = 0;
@@ -1794,7 +1809,7 @@ int main (void) {
 										printf("	Electric   : 9 \n");
 									}
 									
-									scanf("%u", &lim);
+									lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 									
 									if ((ability[lim] == 0)&&(lim != 0)&&(lim <= 9)) {
 										ability[lim] = p;
@@ -2089,7 +2104,7 @@ int main (void) {
 		if (gamemode == 12) {
 			while ((survive_different == 0)||(survive_different > 60)){
 				printf("	Please give me a number between 1 and 60. \n");
-				scanf("%u", &survive_different);
+				survive_different = get_unsigned_numeric_input_with_not_more_than_1_letter (survive_different);
 			}
 		}
 		
@@ -4136,7 +4151,7 @@ int main (void) {
 					printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
 					printf("	Keep the number: 	1 \n");
 					printf("	Get the next one:	2 \n");
-					scanf("%u", &lim);
+					lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 					
 					if (lim == 2) {
 						use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_);
@@ -4223,8 +4238,7 @@ int main (void) {
 				if ((ttt != 0)&&(time_saver == 0.0)) {
 					time1 = time(NULL);
 				}
-				scanf("%u", &var_[geben]);
-				
+				var_[geben] = get_unsigned_numeric_input_with_not_more_than_4_letters (var_[geben]);
 				//printf("	Checkpoint: var_[geben] \n");	//test
 				
 				if (var_[geben] == 10){
@@ -4236,7 +4250,7 @@ int main (void) {
 						printf("\n");
 						printf("\n");
 						printf("	About the game: 1 \n	Statistics: 2 \n	The numbers: 3 \n	The limits: 4 \n	Get Hints: 5 \n	Suprise: 6 \n	Quit Menu: 7 \n");
-						scanf("%u", &menuoperator);
+						menuoperator = get_unsigned_numeric_input_with_not_more_than_1_letter(menuoperator);
 						
 						if (menuoperator == 1){
 							About_the_game (gamemode, geben, limit_at_all, limit_new, number_of_players, freq, w, d, e);
@@ -4283,14 +4297,14 @@ int main (void) {
 							while (menuoperator != 1) {
 					
 								printf("	Creator menu. 	Change number: 1	Suprise: 2	Suprise undo: 3	Back: 4 \n");
-								scanf ("%u", &lim);
+								lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 								if (lim == 1){
 									printf("	number = ? \n");
-									scanf ("%u", &use_number);
+									use_number = get_unsigned_numeric_input_with_not_more_than_1_letter(use_number);
 								} else if (lim == 2){
 							
 									printf("\n");
-									scanf("%u", &suprise);
+									suprise = get_unsigned_numeric_input_with_not_more_than_1_letter(suprise);
 							
 									if (suprise == 31){
 										for (unsigned int i=2; i<m-2; i+=1){
@@ -4444,7 +4458,7 @@ int main (void) {
 			if (var_[geben] == 0){
 				printf("	Do you really want to end the game ? \n");
 				printf("	Yes: 0		No: 1 \n");
-				scanf("%u", &lim);
+				lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 				if (lim == 0){
 					break;
 				} else if (lim == 1){
@@ -4967,7 +4981,7 @@ int main (void) {
 								printf("	Length of [%u]: 	%u left \n", p, sequence[geben][p]);
 							}
 							printf("\n");
-							scanf("%u", &sequence[0][0]);
+							sequence[0][0] = get_unsigned_numeric_input_with_not_more_than_1_letter (sequence[0][0]);
 							if ((sequence[0][0] >= seq_max)||(sequence[geben][sequence[0][0]] == 0)) {
 								sequence[0][0] = 100;
 								printf("	You made a mistake. \n");
@@ -5074,7 +5088,7 @@ int main (void) {
 							printf("	Yes: 1 \n");
 							printf("	\n");
 							printf("	\n");
-							scanf("%u", &lim);
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
 							if (lim != 1) {
 								lim = 1;
@@ -6785,8 +6799,7 @@ int main (void) {
 		
 		printf(" \n");
 		printf("	Show statistics:	yes: 1		no: 0 \n");
-		scanf("%u", &lim);
-		
+		lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 		if (lim == 1){
 			
 			show_statistics (number_of_players, gamemode, numbers_of_, Points, exclude_counter, ulcer_lifes, ges, pere, ability, ttt);
@@ -6808,7 +6821,7 @@ int main (void) {
 		printf("	\n ");
 		printf("	\n ");
 		printf("	Do you want to play another match?	\n		Yes: 1		No:  0 ");
-		scanf ("%u", &playtime);
+		playtime = get_unsigned_numeric_input_with_not_more_than_1_letter (playtime);
 		if (playtime == 0) {
 			printf("				     ___ \n ");
 		} else if (playtime > 1) {
@@ -6822,7 +6835,7 @@ int main (void) {
 			
 			printf("	Do you want to play a revanche? \n ");
 			printf("	yes: 1		No: 0 \n ");
-			scanf("%u", &same[0]);
+			same[0] = get_unsigned_numeric_input_with_not_more_than_1_letter (same[0]);
 			
 			// printf("	same[0] = %u \n", same[0]);	//test
 			
@@ -8890,6 +8903,8 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 	
 	a = 0;
 	b = 0;
+	Zeile = 0;
+	Spalte = 0;
 	
 	if ((gamemode == 6)&&(geben == 1)) {
 		limit_at_all = (limit_at_all+ 2 *(number_of_players - 3));
@@ -8913,7 +8928,8 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 	} else {
 	
 		printf(" Zeile: \n Spalte: \n");
-		scanf("%u %u", &Zeile, &Spalte);
+		Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile, 0);
+		Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte, 1);
 		
 		if ((Zeile == 0)&&(Spalte == 0)){
 			printf("	Sweet escape...\n");
@@ -8973,8 +8989,12 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode, unsigned int* information_code, unsigned int* Colored, unsigned int opague, Spielfeld Sf_opague){
 	unsigned int Zeile, Spalte;
 	
+	Zeile = 0;
+	Spalte = 0;
+	
 	printf(" Zeile: \n Spalte: \n");
-	scanf("%u %u", &Zeile, &Spalte);
+	Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile, 0);
+	Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte, 1);
 	
 	if ((Zeile == 0)&&(Spalte == 0)){
 		printf("	Sweet escape...\n");
@@ -9005,6 +9025,13 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 	Spielfeld temp_move;
 	
 	b = 0;
+	
+	Zeile_alt = 0;
+	Spalte_alt = 0;
+	
+	Zeile_neu = 0;
+	Spalte_neu = 0;
+	
 	for (unsigned int h=1; h<=(m-2); h+=1){
 		for (unsigned int k=1; k<=(n-2); k+=1){
 			if ((gamemode == 6)&&(geben == 1)) {
@@ -9111,7 +9138,8 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 		temp_move = Spielfeld_Create (m, n, 0);
 		
 		printf(" alte Zeile: \n alte Spalte: \n");
-		scanf("%u %u", &Zeile_alt, &Spalte_alt);
+		Zeile_alt = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile_alt, 0);
+		Spalte_alt = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte_alt, 1);
 		
 		if ((Zeile_alt == 0)&&(Spalte_alt == 0)){
 			printf("	Sweet escape...\n");
@@ -9135,7 +9163,8 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 				} else {
 					
 					printf(" neue Zeile: \n neue Spalte: \n");
-					scanf("%u %u", &Zeile_neu, &Spalte_neu);
+					Zeile_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile_neu, 0);
+					Spalte_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte_neu, 1);
 					
 					if ((Zeile_neu == 0)&&(Spalte_neu == 0)){
 						printf("	Sweet escape...\n");
@@ -9192,7 +9221,8 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 				} else {
 					
 					printf(" neue Zeile: \n neue Spalte: \n");
-					scanf("%u %u", &Zeile_neu, &Spalte_neu);
+					Zeile_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile_neu, 0);
+					Spalte_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte_neu, 1);
 					
 					if ((Zeile_neu == 0)&&(Spalte_neu == 0)){
 						printf("	Sweet escape...\n");
@@ -9349,7 +9379,8 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 			} else {
 				
 				printf(" normale Zeile: \n normale Spalte: \n");
-				scanf("%u %u", &normal_Zeile, &normal_Spalte);
+				normal_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (normal_Zeile, 0);
+				normal_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (normal_Spalte, 1);
 				
 				if ((normal_Zeile == 0)&&(normal_Spalte == 0)){
 					printf("	Sweet escape...\n");
@@ -9661,7 +9692,8 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 	} else {
 	
 		printf(" eigene Zeile: \n eigene Spalte: \n");
-		scanf("%u %u", &eigene_Zeile, &eigene_Spalte);
+		eigene_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (eigene_Zeile, 0);
+		eigene_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (eigene_Spalte, 1);
 		
 		if ((eigene_Zeile == 0)&&(eigene_Spalte == 0)){
 			printf("	Sweet escape...\n");
@@ -9715,7 +9747,8 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 				} else {
 					
 					printf(" fremde Zeile: \n fremde Spalte: \n");
-					scanf("%u %u", &fremde_Zeile, &fremde_Spalte);
+					fremde_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Zeile, 0);
+					fremde_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Spalte, 1);
 					
 					if ((fremde_Zeile == 0)&&(fremde_Spalte == 0)){
 						printf("	Sweet escape...\n");
@@ -9790,6 +9823,9 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 	unsigned int geben_destroy, a, b;
 	unsigned int fremde_Zeile, fremde_Spalte;
 	
+	fremde_Zeile = 0;
+	fremde_Spalte = 0;
+	
 	if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//mehr-gamemode
 		geben_destroy = (geben%2)+1;
 	} else if ((gamemode == 6)&&(geben != 1)) {
@@ -9800,7 +9836,8 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 	
 	if ((gamemode == 6)&&(geben == 1)) {
 		printf(" fremde Zeile: \n fremde Spalte: \n");
-		scanf("%u %u", &fremde_Zeile, &fremde_Spalte);
+		fremde_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Zeile, 0);
+		fremde_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Spalte, 1);
 		
 		if ((fremde_Zeile == 0)&&(fremde_Spalte == 0)){
 			printf("	Sweet escape...\n");
@@ -10082,7 +10119,8 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 		} else {
 		
 			printf(" fremde Zeile: \n fremde Spalte: \n");
-			scanf("%u %u", &fremde_Zeile, &fremde_Spalte);
+			fremde_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Zeile, 0);
+			fremde_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Spalte, 1);
 			
 			if ((fremde_Zeile == 0)&&(fremde_Spalte == 0)){
 				printf("	Sweet escape...\n");
@@ -10320,21 +10358,21 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 			if (ent == limit_new){
 				if ((gamemode == 11)||(gamemode == 9)) {
 					printf(" #produce	defensive: 1		offensive: 2 \n");
-					scanf("%u", &ind);
+					ind = get_unsigned_numeric_input_with_not_more_than_1_letter (ind);
 				} else if (gamemode == 6) {
 					printf(" #produce	defensive: 2		offensive: 1 \n");
-					scanf("%u", &ind);
+					ind = get_unsigned_numeric_input_with_not_more_than_1_letter (ind);
 				} else if ((gamemode == 8)||(gamemode == 7)||(gamemode == 5)||(gamemode == 4)||(gamemode == 2)) {
 					printf(" #produce	keep bottom: 1		keep top: 2		equal: >=3 \n");
-					scanf("%u", &keep);
+					keep = get_unsigned_numeric_input_with_not_more_than_1_letter (keep);
 					ind = 1;
 				} else if (gamemode == 3) {
 					printf(" #produce	keep top: 1		keep bottom: 2		keep left: 3		keep right: 4		don't matter: >=5 \n");
-					scanf("%u", &keep);
+					keep = get_unsigned_numeric_input_with_not_more_than_1_letter (keep);
 					ind = 2;
 				} else if (gamemode == 1) {
-					printf(" #produce	defensive: 1		offensive: 2 \n");
-					scanf("%u", &keep);		//correct misuse of keep;
+					printf(" #produce	defensive: 1		offensive: 2 	equal: >=3 \n");
+					keep = get_unsigned_numeric_input_with_not_more_than_1_letter (keep);	//correct misuse of keep, done
 					ind = 1;
 				}
 			}
@@ -10342,17 +10380,17 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 			if ((ent >= (limit_at_all - 4))&&(gamemode != 3)){		//min 5/10, watch out with hunt on 2 players
 				if ((gamemode == 11)||(gamemode == 9)||(gamemode == 1)) {
 					printf(" #reduce	defensive: 1		offensive: 2 \n");
-					scanf("%u", &ind);
+					ind = get_unsigned_numeric_input_with_not_more_than_1_letter (ind);
 				} else if (gamemode == 6) {
 					printf(" #produce	defensive: 2		offensive: 1 \n");
-					scanf("%u", &ind);
+					ind = get_unsigned_numeric_input_with_not_more_than_1_letter (ind);
 				} else if ((gamemode == 8)||(gamemode == 7)||(gamemode == 5)||(gamemode == 4)||(gamemode == 2)) {
 					printf(" #produce	keep bottom: 1		keep top: 2 	equal: >=3 \n");
-					scanf("%u", &keep);
+					keep = get_unsigned_numeric_input_with_not_more_than_1_letter (keep);
 					ind = 1;
 				} else if (gamemode == 1) {
-					printf(" #produce	defensive: 1		offensive: 2 \n");
-					scanf("%u", &keep);		//correct misuse of keep;
+					printf(" #produce	defensive: 1		offensive: 2 	equal: >=3 \n");
+					keep = get_unsigned_numeric_input_with_not_more_than_1_letter (keep);	//correct misuse of keep, done
 					ind = 1;
 				}
 				
@@ -11140,7 +11178,10 @@ void choose_heart (Spielfeld Field, unsigned int m, unsigned int n){
 		printf(" Choose the next position of your heart-block: \n");
 		printf("	\n");
 		printf(" Zeile: \n Spalte: \n");
-		scanf("%u %u", &heart_i_wanted, &heart_j_wanted);
+		
+		heart_i_wanted = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (heart_i_wanted, 0);
+		heart_j_wanted = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (heart_j_wanted, 1);
+		
 	}
 	
 	
@@ -11731,9 +11772,6 @@ void get_hints (unsigned int gamemode, Spielfeld Field, unsigned int geben, unsi
 	a = 0;
 	menuoperator = 0;
 	
-	printf("	New: 1 \n	Dying: 2 \n	Both: 3 \n");
-	scanf("%u", &menuoperator);
-	
 	for (unsigned int i=1; i<(m-1); i+=1){
 		for (unsigned int j=1; j<(n-1); j+=1){
 			if ((gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//10
@@ -11779,6 +11817,9 @@ void get_hints (unsigned int gamemode, Spielfeld Field, unsigned int geben, unsi
 			}
 		}
 	}
+	
+	printf("	New: 1 \n	Dying: 2 \n	Both: 3 \n");
+	menuoperator = get_unsigned_numeric_input_with_not_more_than_2_letters (menuoperator);
 	
 	if ((menuoperator == 2)||(menuoperator == 3)){
 		for (unsigned int i=1; i<(m-1); i+=1){
@@ -11953,8 +11994,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 	
 	if (gamemode == 1){
 		printf(" Zeilen: >=6				(normal: 10) \n");
-		scanf("%u", &m);
-		printf("\n");
+		m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 		
 		if (m<6){
 			printf("	You missed the assertion(s) !!! \n");
@@ -11965,8 +12005,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 2) {
 		printf(" Zeilen: >=7, mod2==1				(normal: 9) \n");
-		scanf("%u", &m);
-		printf("\n");
+		m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 		
 		if ((m<7)||(m%2==0)){
 			printf("	You missed the assertion(s) !!! \n");
@@ -11977,8 +12016,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 3) {
 		printf(" Zeilen: >=6				(normal: 10) \n");
-		scanf("%u", &m);
-		printf("\n");
+		m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 		
 		if (m<6){
 			printf("	You missed the assertion(s) !!! \n");
@@ -11989,8 +12027,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 4) {
 		printf(" Zeilen: >=3				(normal: 6) \n");
-		scanf("%u", &m);
-		printf("\n");
+		m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 		
 		if (m<3){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12001,8 +12038,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 5) {
 		printf(" Zeilen: >=6				(normal: 6) \n");
-		scanf("%u", &m);
-		printf("\n");
+		m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 		
 		if (m<6){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12014,8 +12050,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 6) {
 		if (number_of_players == 2) {
 			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<3)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12026,8 +12061,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<3)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12038,8 +12072,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<7)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12050,8 +12083,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 13) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12062,8 +12094,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 13) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12074,8 +12105,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12086,8 +12116,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Zeilen: >=10, mod2==0				(normal: 16) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12098,8 +12127,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Zeilen: >=13, mod2==1				(normal: 21) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12111,8 +12139,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 7) {
 		printf(" Zeilen: >=7				(normal: 7) \n");
-		scanf("%u", &m);
-		printf("\n");
+		m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 		
 		if (m<7){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12123,8 +12150,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 8) {
 		printf(" Zeilen: >=3				(normal: 6) \n");
-		scanf("%u", &m);
-		printf("\n");
+		m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 		
 		if (m<3){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12136,8 +12162,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 9) {
 		if (number_of_players == 2) {
 			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<3)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12148,8 +12173,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Zeilen: >=7, mod2==1				(normal: 7) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<7)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12160,8 +12184,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 9) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12172,8 +12195,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Zeilen: >=8, mod2==0				(normal: 10) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<8)||(m%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12184,8 +12206,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<7)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12196,8 +12217,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Zeilen: >=8, mod2==0				(normal: 12) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<4)||(m%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12208,8 +12228,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Zeilen: >=12, mod2==0				(normal: 14) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<12)||(m%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12220,8 +12239,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Zeilen: >=12, mod2==0				(normal: 14) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<12)||(m%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12234,8 +12252,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 10) {
 		if (number_of_players == 2) {
 			printf(" Zeilen: >=6				(normal: 6) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12246,8 +12263,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Zeilen: >=7				(normal: 7) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<7){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12258,8 +12274,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Zeilen: >=9				(normal: 9) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<9){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12270,8 +12285,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Zeilen: >=10				(normal: 10) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<10){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12282,8 +12296,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Zeilen: >=11				(normal: 11) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<11){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12294,8 +12307,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Zeilen: >=12				(normal: 12) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<12){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12306,8 +12318,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Zeilen: >=13				(normal: 13) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<13){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12318,8 +12329,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Zeilen: >=14				(normal: 14) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<14){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12333,8 +12343,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 11) {
 		if (number_of_players == 2) {
 			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<3)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12345,8 +12354,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Zeilen: >=5, mod2==1				(normal: 9) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<5)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12357,8 +12365,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<7)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12369,8 +12376,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<7)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12381,8 +12387,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12393,8 +12398,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12405,8 +12409,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12417,8 +12420,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Zeilen: >=11, mod2==1				(normal: 17) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<11)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12431,8 +12433,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 12) {
 		if (number_of_players == 1) {
 			printf(" Zeilen: >=3				(normal: 10) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<3){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12443,8 +12444,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 2) {
 			printf(" Zeilen: >=3				(normal: 11) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12455,8 +12455,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Zeilen: >=6				(normal: 12) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12467,8 +12466,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Zeilen: >=6				(normal: 13) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if (m<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12479,8 +12477,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Zeilen: >=7, mod2==1				(normal: 15) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<7)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12491,8 +12488,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12503,8 +12499,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12515,8 +12510,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12527,8 +12521,7 @@ unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &m);
-			printf("\n");
+			m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
 			
 			if ((m<9)||(m%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12549,8 +12542,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	
 	if (gamemode == 1){
 		printf(" Spalten: >=4, mod2==0				(normal: 6) \n");
-		scanf("%u", &n);
-		printf("\n");
+		n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 		
 		if ((n<4)||(n%2==1)){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12561,8 +12553,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 2) {
 		printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
-		scanf("%u", &n);
-		printf("\n");
+		n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 		
 		if ((n<7)||(n%2==0)){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12573,8 +12564,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 3) {
 		printf(" Spalten: >=4, mod2==0				(normal: 16) \n");
-		scanf("%u", &n);
-		printf("\n");
+		n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 		
 		if ((n<4)||(n%2==1)){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12585,8 +12575,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 4) {
 		printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
-		scanf("%u", &n);
-		printf("\n");
+		n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 		
 		if ((n<7)||(n%2==0)){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12597,8 +12586,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 5) {
 		printf(" Spalten: >=4, mod2==0				(normal: 6) \n");
-		scanf("%u", &n);
-		printf("\n");
+		n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 		
 		if ((n<4)||(n%2==1)){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12610,8 +12598,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 6) {
 		if (number_of_players == 2) {
 			printf(" Spalten: >=7, mod2==1				(normal: 9) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12622,8 +12609,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Spalten: >=9, mod2==1				(normal: 13) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12634,8 +12620,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Spalten: >=9, mod2==1				(normal: 13) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12646,8 +12631,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Spalten: >=9, mod2==1				(normal: 13) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12658,8 +12642,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Spalten: >=10, mod2==0				(normal: 16) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<10)||(n%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12670,8 +12653,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Spalten: >=13, mod2==1				(normal: 19) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<13)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12682,8 +12664,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Spalten: >=13, mod2==1				(normal: 21) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<13)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12694,8 +12675,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Spalten: >=13, mod2==1				(normal: 21) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<13)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12707,8 +12687,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 		}
 	} else if (gamemode == 7) {
 		printf(" Spalten: >=5, mod2==1				(normal: 19) \n");
-		scanf("%u", &n);
-		printf("\n");
+		n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 		
 		if ((n<5)||(n%2==0)){
 			printf("	You missed the assertion(s) !!! \n");
@@ -12720,8 +12699,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 9) {
 		if (number_of_players == 2) {
 			printf(" Spalten: >=7, mod2==1				(normal: 7) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12732,8 +12710,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Spalten: >=7, mod2==1				(normal: 7) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12744,8 +12721,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Spalten: >=9, mod2==1				(normal: 9) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12756,8 +12732,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Spalten: >=8, mod2==0				(normal: 10) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<8)||(n%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12768,8 +12743,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Spalten: >=13, mod2==1				(normal: 11) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<13)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12780,8 +12754,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Spalten: >=12, mod2==0				(normal: 12) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<12)||(n%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12792,8 +12765,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Spalten: >=12, mod2==0				(normal: 14) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<12)||(n%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12804,8 +12776,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Spalten: >=12, mod2==0				(normal: 14) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<12)||(n%2==1)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12818,8 +12789,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 10) {
 		if (number_of_players == 2) {
 			printf(" Spalten: >=6				(normal: 6) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12830,8 +12800,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Spalten: >=7				(normal: 7) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<7){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12842,8 +12811,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Spalten: >=9				(normal: 9) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<9){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12854,8 +12822,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Spalten: >=10				(normal: 10) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<10){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12866,8 +12833,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Spalten: >=11				(normal: 11) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<11){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12878,8 +12844,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Spalten: >=12				(normal: 12) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<12){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12890,8 +12855,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Spalten: >=13				(normal: 13) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<13){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12902,8 +12866,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Spalten: >=14				(normal: 14) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<14){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12917,8 +12880,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 11) {
 		if (number_of_players == 2) {
 			printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12929,8 +12891,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12941,8 +12902,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12953,8 +12913,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Spalten: >=7, mod2==1				(normal: 15) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12965,8 +12924,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Spalten: >=9, mod2==1				(normal: 15) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12977,8 +12935,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Spalten: >=9, mod2==1				(normal: 15) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -12989,8 +12946,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13001,8 +12957,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Spalten: >=11, mod2==1				(normal: 17) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<11)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13015,8 +12970,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	} else if (gamemode == 12) {
 		if (number_of_players == 1) {
 			printf(" Spalten: >=3				(normal: 10) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<3){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13027,8 +12981,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 2) {
 			printf(" Spalten: >=6				(normal: 11) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13039,8 +12992,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 3) {
 			printf(" Spalten: >=6				(normal: 12) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13051,8 +13003,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 4) {
 			printf(" Spalten: >=6				(normal: 13) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13063,8 +13014,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 5) {
 			printf(" Spalten: >=7, mod2==1				(normal: 15) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<7)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13075,8 +13025,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 6) {
 			printf(" Spalten: >=6				(normal: 15) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if (n<6){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13087,8 +13036,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 7) {
 			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13099,8 +13047,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 8) {
 			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13111,8 +13058,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 			}
 		} else if (number_of_players == 9) {
 			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
-			scanf("%u", &n);
-			printf("\n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
 			
 			if ((n<9)||(n%2==0)){
 				printf("	You missed the assertion(s) !!! \n");
@@ -13127,6 +13073,90 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	return n;
 }
 	
+unsigned int get_unsigned_numeric_input_with_not_more_than_4_letters (unsigned int parameter) {
+	char input[4];
+	
+	scanf("%4s", input);
+	
+	if (isdigit(*input) == 0) {
+		printf("	You should give me natural numbers, sometimes including 0. \n");
+	} else {
+		parameter = atoi (input);
+	}
+	printf("\n");
+	
+	return parameter;
+}
+
+unsigned int get_unsigned_numeric_input_with_not_more_than_2_letters (unsigned int parameter) {
+	char input[2];
+	
+	scanf("%2s", input);
+	
+	if (isdigit(*input) == 0) {
+		printf("	You should give me natural numbers, sometimes including 0. \n");
+	} else {
+		parameter = atoi (input);
+	}
+	printf("\n");
+	
+	return parameter;
+}
+
+unsigned int get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (unsigned int parameter, unsigned int which_part) {	//which_part=0 => first, which_part=1 => second.
+	char input[4];
+	char input_wanted[2];
+	
+	
+	scanf("%4s", input);
+	
+	if (isdigit(*input) == 0) {
+		printf("	You should give me natural numbers, sometimes including 0. \n");
+		parameter = 1000;	//forced to try again.
+	} else {
+		for (unsigned int p=0; p<=1; p++) {
+			input_wanted[p] = input[p+2*which_part];
+		}
+		parameter = atoi (input_wanted);
+	}
+	printf("\n");
+	
+	return parameter;
+}
+
+unsigned int get_unsigned_numeric_input_with_not_more_than_1_letter (unsigned int parameter) {
+	char input[1];
+	
+	scanf("%1s", input);
+	
+	if (isdigit(*input) == 0) {
+		printf("	You should give me natural numbers, sometimes including 0. \n");
+	} else {
+		parameter = atoi (input);
+	}
+	
+	if (parameter != 0) {
+		printf("\n");
+	}
+	
+	return parameter;
+}
+
+int get_signed_numeric_input_with_not_more_than_1_letter (int parameter) {
+	char input[1];
+	
+	scanf("%1s", input);
+	
+	if (isdigit(*input) == 0) {
+		printf("	You should give me natural numbers, sometimes including 0. \n");
+	} else {
+		parameter = atoi (input);
+	}
+	printf("\n");
+	
+	return parameter;
+}
+
 
 //dynamic (gamemode)	, done		(just notes following)
 //Geschwindigkeit (vertikal, horizontal)
