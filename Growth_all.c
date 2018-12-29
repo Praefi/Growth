@@ -8967,42 +8967,43 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 					show_field (Field, m, n, gamemode, information_code, geben, Colored, 0);
 				}
 				Plus (m, n, geben, Field, limit_at_all, gamemode, information_code, number_of_players, Colored, opague, Sf_opague);
-			}
-		
-			for (unsigned int h=Zeile-1; h<=Zeile+1; h+=1){			//Lebender in der Nähe?
-				for (unsigned int k=Spalte-1; k<=Spalte+1; k+=1){
-					if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
-						if ((gamemode == 6)&&(geben == 1)) {
-							if ((Field[0][h][k] == 1)||(Field[0][h][k] == 11)){
+			} else {
+				
+				for (unsigned int h=Zeile-1; h<=Zeile+1; h+=1){			//Lebender in der Nähe?
+					for (unsigned int k=Spalte-1; k<=Spalte+1; k+=1){
+						if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
+							if ((gamemode == 6)&&(geben == 1)) {
+								if ((Field[0][h][k] == 1)||(Field[0][h][k] == 11)){
+									a+=1;
+								}
+							} else if (Field[0][h][k] == geben){
 								a+=1;
 							}
-						} else if (Field[0][h][k] == geben){
-							a+=1;
 						}
 					}
 				}
-			}
-			if (gamemode == 6) {
-				if ((a == 0) || (Field[0][Zeile][Spalte] != 0)){
-					printf ("	Not possible\n");
-				} else {
-					if (geben == 1) {
-						Field[0][Zeile][Spalte] = 1;
+				if (gamemode == 6) {
+					if ((a == 0) || (Field[0][Zeile][Spalte] != 0)){
+						printf ("	Not possible\n");
+					} else {
+						if (geben == 1) {
+							Field[0][Zeile][Spalte] = 1;
+						} else {
+							Field[0][Zeile][Spalte] = geben;
+						}
+					}
+				} else if ((gamemode != 10)&&(gamemode != 12)) {
+					if ((a == 0) || (Field[0][Zeile][Spalte] != 0)){
+						printf ("	Not possible\n");
 					} else {
 						Field[0][Zeile][Spalte] = geben;
 					}
-				}
-			} else if ((gamemode != 10)&&(gamemode != 12)) {
-				if ((a == 0) || (Field[0][Zeile][Spalte] != 0)){
-					printf ("	Not possible\n");
 				} else {
-					Field[0][Zeile][Spalte] = geben;
-				}
-			} else {
-				if (a == 0){
-					printf ("	Not possible\n");
-				} else {
-					Field[0][Zeile][Spalte] = geben;
+					if (a == 0){
+						printf ("	Not possible\n");
+					} else {
+						Field[0][Zeile][Spalte] = geben;
+					}
 				}
 			}
 		}
@@ -9032,9 +9033,7 @@ void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field,
 				show_field (Field, m, n, gamemode, information_code, geben, Colored, 0);
 			}
 			Minus (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
-		}
-		
-		if (Field[0][Zeile][Spalte] != geben){
+		} else if (Field[0][Zeile][Spalte] != geben){
 			printf("	you made a mistake, try again: \n");
 			Minus (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 		} else {
@@ -9179,9 +9178,7 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 				}
 				Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 				
-			}
-			
-			if ((gamemode == 6)&&(geben == 1)) {
+			} else if ((gamemode == 6)&&(geben == 1)) {
 				if ((Field[0][Zeile_alt][Spalte_alt] != 1)&&(Field[0][Zeile_alt][Spalte_alt] != 11)){
 					printf("	you made a mistake, try again: \n");
 					Move (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
@@ -9737,9 +9734,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 				}
 				Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 				
-			}
-			
-			if (Field[0][eigene_Zeile][eigene_Spalte] != geben){
+			} else if (Field[0][eigene_Zeile][eigene_Spalte] != geben){
 				printf("	you made a mistake, try again: \n");
 				Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 			} else {
@@ -9793,9 +9788,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 							}
 							Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
 							
-						}
-						
-						if ((gamemode != 3)&&(gamemode != 8)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//mehr-gamemode
+						} else if ((gamemode != 3)&&(gamemode != 8)&&(gamemode != 9)&&(gamemode != 10)&&(gamemode != 11)&&(gamemode != 12)) {	//mehr-gamemode
 							if ((Field[0][fremde_Zeile][fremde_Spalte] != geben_change)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
 								Change (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague, position);
@@ -10157,7 +10150,9 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 			if ((fremde_Zeile == 0)&&(fremde_Spalte == 0)){
 				printf("	Sweet escape...\n");
 			} else {
-			
+				
+				a = 0;								//Eigener in der Nähe?
+				
 				if (((fremde_Zeile<1)||(fremde_Zeile>(m-2))) || ((fremde_Spalte<1)||(fremde_Spalte>n-2))){
 					printf("	you made a mistake, try again: \n");
 					if (opague >= 1) {
@@ -10167,10 +10162,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 					}
 					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
 					
-				}
-				
-				a = 0;								//Eigener in der Nähe?
-				if ((gamemode == 1)||(gamemode == 2)||(gamemode == 4)||(gamemode == 5)||(gamemode == 6)||(gamemode == 7)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {	//mehr-gamemode
+				} else if ((gamemode == 1)||(gamemode == 2)||(gamemode == 4)||(gamemode == 5)||(gamemode == 6)||(gamemode == 7)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {	//mehr-gamemode
 					if ((Field[0][fremde_Zeile-1][fremde_Spalte]==geben)||(Field[0][fremde_Zeile][fremde_Spalte-1]==geben)||(Field[0][fremde_Zeile][fremde_Spalte+1]==geben)||(Field[0][fremde_Zeile+1][fremde_Spalte]==geben)){
 						a = 1;
 					}
@@ -10189,7 +10181,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 						a = 1;
 					}
 				}
-					
+				
 				if (a == 0){
 					printf("	you made a mistake, try again: \n");
 					Destroy (m, n, geben, Field, gamemode, information_code, Colored, opague, Sf_opague);
