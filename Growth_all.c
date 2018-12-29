@@ -51,10 +51,11 @@ void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, uns
 void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int);
 unsigned int get_m (unsigned int, unsigned int);
 unsigned int get_n (unsigned int, unsigned int);
-unsigned int get_unsigned_numeric_input_with_not_more_than_4_letters (unsigned int);
+unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4 (unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_2_letters (unsigned int);
-unsigned int get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (unsigned int, unsigned int);
+unsigned int split_unsigned_numeric_input_with_letters_4 (unsigned int, unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_1_letter (unsigned int);
+unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
 int get_signed_numeric_input_with_not_more_than_1_letter (int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
@@ -76,6 +77,8 @@ void heart_ground (unsigned int, unsigned int, Spielfeld, Spielfeld);
 int sgn (int);
 void Reflection (int*, unsigned int, int);
 void impact_y_semi_square (unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, int*, Spielfeld);	// unsigned int** wird zu Spielfeld
+
+unsigned int letters_4;
 
 int main (void) {
 	
@@ -190,6 +193,7 @@ int main (void) {
 		
 		pause = 0;
 		
+		letters_4 = 0;
 		rain_speed = 1;
 		rain_speed_save = 0;
 		rain_obj = 0;
@@ -668,8 +672,9 @@ int main (void) {
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 10) \n	limit_at_all:				(normal: 20) \n");
-								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
-								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 								printf("\n");
 							}
 							if (limit_new >= limit_at_all - 4) {
@@ -690,8 +695,9 @@ int main (void) {
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 15) \n	limit_at_all:				(normal: 30) \n");
-								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
-								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if ((gamemode == 4)||(gamemode == 7)||(gamemode == 8)) {
 							printf("	limit_new < limit_at_all - 4 	!	\n");
@@ -708,8 +714,9 @@ int main (void) {
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 7) \n	limit_at_all:				(normal: 14) \n");
-								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
-								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -729,8 +736,9 @@ int main (void) {
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 5) \n	limit_at_all:				(normal: 10) \n");
-								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
-								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -751,8 +759,9 @@ int main (void) {
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 6) \n	limit_at_all:				(normal: 12) \n");
-								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
-								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -773,8 +782,9 @@ int main (void) {
 							}
 							if (lim == 3){
 								printf("	limit_new:				(normal: 8) \n	limit_at_all:				(normal: 16) \n");
-								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
-								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -805,8 +815,9 @@ int main (void) {
 							if (lim == 3){
 								
 								printf("	limit_new:				(normal: 10) \n	limit_at_all:				(normal: 20) \n");
-								limit_new = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_new, 0);
-								limit_at_all = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (limit_at_all, 1);
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 							if (limit_new >= limit_at_all - 4) {
 								limit_at_all = limit_new + 5;
@@ -4171,6 +4182,7 @@ int main (void) {
 						numbers_of_[geben][0][0] += 1;
 					}
 				} else if (opt == 5) {
+					use_number = cons[geben];
 					numbers_of_[geben][use_number][0] -= 1;
 				} else {
 					numbers_of_[geben][number_[geben]][0] -= 1;
@@ -4238,7 +4250,7 @@ int main (void) {
 				if ((ttt != 0)&&(time_saver == 0.0)) {
 					time1 = time(NULL);
 				}
-				var_[geben] = get_unsigned_numeric_input_with_not_more_than_4_letters (var_[geben]);
+				var_[geben] = get_unsigned_numeric_input_with_not_more_than_letters_4 (var_[geben]);
 				//printf("	Checkpoint: var_[geben] \n");	//test
 				
 				if (var_[geben] == 10){
@@ -4798,8 +4810,15 @@ int main (void) {
 					}
 					
 					if (journey == 1){
-						unsigned int journey_max;
+						unsigned int journey_max, temp_limit_at_all;
 						journey_max = 0;
+						temp_limit_at_all = 0;
+						
+						if (limit_at_all == 0) {
+							limit_at_all = 25;
+							temp_limit_at_all = 1;
+						}
+						
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
 								if (Field_journey[0][i][j] == geben){
@@ -4834,6 +4853,9 @@ int main (void) {
 						}
 						journey_max = 0;
 						
+						if (temp_limit_at_all == 1) {
+							limit_at_all = 0;
+						}
 					}
 					
 					if (var_[geben] == 32){numbers_of_[geben][3][0] += 1; Revive(m, n, Sf_od_, Field, geben);}
@@ -8928,8 +8950,9 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 	} else {
 	
 		printf(" Zeile: \n Spalte: \n");
-		Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile, 0);
-		Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte, 1);
+		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+		Zeile = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+		Spalte = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 		
 		if ((Zeile == 0)&&(Spalte == 0)){
 			printf("	Sweet escape...\n");
@@ -8993,8 +9016,9 @@ void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field,
 	Spalte = 0;
 	
 	printf(" Zeile: \n Spalte: \n");
-	Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile, 0);
-	Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte, 1);
+	letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+	Zeile = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+	Spalte = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 	
 	if ((Zeile == 0)&&(Spalte == 0)){
 		printf("	Sweet escape...\n");
@@ -9138,8 +9162,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 		temp_move = Spielfeld_Create (m, n, 0);
 		
 		printf(" alte Zeile: \n alte Spalte: \n");
-		Zeile_alt = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile_alt, 0);
-		Spalte_alt = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte_alt, 1);
+		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+		Zeile_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+		Spalte_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 		
 		if ((Zeile_alt == 0)&&(Spalte_alt == 0)){
 			printf("	Sweet escape...\n");
@@ -9163,8 +9188,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 				} else {
 					
 					printf(" neue Zeile: \n neue Spalte: \n");
-					Zeile_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile_neu, 0);
-					Spalte_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte_neu, 1);
+					letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+					Zeile_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+					Spalte_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 					
 					if ((Zeile_neu == 0)&&(Spalte_neu == 0)){
 						printf("	Sweet escape...\n");
@@ -9221,8 +9247,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 				} else {
 					
 					printf(" neue Zeile: \n neue Spalte: \n");
-					Zeile_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Zeile_neu, 0);
-					Spalte_neu = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (Spalte_neu, 1);
+					letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+					Zeile_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+					Spalte_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 					
 					if ((Zeile_neu == 0)&&(Spalte_neu == 0)){
 						printf("	Sweet escape...\n");
@@ -9379,8 +9406,9 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 			} else {
 				
 				printf(" normale Zeile: \n normale Spalte: \n");
-				normal_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (normal_Zeile, 0);
-				normal_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (normal_Spalte, 1);
+				letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+				normal_Zeile = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+				normal_Spalte = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 				
 				if ((normal_Zeile == 0)&&(normal_Spalte == 0)){
 					printf("	Sweet escape...\n");
@@ -9692,8 +9720,9 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 	} else {
 	
 		printf(" eigene Zeile: \n eigene Spalte: \n");
-		eigene_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (eigene_Zeile, 0);
-		eigene_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (eigene_Spalte, 1);
+		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+		eigene_Zeile = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+		eigene_Spalte = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 		
 		if ((eigene_Zeile == 0)&&(eigene_Spalte == 0)){
 			printf("	Sweet escape...\n");
@@ -9747,8 +9776,9 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 				} else {
 					
 					printf(" fremde Zeile: \n fremde Spalte: \n");
-					fremde_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Zeile, 0);
-					fremde_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Spalte, 1);
+					letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+					fremde_Zeile = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+					fremde_Spalte = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 					
 					if ((fremde_Zeile == 0)&&(fremde_Spalte == 0)){
 						printf("	Sweet escape...\n");
@@ -9836,8 +9866,9 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 	
 	if ((gamemode == 6)&&(geben == 1)) {
 		printf(" fremde Zeile: \n fremde Spalte: \n");
-		fremde_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Zeile, 0);
-		fremde_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Spalte, 1);
+		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+		fremde_Zeile = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+		fremde_Spalte = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 		
 		if ((fremde_Zeile == 0)&&(fremde_Spalte == 0)){
 			printf("	Sweet escape...\n");
@@ -10119,8 +10150,9 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 		} else {
 		
 			printf(" fremde Zeile: \n fremde Spalte: \n");
-			fremde_Zeile = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Zeile, 0);
-			fremde_Spalte = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (fremde_Spalte, 1);
+			letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+			fremde_Zeile = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+			fremde_Spalte = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 			
 			if ((fremde_Zeile == 0)&&(fremde_Spalte == 0)){
 				printf("	Sweet escape...\n");
@@ -10696,9 +10728,9 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 							} else if (gamemode == 3) {
 								
 								if (keep == 1) {
-									Index_Wert += (m-1)-i;
-								} else if (keep == 2) {
 									Index_Wert += i;
+								} else if (keep == 2) {
+									Index_Wert += (m-1)-i;
 								} else if (keep == 3) {
 									Index_Wert += j;
 								} else if (keep == 4) {
@@ -11179,8 +11211,9 @@ void choose_heart (Spielfeld Field, unsigned int m, unsigned int n){
 		printf("	\n");
 		printf(" Zeile: \n Spalte: \n");
 		
-		heart_i_wanted = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (heart_i_wanted, 0);
-		heart_j_wanted = get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (heart_j_wanted, 1);
+		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+		heart_i_wanted = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+		heart_j_wanted = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 		
 	}
 	
@@ -13073,7 +13106,7 @@ unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
 	return n;
 }
 	
-unsigned int get_unsigned_numeric_input_with_not_more_than_4_letters (unsigned int parameter) {
+unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4 (unsigned int parameter) {
 	char input[4];
 	
 	scanf("%4s", input);
@@ -13086,6 +13119,24 @@ unsigned int get_unsigned_numeric_input_with_not_more_than_4_letters (unsigned i
 	printf("\n");
 	
 	return parameter;
+}
+	
+unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting () {
+	char input[4];
+	unsigned int parameter;
+	
+	parameter = 0;
+	
+	scanf("%4s", input);
+	
+	if (isdigit(*input) == 0) {
+		printf("	You should give me natural numbers, sometimes including 0. \n");
+	} else {
+		parameter = atoi (input);
+	}
+	printf("\n");
+	
+	return parameter;	//returning 0 if there is made a mistake
 }
 
 unsigned int get_unsigned_numeric_input_with_not_more_than_2_letters (unsigned int parameter) {
@@ -13103,23 +13154,15 @@ unsigned int get_unsigned_numeric_input_with_not_more_than_2_letters (unsigned i
 	return parameter;
 }
 
-unsigned int get_two_unsigned_numeric_inputs_with_each_not_more_than_2_letters (unsigned int parameter, unsigned int which_part) {	//which_part=0 => first, which_part=1 => second.
-	char input[4];
-	char input_wanted[2];
+unsigned int split_unsigned_numeric_input_with_letters_4 (unsigned int letters_4, unsigned int which_part) {	//which_part=0 => first, which_part=1 => second.
+	unsigned int parameter;
+	parameter = 0;
 	
-	
-	scanf("%4s", input);
-	
-	if (isdigit(*input) == 0) {
-		printf("	You should give me natural numbers, sometimes including 0. \n");
-		parameter = 1000;	//forced to try again.
-	} else {
-		for (unsigned int p=0; p<=1; p++) {
-			input_wanted[p] = input[p+2*which_part];
-		}
-		parameter = atoi (input_wanted);
+	if (which_part == 0) {
+		parameter = letters_4/100;
+	} else if (which_part == 1) {
+		parameter = letters_4%100;
 	}
-	printf("\n");
 	
 	return parameter;
 }
