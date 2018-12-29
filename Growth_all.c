@@ -2051,14 +2051,14 @@ int main (void) {
 		
 		
 		numbers_of_ = Spielfeld_Create (7, 1, number_of_players);
-		stack_of_ = Spielfeld_Create (6, 1, number_of_players);
+		stack_of_ = Spielfeld_Create (7, 1, number_of_players);
 		
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2973, before tac \n");	//test
 		
 		if (tac != 0){
 			for (unsigned int p=1; p<=number_of_players; p+=1){
-				for (unsigned int q=0; q<=5; q+=1){
+				for (unsigned int q=1; q<=6; q+=1){
 					stack_of_[p][q][0] = tac;
 				}
 			}
@@ -4176,11 +4176,9 @@ int main (void) {
 			
 			if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
 				if (tac != 0) {
-					if (number_[geben] <= 5){
-						numbers_of_[geben][number_[geben]][0] += 1;
-					} else if (number_[geben] == 6){
-						numbers_of_[geben][0][0] += 1;
-					}
+					
+					numbers_of_[geben][number_[geben]][0] += 1;
+					
 				} else if (opt == 5) {
 					use_number = cons[geben];
 					numbers_of_[geben][use_number][0] -= 1;
@@ -4190,8 +4188,8 @@ int main (void) {
 				
 			}
 			
-			if ((tac != 0)&&((numbers_of_[geben][1][0]+numbers_of_[geben][2][0]+numbers_of_[geben][3][0]+numbers_of_[geben][4][0]+numbers_of_[geben][5][0]+numbers_of_[geben][0][0]) == 0)){
-				for (unsigned int p=0; p<=5; p+=1){
+			if ((tac != 0)&&((numbers_of_[geben][1][0]+numbers_of_[geben][2][0]+numbers_of_[geben][3][0]+numbers_of_[geben][4][0]+numbers_of_[geben][5][0]+numbers_of_[geben][6][0]) == 0)){
+				for (unsigned int p=1; p<=6; p+=1){
 					numbers_of_[geben][p][0] = tac;
 				}
 			}
@@ -4231,7 +4229,7 @@ int main (void) {
 				show_whose_turn (gamemode, geben, ability, Colored);
 				
 				if (tac != 0){
-					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", numbers_of_[geben][1][0], numbers_of_[geben][2][0], numbers_of_[geben][3][0], numbers_of_[geben][4][0], numbers_of_[geben][5][0], numbers_of_[geben][0][0]);
+					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", numbers_of_[geben][1][0], numbers_of_[geben][2][0], numbers_of_[geben][3][0], numbers_of_[geben][4][0], numbers_of_[geben][5][0], numbers_of_[geben][6][0]);
 					printf("\n");
 					printf("\n");
 				}
@@ -4407,9 +4405,6 @@ int main (void) {
 					} else {
 						for (unsigned int z=var_[geben]; z>2; z-=10){
 							tac_controll += 1;
-						}
-						if (tac_controll == 6){
-							tac_controll = 0;
 						}
 						if (numbers_of_[geben][tac_controll][0] == 0){
 							var_[geben] = 7;
