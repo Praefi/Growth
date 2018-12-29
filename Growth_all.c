@@ -48,6 +48,8 @@ unsigned int Initialisierung_n (unsigned int);
 
 void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int);
+unsigned int get_m (unsigned int, unsigned int);
+unsigned int get_n (unsigned int, unsigned int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
@@ -398,689 +400,9 @@ int main (void) {
 							printf("	This only works if the number of players is correct! \n");
 						}
 						
-						if (gamemode == 1){
-							printf(" Zeilen: >=6				(normal: 10) \n Spalten: >=4, mod2==0				(normal: 6) \n");
-							scanf("%u %u", &m, &n);
-							printf("\n");
-							
-							if ((m<6)||(n<4)||(n%2==1)){
-								printf("	You missed the assertions !!! \n");
-								printf("\n");
-								m = 12;
-								n = 8;
-							} else {
-								m += 2;
-								n += 2;
-							}
-						} else if (gamemode == 2) {
-							printf(" Zeilen: >=7, mod2==1				(normal: 9) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-							scanf("%u %u", &m, &n);
-							printf("\n");
-							
-							if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
-								printf("	You missed the assertions !!! \n");
-								printf("\n");
-								m = 11;
-								n = 13;
-							} else {
-								m += 2;
-								n += 2;
-							}
-						} else if (gamemode == 3) {
-							printf(" Zeilen: >=6				(normal: 10) \n Spalten: >=4, mod2==0				(normal: 16) \n");
-							scanf("%u %u", &m, &n);
-							printf("\n");
-							
-							if ((m<6)||(n<4)||(n%2==1)){
-								printf("	You missed the assertions !!! \n");
-								printf("\n");
-								m = 12;
-								n = 18;
-							} else {
-								m += 2;
-								n += 2;
-							}
-						} else if (gamemode == 4) {
-							printf(" Zeilen: >=3				(normal: 6) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-							scanf("%u %u", &m, &n);
-							printf("\n");
-							
-							if ((m<3)||(n<7)||(n%2==0)){
-								printf("	You missed the assertions !!! \n");
-								printf("\n");
-								m = 8;
-								n = 13;
-							} else {
-								m += 2;
-								n += 2;
-							}
-						} else if (gamemode == 5) {
-							printf(" Zeilen: >=6				(normal: 6) \n Spalten: >=4, mod2==0				(normal: 6) \n");
-							scanf("%u %u", &m, &n);
-							printf("\n");
-							
-							if ((m<6)||(n<4)||(n%2==1)){
-								printf("	You missed the assertions !!! \n");
-								printf("\n");
-								m = 8;
-								n = 8;
-							} else {
-								m += 2;
-								n += 2;
-							}
-						} else if (gamemode == 6) {
-							if (number_of_players == 2) {
-								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 9) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<3)||(n<7)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 9;
-									n = 11;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 3) {
-								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=9, mod2==1				(normal: 13) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<3)||(n<9)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 9;
-									n = 15;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 4) {
-								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=9, mod2==1				(normal: 13) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<7)||(n<9)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 13;
-									n = 15;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 5) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 13) \n Spalten: >=9, mod2==1				(normal: 13) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 15;
-									n = 15;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 6) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 13) \n Spalten: >=10, mod2==0				(normal: 16) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<10)||(n%2==1)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 15;
-									n = 18;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 7) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=13, mod2==1				(normal: 19) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<13)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 17;
-									n = 21;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 8) {
-								printf(" Zeilen: >=10, mod2==0				(normal: 16) \n Spalten: >=13, mod2==1				(normal: 21) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<13)||(n%2==0)||(m%2==1)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 18;
-									n = 23;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 9) {
-								printf(" Zeilen: >=13, mod2==1				(normal: 21) \n Spalten: >=13, mod2==1				(normal: 21) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<13)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 23;
-									n = 23;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							}
-						} else if (gamemode == 7) {
-							printf(" Zeilen: >=7				(normal: 7) \n Spalten: >=5, mod2==1				(normal: 19) \n");
-							scanf("%u %u", &m, &n);
-							printf("\n");
-							
-							if ((m<7)||(n<5)||(n%2==0)){
-								printf("	You missed the assertions !!! \n");
-								printf("\n");
-								m = 9;
-								n = 21;
-							} else {
-								m += 2;
-								n += 2;
-							}
-						} else if (gamemode == 8) {
-							printf(" Zeilen: >=3				(normal: 6) \n");
-							scanf("%u %u", &m, &n);
-							printf("\n");
-							
-							if (m<3){
-								printf("	You missed the assertions !!! \n");
-								printf("\n");
-								m = 8;
-							} else {
-								m += 2;
-								n += 2;
-							}
-						} else if (gamemode == 9) {
-							if (number_of_players == 2) {
-								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 7) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<3)||(n<7)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 9;
-									n = 9;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 3) {
-								printf(" Zeilen: >=7, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 7) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 9;
-									n = 9;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 4) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 9) \n Spalten: >=9, mod2==1				(normal: 9) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 11;
-									n = 11;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 5) {
-								printf(" Zeilen: >=8, mod2==0				(normal: 10) \n Spalten: >=8, mod2==0				(normal: 10) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<8)||(n<8)||(n%2==1)||(m%2==1)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 12;
-									n = 12;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 6) {
-								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=13, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<7)||(n<13)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 13;
-									n = 13;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 7) {
-								printf(" Zeilen: >=8, mod2==0				(normal: 12) \n Spalten: >=12, mod2==0				(normal: 12) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<4)||(n<12)||(n%2==1)||(m%2==1)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 14;
-									n = 14;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 8) {
-								printf(" Zeilen: >=12, mod2==0				(normal: 14) \n Spalten: >=12, mod2==0				(normal: 14) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<12)||(n<12)||(n%2==1)||(m%2==1)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 16;
-									n = 16;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 9) {
-								printf(" Zeilen: >=12, mod2==0				(normal: 14) \n Spalten: >=12, mod2==0				(normal: 14) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<12)||(n<12)||(n%2==1)||(m%2==1)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 16;
-									n = 16;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							}
-						} else if (gamemode == 10) {
-							if (number_of_players == 2) {
-								printf(" Zeilen: >=6				(normal: 6) \n Spalten: >=6				(normal: 6) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<6)||(n<6)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 8;
-									n = 8;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 3) {
-								printf(" Zeilen: >=7				(normal: 7) \n Spalten: >=7				(normal: 7) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<7)||(n<7)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 9;
-									n = 9;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 4) {
-								printf(" Zeilen: >=9				(normal: 9) \n Spalten: >=9				(normal: 9) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 11;
-									n = 11;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 5) {
-								printf(" Zeilen: >=10				(normal: 10) \n Spalten: >=10				(normal: 10) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<10)||(n<10)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 12;
-									n = 12;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 6) {
-								printf(" Zeilen: >=11				(normal: 11) \n Spalten: >=11				(normal: 11) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<11)||(n<11)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 13;
-									n = 13;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 7) {
-								printf(" Zeilen: >=12				(normal: 12) \n Spalten: >=12				(normal: 12) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<12)||(n<12)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 14;
-									n = 14;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 8) {
-								printf(" Zeilen: >=13				(normal: 13) \n Spalten: >=13				(normal: 13) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<13)||(n<13)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 15;
-									n = 15;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 9) {
-								printf(" Zeilen: >=14				(normal: 14) \n Spalten: >=14				(normal: 14) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<14)||(n<14)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 16;
-									n = 16;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							}
-							
-						} else if (gamemode == 11) {
-							if (number_of_players == 2) {
-								printf(" Zeilen: >=3, mod2==1				(normal: 7) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<3)||(n<7)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 9;
-									n = 11;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 3) {
-								printf(" Zeilen: >=5, mod2==1				(normal: 9) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<5)||(n<7)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 11;
-									n = 13;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 4) {
-								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=7, mod2==1				(normal: 11) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 13;
-									n = 13;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 5) {
-								printf(" Zeilen: >=7, mod2==1				(normal: 11) \n Spalten: >=7, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<7)||(n<7)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 13;
-									n = 17;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 6) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=9, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 17;
-									n = 17;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 7) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=9, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 17;
-									n = 17;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 8) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 19;
-									n = 19;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 9) {
-								printf(" Zeilen: >=11, mod2==1				(normal: 17) \n Spalten: >=11, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<11)||(n<11)||(n%2==0)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 19;
-									n = 19;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							}
-						} else if (gamemode == 12) {
-							if (number_of_players == 1) {
-								printf(" Zeilen: >=3				(normal: 10) \n Spalten: >=3				(normal: 10) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<3)||(n<3)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 12;
-									n = 12;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 2) {
-								printf(" Zeilen: >=3				(normal: 11) \n Spalten: >=6				(normal: 11) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<6)||(n<6)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 13;
-									n = 13;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 3) {
-								printf(" Zeilen: >=6				(normal: 12) \n Spalten: >=6				(normal: 12) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<6)||(n<6)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 14;
-									n = 14;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 4) {
-								printf(" Zeilen: >=6				(normal: 13) \n Spalten: >=6				(normal: 13) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<6)||(n<6)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 15;
-									n = 15;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 5) {
-								printf(" Zeilen: >=7, mod2==1				(normal: 15) \n Spalten: >=7, mod2==1				(normal: 15) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<7)||(n<7)||(m%2==0)||(n%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 17;
-									n = 17;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 6) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 15) \n Spalten: >=6				(normal: 15) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<6)||(m%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 17;
-									n = 17;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 7) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(m%2==0)||(n%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 19;
-									n = 19;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 8) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(m%2==0)||(n%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 19;
-									n = 19;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							} else if (number_of_players == 9) {
-								printf(" Zeilen: >=9, mod2==1				(normal: 17) \n Spalten: >=9, mod2==1				(normal: 17) \n");
-								scanf("%u %u", &m, &n);
-								printf("\n");
-								
-								if ((m<9)||(n<9)||(m%2==0)||(n%2==0)){
-									printf("	You missed the assertions !!! \n");
-									printf("\n");
-									m = 19;
-									n = 19;
-								} else {
-									m += 2;
-									n += 2;
-								}
-							}
-						}
+						m = get_m (gamemode, number_of_players);
+						n = get_n (gamemode, number_of_players);
+						
 					}
 				
 					if (beginningmenu == 3){		//Growth
@@ -1111,7 +433,7 @@ int main (void) {
 						scanf("%u %u %u", &number_[1], &number_[2], &number_[3]);
 						printf("\n");
 						if ((number_[1]==0)||(number_[2]==0)||(number_[3]==0)||(number_[1]>60)||(number_[2]>60)||(number_[3]>60)){
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							printf("\n");
 							beginningmenu = 0;
 						} else {
@@ -1120,7 +442,7 @@ int main (void) {
 							scanf("%u", &number_[4]);
 							printf("\n");
 							if ((number_[4]<1)||(number_[4]>60)){
-								printf("	You missed the assertions !!! \n");
+								printf("	You missed the assertion(s) !!! \n");
 								printf("\n");
 								beginningmenu = 0;
 							} else {
@@ -1171,12 +493,12 @@ int main (void) {
 						printf("	Give me three random numbers from 1 to 60 \n");
 						scanf("%u %u %u", &number_[1], &number_[2], &number_[3]);
 						if ((number_[1]==0)||(number_[2]==0)||(number_[3]==0)||(number_[1]>60)||(number_[2]>60)||(number_[3]>60)){
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 						} else {
 							printf("	Give me another random number from 1 to 60 \n");
 							scanf("%u", &number_[4]);
 							if ((number_[4]<1)||(number_[4]>60)){
-								printf("	You missed the assertions !!! \n");
+								printf("	You missed the assertion(s) !!! \n");
 							} else {
 								number_[4] = ((number_[4]%6)+1)%3 + 1;
 								if (number_[4] == 1){
@@ -1766,7 +1088,7 @@ int main (void) {
 						scanf("%u", &points_for_win);
 						
 						if (points_for_win == 0) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							points_for_win = 3;
 						}
 						
@@ -1776,7 +1098,7 @@ int main (void) {
 						scanf("%u", &turns_per_drop);
 						
 						if (turns_per_drop < 2) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							turns_per_drop = 3;
 						}
 						
@@ -1786,7 +1108,7 @@ int main (void) {
 						scanf("%u", &speed_of_fall);
 						
 						if (speed_of_fall == 0) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							speed_of_fall = 1;
 						}
 					}
@@ -1794,28 +1116,28 @@ int main (void) {
 						printf("	Rounds to catch? >=5			(normal: 30) \n");
 						scanf("%u", &rtc);
 						if (rtc < 5) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							rtc = 30;
 						}
 						
 						printf("	Show-Position-Frequence in Rounds:			(normal: 5) \n");
 						scanf("%u", &spf);
 						if (spf < 1) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							spf = 5;
 						}
 						
 						printf("	Show the heart_block or all?: 		(normal: all) \n		heart_block: 0 \n		all: 1 \n		\n");
 						scanf("%u", &hboa);
 						if (hboa >= 2) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							hboa = 1;
 						}
 						
 						printf("	Show contact with hunted person: 		(normal: 1) \n		No: 0 \n		Only if necessary : 1 \n		Always: 2 \n		\n");
 						scanf("%u", &scwhp);
 						if (scwhp > 2) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							scwhp = 1;
 						}
 					}
@@ -2091,14 +1413,14 @@ int main (void) {
 						printf("	Only Object: 	yes [1]		no [0] \n");
 						scanf("%u", &rain_obj);
 						if ((rain_obj != 1)&&(rain_obj != 0)) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							rain_obj = 0;
 						}
 						
 						printf("	Raindrops per turn:		1, 	2, 	4, 	5, 	6 	? \n");
 						scanf("%u", &rain_drops);
 						if ((rain_drops == 0) || (rain_drops > 6) || (rain_drops == 3)){
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							rain_drops = 1;
 						}
 						printf("\n");
@@ -2112,14 +1434,14 @@ int main (void) {
 						}
 						printf("\n");
 						if ((rain == 0)||(rain > 6)) {
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							rain = 1;
 						}
 						
 						printf("	Distance in squares the rain should fall per turn:  		(<=6), 0 = 0,5 \n");
 						scanf("%u", &rain_speed);
 						if (rain_speed > 6){
-							printf("	You missed the assertions !!! \n");
+							printf("	You missed the assertion(s) !!! \n");
 							rain_speed = 1;
 						}
 						printf("\n");
@@ -12625,7 +11947,1186 @@ unsigned int Initialisierung_m (unsigned int gamemode) {
 	return Ausgabe;
 }
 
+unsigned int get_m (unsigned int gamemode, unsigned int number_of_players) {
+	unsigned int m;
+	m = 0;
+	
+	if (gamemode == 1){
+		printf(" Zeilen: >=6				(normal: 10) \n");
+		scanf("%u", &m);
+		printf("\n");
+		
+		if (m<6){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			m = 12;
+		} else {
+			m += 2;
+		}
+	} else if (gamemode == 2) {
+		printf(" Zeilen: >=7, mod2==1				(normal: 9) \n");
+		scanf("%u", &m);
+		printf("\n");
+		
+		if ((m<7)||(m%2==0)){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			m = 11;
+		} else {
+			m += 2;
+		}
+	} else if (gamemode == 3) {
+		printf(" Zeilen: >=6				(normal: 10) \n");
+		scanf("%u", &m);
+		printf("\n");
+		
+		if (m<6){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			m = 12;
+		} else {
+			m += 2;
+		}
+	} else if (gamemode == 4) {
+		printf(" Zeilen: >=3				(normal: 6) \n");
+		scanf("%u", &m);
+		printf("\n");
+		
+		if (m<3){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			m = 8;
+		} else {
+			m += 2;
+		}
+	} else if (gamemode == 5) {
+		printf(" Zeilen: >=6				(normal: 6) \n");
+		scanf("%u", &m);
+		printf("\n");
+		
+		if (m<6){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			m = 8;
+		} else {
+			m += 2;
+		}
+	} else if (gamemode == 6) {
+		if (number_of_players == 2) {
+			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<3)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 9;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<3)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 9;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<7)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 13;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 13) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 15;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 13) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 15;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 17;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Zeilen: >=10, mod2==0				(normal: 16) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 18;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Zeilen: >=13, mod2==1				(normal: 21) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 23;
+			} else {
+				m += 2;
+			}
+		}
+	} else if (gamemode == 7) {
+		printf(" Zeilen: >=7				(normal: 7) \n");
+		scanf("%u", &m);
+		printf("\n");
+		
+		if (m<7){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			m = 9;
+		} else {
+			m += 2;
+		}
+	} else if (gamemode == 8) {
+		printf(" Zeilen: >=3				(normal: 6) \n");
+		scanf("%u", &m);
+		printf("\n");
+		
+		if (m<3){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			m = 8;
+		} else {
+			m += 2;
+		}
+	} else if (gamemode == 9) {
+		if (number_of_players == 2) {
+			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<3)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 9;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Zeilen: >=7, mod2==1				(normal: 7) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<7)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 9;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 9) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 11;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Zeilen: >=8, mod2==0				(normal: 10) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<8)||(m%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 12;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<7)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 13;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Zeilen: >=8, mod2==0				(normal: 12) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<4)||(m%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 14;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Zeilen: >=12, mod2==0				(normal: 14) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<12)||(m%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 16;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Zeilen: >=12, mod2==0				(normal: 14) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<12)||(m%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 16;
+			} else {
+				m += 2;
+			}
+		}
+	} else if (gamemode == 10) {
+		if (number_of_players == 2) {
+			printf(" Zeilen: >=6				(normal: 6) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 8;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Zeilen: >=7				(normal: 7) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<7){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 9;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Zeilen: >=9				(normal: 9) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<9){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 11;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Zeilen: >=10				(normal: 10) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<10){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 12;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Zeilen: >=11				(normal: 11) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<11){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 13;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Zeilen: >=12				(normal: 12) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<12){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 14;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Zeilen: >=13				(normal: 13) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<13){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 15;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Zeilen: >=14				(normal: 14) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<14){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 16;
+			} else {
+				m += 2;
+			}
+		}
+		
+	} else if (gamemode == 11) {
+		if (number_of_players == 2) {
+			printf(" Zeilen: >=3, mod2==1				(normal: 7) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<3)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 9;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Zeilen: >=5, mod2==1				(normal: 9) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<5)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 11;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<7)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 13;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Zeilen: >=7, mod2==1				(normal: 11) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<7)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 13;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 17;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 17;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 19;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Zeilen: >=11, mod2==1				(normal: 17) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<11)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 19;
+			} else {
+				m += 2;
+			}
+		}
+	} else if (gamemode == 12) {
+		if (number_of_players == 1) {
+			printf(" Zeilen: >=3				(normal: 10) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<3){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 12;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 2) {
+			printf(" Zeilen: >=3				(normal: 11) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 13;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Zeilen: >=6				(normal: 12) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 14;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Zeilen: >=6				(normal: 13) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if (m<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 15;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Zeilen: >=7, mod2==1				(normal: 15) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<7)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 17;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 15) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 17;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 19;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 19;
+			} else {
+				m += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Zeilen: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &m);
+			printf("\n");
+			
+			if ((m<9)||(m%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				m = 19;
+			} else {
+				m += 2;
+			}
+		}
+	}
+	
+	return m;
+}
 
+unsigned int get_n (unsigned int gamemode, unsigned int number_of_players) {
+	unsigned int n;
+	n = 0;
+	
+	if (gamemode == 1){
+		printf(" Spalten: >=4, mod2==0				(normal: 6) \n");
+		scanf("%u", &n);
+		printf("\n");
+		
+		if ((n<4)||(n%2==1)){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			n = 8;
+		} else {
+			n += 2;
+		}
+	} else if (gamemode == 2) {
+		printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
+		scanf("%u", &n);
+		printf("\n");
+		
+		if ((n<7)||(n%2==0)){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			n = 13;
+		} else {
+			n += 2;
+		}
+	} else if (gamemode == 3) {
+		printf(" Spalten: >=4, mod2==0				(normal: 16) \n");
+		scanf("%u", &n);
+		printf("\n");
+		
+		if ((n<4)||(n%2==1)){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			n = 18;
+		} else {
+			n += 2;
+		}
+	} else if (gamemode == 4) {
+		printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
+		scanf("%u", &n);
+		printf("\n");
+		
+		if ((n<7)||(n%2==0)){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			n = 13;
+		} else {
+			n += 2;
+		}
+	} else if (gamemode == 5) {
+		printf(" Spalten: >=4, mod2==0				(normal: 6) \n");
+		scanf("%u", &n);
+		printf("\n");
+		
+		if ((n<4)||(n%2==1)){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			n = 8;
+		} else {
+			n += 2;
+		}
+	} else if (gamemode == 6) {
+		if (number_of_players == 2) {
+			printf(" Spalten: >=7, mod2==1				(normal: 9) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 11;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Spalten: >=9, mod2==1				(normal: 13) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 15;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Spalten: >=9, mod2==1				(normal: 13) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 15;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Spalten: >=9, mod2==1				(normal: 13) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 15;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Spalten: >=10, mod2==0				(normal: 16) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<10)||(n%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 18;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Spalten: >=13, mod2==1				(normal: 19) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<13)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 21;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Spalten: >=13, mod2==1				(normal: 21) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<13)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 23;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Spalten: >=13, mod2==1				(normal: 21) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<13)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 23;
+			} else {
+				n += 2;
+			}
+		}
+	} else if (gamemode == 7) {
+		printf(" Spalten: >=5, mod2==1				(normal: 19) \n");
+		scanf("%u", &n);
+		printf("\n");
+		
+		if ((n<5)||(n%2==0)){
+			printf("	You missed the assertion(s) !!! \n");
+			printf("\n");
+			n = 21;
+		} else {
+			n += 2;
+		}
+	} else if (gamemode == 9) {
+		if (number_of_players == 2) {
+			printf(" Spalten: >=7, mod2==1				(normal: 7) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 9;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Spalten: >=7, mod2==1				(normal: 7) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 9;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Spalten: >=9, mod2==1				(normal: 9) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 11;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Spalten: >=8, mod2==0				(normal: 10) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<8)||(n%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 12;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Spalten: >=13, mod2==1				(normal: 11) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<13)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 13;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Spalten: >=12, mod2==0				(normal: 12) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<12)||(n%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 14;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Spalten: >=12, mod2==0				(normal: 14) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<12)||(n%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 16;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Spalten: >=12, mod2==0				(normal: 14) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<12)||(n%2==1)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 16;
+			} else {
+				n += 2;
+			}
+		}
+	} else if (gamemode == 10) {
+		if (number_of_players == 2) {
+			printf(" Spalten: >=6				(normal: 6) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 8;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Spalten: >=7				(normal: 7) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<7){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 9;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Spalten: >=9				(normal: 9) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<9){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 11;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Spalten: >=10				(normal: 10) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<10){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 12;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Spalten: >=11				(normal: 11) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<11){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 13;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Spalten: >=12				(normal: 12) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<12){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 14;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Spalten: >=13				(normal: 13) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<13){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 15;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Spalten: >=14				(normal: 14) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<14){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 16;
+			} else {
+				n += 2;
+			}
+		}
+		
+	} else if (gamemode == 11) {
+		if (number_of_players == 2) {
+			printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 11;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 13;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Spalten: >=7, mod2==1				(normal: 11) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 13;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Spalten: >=7, mod2==1				(normal: 15) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 17;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Spalten: >=9, mod2==1				(normal: 15) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 17;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Spalten: >=9, mod2==1				(normal: 15) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 17;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 19;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Spalten: >=11, mod2==1				(normal: 17) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<11)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 19;
+			} else {
+				n += 2;
+			}
+		}
+	} else if (gamemode == 12) {
+		if (number_of_players == 1) {
+			printf(" Spalten: >=3				(normal: 10) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<3){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 12;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 2) {
+			printf(" Spalten: >=6				(normal: 11) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 13;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 3) {
+			printf(" Spalten: >=6				(normal: 12) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 14;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 4) {
+			printf(" Spalten: >=6				(normal: 13) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 15;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 5) {
+			printf(" Spalten: >=7, mod2==1				(normal: 15) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<7)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 17;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 6) {
+			printf(" Spalten: >=6				(normal: 15) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if (n<6){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 17;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 7) {
+			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 19;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 8) {
+			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 19;
+			} else {
+				n += 2;
+			}
+		} else if (number_of_players == 9) {
+			printf(" Spalten: >=9, mod2==1				(normal: 17) \n");
+			scanf("%u", &n);
+			printf("\n");
+			
+			if ((n<9)||(n%2==0)){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 19;
+			} else {
+				n += 2;
+			}
+		}
+	}
+
+	return n;
+}
+	
 
 //dynamic (gamemode)	, done		(just notes following)
 //Geschwindigkeit (vertikal, horizontal)
