@@ -80,6 +80,9 @@ void impact_y_semi_square (unsigned int, unsigned int, unsigned int*, unsigned i
 
 unsigned int letters_4;
 
+int Vektor_counter;
+int Spielfeld_counter;
+
 int main (void) {
 	
 	//printf ("	ok 1 \n");	//test
@@ -128,11 +131,11 @@ int main (void) {
 	
 	time_t time1, time2, time3, time4;
 	
-	AOP = 9;	//Amount Of Players
-	
 	unsigned int pause; //Fehlersuche
 	
 	unsigned int Points[3];		//undecided, 1, 2
+	
+	AOP = 9;	//Amount Of Players, needed so early - look at the following lines
 	
 	unsigned int pere[AOP+1], ability[AOP+1], Colored[AOP+1], ulcer_start[AOP+1], ulcer_lifes[AOP+1], out_counter[AOP+1];		//pere==penalty-reminder, ulcer_start==Are you on the field, out_counter== Are you out of play
 	
@@ -145,14 +148,13 @@ int main (void) {
 	// 10, 20, 30, 40, 50, 60, 70, 80, 90 ausschließlich im Spielfeldrand
 	//used Field[0]: (1,0), (0,0), (0,1), (0,n-1), (m-1,n-1), (m-1,0)
 	
+	Vektor_counter = 0;
+	Spielfeld_counter = 0;
+	
 	playtime = 1;	//playing game after game after...
 	
 	nosv = 68;	//Number_of_saved_variables, drücke abhängig von AOP aus go on
 	//same_counter = 0; 		//for variable length of same
-	
-	dynamic_pointer = int_Vektor_Create (8);
-	
-	position = unsigned_int_Vektor_Create (2);
 	
 	same = unsigned_int_Vektor_Create (nosv);
 	
@@ -177,7 +179,11 @@ int main (void) {
 	//printf ("	ok 3 \n");	//test
 	
 	while (playtime != 0){		// Außenschleife für mehrere Spiele hintereinander
-
+		
+		dynamic_pointer = int_Vektor_Create (8);
+		
+		position = unsigned_int_Vektor_Create (2);
+		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 4 \n");	//test
 		
@@ -344,6 +350,7 @@ int main (void) {
 					
 					printf("	Choose your gamemode\n  \n");
 
+					// enum: gamemode, (traps, bombs, waves), in menu (about the game, limits, hints, numbers), beginningmenu 	//go on
 					
 					printf("	Classic: 1\n	Collect: 2\n	Contact: 3\n	Fall   : 4\n	Fight  : 5\n	Hunt   : 6\n	Race   : 7\n	Rain   : 8\n	Arena  : 9\n  	Ulcer  : 10\n   	Dynamic: 11\n   	Survive: 12\n  \n");
 					gamemode = get_unsigned_numeric_input_with_not_more_than_2_letters (gamemode);
@@ -2008,7 +2015,7 @@ int main (void) {
 		}
 		
 		for (unsigned int p=0; p<=number_of_players; p+=1) {
-			for (unsigned int q=0; q<=4; q+=1) {
+			for (unsigned int q=0; q<=3; q+=1) {
 				dynamic_pointer_save[p][q] = 0;
 			}
 		}
@@ -2016,9 +2023,7 @@ int main (void) {
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2946, after same \n");	//test
 		
-		if (journey == 1){		//gamemode 11 journey, done
-			Field_journey = Spielfeld_Create (m, n, number_of_players);
-		}
+		Field_journey = Spielfeld_Create (m, n, number_of_players);	//gamemode 11 journey, done
 		
 		// printf(" m= %u, n= %u \n", m, n);	//test
 		
@@ -3970,8 +3975,6 @@ int main (void) {
 			printf("\n");
 			*/
 			
-			temp = Spielfeld_Create (m, n, 0);
-			
 			if ((journey == 1)&&((gamemode == 1)||(gamemode == 2)||(gamemode == 3))){	//journey-frequence
 				printf("	All turns until the journey starts: %u \n", (19 - ((g-1)%19)));
 				printf("\n");
@@ -4539,6 +4542,8 @@ int main (void) {
 					}
 					
 					var_[0] = 0;
+					
+					temp = Spielfeld_Create (m, n, 0);
 					
 					if (var_[geben] < 50){
 						
@@ -6871,57 +6876,103 @@ int main (void) {
 			
 		}
 		
-		//Aufräumphase!!!
+		// Aufräumphase !!!
+		
+		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		
 		int_Vektor_Destroy (dynamic_pointer);
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 1\n");	//test
+		// printf("	#line 6k, 1\n");	//test
 		
 		for (unsigned int p=0; p<=number_of_players; p+=1) {
 			free (dynamic_pointer_save[p]);
+			dynamic_pointer_save[p] = NULL;
 		}
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 2\n");	//test
+		// printf("	#line 6k, 2\n");	//test
 		
 		free (dynamic_pointer_save);
+		dynamic_pointer_save = NULL;
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 3\n");	//test
+		// printf("	#line 6k, 3\n");	//test
 		
 		unsigned_int_Vektor_Destroy (position);
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 4\n");	//test
+		// printf("	#line 6k, 4\n");	//test
 		
-		Spielfeld_Destroy (Field, m, 0);
+		Spielfeld_Destroy (Field, m, number_of_players);
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 5\n");	//test
+		// printf("	#line 6k, 5\n");	//test
 		
-		Spielfeld_Destroy (Sf_od_, m, 0);
+		Spielfeld_Destroy (Sf_od_, m, number_of_players);
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 6\n");	//test
+		// printf("	#line 6k, 6\n");	//test
 		
-		Spielfeld_Destroy (Sf_nl_, m, 0);
+		Spielfeld_Destroy (Sf_nl_, m, number_of_players);
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 7\n");	//test
+		// printf("	#line 6k, 7\n");	//test
 		
 		Spielfeld_Destroy (Sf_opague, m, 0);
 		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
-		// printf("	#line 8k, 8\n");	//test
+		// printf("	#line 6k, 8\n");	//test
 		
+		Spielfeld_Destroy (numbers_of_, 7, number_of_players);
+		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 6k, 9\n");	//test
+		
+		Spielfeld_Destroy (stack_of_, 7, number_of_players);
+		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 6k, 10\n");	//test
+		
+		Spielfeld_Destroy (Field_journey, m, number_of_players);
+		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 6k, 11\n");	//test
 	}
 	
 	return 0;
@@ -6963,12 +7014,16 @@ Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_
 		// printf("	3. \n");
 	
 	
+	Spielfeld_counter += 1;
+	
 	return Field;
 }
 
 unsigned int* unsigned_int_Vektor_Create (unsigned int length) {
 	unsigned int* Vektor;
 	Vektor = calloc(length, sizeof(unsigned int));
+	
+	Vektor_counter += 1;
 	
 	return Vektor;
 }
@@ -6977,32 +7032,51 @@ int* int_Vektor_Create (unsigned int length) {
 	int* Vektor;
 	Vektor = calloc(length, sizeof(int));
 	
+	Vektor_counter += 1;
+	
 	return Vektor;
 }
 
 void int_Vektor_Destroy (int* Vektor) {
 	free(Vektor);
 	Vektor = NULL;
+	
+	Vektor_counter -= 1;
 }
 
 void unsigned_int_Vektor_Destroy (unsigned int* Vektor) {
 	free(Vektor);
 	Vektor = NULL;
+	
+	Vektor_counter -= 1;
 }
 
 void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m, unsigned int number_of_players){
 	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {	//geben, i, j dienen nur zur Anschauung
+		
+		// printf("	Spielfeld_Destroy #1 \n");	//test
+		
 		for (unsigned int i=0; i<=m-1; i+=1){
 			free((Spiel[geben][i]));
 			(Spiel[geben][i]) = NULL;
 		}
+		
+		// printf("	Spielfeld_Destroy #2 \n");	//test
+		
 	}
 	for (unsigned int geben=0; geben<=number_of_players; geben+=1) {
 		free((Spiel[geben]));
 		(Spiel[geben]) = NULL;
 	}
+	
+	// printf("	Spielfeld_Destroy #3 \n");	//test
+	
 	free(Spiel);
 	Spiel = NULL;		//nach testen auf andere Versionen übertragen!
+	
+	// printf("	Spielfeld_Destroy #4 \n");	//test
+	
+	Spielfeld_counter -= 1;
 }
 
 void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode, unsigned int number_of_players){
@@ -8471,6 +8545,8 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 		}
 	}
 	
+	Spielfeld_Destroy (Sf_temp, m, 0);
+	
 	// printf("end of new_life");	//test
 	
 }
@@ -8560,6 +8636,8 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 			}
 		}
 	}
+	
+	Spielfeld_Destroy (Sf_temp, m, 0);
 	
 	// printf("	101*geben=%u, geben=%u \n", 101*geben, geben);	//test
 	
@@ -10880,6 +10958,8 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 		
 	}
 	
+	Spielfeld_Destroy (Index_Feld, m, 0);
+	
 }
 
 void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben){
@@ -11454,6 +11534,8 @@ void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsig
 			Sf_opague[0][i][j] = temp[0][i][j];
 		}
 	}
+	
+	Spielfeld_Destroy (temp, m, 0);
 	
 }
 
