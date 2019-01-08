@@ -46,6 +46,8 @@ unsigned int Initialisierung_limit_at_all (unsigned int);
 unsigned int Initialisierung_limit_new (unsigned int);
 unsigned int Initialisierung_m (unsigned int);
 unsigned int Initialisierung_n (unsigned int);
+void unsigned_int_array_null_initialisierung (unsigned int*, unsigned int);
+void int_array_null_initialisierung (int*, unsigned int);
 
 void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int);
@@ -57,6 +59,9 @@ unsigned int split_unsigned_numeric_input_with_letters_4 (unsigned int, unsigned
 unsigned int get_unsigned_numeric_input_with_not_more_than_1_letter (unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
 int get_signed_numeric_input_with_not_more_than_1_letter (int);
+void get_colors (unsigned int*, unsigned int, unsigned int, unsigned int);
+
+void choose_your_ability (unsigned int, unsigned int*, unsigned int*);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
@@ -112,7 +117,6 @@ int main (void) {
 	
 	unsigned int number_of_players, rtc, spf, scwhp, round_counter, round_counter_before, hboa, precounter, opague;
 	unsigned int ttt, warning_system, back_opt, exclude_counter, player_counter, rtp, limit_at_all_saver, information_code[4];	//time-to-think, rounds-to-play, 0 == rtc, 1 == spf, 2 == hboa, 3 == scwhp (gamemode == 6)
-	unsigned int Color_choice[13];
 	unsigned int* same;	//immer aktualisieren
 	unsigned int* position;		// "*" bezieht sich auf "position", nicht auf "unsigned int" !!!!
 	int erd;	//erdbeschleunigung
@@ -278,16 +282,12 @@ int main (void) {
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.3.1 \n");	//test
 		
-		for (unsigned int p=0; p<=2; p+=1){
-			Points[p] = 0;		//possible to modify
-		}
+		unsigned_int_array_null_initialisierung (Points, 2);	//possible to modify
 		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.3.2 \n");	//test
 		
-		for (unsigned int p=0; p<=3; p+=1){
-			information_code[p] = 0;
-		}
+		unsigned_int_array_null_initialisierung (information_code, 3);
 		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.4 \n");	//test
@@ -295,9 +295,8 @@ int main (void) {
 		position[0] = 0;
 		position[1] = 0;
 		
-		for (unsigned int p=0; p<=7; p+=1) {
-			dynamic_pointer[p] = 0;
-		}
+		int_array_null_initialisierung (dynamic_pointer, 7);
+		
 		//[0] = s_horizontal
 		//[1] = s_vertikal
 		
@@ -310,7 +309,7 @@ int main (void) {
 		//[6] = y_horizontal
 		//[7] = y_vertikal
 		
-		for (unsigned int p=0; p<=9; p+=1) {
+		for (unsigned int p=0; p<=AOP; p+=1) {
 			pere[p] = 0;
 			ability[p] = 0;
 			Colored[p] = 0;
@@ -442,7 +441,6 @@ int main (void) {
 					}
 				
 					if ((beginningmenu == 5)&&(gamemode != 6)&&(gamemode != 9)&&(gamemode != 10)&(gamemode != 11)&(gamemode != 12)){
-						
 						tac = 0;
 						printf("	Do not activate Tactics, it will replace the Random-Mode! \n");
 						printf("	Random activated \n");
@@ -553,9 +551,8 @@ int main (void) {
 									}
 								}
 								unsigned int Row[number_of_players];
-								for (unsigned int y = 0; y < number_of_players; y+=1){
-									Row[y] = 0;
-								}
+								unsigned_int_array_null_initialisierung (Row, number_of_players-1);
+								
 								unsigned int Verteilung;
 								Verteilung = (number_[1] + number_[2] + number_[3] + number_[4])%(number_of_players);
 								for (unsigned int y = 0; y < number_of_players; y+=1){
@@ -948,137 +945,9 @@ int main (void) {
 					}
 					
 					if (beginningmenu == 8) {
-						lim = 0;
 						
-						if ((gamemode == 6)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {
-							printf("	This only works if the number of players is correct! \n");
-						}
+						get_colors(Colored, gamemode, number_of_players, AOP);
 						
-						printf("	Going here again will lead to a reset of the chosen colors! \n");
-						printf(" \n");
-						for (unsigned int p=0; p<=9; p+=1) {
-							Colored[p] = 0;
-						}
-						for (unsigned int p=0; p<=12; p+=1) {
-							Color_choice[p] = 0;
-						}
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (lim != 14) {
-								printf("	Choose your color, Spieler %u . \n", p);
-							}
-							
-							while ((lim == 0)||(lim > 14)||((Color_choice[lim-1] != 0)&&(Color_choice[lim-1] != p))) {		//pere[] wird zweckentfremdet, da hier noch nicht in Gebrauch, und jetzt ausgetauscht durch Color_choice
-								printf(" \n");
-								if (Color_choice[0] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+15);
-									printf("	1) white. \n");
-								}
-								if (Color_choice[1] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
-									printf("	2) lightgrey. \n");
-								}
-								if (Color_choice[2] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+8);
-									printf("	3) darkgrey. \n");
-								}
-								if (Color_choice[3] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+13);
-									printf("	4) lightmagenta. \n");
-								}
-								if (Color_choice[4] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+12);
-									printf("	5) lightred. \n");
-								}
-								if (Color_choice[5] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+4);
-									printf("	6) red. \n");
-								}
-								if (Color_choice[6] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+11);
-									printf("	7) lightcyan. \n");
-								}
-								if (Color_choice[7] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+3);
-									printf("	8) cyan. \n");
-								}
-								if (Color_choice[8] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+9);
-									printf("	9) lightblue. \n");
-								}
-								if (Color_choice[9] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+1);
-									printf("	10) blue. \n");
-								}
-								if (Color_choice[10] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+14);
-									printf("	11) yellow. \n");
-								}
-								if (Color_choice[11] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+10);
-									printf("	12) lightgreen. \n");
-								}
-								if (Color_choice[12] == 0) {
-									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+2);
-									printf("	13) green. \n");
-								}
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
-								
-								printf(" \n");
-								printf(" \n");
-								printf("	Back: 14 \n");
-								printf(" \n");
-								lim = get_unsigned_numeric_input_with_not_more_than_2_letters (lim);
-								if ((lim != 0)&&(lim <= 13)&&(Color_choice[lim-1] == 0)) {
-									if (lim == 1) {
-										Colored[p] = 15;	//change 6, brown, back to 7, grey, done	//maybe 6 is white	//now white, 15
-										
-									} else if (lim == 2) {
-										Colored[p] = 7;
-										
-									} else if (lim == 3) {
-										Colored[p] = 8;
-										
-									} else if (lim == 4) {
-										Colored[p] = 13;
-										
-									} else if (lim == 5) {
-										Colored[p] = 12;
-										
-									} else if (lim == 6) {
-										Colored[p] = 4;
-										
-									} else if (lim == 7) {
-										Colored[p] = 11;
-										
-									} else if (lim == 8) {
-										Colored[p] = 3;
-										
-									} else if (lim == 9) {
-										Colored[p] = 9;
-										
-									} else if (lim == 10) {
-										Colored[p] = 1;
-										
-									} else if (lim == 11) {
-										Colored[p] = 14;
-										
-									} else if (lim == 12) {
-										Colored[p] = 10;
-										
-									} else if (lim == 13) {
-										Colored[p] = 2;
-										
-									}
-									
-									Color_choice[lim-1] = p;
-								}
-							}
-						}
-						Colored[0] = 1;
-						
-						for (unsigned int p=0; p<=12; p+=1) {
-							Color_choice[p] = 0;
-						}
 					}
 					
 					if (beginningmenu == 9) {
@@ -1482,7 +1351,7 @@ int main (void) {
 						
 						printf("	This only works if the number of players is correct! \n");
 						printf("\n");
-						printf("	Chose the amount of lifes. \n");
+						printf("	Choose the amount of lifes. \n");
 						for (unsigned int p=1; p<=number_of_players; p+=1) {
 							printf("\n");
 							printf("	Lifes PLayer: %u		(normal %u) \n", p, p-1);
@@ -1786,59 +1655,7 @@ int main (void) {
 						printf(" \n");
 						
 						if (gamemode == 9) {
-							for (unsigned int p=1; p<=number_of_players; p+=1) {
-								lim = 0;
-								printf(" \n");
-								printf(" \n");
-								while ((lim == 0)||(lim > 9)||((ability[lim] != 0)&&(ability[lim] != p))) {
-									if (Colored[0] == 1) {
-										SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[p]);
-									}
-									printf("	Spieler %u, please choose your ability:	\n", p);
-									if (Colored[0] == 1) {
-										SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
-									}
-									printf(" \n");
-									if (ability[1] == 0) {
-										printf("	Ultra light: 1 \n");
-									}
-									if (ability[2] == 0) {
-										printf("	Light	   : 2 \n");
-									}
-									if (ability[3] == 0) {
-										printf("	Anti	   : 3 \n");
-									}
-									if (ability[4] == 0) {
-										printf("	Cornered   : 4 \n");
-									}
-									if (ability[5] == 0) {
-										printf("	Inhibitor  : 5 \n");
-									}
-									if (ability[6] == 0) {
-										printf("	Shield	   : 6 \n");
-									}
-									if (ability[7] == 0) {
-										printf("	Poisoning  : 7 \n");
-									}
-									if (ability[8] == 0) {
-										printf("	Pressure   : 8 \n");
-									}
-									if (ability[9] == 0) {
-										printf("	Electric   : 9 \n");
-									}
-									
-									lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
-									
-									if ((ability[lim] == 0)&&(lim != 0)&&(lim <= 9)) {
-										ability[lim] = p;
-										if ((lim <= 4)||(lim == 6)) {
-											ability[0] += 1;
-										}
-									}
-									printf(" \n");
-									printf(" \n");
-								}					
-							}
+							choose_your_ability (number_of_players, ability, Colored);
 						}
 					}
 					printf("\n");
@@ -13269,6 +13086,208 @@ int get_signed_numeric_input_with_not_more_than_1_letter (int parameter) {
 	return parameter;
 }
 
+void choose_your_ability (unsigned int number_of_players, unsigned int* ability, unsigned int* Colored) {
+	
+	unsigned int input;
+	input = 0;
+	
+	for (unsigned int p=1; p<=number_of_players; p+=1) {
+		printf(" \n");
+		printf(" \n");
+		while ((input == 0)||(input > 9)||((ability[input] != 0)&&(ability[input] != p))) {
+			if (Colored[0] == 1) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[p]);
+			}
+			printf("	Spieler %u, please choose your ability:	\n", p);
+			if (Colored[0] == 1) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
+			}
+			printf(" \n");
+			if (ability[1] == 0) {
+				printf("	Ultra light: 1 \n");
+			}
+			if (ability[2] == 0) {
+				printf("	Light	   : 2 \n");
+			}
+			if (ability[3] == 0) {
+				printf("	Anti	   : 3 \n");
+			}
+			if (ability[4] == 0) {
+				printf("	Cornered   : 4 \n");
+			}
+			if (ability[5] == 0) {
+				printf("	Inhibitor  : 5 \n");
+			}
+			if (ability[6] == 0) {
+				printf("	Shield	   : 6 \n");
+			}
+			if (ability[7] == 0) {
+				printf("	Poisoning  : 7 \n");
+			}
+			if (ability[8] == 0) {
+				printf("	Pressure   : 8 \n");
+			}
+			if (ability[9] == 0) {
+				printf("	Electric   : 9 \n");
+			}
+			
+			input = get_unsigned_numeric_input_with_not_more_than_1_letter (input);
+			
+			if ((ability[input] == 0)&&(input != 0)&&(input <= 9)) {
+				ability[input] = p;
+				if ((input <= 4)||(input == 6)) {
+					ability[0] += 1;
+				}
+			}
+			printf(" \n");
+			printf(" \n");
+		}					
+	}
+}
+
+void unsigned_int_array_null_initialisierung (unsigned int* array, unsigned int bueyuekluek) {
+	for (unsigned int p=0; p<=bueyuekluek; p++) {
+		array[p] = 0;
+	}
+}
+
+void int_array_null_initialisierung (int* array, unsigned int bueyuekluek) {
+	for (unsigned int p=0; p<=bueyuekluek; p++) {
+		array[p] = 0;
+	}
+}
+
+void get_colors (unsigned int* Colored, unsigned int gamemode, unsigned int number_of_players, unsigned int AOP) {
+	
+	unsigned int Color_choice[13], input;
+	input = 0;
+	unsigned_int_array_null_initialisierung (Color_choice, 12);
+	
+	if ((gamemode == 6)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12)) {
+		printf("	This only works if the number of players is correct! \n");
+	}
+	
+	printf("	Going here again will lead to a reset of the chosen colors! \n");
+	printf(" \n");
+	
+	unsigned_int_array_null_initialisierung (Colored, AOP);
+	
+	for (unsigned int p=1; p<=number_of_players; p+=1) {
+		if (input != 14) {
+			printf("	Choose your color, Spieler %u . \n", p);
+		}
+		
+		while ((input == 0)||(input > 14)||((Color_choice[input-1] != 0)&&(Color_choice[input-1] != p))) {		//pere[] wird zweckentfremdet, da hier noch nicht in Gebrauch, und jetzt ausgetauscht durch Color_choice
+			printf(" \n");
+			if (Color_choice[0] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+15);
+				printf("	1) white. \n");
+			}
+			if (Color_choice[1] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
+				printf("	2) lightgrey. \n");
+			}
+			if (Color_choice[2] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+8);
+				printf("	3) darkgrey. \n");
+			}
+			if (Color_choice[3] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+13);
+				printf("	4) lightmagenta. \n");
+			}
+			if (Color_choice[4] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+12);
+				printf("	5) lightred. \n");
+			}
+			if (Color_choice[5] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+4);
+				printf("	6) red. \n");
+			}
+			if (Color_choice[6] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+11);
+				printf("	7) lightcyan. \n");
+			}
+			if (Color_choice[7] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+3);
+				printf("	8) cyan. \n");
+			}
+			if (Color_choice[8] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+9);
+				printf("	9) lightblue. \n");
+			}
+			if (Color_choice[9] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+1);
+				printf("	10) blue. \n");
+			}
+			if (Color_choice[10] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+14);
+				printf("	11) yellow. \n");
+			}
+			if (Color_choice[11] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+10);
+				printf("	12) lightgreen. \n");
+			}
+			if (Color_choice[12] == 0) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+2);
+				printf("	13) green. \n");
+			}
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
+			
+			printf(" \n");
+			printf(" \n");
+			printf("	Back: 14 \n");
+			printf(" \n");
+			input = get_unsigned_numeric_input_with_not_more_than_2_letters (input);
+			if ((input != 0)&&(input <= 13)&&(Color_choice[input-1] == 0)) {
+				if (input == 1) {
+					Colored[p] = 15;	//change 6, brown, back to 7, grey, done	//maybe 6 is white	//now white, 15
+					
+				} else if (input == 2) {
+					Colored[p] = 7;
+					
+				} else if (input == 3) {
+					Colored[p] = 8;
+					
+				} else if (input == 4) {
+					Colored[p] = 13;
+					
+				} else if (input == 5) {
+					Colored[p] = 12;
+					
+				} else if (input == 6) {
+					Colored[p] = 4;
+					
+				} else if (input == 7) {
+					Colored[p] = 11;
+					
+				} else if (input == 8) {
+					Colored[p] = 3;
+					
+				} else if (input == 9) {
+					Colored[p] = 9;
+					
+				} else if (input == 10) {
+					Colored[p] = 1;
+					
+				} else if (input == 11) {
+					Colored[p] = 14;
+					
+				} else if (input == 12) {
+					Colored[p] = 10;
+					
+				} else if (input == 13) {
+					Colored[p] = 2;
+					
+				}
+				
+				Color_choice[input-1] = p;
+			}
+		}
+	}
+	Colored[0] = 1;
+	
+	unsigned_int_array_null_initialisierung (Color_choice, 12);
+}
 
 //dynamic (gamemode)	, done		(just notes following)
 //Geschwindigkeit (vertikal, horizontal)
