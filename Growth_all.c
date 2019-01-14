@@ -62,6 +62,7 @@ int get_signed_numeric_input_with_not_more_than_1_letter (int);
 void get_colors (unsigned int*, unsigned int, unsigned int, unsigned int);
 
 void choose_your_ability (unsigned int, unsigned int*, unsigned int*);
+unsigned int dynamic_take_out (unsigned int*, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int, unsigned int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
@@ -1044,7 +1045,8 @@ int main (void) {
 						}
 					}
 					if ((beginningmenu == back_opt+1)&&(gamemode == 9)) {
-						if (number_of_players != 9) {
+						
+						if (number_of_players != AOP) {
 							printf("	This only works if the number of players is correct! \n");
 							printf("\n");
 							printf("	Going here again will lead to a reset of the exclusion! \n");
@@ -1053,7 +1055,7 @@ int main (void) {
 						}
 						
 						printf(" \n");
-						for (unsigned int p=0; p<=9; p+=1) {
+						for (unsigned int p=0; p<=AOP; p+=1) {
 							ability[p] = 0;
 						}
 						
@@ -1203,7 +1205,7 @@ int main (void) {
 						}
 						
 					}
-					if ((beginningmenu == back_opt+2)&&((gamemode == 6)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11))){
+					if ((beginningmenu == back_opt+2)&&((gamemode == 6)||(gamemode == 9)||(gamemode == 10)||(gamemode == 11)||(gamemode == 12))){
 						
 						number_of_players = 0;
 						
@@ -1900,24 +1902,24 @@ int main (void) {
 			information_code[2] = ability[7];
 			information_code[3] = ability[8];
 			
-			if ((ability[1] != 0)&&(ability[1] != 100)) {
-				Field[0][1][0] = 10*ability[1];
-			}
-			if ((ability[2] != 0)&&(ability[2] != 100)) {
-				Field[0][0][0] = 10*ability[2];
-			}
-			if ((ability[3] != 0)&&(ability[3] != 100)) {
-				Field[0][0][1] = 10*ability[3];
-			}
-			if ((ability[4] != 0)&&(ability[4] != 100)) {
-				Field[0][0][n-1] = 10*ability[4];
-			}
-			if ((ability[6] != 0)&&(ability[6] != 100)) {
-				Field[0][m-1][n-1] = 10*ability[6];
-			}
-			if ((ability[9] != 0)&&(ability[9] != 100)) {
-				Field[0][m-1][0] = 10*ability[9];
-			}
+			// if ((ability[1] != 0)&&(ability[1] != 100)) {
+				// Field[0][1][0] = 10*ability[1];
+			// }
+			// if ((ability[2] != 0)&&(ability[2] != 100)) {
+				// Field[0][0][0] = 10*ability[2];
+			// }
+			// if ((ability[3] != 0)&&(ability[3] != 100)) {
+				// Field[0][0][1] = 10*ability[3];
+			// }
+			// if ((ability[4] != 0)&&(ability[4] != 100)) {
+				// Field[0][0][n-1] = 10*ability[4];
+			// }
+			// if ((ability[6] != 0)&&(ability[6] != 100)) {
+				// Field[0][m-1][n-1] = 10*ability[6];
+			// }
+			// if ((ability[9] != 0)&&(ability[9] != 100)) {
+				// Field[0][m-1][0] = 10*ability[9];
+			// }
 			
 		}
 		
@@ -1937,7 +1939,7 @@ int main (void) {
 		if (gamemode == 12) {
 			while ((survive_different == 0)||(survive_different > 60)){
 				printf("	Please give me a number between 1 and 60. \n");
-				survive_different = get_unsigned_numeric_input_with_not_more_than_1_letter (survive_different);
+				survive_different = get_unsigned_numeric_input_with_not_more_than_2_letters (survive_different);
 			}
 		}
 		
@@ -2124,356 +2126,30 @@ int main (void) {
 				dynamic_pointer[5] += dynamic_pointer[7] + erd;
 				
 				while (abs(dynamic_pointer[1])+abs(dynamic_pointer[0]) != 0){
-					/*
-					printf("	Test-print \n");
-					show_field (Field, m, n, gamemode, information_code, geben, Colored, 0);		//test
-					printf("	Test-print \n");
-					printf("	\n");
-					printf("	indikator1: %u \n", indikator1);
-					printf("	indikator2: %u \n", indikator2);
-					printf("	sgn(dynamic_pointer[0]): %d \n", sgn(dynamic_pointer[0]));
-					printf("	sgn(dynamic_pointer[1]): %d \n", sgn(dynamic_pointer[1]));
-					printf("	position[0]: %u \n", position[0]);
-					printf("	position[1]: %u \n", position[1]);
 					
-					printf("	\n");
-					printf("	Object position: (%u, %u) \n", position[1], position[0]);
-					printf("	Weg s: (%d, %d) \n", dynamic_pointer[1], dynamic_pointer[0]);
-					printf("	Geschw. v: (%d, %d) \n", dynamic_pointer[3], dynamic_pointer[2]);
-					printf("	Beschl. a: (%d, %d) \n", dynamic_pointer[5], dynamic_pointer[4]);
-					printf("	Impact  y(+erd): (%d, %d) \n", dynamic_pointer[7]+erd, dynamic_pointer[6]);
-					printf("	ffffffff\n");
-					printf("	\n");	//test
-					//*/
-					iteration += 1;
+					// printf("	Test-print \n");
+					// show_field (Field, m, n, gamemode, information_code, geben, Colored, 0);		//test
+					// printf("	Test-print \n");
+					// printf("	\n");
+					// printf("	indikator1: %u \n", indikator1);
+					// printf("	indikator2: %u \n", indikator2);
+					// printf("	sgn(dynamic_pointer[0]): %d \n", sgn(dynamic_pointer[0]));
+					// printf("	sgn(dynamic_pointer[1]): %d \n", sgn(dynamic_pointer[1]));
+					// printf("	position[0]: %u \n", position[0]);
+					// printf("	position[1]: %u \n", position[1]);
 					
-					if (position[0] == 1) {	//links
-						if ((number_of_players == 2)||(number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 1) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 6) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							
-						} else if ((number_of_players == 7)||(number_of_players == 8)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 1)||(Field[0][i][j] == 5)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 9) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[7] != 7070) {
-								printf("	Player 7, you are out \n");
-								ges[7] = 7070;
-								player_counter += 1;
-							}
-						}
-						
-					} else if (position[1] == 1) {	//oben
-						if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)||(number_of_players == 7)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 2) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 6) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 8) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 2)||(Field[0][i][j] == 6)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							if (ges[6] != 6060) {
-								printf("	Player 6, you are out \n");
-								ges[6] = 6060;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 9) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)||(Field[0][i][j] == 8)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							if (ges[8] != 8080) {
-								printf("	Player 8, you are out \n");
-								ges[8] = 8080;
-								player_counter += 1;
-							}
-						}
-						
-					} else if (position[0] == n-2) {	//rechts
-						if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 3) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							
-						} else if ((number_of_players == 6)||(number_of_players == 7)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							if (ges[6] != 6060) {
-								printf("	Player 6, you are out \n");
-								ges[6] = 6060;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 8) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 3)||(Field[0][i][j] == 7)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							if (ges[7] != 7070) {
-								printf("	Player 7, you are out \n");
-								ges[7] = 7070;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 2) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 2) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 9) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)||(Field[0][i][j] == 9)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							if (ges[6] != 6060) {
-								printf("	Player 6, you are out \n");
-								ges[6] = 6060;
-								player_counter += 1;
-							}
-							if (ges[9] != 9090) {
-								printf("	Player 9, you are out \n");
-								ges[9] = 9090;
-								player_counter += 1;
-							}
-							
-						}
-						
-					} else if (position[1] == m-2) {		//unten
-						if (number_of_players == 4) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 4) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 5) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 4)||(Field[0][i][j] == 5)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 7) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[7] != 7070) {
-								printf("	Player 7, you are out \n");
-								ges[7] = 7070;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 8) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 4)||(Field[0][i][j] == 8)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[8] != 8080) {
-								printf("	Player 8, you are out \n");
-								ges[8] = 8080;
-								player_counter += 1;
-							}
-							
-						}
-						
-					}
+					// printf("	\n");
+					// printf("	Object position: (%u, %u) \n", position[1], position[0]);
+					// printf("	Weg s: (%d, %d) \n", dynamic_pointer[1], dynamic_pointer[0]);
+					// printf("	Geschw. v: (%d, %d) \n", dynamic_pointer[3], dynamic_pointer[2]);
+					// printf("	Beschl. a: (%d, %d) \n", dynamic_pointer[5], dynamic_pointer[4]);
+					// printf("	Impact  y(+erd): (%d, %d) \n", dynamic_pointer[7]+erd, dynamic_pointer[6]);
+					// printf("	ffffffff\n");
+					// printf("	\n");	//test
+					
+					// iteration += 1;
+					
+					player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n);
 					
 					indikator1 = 0;		
 					indikator2 = 0;		//Staffelung: grösser im Betrag 1, anderer nur geblockt 3, anderer reflektiert 5, anderer Null-Betrag 5		3 und 5 und 5 schließen sich aus
@@ -2846,332 +2522,7 @@ int main (void) {
 						
 					}
 					
-					if (position[0] == 1) {	//links
-						if ((number_of_players == 2)||(number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 1) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 6) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							
-						} else if ((number_of_players == 7)||(number_of_players == 8)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 1)||(Field[0][i][j] == 5)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 9) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[1] != 1010) {
-								printf("	Player 1, you are out \n");
-								ges[1] = 1010;
-								player_counter += 1;
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[7] != 7070) {
-								printf("	Player 7, you are out \n");
-								ges[7] = 7070;
-								player_counter += 1;
-							}
-						}
-						
-					} else if (position[1] == 1) {	//oben
-						if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)||(number_of_players == 7)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 2) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 6) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 8) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 2)||(Field[0][i][j] == 6)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							if (ges[6] != 6060) {
-								printf("	Player 6, you are out \n");
-								ges[6] = 6060;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 9) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)||(Field[0][i][j] == 8)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							if (ges[8] != 8080) {
-								printf("	Player 8, you are out \n");
-								ges[8] = 8080;
-								player_counter += 1;
-							}
-						}		//lesezeichen, outcounter
-						
-					} else if (position[0] == n-2) {	//rechts
-						if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 3) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							
-						} else if ((number_of_players == 6)||(number_of_players == 7)) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							if (ges[6] != 6060) {
-								printf("	Player 6, you are out \n");
-								ges[6] = 6060;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 8) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 3)||(Field[0][i][j] == 7)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							if (ges[7] != 7070) {
-								printf("	Player 7, you are out \n");
-								ges[7] = 7070;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 2) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 2) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[2] != 2020) {
-								printf("	Player 2, you are out \n");
-								ges[2] = 2020;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 9) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)||(Field[0][i][j] == 9)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[3] != 3030) {
-								printf("	Player 3, you are out \n");
-								ges[3] = 3030;
-								player_counter += 1;
-							}
-							if (ges[6] != 6060) {
-								printf("	Player 6, you are out \n");
-								ges[6] = 6060;
-								player_counter += 1;
-							}
-							if (ges[9] != 9090) {
-								printf("	Player 9, you are out \n");
-								ges[9] = 9090;
-								player_counter += 1;
-							}
-						}
-						
-					} else if (position[1] == m-2) {		//unten
-						if (number_of_players == 4) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if (Field[0][i][j] == 4) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 5) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 4)||(Field[0][i][j] == 5)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[5] != 5050) {
-								printf("	Player 5, you are out \n");
-								ges[5] = 5050;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 7) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[7] != 7070) {
-								printf("	Player 7, you are out \n");
-								ges[7] = 7070;
-								player_counter += 1;
-							}
-							
-						} else if (number_of_players == 8) {
-							for (unsigned int i=1; i<m-1; i+=1) {
-								for (unsigned int j=1; j<n-1; j+=1) {
-									if ((Field[0][i][j] == 4)||(Field[0][i][j] == 8)) {
-										Field[0][i][j] = 0;
-									}
-								}
-							}
-							if (ges[4] != 4040) {
-								printf("	Player 4, you are out \n");
-								ges[4] = 4040;
-								player_counter += 1;
-							}
-							if (ges[8] != 8080) {
-								printf("	Player 8, you are out \n");
-								ges[8] = 8080;
-								player_counter += 1;
-							}
-							
-						}
-						
-					}
+					player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n);
 					
 					if ((abs(dynamic_pointer[1])+abs(dynamic_pointer[0])) == 0) {
 						
@@ -3418,333 +2769,9 @@ int main (void) {
 			// printf("	#line 4494, komplette durchrechnung \n");	//test
 			
 			if (gamemode == 11) {	//Ausscheiden der Teams?
-				if (position[0] == 1) {	//links
-					if ((number_of_players == 2)||(number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if (Field[0][i][j] == 1) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[1] != 1010) {
-							printf("	Player 1, you are out \n");
-							ges[1] = 1010;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 6) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[1] != 1010) {
-							printf("	Player 1, you are out \n");
-							ges[1] = 1010;
-							player_counter += 1;
-						}
-						if (ges[4] != 4040) {
-							printf("	Player 4, you are out \n");
-							ges[4] = 4040;
-							player_counter += 1;
-						}
-						
-					} else if ((number_of_players == 7)||(number_of_players == 8)) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 1)||(Field[0][i][j] == 5)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[1] != 1010) {
-							printf("	Player 1, you are out \n");
-							ges[1] = 1010;
-							player_counter += 1;
-						}
-						if (ges[5] != 5050) {
-							printf("	Player 5, you are out \n");
-							ges[5] = 5050;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 9) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[1] != 1010) {
-							printf("	Player 1, you are out \n");
-							ges[1] = 1010;
-							player_counter += 1;
-						}
-						if (ges[4] != 4040) {
-							printf("	Player 4, you are out \n");
-							ges[4] = 4040;
-							player_counter += 1;
-						}
-						if (ges[7] != 7070) {
-							printf("	Player 7, you are out \n");
-							ges[7] = 7070;
-							player_counter += 1;
-						}
-					}
-					
-				} else if (position[1] == 1) {	//oben
-					if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)||(number_of_players == 7)) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if (Field[0][i][j] == 2) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[2] != 2020) {
-							printf("	Player 2, you are out \n");
-							ges[2] = 2020;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 6) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						
-						if (ges[2] != 2020) {
-							printf("	Player 2, you are out \n");
-							ges[2] = 2020;
-							player_counter += 1;
-						}
-						if (ges[5] != 5050) {
-							printf("	Player 5, you are out \n");
-							ges[5] = 5050;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 8) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 2)||(Field[0][i][j] == 6)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						
-						if (ges[2] != 2020) {
-							printf("	Player 2, you are out \n");
-							ges[2] = 2020;
-							player_counter += 1;
-						}
-						if (ges[6] != 6060) {
-							printf("	Player 6, you are out \n");
-							ges[6] = 6060;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 9) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)||(Field[0][i][j] == 8)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[2] != 2020) {
-							printf("	Player 2, you are out \n");
-							ges[2] = 2020;
-							player_counter += 1;
-						}
-						if (ges[5] != 5050) {
-							printf("	Player 5, you are out \n");
-							ges[5] = 5050;
-							player_counter += 1;
-						}
-						if (ges[8] != 8080) {
-							printf("	Player 8, you are out \n");
-							ges[8] = 8080;
-							player_counter += 1;
-						}
-					}
-					
-				} else if (position[0] == n-2) {	//rechts
-					if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if (Field[0][i][j] == 3) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[3] != 3030) {
-							printf("	Player 3, you are out \n");
-							ges[3] = 3030;
-							player_counter += 1;
-						}
-						
-					} else if ((number_of_players == 6)||(number_of_players == 7)) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						
-						if (ges[3] != 3030) {
-							printf("	Player 3, you are out \n");
-							ges[3] = 3030;
-							player_counter += 1;
-						}
-						if (ges[6] != 6060) {
-							printf("	Player 6, you are out \n");
-							ges[6] = 6060;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 8) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 3)||(Field[0][i][j] == 7)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[3] != 3030) {
-							printf("	Player 3, you are out \n");
-							ges[3] = 3030;
-							player_counter += 1;
-						}
-						if (ges[7] != 7070) {
-							printf("	Player 7, you are out \n");
-							ges[7] = 7070;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 2) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if (Field[0][i][j] == 2) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[2] != 2020) {
-							printf("	Player 2, you are out \n");
-							ges[2] = 2020;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 9) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)||(Field[0][i][j] == 9)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[3] != 3030) {
-							printf("	Player 3, you are out \n");
-							ges[3] = 3030;
-							player_counter += 1;
-						}
-						if (ges[6] != 6060) {
-							printf("	Player 6, you are out \n");
-							ges[6] = 6060;
-							player_counter += 1;
-						}
-						if (ges[9] != 9090) {
-							printf("	Player 9, you are out \n");
-							ges[9] = 9090;
-							player_counter += 1;
-						}
-						
-					}
-					
-				} else if (position[1] == m-2) {		//unten
-					if (number_of_players == 4) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if (Field[0][i][j] == 4) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[4] != 4040) {
-							printf("	Player 4, you are out \n");
-							ges[4] = 4040;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 5) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 4)||(Field[0][i][j] == 5)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[4] != 4040) {
-							printf("	Player 4, you are out \n");
-							ges[4] = 4040;
-							player_counter += 1;
-						}
-						if (ges[5] != 5050) {
-							printf("	Player 5, you are out \n");
-							ges[5] = 5050;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 7) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[4] != 4040) {
-							printf("	Player 4, you are out \n");
-							ges[4] = 4040;
-							player_counter += 1;
-						}
-						if (ges[7] != 7070) {
-							printf("	Player 7, you are out \n");
-							ges[7] = 7070;
-							player_counter += 1;
-						}
-						
-					} else if (number_of_players == 8) {
-						for (unsigned int i=1; i<m-1; i+=1) {
-							for (unsigned int j=1; j<n-1; j+=1) {
-								if ((Field[0][i][j] == 4)||(Field[0][i][j] == 8)) {
-									Field[0][i][j] = 0;
-								}
-							}
-						}
-						if (ges[4] != 4040) {
-							printf("	Player 4, you are out \n");
-							ges[4] = 4040;
-							player_counter += 1;
-						}
-						if (ges[8] != 8080) {
-							printf("	Player 8, you are out \n");
-							ges[8] = 8080;
-							player_counter += 1;
-						}
-						
-					}
-					
-				}
+				
+				player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n);
+				
 			}
 			
 			if (gamemode == 6) {	//hunt-Formalitäten
@@ -4008,9 +3035,9 @@ int main (void) {
 				
 			}
 			
-			if ((tac != 0)&&((numbers_of_[geben][1][0]+numbers_of_[geben][2][0]+numbers_of_[geben][3][0]+numbers_of_[geben][4][0]+numbers_of_[geben][5][0]+numbers_of_[geben][6][0]) == 0)){
+			if ((tac != 0)&&((stack_of_[geben][1][0]+stack_of_[geben][2][0]+stack_of_[geben][3][0]+stack_of_[geben][4][0]+stack_of_[geben][5][0]+stack_of_[geben][6][0]) == 0)){
 				for (unsigned int p=1; p<=6; p+=1){
-					numbers_of_[geben][p][0] = tac;
+					stack_of_[geben][p][0] = tac;
 				}
 			}
 			
@@ -4049,7 +3076,7 @@ int main (void) {
 				show_whose_turn (gamemode, geben, ability, Colored);
 				
 				if (tac != 0){
-					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", numbers_of_[geben][1][0], numbers_of_[geben][2][0], numbers_of_[geben][3][0], numbers_of_[geben][4][0], numbers_of_[geben][5][0], numbers_of_[geben][6][0]);
+					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", stack_of_[geben][1][0], stack_of_[geben][2][0], stack_of_[geben][3][0], stack_of_[geben][4][0], stack_of_[geben][5][0], stack_of_[geben][6][0]);
 					printf("\n");
 					printf("\n");
 				}
@@ -4226,11 +3253,11 @@ int main (void) {
 						for (unsigned int z=var_[geben]; z>2; z-=10){
 							tac_controll += 1;
 						}
-						if (numbers_of_[geben][tac_controll][0] == 0){
+						if (stack_of_[geben][tac_controll][0] == 0){
 							var_[geben] = 7;
 							menuoperator = 1;
 						} else {
-							numbers_of_[geben][tac_controll][0] -= 1;		//Die tac-Abrechnung
+							stack_of_[geben][tac_controll][0] -= 1;		//Die tac-Abrechnung
 						}
 					}
 				} else if ((tac != 0)&&(var_[geben] != 100)&&(var_[geben] != 1010)&&(var_[geben] != 0)&&(var_[geben] != 5)) {
@@ -13287,6 +12314,338 @@ void get_colors (unsigned int* Colored, unsigned int gamemode, unsigned int numb
 	Colored[0] = 1;
 	
 	unsigned_int_array_null_initialisierung (Color_choice, 12);
+}
+
+unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_players, Spielfeld Field, unsigned int* ges, unsigned int player_counter, unsigned int m, unsigned int n) {
+	
+	if (position[0] == 1) {	//links
+		if ((number_of_players == 2)||(number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if (Field[0][i][j] == 1) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[1] != 1010) {
+				printf("	Player 1, you are out \n");
+				ges[1] = 1010;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 6) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[1] != 1010) {
+				printf("	Player 1, you are out \n");
+				ges[1] = 1010;
+				player_counter += 1;
+			}
+			if (ges[4] != 4040) {
+				printf("	Player 4, you are out \n");
+				ges[4] = 4040;
+				player_counter += 1;
+			}
+			
+		} else if ((number_of_players == 7)||(number_of_players == 8)) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 1)||(Field[0][i][j] == 5)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[1] != 1010) {
+				printf("	Player 1, you are out \n");
+				ges[1] = 1010;
+				player_counter += 1;
+			}
+			if (ges[5] != 5050) {
+				printf("	Player 5, you are out \n");
+				ges[5] = 5050;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 9) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[1] != 1010) {
+				printf("	Player 1, you are out \n");
+				ges[1] = 1010;
+				player_counter += 1;
+			}
+			if (ges[4] != 4040) {
+				printf("	Player 4, you are out \n");
+				ges[4] = 4040;
+				player_counter += 1;
+			}
+			if (ges[7] != 7070) {
+				printf("	Player 7, you are out \n");
+				ges[7] = 7070;
+				player_counter += 1;
+			}
+		}
+		
+	} else if (position[1] == 1) {	//oben
+		if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)||(number_of_players == 7)) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if (Field[0][i][j] == 2) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[2] != 2020) {
+				printf("	Player 2, you are out \n");
+				ges[2] = 2020;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 6) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			
+			if (ges[2] != 2020) {
+				printf("	Player 2, you are out \n");
+				ges[2] = 2020;
+				player_counter += 1;
+			}
+			if (ges[5] != 5050) {
+				printf("	Player 5, you are out \n");
+				ges[5] = 5050;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 8) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 2)||(Field[0][i][j] == 6)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			
+			if (ges[2] != 2020) {
+				printf("	Player 2, you are out \n");
+				ges[2] = 2020;
+				player_counter += 1;
+			}
+			if (ges[6] != 6060) {
+				printf("	Player 6, you are out \n");
+				ges[6] = 6060;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 9) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)||(Field[0][i][j] == 8)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[2] != 2020) {
+				printf("	Player 2, you are out \n");
+				ges[2] = 2020;
+				player_counter += 1;
+			}
+			if (ges[5] != 5050) {
+				printf("	Player 5, you are out \n");
+				ges[5] = 5050;
+				player_counter += 1;
+			}
+			if (ges[8] != 8080) {
+				printf("	Player 8, you are out \n");
+				ges[8] = 8080;
+				player_counter += 1;
+			}
+		}
+		
+	} else if (position[0] == n-2) {	//rechts
+		if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if (Field[0][i][j] == 3) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[3] != 3030) {
+				printf("	Player 3, you are out \n");
+				ges[3] = 3030;
+				player_counter += 1;
+			}
+			
+		} else if ((number_of_players == 6)||(number_of_players == 7)) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			
+			if (ges[3] != 3030) {
+				printf("	Player 3, you are out \n");
+				ges[3] = 3030;
+				player_counter += 1;
+			}
+			if (ges[6] != 6060) {
+				printf("	Player 6, you are out \n");
+				ges[6] = 6060;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 8) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 3)||(Field[0][i][j] == 7)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[3] != 3030) {
+				printf("	Player 3, you are out \n");
+				ges[3] = 3030;
+				player_counter += 1;
+			}
+			if (ges[7] != 7070) {
+				printf("	Player 7, you are out \n");
+				ges[7] = 7070;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 2) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if (Field[0][i][j] == 2) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[2] != 2020) {
+				printf("	Player 2, you are out \n");
+				ges[2] = 2020;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 9) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)||(Field[0][i][j] == 9)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[3] != 3030) {
+				printf("	Player 3, you are out \n");
+				ges[3] = 3030;
+				player_counter += 1;
+			}
+			if (ges[6] != 6060) {
+				printf("	Player 6, you are out \n");
+				ges[6] = 6060;
+				player_counter += 1;
+			}
+			if (ges[9] != 9090) {
+				printf("	Player 9, you are out \n");
+				ges[9] = 9090;
+				player_counter += 1;
+			}
+			
+		}
+		
+	} else if (position[1] == m-2) {		//unten
+		if (number_of_players == 4) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if (Field[0][i][j] == 4) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[4] != 4040) {
+				printf("	Player 4, you are out \n");
+				ges[4] = 4040;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 5) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 4)||(Field[0][i][j] == 5)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[4] != 4040) {
+				printf("	Player 4, you are out \n");
+				ges[4] = 4040;
+				player_counter += 1;
+			}
+			if (ges[5] != 5050) {
+				printf("	Player 5, you are out \n");
+				ges[5] = 5050;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 7) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[4] != 4040) {
+				printf("	Player 4, you are out \n");
+				ges[4] = 4040;
+				player_counter += 1;
+			}
+			if (ges[7] != 7070) {
+				printf("	Player 7, you are out \n");
+				ges[7] = 7070;
+				player_counter += 1;
+			}
+			
+		} else if (number_of_players == 8) {
+			for (unsigned int i=1; i<m-1; i+=1) {
+				for (unsigned int j=1; j<n-1; j+=1) {
+					if ((Field[0][i][j] == 4)||(Field[0][i][j] == 8)) {
+						Field[0][i][j] = 0;
+					}
+				}
+			}
+			if (ges[4] != 4040) {
+				printf("	Player 4, you are out \n");
+				ges[4] = 4040;
+				player_counter += 1;
+			}
+			if (ges[8] != 8080) {
+				printf("	Player 8, you are out \n");
+				ges[8] = 8080;
+				player_counter += 1;
+			}
+			
+		}
+	}
+	
+	return player_counter;
 }
 
 //dynamic (gamemode)	, done		(just notes following)
