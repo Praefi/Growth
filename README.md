@@ -11,8 +11,11 @@ If you try to play Growth_contact on the seperated website, you should read this
 What is Growth-Contact and how to play it?
 
 Growth-contact is a cube-based 2D game for 2 persons. On the surface you can see a field of squares, each of them is in exactly one of the following, different coloured states:
+
 gray: The square is „dead“.
+
 yellow: The square belongs to player 1.
+
 purple: The square belongs to player 2.
 
 The squares you own build your organism. After a players turn his/her organism takes one step of development, that means:
