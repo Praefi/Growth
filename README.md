@@ -27,28 +27,45 @@ This algorithim is not working step by step, so the development has no effect on
 Using this algorithim you have to reduce the number of your opponent's squares to zero. But how?
 
 At the beginning of your turn you get a number which is bound to two options:
+
 1: Plus or Minus.
+
 2: Move or Change.
+
 3: Destroy or Revive.
+
 4: Move or Boost.
+
 5: 2-new or 4/5-new.
+
 6: 1-min or 4-max.
 
 You can always skip the choice of an option, but what are the options saying?
+
 Plus: Click on a square of yours. After that you can click on a dead square in its surrounding 	which will be owned by you now.
+
 Minus: Click on a square of yours, it will be dead now.
+
 Move: Click on a square of yours, after that you can click on a dead square having an edge with it together. The positions of these two squares will change now.
+
 Change: Click on a square of yours, then click on a square of your opponent which is in its surrounding. These two squares will change positions now.
+
 Destroy: Click on a square of yours, then click on a square of your opponent which is in its surrounding. The opponents square will be dead now.
+
 Revive: Each square of yours, which will be dead after the development, having no squares of yours in its surrounding which were your squares before the development, will be yours again.
+
 Boost: If a opponents square is in the surrounding of one of your squares, it will be counted as one of your squares in the development, but only in the step of creating new squares, not while looking for squares of yours to die.
+
 2-new: The number of your squares surrounding a dead square for creating a new one changes from 3 to 2 for the next step of development.
+
 4/5-new: The number of your squares surrounding a dead square for creating a new one changes from 3 to 4/5 for the next step of development.
+
 1-min: The minimum number of your squares which have to surround a square of yours changes from 2 to 1 for the next step of development.
+
 4-max: The maximum number of your squares which are allowed to surround a square of yours changes from 3 to 4 for the next step of development.
 
 Now it's time to reveal why the games titel has the part „contact“ in it:
-Every time a square of yours is touching a square of your opponent, the number of squares 	owned by a player which are connected to the touching one (which counts too) using same edges of his/her squares are count for each player.
+Every time a square of yours is touching a square of your opponent, the number of squares owned by a player which are connected to the touching one (which counts too) using same edges of his/her squares are count for each player.
 Then the player with the higher count gets the squares of the opponent, in the situation of 	equal counts nothing happens, except the number of squares is 1. In that case the active player, means the player which made the last turn, will win this battle.
 
 Understanding the algorithim of development, playing this game will causes no troubles after a period of time.
