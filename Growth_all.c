@@ -51,8 +51,8 @@ void int_array_null_initialisierung (int*, unsigned int);
 
 void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int);
-unsigned int get_m (unsigned int, unsigned int);
-unsigned int get_n (unsigned int, unsigned int);
+unsigned int get_m (unsigned int, unsigned int, unsigned int);
+unsigned int get_n (unsigned int, unsigned int, unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4 (unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_2_letters (unsigned int);
 unsigned int split_unsigned_numeric_input_with_letters_4 (unsigned int, unsigned int);
@@ -119,6 +119,7 @@ enum gamemode {
 	Ulcer	= 10,
 	Dynamic	= 11,
 	Survive	= 12,
+	Sand	= 13,
 } gamemode_played;
 
 int main (void) {
@@ -382,13 +383,13 @@ int main (void) {
 				
 				// scanf("%u", &pause); //test
 				// printf ("	ok 7 \n");	//test
-				while ((gamemode_played < 1) || (gamemode_played > 12)) {
+				while ((gamemode_played < 1) || (gamemode_played > 13)) {
 					
 					printf("	Choose your gamemode\n  \n");
 
 					// enum: gamemode_played[done], (traps, bombs, waves), in menu (about the game, limits, hints, numbers), beginningmenu 	//go on
 					
-					printf("	Classic: 1\n	Collect: 2\n	Contact: 3\n	Fall   : 4\n	Fight  : 5\n	Hunt   : 6\n	Race   : 7\n	Rain   : 8\n	Arena  : 9\n  	Ulcer  : 10\n   	Dynamic: 11\n   	Survive: 12\n  \n");
+					printf("	Classic: 1\n	Collect: 2\n	Contact: 3\n	Fall   : 4\n	Fight  : 5\n	Hunt   : 6\n	Race   : 7\n	Rain   : 8\n	Arena  : 9\n  	Ulcer  : 10\n   	Dynamic: 11\n   	Survive: 12\n   	Sand   : 13\n  \n");
 					gamemode_played = get_unsigned_numeric_input_with_not_more_than_2_letters (gamemode_played);
 					printf("\n");
 					//Players?
@@ -407,37 +408,35 @@ int main (void) {
 						printf("	Points for win: %u \n", back+1);
 						printf("	Turns per drop: %u \n", back+2);
 						printf("	Speed of the #-square : %u \n", back+3);
-					}
-					if (gamemode_played == Hunt) {
+					} else if (gamemode_played == Hunt) {
 						printf("	Hunt-conditions: %u \n", back+1);
 						printf("	Number of players: %u \n", back+2);	// synchronisiere diese ebenfalls
-					}
-					if (gamemode_played == Race) {
+					} else if (gamemode_played == Race) {
 						printf("	Frequence : %u \n", back+1);
-					}
-					if (gamemode_played == Rain) {
+					} else if (gamemode_played == Rain) {
 						printf("	Rain-Modus: %u \n", back+1);
-					}
-					if (gamemode_played == Arena) {
+					} else if (gamemode_played == Arena) {
 						printf("	Abilities : %u \n", back+1);
 						printf("	Number of players: %u \n", back+2);
 						printf("	Rounds to play	 : %u \n", back+3);
-					}
-					if (gamemode_played == Ulcer) {
+					} else if (gamemode_played == Ulcer) {
 						printf("	Lifes	  : %u \n", back+1);
 						printf("	Number of players: %u \n", back+2);
 						printf("	Rounds to play	 : %u \n", back+3);
 						printf("	K.O.-Mode : %u \n", back+4);
-					}
-					if (gamemode_played == Dynamic) {
+					} else if (gamemode_played == Dynamic) {
 						printf("	Gravity	  : %u \n", back+1);
 						printf("	Number of players: %u \n", back+2);
 						printf("	Range	  : %u \n", back+3);
 						printf("	Coefficient : %u \n", back+4);
-					}
-					if (gamemode_played == Survive) {
+					} else if (gamemode_played == Survive) {
 						printf("	obstacles  : %u \n", back+1);
 						printf("	Number of players: %u \n", back+2);
+					} else if (gamemode_played == Sand) {
+						printf("	Gravity	  : %u \n", back+1);
+						printf("	Number of players: %u \n", back+2);
+						printf("	Speed	  : %u \n", back+3);
+						printf("	Period	  : %u \n", back+4);
 					}
 					
 					printf("\n");
@@ -453,8 +452,8 @@ int main (void) {
 							printf("	This only works if the number of players is correct! \n");
 						}
 						
-						m = get_m (gamemode_played, number_of_players);
-						n = get_n (gamemode_played, number_of_players);
+						m = get_m (gamemode_played, number_of_players, AOP);
+						n = get_n (gamemode_played, number_of_players, AOP);
 						
 					}
 				
@@ -1027,7 +1026,7 @@ int main (void) {
 							printf(" \n");
 							undead_duration = 0;
 						} else {
-							printf("	How long should the undead-square survive? \n");
+							printf("	How many turns the undead-square should survive? \n");
 							undead_duration = get_unsigned_numeric_input_with_not_more_than_2_letters (undead_duration);
 						}
 					}
@@ -1251,7 +1250,7 @@ int main (void) {
 						}
 						
 					}
-					if ((beginningmenu == back+2)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive))){
+					if ((beginningmenu == back+2)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))){
 						
 						number_of_players = 0;
 						
@@ -1342,6 +1341,19 @@ int main (void) {
 										n--;
 									}
 									break;
+								}
+							}
+						} else if (gamemode_played == Sand) {
+							if (number_of_players == 2) {
+								m = Initialisierung_m (gamemode_played);
+								n = Initialisierung_n (gamemode_played);
+							} else {
+								for (unsigned int p=1; p<=AOP; p++) {
+									if (p == number_of_players) {
+										m = 5+p + 2;
+										n = 3+4*(p-1)+ 1/(p*p) + 2;
+										break;
+									}
 								}
 							}
 						}
@@ -1460,6 +1472,27 @@ int main (void) {
 						while (information_code[3]>1) {
 							printf("	-Waves:		Yes: 1		No: 0 \n");
 							information_code[3] = get_unsigned_numeric_input_with_not_more_than_1_letter (information_code[3]);
+						}
+					} else if ((beginningmenu == back+1)&&(gamemode_played == Sand)) {
+						printf("	Where to start falling? \n");
+						printf("	Top: 1		Bottom: 2 \n");
+						information_code[1] = get_unsigned_numeric_input_with_not_more_than_1_letter (information_code[1]);
+						
+						if ((information_code[1] == 0)||(information_code[1] >= 2)) {
+							printf("	You missed the assertion(s) !!! \n");
+							information_code[1] = 1;
+						}
+					} else if ((beginningmenu == back+3)&&(gamemode_played == Sand)) {
+						printf("	How many squares falling? \n");
+						information_code[2] = get_unsigned_numeric_input_with_not_more_than_2_letters (information_code[2]);
+						
+					} else if ((beginningmenu == back+4)&&(gamemode_played == Sand)) {
+						printf("	After how many rounds falling? (>0)\n");
+						information_code[3] = get_unsigned_numeric_input_with_not_more_than_2_letters (information_code[3]);
+						
+						if (information_code[3] == 0) {
+							printf("	You missed the assertion(s) !!! \n");
+							information_code[3] = 1;
 						}
 					} else if (beginningmenu == back){	//auch hier!
 						gamemode_played = 0;
@@ -1607,6 +1640,17 @@ int main (void) {
 							printf("	no \n");
 						}
 						printf("	Number of players: %u \n", number_of_players);
+					} else if (gamemode_played == Sand) {
+						printf(" Sand \n ");
+						printf("	Gravity begins at the: ");
+						if (information_code[1] == 1) {
+							printf("	Top \n");
+						} else if (information_code[1]== 0) {
+							printf("	Bottom \n");
+						}
+						printf("	Speed : %u \n", information_code[2]);
+						printf("	Period: %u \n", information_code[3]);
+						printf("	Number of players: %u \n", number_of_players);
 					}
 					printf(" \n ");
 					printf(" \n");
@@ -1671,7 +1715,7 @@ int main (void) {
 					
 					if (opt == 5) {
 						printf("	Random    activated \n");
-						if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {
+						if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {
 							if ((number_[1] + number_[3]) % 4 <= 1){
 								printf("\n");
 								printf("	A Player: Spieler 1	\n	The other Player: Spieler 2 \n");
@@ -1982,7 +2026,7 @@ int main (void) {
 		
 		limit_at_all_saver = limit_at_all;
 		
-		if ((gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
+		if ((gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 			information_code[0] = number_of_players;
 		}
 		
@@ -2882,7 +2926,7 @@ int main (void) {
 			} else if ((journey == 1)&&(gamemode_played == Race)) {
 				printf("	All turns until the journey starts: %u \n", ((2*freq) - ((g-1)%(2*freq))));
 				printf("\n");
-			} else if ((journey == 1)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive))) {	//10
+			} else if ((journey == 1)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//10
 				printf("	All turns until the journey starts: %u \n", ((10*(number_of_players-player_counter) - 1) - ((g-1)%(10*(number_of_players-player_counter) - 1))));
 				printf("\n");
 			}
@@ -2907,7 +2951,7 @@ int main (void) {
 				continue;
 			}
 			
-			if ((ges[geben] == 1010)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive))) {	//10	//Überspringen, wenn ausgeschieden
+			if ((ges[geben] == 1010)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//10	//Überspringen, wenn ausgeschieden
 				g+=1;
 				var_[geben] = 1010*geben;		//eigentlich var_[geben] = 1010*geben, done
 				for (unsigned int i=1; i<m-1; i+=1){
@@ -2926,7 +2970,7 @@ int main (void) {
 						
 						if (gamemode_played == Dynamic){
 							for (unsigned int p=2; p<=5; p+=1) {
-								dynamic_pointer_save[Vorganger(geben, number_of_players)][p-2] = dynamic_pointer_save[geben][p-2]; // if geben == 1 => number_of_players, sonst geben-1	(maybe a function)
+								dynamic_pointer_save[Vorganger(geben, number_of_players)][p-2] = dynamic_pointer_save[geben][p-2]; // if geben == 1 => number_of_players, sonst geben-1	(maybe a function), done
 							}
 						}
 						
@@ -3681,6 +3725,20 @@ int main (void) {
 						}
 					}
 					controll = 0;
+					if (gamemode_played == Sand) {
+						for (unsigned int j=1; j<n-1; j+=1){
+							
+							if (Field[0][1][j] != 0){
+								printf("	Sieg:	Spieler %u \n", Field[0][1][j]);
+							}
+							controll = 1;
+							break;
+						}
+						if (controll == 1){
+							break;
+						}
+					}
+					controll = 0;
 					
 					Spielfeld_Destroy (temp, m, 0);
 				
@@ -3989,6 +4047,14 @@ int main (void) {
 							printf("\n");
 							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0);
 							break;
+						}
+					} else if (gamemode_played == Sand) {
+						for (unsigned int j=1; j<n-1; j+=1){
+						
+							if (Field[0][2][j] != 0){
+								numbers_of_[Field[0][2][j]][0][0] += 1;
+							}
+							
 						}
 					}
 					
@@ -5655,6 +5721,11 @@ int main (void) {
 				
 			}
 			
+			if (gamemode_played == Sand) {
+				//Spieler raus und falling, go on
+			}
+			
+			
 			if (player_counter == number_of_players) {	//Notbremse
 				break;
 			}
@@ -7110,7 +7181,7 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			n_2 = (n-1)/2;
 			m_2 = (m-1)/2;
 			
-			Field[0][m_2][n_2]	= 5;		//Spieler 5
+			Field[0][m_2][n_2]		= 5;		//Spieler 5
 			Field[0][m_2][n_2-1]	= 5;
 			Field[0][m_2][n_2+1]	= 5;
 			Field[0][m_2-1][n_2]	= 5;
@@ -7120,8 +7191,8 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			unsigned int m_2;
 			m_2 = (m-1)/2;
 			
-			Field[0][m_2][n-2]	= 5;		//Spieler 5
-			Field[0][m_2][n-3]	= 5;
+			Field[0][m_2][n-2]		= 5;		//Spieler 5
+			Field[0][m_2][n-3]		= 5;
 			Field[0][m_2-1][n-3]	= 5;
 			Field[0][m_2+1][n-3]	= 5;
 			
@@ -7130,8 +7201,8 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			unsigned int m_2;
 			m_2 = (m-1)/2;
 			
-			Field[0][m_2][1]		= 6;		//Spieler 6
-			Field[0][m_2][2]		= 6;
+			Field[0][m_2][1]	= 6;		//Spieler 6
+			Field[0][m_2][2]	= 6;
 			Field[0][m_2-1][2]	= 6;
 			Field[0][m_2+1][2]	= 6;
 			
@@ -7152,9 +7223,9 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			unsigned int n_2;
 			n_2 = (n-1)/2;
 			
-			Field[0][1][n_2]		= 7;		//Spieler 7
+			Field[0][1][n_2]	= 7;		//Spieler 7
 			Field[0][2][n_2-1]	= 7;
-			Field[0][2][n_2]		= 7;
+			Field[0][2][n_2]	= 7;
 			Field[0][2][n_2+1]	= 7;
 			
 		}
@@ -7162,9 +7233,9 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			unsigned int n_2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m-2][n_2]	= 8;		//Spieler 8
+			Field[0][m-2][n_2]		= 8;		//Spieler 8
 			Field[0][m-3][n_2-1]	= 8;
-			Field[0][m-3][n_2]	= 8;
+			Field[0][m-3][n_2]		= 8;
 			Field[0][m-3][n_2+1]	= 8;
 			
 		}
@@ -7174,11 +7245,93 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			n_2 = (n-1)/2;
 			m_2 = (m-1)/2;
 			
-			Field[0][m_2][n_2]	= 9;		//Spieler 9
+			Field[0][m_2][n_2]		= 9;		//Spieler 9
 			Field[0][m_2][n_2-1]	= 9;
 			Field[0][m_2][n_2+1]	= 9;
 			Field[0][m_2-1][n_2]	= 9;
 			Field[0][m_2+1][n_2]	= 9;
+			
+		}
+	} else if (gamemode_played == Sand) {
+		if (number_of_players >= 1) {
+			
+			Field[0][m-2][1] = 1;		//Spieler 1
+			Field[0][m-2][3] = 1;
+			Field[0][m-3][2] = 1;
+			Field[0][m-3][3] = 1;
+			Field[0][m-4][2] = 1;
+			
+		}
+		if (number_of_players >= 2) {
+			
+			Field[0][m-2][5] = 2;		//Spieler 2
+			Field[0][m-2][7] = 2;
+			Field[0][m-3][5] = 2;
+			Field[0][m-3][6] = 2;
+			Field[0][m-4][6] = 2;
+			
+		}
+		if (number_of_players >= 3) {
+			
+			Field[0][m-2][9] = 3;		//Spieler 3
+			Field[0][m-2][11] = 3;
+			Field[0][m-3][10] = 3;
+			Field[0][m-3][11] = 3;
+			Field[0][m-4][10] = 3;
+			
+		}
+		if (number_of_players >= 4) {
+			
+			Field[0][m-2][13] = 4;		//Spieler 4
+			Field[0][m-2][15] = 4;
+			Field[0][m-3][13] = 4;
+			Field[0][m-3][14] = 4;
+			Field[0][m-4][14] = 4;
+			
+		}
+		if (number_of_players >= 5) {
+			
+			Field[0][m-2][17] = 5;		//Spieler 5
+			Field[0][m-2][19] = 5;
+			Field[0][m-3][18] = 5;
+			Field[0][m-3][19] = 5;
+			Field[0][m-4][18] = 5;
+			
+		}
+		if (number_of_players >= 6) {
+			
+			Field[0][m-2][21] = 6;		//Spieler 6
+			Field[0][m-2][23] = 6;
+			Field[0][m-3][21] = 6;
+			Field[0][m-3][22] = 6;
+			Field[0][m-4][22] = 6;
+			
+		}
+		if (number_of_players >= 7) {
+			
+			Field[0][m-2][25] = 7;		//Spieler 7
+			Field[0][m-2][27] = 7;
+			Field[0][m-3][26] = 7;
+			Field[0][m-3][27] = 7;
+			Field[0][m-4][26] = 7;
+			
+		}
+		if (number_of_players >= 8) {
+			
+			Field[0][m-2][29] = 8;		//Spieler 8
+			Field[0][m-2][31] = 8;
+			Field[0][m-3][29] = 8;
+			Field[0][m-3][30] = 8;
+			Field[0][m-4][30] = 8;
+			
+		}
+		if (number_of_players >= 9) {
+			
+			Field[0][m-2][33] = 9;		//Spieler 9
+			Field[0][m-2][35] = 9;
+			Field[0][m-3][34] = 9;
+			Field[0][m-3][35] = 9;
+			Field[0][m-4][34] = 9;
 			
 		}
 	}
@@ -7647,7 +7800,7 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 					printf("??");
 				} 
 				
-				if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//mehr-gamemode_played
+				if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 					if (Field[auswerter][i][j] == 1){
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
@@ -7795,7 +7948,7 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 					} else if (Field[auswerter][i][j] == 17){	//hint
 						printf("::");
 					}
-				} else if (gamemode_played == Ulcer) {
+				} else if ((gamemode_played == Ulcer)||(gamemode_played == Sand)) {
 					for (unsigned int p=1; p<=information_code[0]; p+=1) {	//information_code[0] == number_of_players
 						if (Field[auswerter][i][j] == p) {
 							if (Colored[0] == 1) {
@@ -8291,11 +8444,11 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 	normal_Zeile = 0;
 	normal_Spalte = 0;
 	
-	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//mehr-gamemode_played
+	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 		geben_change = (geben%2)+1;
 	} else if ((gamemode_played == Hunt)&&(geben != 1)) {
 		geben_change = 1;
-	} else if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//mehr-gamemode_played
+	} else if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 		geben_change = 0;
 	}
 	
@@ -8505,7 +8658,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 				break;
 			}
 		}
-	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//nur Berechnung, kein Change direkt, mehr-gamemode_played
+	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//nur Berechnung, kein Change direkt, mehr-gamemode_played
 		for (unsigned int h=1; h<=(m-2); h+=1){
 			for (unsigned int k=1; k<=(n-2); k+=1){
 				if (Field[0][h][k] == geben){
@@ -8624,7 +8777,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 					break;
 				}
 			}
-		} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)) {	//mehr-gamemode_played
+		} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 			for (unsigned int h=1; h<=(m-2); h+=1){
 				for (unsigned int k=1; k<=(n-2); k+=1){
 					if (Field[0][h][k] == geben){
@@ -8745,7 +8898,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 					if ((Field[0][eigene_Zeile-1][eigene_Spalte]==7)||(Field[0][eigene_Zeile][eigene_Spalte-1]==7)||(Field[0][eigene_Zeile][eigene_Spalte+1]==7)||(Field[0][eigene_Zeile+1][eigene_Spalte]==7)){
 						a = 1;
 					}
-				} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//mehr-gamemode_played
+				} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 					if (((Field[0][eigene_Zeile-1][eigene_Spalte]!=geben)&&(Field[0][eigene_Zeile-1][eigene_Spalte]!=0))||((Field[0][eigene_Zeile][eigene_Spalte-1]!=geben)&&(Field[0][eigene_Zeile][eigene_Spalte-1]!=0))||((Field[0][eigene_Zeile][eigene_Spalte+1]!=geben)&&(Field[0][eigene_Zeile][eigene_Spalte+1]!=0))||((Field[0][eigene_Zeile+1][eigene_Spalte]!=geben)&&(Field[0][eigene_Zeile+1][eigene_Spalte]!=0))){
 						a = 1;
 					}
@@ -8775,7 +8928,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 							}
 							Change (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, position);
 							
-						} else if ((gamemode_played != Contact)&&(gamemode_played != Rain)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//mehr-gamemode_played
+						} else if ((gamemode_played != Contact)&&(gamemode_played != Rain)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 							if ((Field[0][fremde_Zeile][fremde_Spalte] != geben_change)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
 								Change (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, position);
@@ -8799,7 +8952,7 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 								Field[0][fremde_Zeile][fremde_Spalte] = geben;
 								Field[0][eigene_Zeile][eigene_Spalte] = 7;
 							}
-						} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)) {
+						} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 							if ((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
 								Change (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, position);
@@ -8836,11 +8989,11 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 	fremde_Zeile = 0;
 	fremde_Spalte = 0;
 	
-	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//mehr-gamemode_played
+	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 		geben_destroy = (geben%2)+1;
 	} else if ((gamemode_played == Hunt)&&(geben != 1)) {
 		geben_destroy = 1;
-	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
+	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 		geben_destroy = 0;
 	}
 	
@@ -8905,7 +9058,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 					}
 				}
 			}
-		} else if ((gamemode_played == Arena)||(gamemode_played == Survive)) {
+		} else if ((gamemode_played == Arena)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 			for (unsigned int h=1; h<=(m-2); h+=1){
 				for (unsigned int k=1; k<=(n-2); k+=1){
 					if (Field[0][h][k] == geben){
@@ -9032,7 +9185,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 						break;
 					}
 				}
-			} else if ((gamemode_played == Arena)||(gamemode_played == Survive)) {
+			} else if ((gamemode_played == Arena)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 				for (unsigned int h=1; h<=(m-2); h+=1){
 					for (unsigned int k=1; k<=(n-2); k+=1){
 						if (Field[0][h][k] == geben){
@@ -9149,7 +9302,7 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 					}
 					Destroy (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague);
 					
-				} else if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Hunt)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//mehr-gamemode_played
+				} else if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Hunt)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 					if ((Field[0][fremde_Zeile-1][fremde_Spalte]==geben)||(Field[0][fremde_Zeile][fremde_Spalte-1]==geben)||(Field[0][fremde_Zeile][fremde_Spalte+1]==geben)||(Field[0][fremde_Zeile+1][fremde_Spalte]==geben)){
 						a = 1;
 					}
@@ -9172,10 +9325,10 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 				if (a == 0){
 					printf("	you made a mistake, try again: \n");
 					Destroy (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague);
-				} else if ((gamemode_played != Survive)&&(gamemode_played != Dynamic)&&(gamemode_played != Ulcer)&&(gamemode_played != Arena)&&(Field[0][fremde_Zeile][fremde_Spalte] != geben_destroy)){	//mehr-gamemode_played
+				} else if ((gamemode_played != Sand)&&(gamemode_played != Survive)&&(gamemode_played != Dynamic)&&(gamemode_played != Ulcer)&&(gamemode_played != Arena)&&(Field[0][fremde_Zeile][fremde_Spalte] != geben_destroy)){	//mehr-gamemode_played
 					printf("	you made a mistake, try again: \n");
 					Destroy (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague);
-				} else if (((gamemode_played == Survive)||(gamemode_played == Arena))&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben))){
+				} else if (((gamemode_played == Sand)||(gamemode_played == Survive)||(gamemode_played == Arena))&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben))){
 					printf("	you made a mistake, try again: \n");
 					Destroy (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague);
 				} else if ((gamemode_played == Ulcer)&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(Field[0][fremde_Zeile][fremde_Spalte] == 1))){
@@ -9235,11 +9388,11 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_, Spielfeld Field, 
 void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n, Spielfeld temp, unsigned int gamemode_played){
 	unsigned int geben_Boost;
 				//printf("?");
-	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//mehr-gamemode_played
+	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 		geben_Boost = (geben%2)+1;
 	} else if (gamemode_played == Hunt) {
 		geben_Boost = 1;
-	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
+	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 		geben_Boost = 0;
 	}
 	
@@ -9280,7 +9433,7 @@ void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n,
 				}
 			}
 		}
-	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//mehr-gamemode_played
+	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 		for (unsigned int i=1; i<m-1; i+=1){
 			for (unsigned int j=1; j<n-1; j+=1){
 				if ((Field[0][i][j] != geben)&&(Field[0][i][j] != 0)) {
@@ -9294,11 +9447,11 @@ void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n,
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if ((gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//mehr-gamemode_played
+			if ((gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 				if (temp[0][i][j] == geben){
 					Field[0][i][j] = geben;
 				}
-			} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
+			} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 				if (temp[0][i][j] != 0){
 					Field[0][i][j] = geben;
 				}
@@ -9367,7 +9520,7 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 			printf (" How do you want to play: \n");
 			printf (" \n");
 			if (ent == limit_new){
-				if ((gamemode_played == Dynamic)||(gamemode_played == Arena)) {
+				if ((gamemode_played == Dynamic)||(gamemode_played == Arena)||(gamemode_played == Sand)) {
 					printf(" #produce	defensive: 1		offensive: 2 \n");
 					ind = get_unsigned_numeric_input_with_not_more_than_1_letter (ind);
 				} else if (gamemode_played == Hunt) {
@@ -9389,18 +9542,18 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 			}
 			
 			if ((ent >= (limit_at_all - 4))&&(gamemode_played != Contact)){		//min 5/10, watch out with Hunt on 2 players
-				if ((gamemode_played == Dynamic)||(gamemode_played == Arena)||(gamemode_played == Classic)) {
+				if ((gamemode_played == Dynamic)||(gamemode_played == Arena)||(gamemode_played == Sand)) {
 					printf(" #reduce	defensive: 1		offensive: 2 \n");
 					ind = get_unsigned_numeric_input_with_not_more_than_1_letter (ind);
 				} else if (gamemode_played == Hunt) {
-					printf(" #produce	defensive: 2		offensive: 1 \n");
+					printf(" #reduce	defensive: 2		offensive: 1 \n");
 					ind = get_unsigned_numeric_input_with_not_more_than_1_letter (ind);
 				} else if ((gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Fall)||(gamemode_played == Collect)) {
-					printf(" #produce	keep bottom: 1		keep top: 2 	equal: >=3 \n");
+					printf(" #reduce	keep bottom: 1		keep top: 2 	equal: >=3 \n");
 					keep = get_unsigned_numeric_input_with_not_more_than_1_letter (keep);
 					ind = 1;
 				} else if (gamemode_played == Classic) {
-					printf(" #produce	defensive: 1		offensive: 2 	equal: >=3 \n");
+					printf(" #reduce	defensive: 1		offensive: 2 	equal: >=3 \n");
 					keep = get_unsigned_numeric_input_with_not_more_than_1_letter (keep);	//correct misuse of keep, done
 					ind = 1;
 				}
@@ -9421,6 +9574,8 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 				ober = 105;
 			} else if (gamemode_played == Collect) {
 				ober = 85;
+			} else if (gamemode_played == Sand) {
+				ober = 85+m;
 			}
 			
 		} else if (ind == 2) {
@@ -9428,6 +9583,8 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 				ober = m+n;
 			} else if ((gamemode_played == Arena)) {
 				ober = 10;
+			} else if ((gamemode_played == Sand)) {
+				ober = m;
 			}
 		}
 		
@@ -9475,7 +9632,7 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 									}
 								}
 							}
-							if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Collect)) {
+							if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Collect)||(gamemode_played == Sand)) {
 								for (unsigned int h=i-1; h<=i+1; h+=1){		//Stört feindliches Wachstum?
 									for (unsigned int k=j-1; k<=j+1; k+=1){
 										if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -9650,6 +9807,8 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 										Index_Wert = 1;
 									}
 								}
+							} else if (gamemode_played == Sand) {
+								Index_Wert += i;
 							}
 							
 							Index_Feld[0][i][j] = Index_Wert;
@@ -9728,9 +9887,10 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 								
 								Index_Feld[0][i][j] = Index_Wert;
 								Index_Wert = 0;
+								
+							} else if (gamemode_played == Sand) {
+								Index_Feld[0][i][j] = i;
 							}
-							
-							
 						}
 					}
 				}
@@ -9751,12 +9911,12 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 						Sf_nl_[geben][i][j] = 0;
 						count_new -= 1;
 						if (ind  == 2) {
-							if ((gamemode_played == Dynamic)||((gamemode_played == Hunt)&&(geben == 1))) {
+							if ((gamemode_played == Dynamic)||(gamemode_played == Contact)||((gamemode_played == Hunt)&&(geben == 1))) {
 								ober = m+n;
 							} else if (gamemode_played == Arena) {
 								ober = 10;
-							} else if (gamemode_played == Contact) {
-								ober = m+n;
+							} else if (gamemode_played == Sand) {
+								ober = m;
 							}
 						} else if (ind == 1) {
 							
@@ -9772,6 +9932,8 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 								ober = 105;
 							} else if (gamemode_played == Collect) {
 								ober = 85;
+							} else if (gamemode_played == Sand) {
+								ober = 85+m;
 							}
 						}
 						
@@ -10519,7 +10681,7 @@ void show_whose_turn (unsigned int gamemode_played, unsigned int geben, unsigned
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[geben]);
 	}
 	
-	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)){	//10
+	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)){	//10
 		if (geben == 1) {
 			printf("	Am Zug: Spieler %u (**)	\n", geben);
 		} else if (geben == 2) {
@@ -10565,7 +10727,7 @@ void show_whose_turn (unsigned int gamemode_played, unsigned int geben, unsigned
 		} else if (ability[9] == geben) {
 			printf("	Am Zug: Spieler %u (EE)	\n", geben);
 		}
-	} else if ((gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//10
+	} else if ((gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//10
 		printf("	Am Zug: Spieler %u (%u%u)	\n", geben, geben, geben);
 	}
 	
@@ -10588,7 +10750,7 @@ void show_statistics (unsigned int number_of_players, unsigned int gamemode_play
 		printf("\n");
 	}
 	
-	if ((gamemode_played == Classic)||(gamemode_played == Hunt)||(gamemode_played == Race)||(gamemode_played == Rain)) {
+	if ((gamemode_played == Classic)||(gamemode_played == Hunt)||(gamemode_played == Race)||(gamemode_played == Rain)||(gamemode_played == Sand)) {
 		for (unsigned int p=1; p<=number_of_players; p+=1) {
 			printf("	Matchballs player %u: 	%u \n", p, numbers_of_[p][0][0]);
 		}
@@ -10620,7 +10782,7 @@ void show_statistics (unsigned int number_of_players, unsigned int gamemode_play
 				printf("		Spieler %u: %u life(s) left.\n", p, ulcer_lifes[p]);
 			}
 		}
-	} else if ((gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//mehr-gamemode_played
+	} else if ((gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 		for (unsigned int p=1; p<=number_of_players; p+=1) {
 			if ((ges[p] > 1000)||(ges[p] == 0)) {
 				printf("	Spieler %u: is out.\n", p);
@@ -10703,6 +10865,8 @@ void About_the_game (unsigned int gamemode_played, unsigned int geben, unsigned 
 		printf("	How to win? 	Push the ball against your opponent's side.\n");
 	} else if (gamemode_played == Survive) {
 		printf("	How to win? 	Stay alive.\n");
+	} else if (gamemode_played == Sand) {
+		printf("	How to win? 	Reach the top.\n");
 	}
 	printf("	Surrounding:	The 8 squares around another, at the edge 5, in the corners 3, are called #surrounding. \n");
 	printf("	near-by:	The 4 squares around another, at the edge 3, in the corners 2, are called #near-by. \n");
@@ -10714,7 +10878,7 @@ void About_the_game (unsigned int gamemode_played, unsigned int geben, unsigned 
 		printf("	Limits: 	This gamemode_played is unlimited. \n");
 	} else if (gamemode_played == Contact) {
 		printf("	Limits: 	Your development is limited by %u per round. \n", limit_new);
-	} else if (gamemode_played != Hunt) {
+	} else if ((gamemode_played != Hunt)||(geben != 1)) {
 		printf("	Limits: 	Your development is limited by %u per round, your units in total by %u per round. \n", limit_new, limit_at_all);
 	}
 	
@@ -10739,7 +10903,7 @@ void show_the_numbers (unsigned int gamemode_played, unsigned int w, unsigned in
 		printf("	%u-min: A square of yours will survive even by only %u of your squares surrounding it.\n", d-1, d-1);
 	}
 	
-	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)) {	//10
+	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Sand)) {	//10
 		printf("	Change: A square of yours and a near-by square of your enemy will change positions.\n");
 		printf("	Destroy: Delete a near-by square of your enemy.\n");
 		printf("	Boost: Use all near-by squares of your enemy as your own for the development.\n");
@@ -10790,7 +10954,7 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 	
 	for (unsigned int i=1; i<(m-1); i+=1){
 		for (unsigned int j=1; j<(n-1); j+=1){
-			if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//10
+			if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//10
 				if (Field[0][i][j] == geben){
 					hint[0][i][j] = geben;
 				} else if (Field[0][i][j] == (geben%2)+1){
@@ -10798,7 +10962,7 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 				} else if (Field[0][i][j] == 7){
 					hint[0][i][j] = 7;
 				}
-			} else if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)) {	//10
+			} else if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Sand)) {	//10
 				if (Field[0][i][j] == geben){
 					hint[0][i][j] = geben;
 				} else if (Field[0][i][j] != 0){
@@ -10901,7 +11065,7 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 
 void Initialisierung (unsigned int gamemode_played, unsigned int* information_code) {
 	
-	if (gamemode_played == Survive) {
+	if ((gamemode_played == Survive)||(gamemode_played == Sand)) {
 		
 		for (unsigned int p=1; p<=3; p+=1) {
 			information_code[p] = 1;
@@ -10916,7 +11080,7 @@ unsigned int Initialisierung_limit_new (unsigned int gamemode_played) {
 	
 	Ausgabe = 0;
 	
-	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Dynamic)) {
+	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Dynamic)||(gamemode_played == Sand)) {
 		Ausgabe = 10;
 	} else if (gamemode_played == Contact) {
 		Ausgabe = 15;
@@ -10941,7 +11105,7 @@ unsigned int Initialisierung_limit_at_all (unsigned int gamemode_played) {
 	
 	Ausgabe = 0;
 	
-	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Dynamic)) {
+	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Dynamic)||(gamemode_played == Sand)) {
 		Ausgabe = 20;
 	} else if ((gamemode_played == Fall)||(gamemode_played == Race)||(gamemode_played == Rain)) {
 		Ausgabe = 14;
@@ -10958,7 +11122,7 @@ unsigned int Initialisierung_limit_at_all (unsigned int gamemode_played) {
 	return Ausgabe;
 }
 
-unsigned int Initialisierung_n (unsigned int gamemode_played) {
+unsigned int Initialisierung_n (unsigned int gamemode_played) {	//real+2
 	
 	unsigned int Ausgabe;
 	
@@ -10976,14 +11140,14 @@ unsigned int Initialisierung_n (unsigned int gamemode_played) {
 		Ausgabe = 21;
 	} else if (gamemode_played == Rain) {
 		Ausgabe = 15;
-	} else if (gamemode_played == Arena) {
+	} else if ((gamemode_played == Arena)||(gamemode_played == Sand)) {
 		Ausgabe = 9;
 	}
 	
 	return Ausgabe;
 }
 
-unsigned int Initialisierung_m (unsigned int gamemode_played) {
+unsigned int Initialisierung_m (unsigned int gamemode_played) {	//real+2
 	
 	unsigned int Ausgabe;
 	
@@ -10995,7 +11159,7 @@ unsigned int Initialisierung_m (unsigned int gamemode_played) {
 		Ausgabe = 11;
 	} else if ((gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Rain)||(gamemode_played == Ulcer)) {
 		Ausgabe = 8;
-	} else if ((gamemode_played == Hunt)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Dynamic)) {
+	} else if ((gamemode_played == Hunt)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Dynamic)||(gamemode_played == Sand)) {
 		Ausgabe = 9;
 	} else if (gamemode_played == Survive) {
 		Ausgabe = 13;
@@ -11004,7 +11168,7 @@ unsigned int Initialisierung_m (unsigned int gamemode_played) {
 	return Ausgabe;
 }
 
-unsigned int get_m (unsigned int gamemode_played, unsigned int number_of_players) {
+unsigned int get_m (unsigned int gamemode_played, unsigned int number_of_players, unsigned int AOP) {
 	unsigned int m;
 	m = 0;
 	
@@ -11547,12 +11711,28 @@ unsigned int get_m (unsigned int gamemode_played, unsigned int number_of_players
 				m += 2;
 			}
 		}
+	} else if (gamemode_played == Sand) {
+		for (unsigned int p=1; p<=AOP; p++) {
+			if (p == number_of_players) {
+				printf(" Zeilen: >=4				(normal: %u) \n", 5+p);
+				m = get_unsigned_numeric_input_with_not_more_than_2_letters (m);
+				
+				if (m<4){
+					printf("	You missed the assertion(s) !!! \n");
+					printf("\n");
+					m = 7+p;
+				} else {
+					m += 2;
+				}
+				break;
+			}
+		}
 	}
 	
 	return m;
 }
 
-unsigned int get_n (unsigned int gamemode_played, unsigned int number_of_players) {
+unsigned int get_n (unsigned int gamemode_played, unsigned int number_of_players, unsigned int AOP) {
 	unsigned int n;
 	n = 0;
 	
@@ -12082,6 +12262,35 @@ unsigned int get_n (unsigned int gamemode_played, unsigned int number_of_players
 				n = 19;
 			} else {
 				n += 2;
+			}
+		}
+	} else if (gamemode_played == Sand) {
+		if (number_of_players == 1) {
+			printf(" Spalten: >=3				(normal: 4) \n");
+			n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
+			
+			if (n<3){
+				printf("	You missed the assertion(s) !!! \n");
+				printf("\n");
+				n = 6;
+			} else {
+				n += 2;
+			}
+		} else {
+			for (unsigned int p=2; p<=AOP; p++) {
+				if (p == number_of_players) {
+					printf(" Spalten: >=%u				(normal: %u) \n", 3+4*(p-1), 3+4*(p-1));
+					n = get_unsigned_numeric_input_with_not_more_than_2_letters (n);
+					
+					if (n<3+4*(p-1)){
+						printf("	You missed the assertion(s) !!! \n");
+						printf("\n");
+						n = 5+4*(p-1);
+					} else {
+						n += 2;
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -12734,7 +12943,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 //v= 0:	0	0	-1	-3	-6	-3	-1	0	<--leer	,freier Fall,	1 Hindernis auf Grund-->	v= 0:	0	0	-1	-3	-3	-4	-4	-3	-3	-2	-3	-4	-4		für 1.
 //a= 0:	0	-1	-2	-3	3	2	1	0														a= 0:	0	-1	-2	-3	-1	-2	0	-1	0	-1	-3	0	-1
 //Nimm 2.Geschwindigkeit
-// constructor (option), go on
+// undead (option), done
 // no return into dead, but into undead squares for a period of time,
 // undead squares just reserve the place
 
