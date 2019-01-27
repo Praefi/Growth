@@ -63,6 +63,7 @@ void get_colors (unsigned int*, unsigned int, unsigned int, unsigned int);
 
 void choose_your_ability (unsigned int, unsigned int*, unsigned int*);
 unsigned int dynamic_take_out (unsigned int*, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int, unsigned int);
+unsigned int who_is_out (unsigned int*, unsigned int, unsigned int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
@@ -1492,7 +1493,7 @@ int main (void) {
 						
 						if (information_code[3] == 0) {
 							printf("	You missed the assertion(s) !!! \n");
-							information_code[3] = 1;
+							information_code[3] = 2;
 						}
 					} else if (beginningmenu == back){	//auch hier!
 						gamemode_played = 0;
@@ -2934,6 +2935,9 @@ int main (void) {
 			if (gamemode_played == Race) {
 				printf("	All turns until the wall moves forward: %u \n", (freq - ((g-1)%freq)));
 				printf("\n");
+			} else if (gamemode_played == Sand) {
+				printf("	All turns until the squares will fall down: %u \n", number_of_players*information_code[3] - ((g-1)%(number_of_players*information_code[3])));
+				printf("\n");
 			}
 			
 			printf("\n");
@@ -3688,11 +3692,11 @@ int main (void) {
 										if (temp[0][i][j] == geben){
 											Field[0][i][j] = 0;
 										}
-									} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {	//mehr-gamemode_played
+									} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 										if (temp[0][i][j] != 0){
 											Field[0][i][j] = temp[0][i][j];
 										}
-									} else if ((gamemode_played != Rain)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)) {	//10
+									} else if ((gamemode_played != Rain)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//10
 										if (temp[0][i][j] == 1){
 											Field[0][i][j] = 2;
 										}
@@ -3719,20 +3723,6 @@ int main (void) {
 								}
 							}
 							
-						}
-						if (controll == 1){
-							break;
-						}
-					}
-					controll = 0;
-					if (gamemode_played == Sand) {
-						for (unsigned int j=1; j<n-1; j+=1){
-							
-							if (Field[0][1][j] != 0){
-								printf("	Sieg:	Spieler %u \n", Field[0][1][j]);
-							}
-							controll = 1;
-							break;
 						}
 						if (controll == 1){
 							break;
@@ -4026,6 +4016,31 @@ int main (void) {
 							}
 							
 						}
+						
+						controll = 0;
+						
+						for (unsigned int j=1; j<n-1; j+=1){
+							if (geben == 1) {
+								if (Field[0][m-2][j] == geben){
+									printf("	Sieg:	Spieler %u \n", geben);
+									controll = 1;
+									break;
+								}
+							} else if (geben == 2) {
+								if (Field[0][1][j] == geben){
+									printf("	Sieg:	Spieler %u \n", geben);
+									controll = 1;
+									break;
+								}
+							}
+							
+						}
+						if (controll == 1){
+							break;
+						}
+						
+						controll = 0;
+						
 					} else if (gamemode_played == Collect) {
 						for (unsigned int j=2; j<n-1; j+=((n-1)/2)-2){		//Collect-Bed. prüfen
 							unsigned int a;
@@ -4106,30 +4121,6 @@ int main (void) {
 							printf(" \n");
 						}
 					}
-					
-					controll = 0;
-					if (gamemode_played == Classic) {
-						for (unsigned int j=1; j<n-1; j+=1){
-							if (geben == 1) {
-								if (Field[0][m-2][j] == geben){
-									printf("	Sieg:	Spieler %u \n", geben);
-									controll = 1;
-									break;
-								}
-							} else if (geben == 2) {
-								if (Field[0][1][j] == geben){
-									printf("	Sieg:	Spieler %u \n", geben);
-									controll = 1;
-									break;
-								}
-							}
-							
-						}
-						if (controll == 1){
-							break;
-						}
-					}
-					controll = 0;
 					
 					if (gamemode_played == Contact) {
 						if (opague >= 1) {
@@ -5080,51 +5071,8 @@ int main (void) {
 						}
 					}
 				}
-				if ((ges[1] == 0)&&(number_of_players >= 1)) {
-					printf("		Spieler 1, you are out. \n");
-					player_counter += 1;
-					ges[1] = 1010;
-				}
-				if ((ges[2] == 0)&&(number_of_players >= 2)) {
-					printf("		Spieler 2, you are out. \n");
-					player_counter += 1;
-					ges[2] = 2020;
-				}
-				if ((ges[3] == 0)&&(number_of_players >= 3)) {
-					printf("		Spieler 3, you are out. \n");
-					player_counter += 1;
-					ges[3] = 3030;
-				}
-				if ((ges[4] == 0)&&(number_of_players >= 4)) {
-					printf("		Spieler 4, you are out. \n");
-					player_counter += 1;
-					ges[4] = 4040;
-				}
-				if ((ges[5] == 0)&&(number_of_players >= 5)) {
-					printf("		Spieler 5, you are out. \n");
-					player_counter += 1;
-					ges[5] = 5050;
-				}
-				if ((ges[6] == 0)&&(number_of_players >= 6)) {
-					printf("		Spieler 6, you are out. \n");
-					player_counter += 1;
-					ges[6] = 6060;
-				}
-				if ((ges[7] == 0)&&(number_of_players >= 7)) {
-					printf("		Spieler 7, you are out. \n");
-					player_counter += 1;
-					ges[7] = 7070;
-				}
-				if ((ges[8] == 0)&&(number_of_players >= 8)) {
-					printf("		Spieler 8, you are out. \n");
-					player_counter += 1;
-					ges[8] = 8080;
-				}
-				if ((ges[9] == 0)&&(number_of_players == 9)) {
-					printf("		Spieler 9, you are out. \n");
-					player_counter += 1;
-					ges[9] = 9090;
-				}
+				
+				player_counter = who_is_out (ges, number_of_players, player_counter);
 				
 				if (player_counter == (number_of_players - 1)) {
 					printf("		Game over, you can see the master of the Arena. \n");
@@ -5470,51 +5418,8 @@ int main (void) {
 						}
 					}
 				}
-				if ((ges[1] == 0)&&(number_of_players >= 1)) {
-					printf("		Spieler 1, you are out. \n");
-					player_counter += 1;
-					ges[1] = 1010;
-				}
-				if ((ges[2] == 0)&&(number_of_players >= 2)) {
-					printf("		Spieler 2, you are out. \n");
-					player_counter += 1;
-					ges[2] = 2020;
-				}
-				if ((ges[3] == 0)&&(number_of_players >= 3)) {
-					printf("		Spieler 3, you are out. \n");
-					player_counter += 1;
-					ges[3] = 3030;
-				}
-				if ((ges[4] == 0)&&(number_of_players >= 4)) {
-					printf("		Spieler 4, you are out. \n");
-					player_counter += 1;
-					ges[4] = 4040;
-				}
-				if ((ges[5] == 0)&&(number_of_players >= 5)) {
-					printf("		Spieler 5, you are out. \n");
-					player_counter += 1;
-					ges[5] = 5050;
-				}
-				if ((ges[6] == 0)&&(number_of_players >= 6)) {
-					printf("		Spieler 6, you are out. \n");
-					player_counter += 1;
-					ges[6] = 6060;
-				}
-				if ((ges[7] == 0)&&(number_of_players >= 7)) {
-					printf("		Spieler 7, you are out. \n");
-					player_counter += 1;
-					ges[7] = 7070;
-				}
-				if ((ges[8] == 0)&&(number_of_players >= 8)) {
-					printf("		Spieler 8, you are out. \n");
-					player_counter += 1;
-					ges[8] = 8080;
-				}
-				if ((ges[9] == 0)&&(number_of_players == 9)) {
-					printf("		Spieler 9, you are out. \n");
-					player_counter += 1;
-					ges[9] = 9090;
-				}
+				
+				player_counter = who_is_out (ges, number_of_players, player_counter);
 				
 				if (number_of_players == 2) {
 					if (player_counter == 1) {
@@ -5666,52 +5571,8 @@ int main (void) {
 						}
 					}
 				}
-				if ((ges[1] == 0)&&(number_of_players >= 1)) {
-					printf("		Spieler 1, you are out. \n");
-					player_counter += 1;
-					ges[1] = 1010;
-				}
-				if ((ges[2] == 0)&&(number_of_players >= 2)) {
-					printf("		Spieler 2, you are out. \n");
-					player_counter += 1;
-					ges[2] = 2020;
-				}
-				if ((ges[3] == 0)&&(number_of_players >= 3)) {
-					printf("		Spieler 3, you are out. \n");
-					player_counter += 1;
-					ges[3] = 3030;
-				}
-				if ((ges[4] == 0)&&(number_of_players >= 4)) {
-					printf("		Spieler 4, you are out. \n");
-					player_counter += 1;
-					ges[4] = 4040;
-				}
-				if ((ges[5] == 0)&&(number_of_players >= 5)) {
-					printf("		Spieler 5, you are out. \n");
-					player_counter += 1;
-					ges[5] = 5050;
-				}
-				if ((ges[6] == 0)&&(number_of_players >= 6)) {
-					printf("		Spieler 6, you are out. \n");
-					player_counter += 1;
-					ges[6] = 6060;
-				}
-				if ((ges[7] == 0)&&(number_of_players >= 7)) {
-					printf("		Spieler 7, you are out. \n");
-					player_counter += 1;
-					ges[7] = 7070;
-				}
-				if ((ges[8] == 0)&&(number_of_players >= 8)) {
-					printf("		Spieler 8, you are out. \n");
-					player_counter += 1;
-					ges[8] = 8080;
-				}
-				if ((ges[9] == 0)&&(number_of_players == 9)) {
-					printf("		Spieler 9, you are out. \n");
-					player_counter += 1;
-					ges[9] = 9090;
-				}
 				
+				player_counter = who_is_out (ges, number_of_players, player_counter);
 				
 				for (unsigned int p=1; p<=number_of_players; p+=1) {
 					if (ges[p] < 1000) {
@@ -5722,11 +5583,82 @@ int main (void) {
 			}
 			
 			if (gamemode_played == Sand) {
-				//Spieler raus und falling, go on
+				lim = 0;
+				for (unsigned j=1; j<=n-2; j++) {
+					if (Field[0][1][j] != 0) {
+						printf("	Sieg Spieler: %u \n", Field[0][1][j]);
+						lim = 1;
+						break;
+					}
+				}
+				if (lim == 1) {
+					break;
+				}
+				
+				if (g%(number_of_players*information_code[3]) == 0) {
+					if (information_code[1] == 1) {
+						for (unsigned int i=1; i<=m-2; i++) {
+							for (unsigned int j=1; j<=n-2; j++) {
+								lim = 0;
+								while (lim != information_code[2]) {
+									if ((Field[0][i+lim][j] != 0)&&(i+lim+1 != m-1)&&(Field[0][i+lim+1][j] == 0)) {
+										Field[0][i+lim+1][j] = Field[0][i+lim][j];
+										Field[0][i+lim][j] = 0;
+									}
+									lim += 1;
+								}
+								lim = 0;
+							}
+						}
+					} else if (information_code[1] == 2) {
+						for (unsigned int i=m-2; i>=1; i--) {
+							for (unsigned int j=n-2; j>=1; j--) {
+								lim = 0;
+								while (lim != information_code[2]) {
+									if ((Field[0][i+lim][j] != 0)&&(i+lim+1 != m-1)&&(Field[0][i+lim+1][j] == 0)) {
+										Field[0][i+lim+1][j] = Field[0][i+lim][j];
+										Field[0][i+lim][j] = 0;
+									}
+									lim += 1;
+								}
+								lim = 0;
+							}
+						}
+					}
+				}
+				
+				for (unsigned int i=1; i<m-1; i+=1){
+					for (unsigned int j=1; j<n-1; j+=1){
+						for (unsigned int p=1; p<=number_of_players; p+=1) {
+							if (Field[0][i][j] == p) {
+								ges[p] += 1;
+								break;
+							}
+						}
+					}
+				}
+				player_counter = who_is_out (ges, number_of_players, player_counter);
+				
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
+					if (ges[p] < 1000) {
+						ges[p] = 0;
+					}
+				}
+				
+				if (player_counter == number_of_players-1) {
+					for (unsigned int p=1; p<=number_of_players; p++) {
+						if (ges[p] != p*1010) {
+							printf("	Sieg Spieler: %u \n", p);
+							break;
+						}
+					}
+					break;
+				}
 			}
 			
 			
 			if (player_counter == number_of_players) {	//Notbremse
+				printf("	No player left \n ");
 				break;
 			}
 			
@@ -5795,7 +5727,7 @@ int main (void) {
 		printf("	Show statistics:	yes: 1		no: 0 \n");
 		lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 		if (lim == 1){
-			
+			printf("	\n");
 			show_statistics (number_of_players, gamemode_played, numbers_of_, Points, exclude_counter, ulcer_lifes, ges, pere, ability, ttt);
 			
 		}
@@ -11065,10 +10997,15 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 
 void Initialisierung (unsigned int gamemode_played, unsigned int* information_code) {
 	
-	if ((gamemode_played == Survive)||(gamemode_played == Sand)) {
+	if (gamemode_played == Survive) {
 		
 		for (unsigned int p=1; p<=3; p+=1) {
 			information_code[p] = 1;
+		}
+	} else if (gamemode_played == Sand) {
+		
+		for (unsigned int p=1; p<=3; p+=1) {
+			information_code[p] = 1 + p/3;
 		}
 	}
 	
@@ -12921,6 +12858,19 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 				player_counter += 1;
 			}
 			
+		}
+	}
+	
+	return player_counter;
+}
+
+unsigned int who_is_out (unsigned int* ges, unsigned int number_of_players, unsigned int player_counter) {
+	
+	for (unsigned int p=1; p<=number_of_players; p++) {
+		if ((ges[p] == 0)&&(number_of_players >= p)) {
+			printf("		Spieler %u, you are out. \n", p);
+			player_counter += 1;
+			ges[p] = 1010*p;
 		}
 	}
 	
