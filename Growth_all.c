@@ -25,8 +25,10 @@ void show_whose_turn (unsigned int, unsigned int, unsigned int*, unsigned int*);
 void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int);
 void show_options_of_actions (unsigned int, unsigned int*, unsigned int);
 void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void show_figures (unsigned int);
 
 unsigned int Vorganger (unsigned int, unsigned int);
+void figure_check (Spielfeld, unsigned int, unsigned int);
 
 void Spielfeld_Destroy (Spielfeld, unsigned int, unsigned int);
 void unsigned_int_Vektor_Destroy (unsigned int*);
@@ -102,8 +104,9 @@ enum options {
 	Color	= 8,
 	Opague	= 9,
 	undead	= 10,
+	Figures	= 11,
 	
-	back = 11,		//synchronisiere mit back!
+	back = 12,		//synchronisiere mit back!
 } beginningmenu;
 
 enum gamemode {
@@ -142,11 +145,13 @@ int main (void) {
 	unsigned int fall_controll, fall_back, turns_per_drop, speed_of_fall, count_freq, rain, rain_drops, rain_save, rain_obj, rain_speed, rain_speed_save;
 	unsigned int w, d, e;
 	unsigned int opt, limit_new, limit_at_all, lim, suprise, sup_num, menuoperator, points_for_win, freq;
-	unsigned int use_number, num_1, num_2, num_3, num_temp, number_rain;
+	unsigned int use_number, num_1, num_2, num_3, num_temp, number_rain, figures;
 	unsigned int count_new, einmal, boost_hunt_activator, zeitgewinner;
 	unsigned int nosv, AOP;		//number of saved variables; amount of players
 	unsigned int range, d_wert, indikator1, indikator2, indikator3, space_i, space_j, controll, iteration;
 	//unsigned int cons[1]_fort, cons[2]_fort, cons[3]_fort, cons[4]_fort, cons[5]_fort, cons[6]_fort, cons[7]_fort, cons[8]_fort, cons[9]_fort;
+	
+	//sort the variables, go on
 	
 	//scanf("%u", &pause); //test
 	//printf ("	ok 2 \n");	//test
@@ -194,7 +199,7 @@ int main (void) {
 	
 	playtime = 1;	//playing game after game after...
 	
-	nosv = 69;	//Number_of_saved_variables, drücke abhängig von AOP aus go on
+	nosv = 70;	//Number_of_saved_variables, drücke abhängig von AOP aus go on
 	//same_counter = 0; 		//for variable length of same
 	
 	same = unsigned_int_Vektor_Create (nosv);
@@ -249,6 +254,7 @@ int main (void) {
 		rain_save = 0;
 		freq = 6;
 		
+		figures = 0;
 		undead_duration = 0;
 		
 		fall_back = 0;
@@ -404,7 +410,7 @@ int main (void) {
 				
 				while (beginningmenu != Start){
 			
-					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	Undead	  : 10\n \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
+					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	Points for win: %u \n", back+1);
 						printf("	Turns per drop: %u \n", back+2);
@@ -1020,15 +1026,27 @@ int main (void) {
 					}
 					
 					if (beginningmenu == undead) {
-						printf("	Going here again will delete the undead-mode! \n");
+						printf("	Going here again will reset the undead-mode! \n");
 						
 						if (undead_duration != 0) {
-							printf("	Undead-mode deleted! \n");
+							printf("	undead-mode reseted! \n");
 							printf(" \n");
 							undead_duration = 0;
 						} else {
 							printf("	How many turns the undead-square should survive? \n");
 							undead_duration = get_unsigned_numeric_input_with_not_more_than_2_letters (undead_duration);
+						}
+					}
+					
+					if (beginningmenu == Figures) {
+						printf("	Going here again will reset the Figures-mode! \n");
+						
+						if (figures != 0) {
+							printf("	Figures-mode reseted! \n");
+							printf(" \n");
+							figures = 0;
+						} else {
+							figures = 1;	//make a selection possible, go on
 						}
 					}
 					
@@ -1847,6 +1865,7 @@ int main (void) {
 				same[67] = erd;
 			}
 			same[68] = undead_duration;
+			same[69] = figures;
 			
 		} else if (same[0] == 1) {
 			same[0] = 0;
@@ -1922,6 +1941,7 @@ int main (void) {
 				erd = same[67];
 			}
 			undead_duration = same[68];
+			figures = same[69];
 		}
 		
 		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
@@ -5656,6 +5676,11 @@ int main (void) {
 				}
 			}
 			
+			if (figures != 0) {
+				if (g%number_of_players == 0) {
+					figure_check (Field, m, n);
+				}
+			}
 			
 			if (player_counter == number_of_players) {	//Notbremse
 				printf("	No player left \n ");
@@ -12873,8 +12898,278 @@ unsigned int who_is_out (unsigned int* ges, unsigned int number_of_players, unsi
 			ges[p] = 1010*p;
 		}
 	}
-	
+	printf("\n");
 	return player_counter;
+}
+
+void show_figures (unsigned int menuoperator) {	//in order of calculation
+	
+	if (menuoperator == 1) {	//enum, go on
+		printf("		Seed:	\n");
+		printf("	OOO			OXO	\n");
+		printf("	OXO	--->	XOX	\n");
+		printf("	OOO			OXO	\n");
+		printf("	\n\n");
+		
+	} else if (menuoperator == 2) {	//take steps in 2^x, go on
+		printf("		Grass:	\n");
+		printf("	OOO			OXO	\n");
+		printf("	OXO			OXO	\n");
+		printf("	OXO	--->	OXO	\n");
+		printf("	OOO			OOO	\n");
+		printf("	\n\n");
+		
+	} else if (menuoperator == 3) {
+		printf("		Windmill:	\n");
+		printf("	OOOO			OOOO			OOOO	\n");
+		printf("	OOXO			OXOO			OOXO	\n");
+		printf("	OXOO	--->	OOXO	--->	OXOO	\n");
+		printf("	OOOO			OOOO			OOOO	\n");
+		printf("	\n\n");
+		
+	} else if (menuoperator == 4) {
+		printf("		Popcorn:	\n");
+		printf("	OOOO			OXXO	\n");
+		printf("	OXXO			XOOX	\n");
+		printf("	OXXO	--->	XOOX	\n");
+		printf("	OOOO			OXXO	\n");
+		printf("	\n\n");
+		
+	} else if (menuoperator == 5) {
+		printf("		Shield:	\n");
+		printf("	OOOOO			OOOOO	\n");
+		printf("	OOXOO			OOXOO	\n");
+		printf("	OXOXO	--->	XXOXX	\n");
+		printf("	OOOOO			OOOOO	\n");
+		printf("	\n\n");
+		
+	} else if (menuoperator == 6) {
+		printf("		Flower:	\n");
+		printf("	OOOOO			OOXOO	\n");
+		printf("	OOXOO			OOXOO	\n");
+		printf("	OXOXO	--->	XXOXX	\n");
+		printf("	OOXOO			OOXOO	\n");
+		printf("	OOOOO			OOXOO	\n");
+		printf("	\n\n");
+		
+	} else if (menuoperator == 7) {
+		printf("		Black hole:	\n");
+		printf("	OOOOO			OOOOO	\n");
+		printf("	OXXXO			OOOOO	\n");
+		printf("	OXXXO	--->	OOXOO	\n");
+		printf("	OXXXO			OOOOO	\n");
+		printf("	OOOOO			OOOOO	\n");
+		printf("	\n\n");
+		
+	}
+}
+
+void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
+	unsigned int figure_check_counter;
+	figure_check_counter = 0;
+	
+	for (unsigned int i=1; i<=m-2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			for (unsigned int z=0; z<=2; z++) {
+				if ((j+2<=n-2)&&(i+2<=m-2)&&(Field[0][i][j+z] == 0)&&(Field[0][i+2][j+z] == 0)) {
+					figure_check_counter += 2;
+				}
+			}
+			for (unsigned int t=1; t<=1; t++) {
+				if ((j+2<=n-2)&&(i+2<=m-2)&&(Field[0][i+t][j] == 0)&&(Field[0][i+t][j+2] == 0)) {
+					figure_check_counter += 2;
+				}
+			}
+			if (figure_check_counter == 8) {	//Seed
+				figure_check_counter = 0;
+				
+				if (Field[0][i+1][j+1] != 0) {
+					for (unsigned int t=1; t<=2; t++) {
+						for (unsigned int z=1; z<=2; z++) {
+							if ((t+z)%2 == 1) {
+								Field[0][i+t][j+z] = Field[0][i+1][j+1];
+							}
+						}
+					}
+					Field[0][i+1][j+1] = 0;
+				}
+			} else {
+				figure_check_counter = 0;
+				
+				for (unsigned int z=0; z<=2; z++) {
+					if ((j+2<=n-2)&&(i+3<=m-2)&&(Field[0][i][j+z] == 0)&&(Field[0][i+3][j+z] == 0)) {
+						figure_check_counter += 2;
+					}
+				}
+				for (unsigned int t=1; t<=2; t++) {
+					if ((j+2<=n-2)&&(i+3<=m-2)&&(Field[0][i+t][j] == 0)&&(Field[0][i+t][j+2] == 0)) {
+						figure_check_counter += 2;
+					}
+				}
+				if (figure_check_counter == 10) {	//Grass
+					figure_check_counter = 0;
+					
+					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
+						Field[0][i][j+1] = 0;
+					}
+					
+				} else {
+					figure_check_counter = 0;
+					
+					for (unsigned int z=0; z<=3; z++) {
+						if ((j+3<=n-2)&&(i+3<=m-2)&&(Field[0][i][j+z] == 0)&&(Field[0][i+3][j+z] == 0)) {
+							figure_check_counter += 2;
+						}
+					}
+					for (unsigned int t=1; t<=2; t++) {
+						if ((j+3<=n-2)&&(i+3<=m-2)&&(Field[0][i+t][j] == 0)&&(Field[0][i+t][j+3] == 0)) {
+							figure_check_counter += 2;
+						}
+					}
+					if (figure_check_counter == 12) {
+						figure_check_counter = 0;
+						
+						if (Field[0][i+1][j+1] != 0) {
+							for (unsigned int t=1; t<=2; t++) {
+								for (unsigned int z=1; z<=2; z++) {
+									if (((t+z)%2 == 0)&&(Field[0][i+t][j+z] = Field[0][i+1][j+1])) {
+										figure_check_counter += 1;
+									} else if (((t+z)%2 == 1)&&(Field[0][i+t][j+z] == 0)) {
+										figure_check_counter += 3;
+									} else if (((t+z)%2 == 1)&&(Field[0][i+t][j+z] == Field[0][i+1][j+1])) {
+										figure_check_counter += 9;
+									}
+								}
+							}
+							if (figure_check_counter == 8) {	//Windmill#2
+								figure_check_counter = 0;
+								
+								for (unsigned int t=2; t>=1; t--) {
+									for (unsigned int z=2; z>=1; z--) {
+										if ((z+t)%2 == 1) {
+											Field[0][i+t][j+z] = Field[0][i+1][j+1];
+										} else if ((z+t)%2 == 0) {
+											Field[0][i+t][j+z] = 0;
+										}
+									}
+								}
+							} else if (figure_check_counter == 20) {	//Popcorn
+								figure_check_counter = 0;
+								
+								for (unsigned int t=1; t<=2; t++) {
+									Field[0][i+t][j] = Field[0][i+1][j+1];
+									Field[0][i+t][j+3] = Field[0][i+1][j+1];
+								}
+								for (unsigned int z=1; z<=2; z++) {
+									Field[0][i][j+z] = Field[0][i+1][j+1];
+									Field[0][i+3][j+z] = Field[0][i+1][j+1];
+								}
+								for (unsigned int t=2; t>=1; t--) {
+									for (unsigned int z=2; z>=1; z--) {
+										Field[0][i+t][j+z] = 0;
+									}
+								}
+							}
+							
+						} else if (Field[0][i+1][j+1] == 0) {	//Windmill#1
+							
+							if ((Field[0][i+1][j+2] != 0)&&(Field[0][i+2][j+1] == Field[0][i+1][j+2])&&(Field[0][i+2][j+2] == 0)) {
+								for (unsigned int t=2; t>=1; t--) {
+									for (unsigned int z=1; z<=2; z++) {
+										if ((z+t)%2 == 0) {
+											Field[0][i+t][j+z] = Field[0][i+1][j+2];
+										} else if ((z+t)%2 == 1) {
+											Field[0][i+t][j+z] = 0;
+										}
+									}
+								}
+							}
+						}
+						
+					} else {
+						figure_check_counter = 0;
+					
+						for (unsigned int z=0; z<=4; z++) {
+							if ((j+4<=n-2)&&(i+3<=m-2)&&(Field[0][i][j+z] == 0)&&(Field[0][i+3][j+z] == 0)) {
+								figure_check_counter += 2;
+							}
+						}
+						for (unsigned int t=1; t<=2; t++) {
+							if ((j+4<=n-2)&&(i+3<=m-2)&&(Field[0][i+t][j] == 0)&&(Field[0][i+t][j+4] == 0)) {
+								figure_check_counter += 2;
+							}
+						}
+						if (figure_check_counter == 14) {
+							figure_check_counter = 0;
+							
+							if (Field[0][i+1][j+2] != 0) {
+								for (unsigned int t=1; t<=2; t++) {
+									for (unsigned int z=1; z<=3; z++) {
+										if (((t+z)%2 == 1)&&(Field[0][i+t][j+z] = Field[0][i+1][j+2])) {
+											figure_check_counter += 1;
+										} else if (((t+z)%2 == 0)&&(Field[0][i+t][j+z] == 0)) {
+											figure_check_counter += 1;
+										}
+									}
+								}
+								if (figure_check_counter == 6) {	//Shield
+									Field[0][i+2][j] = Field[0][i+1][j+2];
+									Field[0][i+2][j+4] = Field[0][i+1][j+2];
+								}
+							}
+						} else {
+							figure_check_counter = 0;
+							
+							for (unsigned int z=0; z<=4; z++) {
+								if ((j+4<=n-2)&&(i+4<=m-2)&&(Field[0][i][j+z] == 0)&&(Field[0][i+4][j+z] == 0)) {
+									figure_check_counter += 2;
+								}
+							}
+							for (unsigned int t=1; t<=2; t++) {
+								if ((j+4<=n-2)&&(i+4<=m-2)&&(Field[0][i+t][j] == 0)&&(Field[0][i+t][j+4] == 0)) {
+									figure_check_counter += 2;
+								}
+							}
+							if (figure_check_counter == 16) {
+								figure_check_counter = 0;
+								
+								if (Field[0][i+1][j+2] != 0) {
+									for (unsigned int t=1; t<=3; t++) {
+										for (unsigned int z=1; z<=3; z++) {
+											if (((t+z)%2 == 1)&&(Field[0][i+t][j+z] = Field[0][i+1][j+2])) {
+												figure_check_counter += 1;
+											} else if (((t+z)%2 == 0)&&(Field[0][i+t][j+z] == 0)) {
+												figure_check_counter += 1;
+											} else if (((t+z)%2 == 0)&&(Field[0][i+t][j+z] == Field[0][i+1][j+2])) {
+												figure_check_counter += 9;
+											}
+										}
+									}
+									if (figure_check_counter == 6) {	//Flower
+										figure_check_counter = 0;
+										
+										Field[0][i+2][j] = Field[0][i+1][j+2];
+										Field[0][i+2][j+4] = Field[0][i+1][j+2];
+										
+									} else if (figure_check_counter == 49) {	//Black hole
+										for (unsigned int t=1; t<=3; t++) {
+											for (unsigned int z=1; z<=3; z++) {
+												if ((t != 2)&&(z != 2)) {
+													Field[0][i+t][j+z] = 0;
+												}
+											}
+										}
+									}	
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		}
+	}
+	
 }
 
 //Dynamic (gamemode_played)	, done		(just notes following)
@@ -12897,7 +13192,7 @@ unsigned int who_is_out (unsigned int* ges, unsigned int number_of_players, unsi
 // no return into dead, but into undead squares for a period of time,
 // undead squares just reserve the place
 
-// sand (gamemode), go on
+// sand (gamemode), done
 // reach the top, after development: Every square falls down one square,
 // if there is a dead square under.
 
@@ -12905,5 +13200,8 @@ unsigned int who_is_out (unsigned int* ges, unsigned int number_of_players, unsi
 // you can own a square more than once, lose it with the difference of parameters,
 // limited to an amount
 
-// figures (gamemode/option), go on
+// figures (option), go on
 // activate movements though building special figures.
+
+// cards (option), go on
+// get numbers as cards every round, choose one to play.
