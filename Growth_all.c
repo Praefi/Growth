@@ -25,7 +25,7 @@ void show_whose_turn (unsigned int, unsigned int, unsigned int*, unsigned int*);
 void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int);
 void show_options_of_actions (unsigned int, unsigned int*, unsigned int);
 void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
-void show_figures (unsigned int);
+void show_figures ();
 
 unsigned int Vorganger (unsigned int, unsigned int);
 void figure_check (Spielfeld, unsigned int, unsigned int);
@@ -872,6 +872,35 @@ int main (void) {
 						} else if (gamemode_played == Survive) {
 							printf("	Survive is unlimited.\n");
 							
+						} else if (gamemode_played == Sand) {
+							printf("	This only works if the number of players is correct! \n");
+							
+							printf("	limit_new < limit_at_all - 4 	!	\n");
+							printf("	limit_new: 1		limit_at_all: 2		both: 3\n");
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
+							
+							if (lim == 1){
+								
+								printf("	limit_new: 			(normal: 7) \n");
+								limit_new = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_new);
+								
+							}
+							if (lim == 2){
+								
+								printf("	limit_at_all: 			(normal: 14) \n");
+								limit_at_all = get_unsigned_numeric_input_with_not_more_than_2_letters (limit_at_all);
+								
+							}
+							if (lim == 3){
+								
+								printf("	limit_new:				(normal: 7) \n	limit_at_all:				(normal: 14) \n");
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limit_new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limit_at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
+							}
+							if (limit_new >= limit_at_all - 4) {
+								limit_at_all = limit_new + 5;
+							}
 						}
 						
 					}
@@ -1047,6 +1076,8 @@ int main (void) {
 							figures = 0;
 						} else {
 							figures = 1;	//make a selection possible, go on
+							
+							show_figures ();
 						}
 					}
 					
@@ -1729,6 +1760,13 @@ int main (void) {
 						printf("	undead	deactivated \n");
 					} else if (undead_duration != 0) {
 						printf("	undead	  activated \n");
+					}
+					printf("\n");
+					
+					if (figures == 0) {
+						printf("	Figures	deactivated \n");
+					} else if (figures != 0) {
+						printf("	Figures	  activated \n");
 					}
 					printf("\n");
 					
@@ -5616,6 +5654,9 @@ int main (void) {
 				}
 				
 				if (g%(number_of_players*information_code[3]) == 0) {
+					
+					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0);
+					
 					if (information_code[1] == 1) {
 						for (unsigned int i=1; i<=m-2; i++) {
 							for (unsigned int j=1; j<=n-2; j++) {
@@ -5678,6 +5719,9 @@ int main (void) {
 			
 			if (figures != 0) {
 				if (g%number_of_players == 0) {
+					
+					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0);
+					
 					figure_check (Field, m, n);
 				}
 			}
@@ -12902,66 +12946,66 @@ unsigned int who_is_out (unsigned int* ges, unsigned int number_of_players, unsi
 	return player_counter;
 }
 
-void show_figures (unsigned int menuoperator) {	//in order of calculation
+void show_figures () {	//in order of calculation
 	
-	if (menuoperator == 1) {	//enum, go on
+	// if (menuoperator == 1) {	//enum, go on
 		printf("		Seed:	\n");
-		printf("	OOO			OXO	\n");
+		printf("	OOO		OXO	\n");
 		printf("	OXO	--->	XOX	\n");
-		printf("	OOO			OXO	\n");
+		printf("	OOO		OXO	\n");
 		printf("	\n\n");
 		
-	} else if (menuoperator == 2) {	//take steps in 2^x, go on
+	// } else if (menuoperator == 2) {	//take steps in 2^x, go on
 		printf("		Grass:	\n");
-		printf("	OOO			OXO	\n");
-		printf("	OXO			OXO	\n");
+		printf("	OOO		OXO	\n");
+		printf("	OXO		OXO	\n");
 		printf("	OXO	--->	OXO	\n");
-		printf("	OOO			OOO	\n");
+		printf("	OOO		OOO	\n");
 		printf("	\n\n");
 		
-	} else if (menuoperator == 3) {
+	// } else if (menuoperator == 3) {
 		printf("		Windmill:	\n");
-		printf("	OOOO			OOOO			OOOO	\n");
-		printf("	OOXO			OXOO			OOXO	\n");
+		printf("	OOOO		OOOO		OOOO	\n");
+		printf("	OOXO		OXOO		OOXO	\n");
 		printf("	OXOO	--->	OOXO	--->	OXOO	\n");
-		printf("	OOOO			OOOO			OOOO	\n");
+		printf("	OOOO		OOOO		OOOO	\n");
 		printf("	\n\n");
 		
-	} else if (menuoperator == 4) {
+	// } else if (menuoperator == 4) {
 		printf("		Popcorn:	\n");
-		printf("	OOOO			OXXO	\n");
-		printf("	OXXO			XOOX	\n");
+		printf("	OOOO		OXXO	\n");
+		printf("	OXXO		XOOX	\n");
 		printf("	OXXO	--->	XOOX	\n");
-		printf("	OOOO			OXXO	\n");
+		printf("	OOOO		OXXO	\n");
 		printf("	\n\n");
 		
-	} else if (menuoperator == 5) {
+	// } else if (menuoperator == 5) {
 		printf("		Shield:	\n");
-		printf("	OOOOO			OOOOO	\n");
-		printf("	OOXOO			OOXOO	\n");
+		printf("	OOOOO		OOOOO	\n");
+		printf("	OOXOO		OOXOO	\n");
 		printf("	OXOXO	--->	XXOXX	\n");
-		printf("	OOOOO			OOOOO	\n");
+		printf("	OOOOO		OOOOO	\n");
 		printf("	\n\n");
 		
-	} else if (menuoperator == 6) {
+	// } else if (menuoperator == 6) {
 		printf("		Flower:	\n");
-		printf("	OOOOO			OOXOO	\n");
-		printf("	OOXOO			OOXOO	\n");
+		printf("	OOOOO		OOXOO	\n");
+		printf("	OOXOO		OOXOO	\n");
 		printf("	OXOXO	--->	XXOXX	\n");
-		printf("	OOXOO			OOXOO	\n");
-		printf("	OOOOO			OOXOO	\n");
+		printf("	OOXOO		OOXOO	\n");
+		printf("	OOOOO		OOXOO	\n");
 		printf("	\n\n");
 		
-	} else if (menuoperator == 7) {
+	// } else if (menuoperator == 7) {
 		printf("		Black hole:	\n");
-		printf("	OOOOO			OOOOO	\n");
-		printf("	OXXXO			OOOOO	\n");
+		printf("	OOOOO		OOOOO	\n");
+		printf("	OXXXO		OOOOO	\n");
 		printf("	OXXXO	--->	OOXOO	\n");
-		printf("	OXXXO			OOOOO	\n");
-		printf("	OOOOO			OOOOO	\n");
+		printf("	OXXXO		OOOOO	\n");
+		printf("	OOOOO		OOOOO	\n");
 		printf("	\n\n");
 		
-	}
+	// }
 }
 
 void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
@@ -12970,6 +13014,8 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 	
 	for (unsigned int i=1; i<=m-2; i++) {
 		for (unsigned int j=1; j<=n-2; j++) {
+			figure_check_counter = 0;
+			
 			for (unsigned int z=0; z<=2; z++) {
 				if ((j+2<=n-2)&&(i+2<=m-2)&&(Field[0][i][j+z] == 0)&&(Field[0][i+2][j+z] == 0)) {
 					figure_check_counter += 2;
@@ -12984,8 +13030,11 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 				figure_check_counter = 0;
 				
 				if (Field[0][i+1][j+1] != 0) {
-					for (unsigned int t=1; t<=2; t++) {
-						for (unsigned int z=1; z<=2; z++) {
+					
+					printf("	Time for a Seed \n\n");
+					
+					for (unsigned int t=0; t<=2; t++) {
+						for (unsigned int z=0; z<=2; z++) {
 							if ((t+z)%2 == 1) {
 								Field[0][i+t][j+z] = Field[0][i+1][j+1];
 							}
@@ -13010,7 +13059,10 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 					figure_check_counter = 0;
 					
 					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
-						Field[0][i][j+1] = 0;
+						Field[0][i][j+1] = Field[0][i+1][j+1];
+						
+						printf("	Time for Grass \n\n");
+						
 					}
 					
 				} else {
@@ -13044,6 +13096,8 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 							if (figure_check_counter == 8) {	//Windmill#2
 								figure_check_counter = 0;
 								
+								printf("	Time for a Windmill \n\n");
+								
 								for (unsigned int t=2; t>=1; t--) {
 									for (unsigned int z=2; z>=1; z--) {
 										if ((z+t)%2 == 1) {
@@ -13055,6 +13109,8 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 								}
 							} else if (figure_check_counter == 20) {	//Popcorn
 								figure_check_counter = 0;
+								
+								printf("	Time for Popcorn \n\n");
 								
 								for (unsigned int t=1; t<=2; t++) {
 									Field[0][i+t][j] = Field[0][i+1][j+1];
@@ -13074,6 +13130,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 						} else if (Field[0][i+1][j+1] == 0) {	//Windmill#1
 							
 							if ((Field[0][i+1][j+2] != 0)&&(Field[0][i+2][j+1] == Field[0][i+1][j+2])&&(Field[0][i+2][j+2] == 0)) {
+								
+								printf("	Time for a Windmill \n\n");
+								
 								for (unsigned int t=2; t>=1; t--) {
 									for (unsigned int z=1; z<=2; z++) {
 										if ((z+t)%2 == 0) {
@@ -13113,6 +13172,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 									}
 								}
 								if (figure_check_counter == 6) {	//Shield
+									
+									printf("	Time for a Shield \n\n");
+									
 									Field[0][i+2][j] = Field[0][i+1][j+2];
 									Field[0][i+2][j+4] = Field[0][i+1][j+2];
 								}
@@ -13148,10 +13210,15 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 									if (figure_check_counter == 6) {	//Flower
 										figure_check_counter = 0;
 										
+										printf("	Time for a Flower \n\n");
+										
 										Field[0][i+2][j] = Field[0][i+1][j+2];
 										Field[0][i+2][j+4] = Field[0][i+1][j+2];
 										
 									} else if (figure_check_counter == 49) {	//Black hole
+										
+										printf("	Time for a Black hole \n\n");
+										
 										for (unsigned int t=1; t<=3; t++) {
 											for (unsigned int z=1; z<=3; z++) {
 												if ((t != 2)&&(z != 2)) {
