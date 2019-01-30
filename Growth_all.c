@@ -4124,7 +4124,7 @@ int main (void) {
 					} else if (gamemode_played == Sand) {
 						for (unsigned int j=1; j<n-1; j+=1){
 						
-							if (Field[0][2][j] != 0){
+							if ((Field[0][2][j] != 0)&&(Field[0][2][j] <= AOP)){
 								numbers_of_[Field[0][2][j]][0][0] += 1;
 							}
 							
