@@ -1528,7 +1528,7 @@ int main (void) {
 						printf("	Top: 1		Bottom: 2 \n");
 						information_code[1] = get_unsigned_numeric_input_with_not_more_than_1_letter (information_code[1]);
 						
-						if ((information_code[1] == 0)||(information_code[1] >= 2)) {
+						if ((information_code[1] == 0)||(information_code[1] > 2)) {
 							printf("	You missed the assertion(s) !!! \n");
 							information_code[1] = 1;
 						}
@@ -1695,7 +1695,7 @@ int main (void) {
 						printf("	Gravity begins at the: ");
 						if (information_code[1] == 1) {
 							printf("	Top \n");
-						} else if (information_code[1]== 0) {
+						} else if (information_code[1]== 2) {
 							printf("	Bottom \n");
 						}
 						printf("	Speed : %u \n", information_code[2]);
