@@ -28,7 +28,7 @@ void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, u
 void show_figures ();
 
 unsigned int Vorganger (unsigned int, unsigned int);
-void figure_check (Spielfeld, unsigned int, unsigned int);
+void figure_check (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*);
 
 void Spielfeld_Destroy (Spielfeld, unsigned int, unsigned int);
 void unsigned_int_Vektor_Destroy (unsigned int*);
@@ -5722,7 +5722,7 @@ int main (void) {
 					
 					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0);
 					
-					figure_check (Field, m, n);
+					figure_check (Field, m, n, number_of_players, Colored);
 				}
 			}
 			
@@ -13008,7 +13008,7 @@ void show_figures () {	//in order of calculation
 	// }
 }
 
-void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
+void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int number_of_players, unsigned int* Colored) {
 	unsigned int figure_check_counter;
 	figure_check_counter = 0;
 	
@@ -13029,8 +13029,11 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 			if (figure_check_counter == 8) {	//Seed
 				figure_check_counter = 0;
 				
-				if (Field[0][i+1][j+1] != 0) {
+				if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)) {
 					
+					if (Colored[0] == 1) {
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+1]]);
+					}
 					printf("	Time for a Seed \n\n");
 					
 					for (unsigned int t=0; t<=2; t++) {
@@ -13058,13 +13061,15 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 				if (figure_check_counter == 10) {	//Grass
 					figure_check_counter = 0;
 					
-					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
+					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
 						Field[0][i][j+1] = Field[0][i+1][j+1];
 						
+						if (Colored[0] == 1) {
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+1]]);
+						}
 						printf("	Time for Grass \n\n");
 						
 					}
-					
 				} else {
 					figure_check_counter = 0;
 					
@@ -13081,7 +13086,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 					if (figure_check_counter == 12) {
 						figure_check_counter = 0;
 						
-						if (Field[0][i+1][j+1] != 0) {
+						if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)) {
 							for (unsigned int t=1; t<=2; t++) {
 								for (unsigned int z=1; z<=2; z++) {
 									if (((t+z)%2 == 0)&&(Field[0][i+t][j+z] = Field[0][i+1][j+1])) {
@@ -13096,6 +13101,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 							if (figure_check_counter == 8) {	//Windmill#2
 								figure_check_counter = 0;
 								
+								if (Colored[0] == 1) {
+									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+1]]);
+								}
 								printf("	Time for a Windmill \n\n");
 								
 								for (unsigned int t=2; t>=1; t--) {
@@ -13110,6 +13118,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 							} else if (figure_check_counter == 20) {	//Popcorn
 								figure_check_counter = 0;
 								
+								if (Colored[0] == 1) {
+									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+1]]);
+								}
 								printf("	Time for Popcorn \n\n");
 								
 								for (unsigned int t=1; t<=2; t++) {
@@ -13129,8 +13140,11 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 							
 						} else if (Field[0][i+1][j+1] == 0) {	//Windmill#1
 							
-							if ((Field[0][i+1][j+2] != 0)&&(Field[0][i+2][j+1] == Field[0][i+1][j+2])&&(Field[0][i+2][j+2] == 0)) {
+							if ((Field[0][i+1][j+2] != 0)&&(Field[0][i+1][j+2] <= number_of_players)&&(Field[0][i+2][j+1] == Field[0][i+1][j+2])&&(Field[0][i+2][j+2] == 0)) {
 								
+								if (Colored[0] == 1) {
+									SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+2]]);
+								}
 								printf("	Time for a Windmill \n\n");
 								
 								for (unsigned int t=2; t>=1; t--) {
@@ -13161,7 +13175,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 						if (figure_check_counter == 14) {
 							figure_check_counter = 0;
 							
-							if (Field[0][i+1][j+2] != 0) {
+							if ((Field[0][i+1][j+2] != 0)&&(Field[0][i+1][j+2] <= number_of_players)) {
 								for (unsigned int t=1; t<=2; t++) {
 									for (unsigned int z=1; z<=3; z++) {
 										if (((t+z)%2 == 1)&&(Field[0][i+t][j+z] = Field[0][i+1][j+2])) {
@@ -13173,6 +13187,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 								}
 								if (figure_check_counter == 6) {	//Shield
 									
+									if (Colored[0] == 1) {
+										SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+2]]);
+									}
 									printf("	Time for a Shield \n\n");
 									
 									Field[0][i+2][j] = Field[0][i+1][j+2];
@@ -13195,7 +13212,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 							if (figure_check_counter == 16) {
 								figure_check_counter = 0;
 								
-								if (Field[0][i+1][j+2] != 0) {
+								if ((Field[0][i+1][j+2] != 0)&&(Field[0][i+1][j+2] <= number_of_players)) {
 									for (unsigned int t=1; t<=3; t++) {
 										for (unsigned int z=1; z<=3; z++) {
 											if (((t+z)%2 == 1)&&(Field[0][i+t][j+z] = Field[0][i+1][j+2])) {
@@ -13210,6 +13227,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 									if (figure_check_counter == 6) {	//Flower
 										figure_check_counter = 0;
 										
+										if (Colored[0] == 1) {
+											SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+2]]);
+										}
 										printf("	Time for a Flower \n\n");
 										
 										Field[0][i+2][j] = Field[0][i+1][j+2];
@@ -13217,6 +13237,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 										
 									} else if (figure_check_counter == 49) {	//Black hole
 										
+										if (Colored[0] == 1) {
+											SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+1]]);
+										}
 										printf("	Time for a Black hole \n\n");
 										
 										for (unsigned int t=1; t<=3; t++) {
@@ -13235,6 +13258,10 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n) {
 			}
 			
 		}
+	}
+	
+	if (Colored[0] == 1) {
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
 	}
 	
 }
