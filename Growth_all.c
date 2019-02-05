@@ -28,7 +28,7 @@ void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, u
 void show_figures ();
 
 unsigned int Vorganger (unsigned int, unsigned int);
-void figure_check (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*);
+void figure_check (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int);
 
 void Spielfeld_Destroy (Spielfeld, unsigned int, unsigned int);
 void unsigned_int_Vektor_Destroy (unsigned int*);
@@ -76,9 +76,9 @@ unsigned int random_number (unsigned int, unsigned int, unsigned int, unsigned i
 void battle (unsigned int, unsigned int, Spielfeld, unsigned int);
 unsigned int chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
 
-void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld);
+void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
 
-void ahead (Spielfeld, unsigned int, unsigned int);
+void ahead (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
 
 void choose_heart (Spielfeld, unsigned int, unsigned int);
 void heart_ground (unsigned int, unsigned int, Spielfeld, Spielfeld);
@@ -1933,7 +1933,7 @@ int main (void) {
 			}
 			same[68] = undead_duration;
 			same[69] = figures;
-			same[69] = allocation;
+			same[70] = allocation;
 			
 		} else if (same[0] == 1) {
 			same[0] = 0;
@@ -3139,24 +3139,40 @@ int main (void) {
 									if (Field[0][i+2][j] == 0) {
 										Field[0][i+2][j] = Field[0][i+1][j];
 										Field[0][i+1][j] = 0;
+										if (allocation != 0) {
+											Sf_allocation[0][i+2][j] = Sf_allocation[0][i+1][j];
+											Sf_allocation[0][i+1][j] = 0;
+										}
 									}
 								}
 								if ((Field[0][i-1][j] != 0)&&(Field[0][i-1][j] != geben)&&((i-2) >= 1)) {
 									if (Field[0][i-2][j] == 0) {
 										Field[0][i-2][j] = Field[0][i-1][j];
 										Field[0][i-1][j] = 0;
+										if (allocation != 0) {
+											Sf_allocation[0][i-2][j] = Sf_allocation[0][i-1][j];
+											Sf_allocation[0][i-1][j] = 0;
+										}
 									}
 								}
 								if ((Field[0][i][j-1] != 0)&&(Field[0][i][j-1] != geben)&&((j-2) >= 1)) {
 									if (Field[0][i][j-2] == 0) {
 										Field[0][i][j-2] = Field[0][i][j-1];
 										Field[0][i][j-1] = 0;
+										if (allocation != 0) {
+											Sf_allocation[0][i][j-2] = Sf_allocation[0][i][j-1];
+											Sf_allocation[0][i][j-1] = 0;
+										}
 									}
 								}
 								if ((Field[0][i][j+1] != 0)&&(Field[0][i][j+1] != geben)&&((j+2) <= (n-2))) {
 									if (Field[0][i][j+2] == 0) {
 										Field[0][i][j+2] = Field[0][i][j+1];
 										Field[0][i][j+1] = 0;
+										if (allocation != 0) {
+											Sf_allocation[0][i][j+2] = Sf_allocation[0][i][j+1];
+											Sf_allocation[0][i][j+1] = 0;
+										}
 									}
 								}
 							}
@@ -4050,7 +4066,7 @@ int main (void) {
 					ent = 0;
 					
 					if (gamemode_played == Fall) {
-						touch (Field, m, n, geben, Sf_nl_);
+						touch (Field, m, n, geben, Sf_nl_, Sf_allocation, allocation);
 					}
 					
 					change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation); 	//Change setzt auf null
@@ -4179,7 +4195,7 @@ int main (void) {
 									numbers_of_[geben][0][0] += 1;
 									Field[0][((m-1)/2)][j] = geben;
 									if (allocation != 0) {
-										Sf_allocation[0][((m-1)/2)][j] = 0;
+										Sf_allocation[0][((m-1)/2)][j] = 1;
 									}
 								}
 							}
@@ -4372,18 +4388,31 @@ int main (void) {
 												while ((Field[0][i+1][j] != 0)&&((i+1)<=(m-2))){
 													if ((i+1)<=(m-2)){
 														Field[0][mem][j] = Field[0][i+1][j];
+														if (allocation != 0) {
+															Sf_allocation[0][mem][j] = Sf_allocation[0][i+1][j];
+														}
 													}
 													
 													if (i == mem) {
 														
 														if ((Field[0][mem+2][j] == 0)&&((mem+2)<=(m-2))) {
 															Field[0][mem+2][j] = Field[0][mem][j];
+															if (allocation != 0) {
+																Sf_allocation[0][mem+2][j] = Sf_allocation[0][mem][j];
+															}
 															break;
 														} else if ((Field[0][mem+2][j] != 0)&&((mem+2)<=(m-2))) {
 															Field[0][mem+1][j] = Field[0][mem+2][j];
 															Field[0][mem+2][j] = Field[0][mem][j];
+															if (allocation != 0) {
+																Sf_allocation[0][mem+1][j] = Sf_allocation[0][mem+2][j];
+																Sf_allocation[0][mem+2][j] = Sf_allocation[0][mem][j];
+															}
 															if ((Field[0][mem+3][j] == 0)&&((mem+3)<=(m-2))) {
 																Field[0][mem+3][j] = Field[0][mem+1][j];
+																if (allocation != 0) {
+																	Sf_allocation[0][mem+3][j] = Sf_allocation[0][mem+1][j];
+																}
 															}
 														}
 														
@@ -4393,29 +4422,50 @@ int main (void) {
 														i += 1;
 														
 														Field[0][i][j] = Field[0][mem+1][j];
+														if (allocation != 0) {
+															Sf_allocation[0][i][j] = Sf_allocation[0][mem+1][j];
+														}
 														
 														if ((Field[0][i+1][j] == 0)&&((i+1)<=(m-2))){
 															Field[0][i+1][j] = Field[0][mem][j];
+															if (allocation != 0) {
+																Sf_allocation[0][i+1][j] = Sf_allocation[0][mem][j];
+															}
 															break;
 														}
 														Field[0][mem+1][j] = Field[0][mem][j];
+														if (allocation != 0) {
+															Sf_allocation[0][mem+1][j] = Sf_allocation[0][mem][j];
+														}
 														
 													}
 												}
 												i = mem;
 												Field[0][i][j] = 0;
+												if (allocation != 0) {
+													Sf_allocation[0][i][j] = 0;
+												}
 												if (i < (m-2)) {
 													Field[0][i+1][j] = 7;
+													if (allocation != 0) {
+														Sf_allocation[0][i+1][j] = 0;
+													}
 												}
 												
 											} else if (rain == 2){
 												Field[0][i+1][j] = 7;
 												Field[0][i][j] = 0;
+												if (allocation != 0) {
+													Sf_allocation[0][i+1][j] = 0;
+												}
 											} else if (rain == 31){
 												for (unsigned int h=i; h<=i+2; h+=1){
 													for (unsigned int k=j-1; k<=j+1; k+=1){
 														if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
 															Field[0][h][k] = 0;
+															if (allocation != 0) {
+																Sf_allocation[0][h][k] = 0;
+															}
 														}
 													}
 												}
@@ -4425,20 +4475,36 @@ int main (void) {
 														if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
 															if (Field[0][h][k] == 7){
 																Field[0][h][k] = geben;
+																if (allocation != 0) {
+																	Sf_allocation[0][h][k] = 1;
+																}
 															} else {
 																Field[0][h][k] = 0;
+																if (allocation != 0) {
+																	Sf_allocation[0][h][k] = 0;
+																}
 															}
 														}
 													}
 												}
 												Field[0][i][j] = 0;
 												Field[0][i+1][j] = geben;
+												if (allocation != 0) {
+													Sf_allocation[0][i][j] = Sf_allocation[0][i+1][j];
+													Sf_allocation[0][i+1][j] = 0;
+												}
 											} else if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i+1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
 													Field[0][i][j] = geben;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j] = 1;
+													}
 												} else {
 													if (i != (m-2)){
 														Field[0][i+1][j] = 7;
+														if (allocation != 0) {
+															Sf_allocation[0][i+1][j] = 0;
+														}
 													}
 													Field[0][i][j] = 0;									
 												}
@@ -4447,39 +4513,70 @@ int main (void) {
 												if (Field[0][i+1][j] == geben){
 													Field[0][i-1][j] = geben;
 													Field[0][i+1][j] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i-1][j] = Sf_allocation[0][i+1][j];
+														Sf_allocation[0][i+1][j] = 0;
+													}
 												} else if (Field[0][i][j-1] == geben){
 													Field[0][i][j+1] = geben;
 													Field[0][i][j-1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j+1] = Sf_allocation[0][i][j-1];
+														Sf_allocation[0][i][j-1] = 0;
+													}
 												} else if ((Field[0][i][j+1] == geben) && (((Field[0][i][j+2] != 7) || (Field[0][i+1][j+2] != geben)) && (Field[0][i-1][j+1] != 7))){
 													Field[0][i][j-1] = geben;
 													Field[0][i][j+1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j-1] = Sf_allocation[0][i][j+1];
+														Sf_allocation[0][i][j+1] = 0;
+													}
 												} else if ((Field[0][i-1][j] == geben) && (Field[0][i-2][j] != 7) && (Field[0][i-1][j-1] != 7)){   
 													Field[0][i+1][j] = geben;
 													Field[0][i-1][j] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i+1][j] = Sf_allocation[0][i-1][j];
+														Sf_allocation[0][i-1][j] = 0;
+													}
 												}
 												Field[0][i+1][j] = 7;
 												Field[0][i][j] = 0;
+												if (allocation != 0) {
+													Sf_allocation[0][i+1][j] = 0;
+												}
 											}
 										} else {
 											
 											if (rain == 5){
-												if (Field[0][i+1][j] == geben){
-													Field[0][i-1][j] = geben;
-													Field[0][i+1][j] = 0;
-												} else if (Field[0][i][j-1] == geben){
+												if (Field[0][i][j-1] == geben){
 													Field[0][i][j+1] = geben;
 													Field[0][i][j-1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j+1] = Sf_allocation[0][i][j-1];
+														Sf_allocation[0][i][j-1] = 0;
+													}
 												} else if ((Field[0][i][j+1] == geben) && (((Field[0][i][j+2] != 7) || (Field[0][i+1][j+2] != geben)) && (Field[0][i-1][j+1] != 7))){
 													Field[0][i][j-1] = geben;
 													Field[0][i][j+1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j-1] = Sf_allocation[0][i][j+1];
+														Sf_allocation[0][i][j+1] = 0;
+													}
 												} else if ((Field[0][i-1][j] == geben) && (Field[0][i-2][j] != 7) && (Field[0][i-1][j-1] != 7)){   
 													Field[0][i+1][j] = geben;
 													Field[0][i-1][j] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i+1][j] = Sf_allocation[0][i-1][j];
+														Sf_allocation[0][i-1][j] = 0;
+													}
 												}
 											}
 											if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i+1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
 													Field[0][i][j] = geben;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j] = 1;
+													}
 												} else {
 													if (i != (m-2)){
 														Field[0][i+1][j] = 7;
@@ -4498,24 +4595,40 @@ int main (void) {
 							}
 							if (rain_drops == 1){
 								Field[0][1][number_rain] = 7;
+								if (allocation != 0) {
+									Sf_allocation[0][1][number_rain] = 0;
+								}
 							} else if (rain_drops == 2){
 								Field[0][1][number_rain] = 7;
 								Field[0][1][((n-1)/2)-number_rain] = 7;
+								if (allocation != 0) {
+									Sf_allocation[0][1][number_rain] = 0;
+									Sf_allocation[0][1][((n-1)/2)-number_rain] = 0;
+								}
 							} else if (rain_drops == 4){
 								for (unsigned int s=0; s<(n-1)/2; s+=1){
 									if ((s != number_rain)&&(s != ((n-1)/2)-number_rain)){
 										Field[0][1][s] = 7;
+										if (allocation != 0) {
+											Sf_allocation[0][1][s] = 0;
+										}
 									}
 								}
 							} else if (rain_drops == 5){
 								for (unsigned int s=0; s<(n-1)/2; s+=1){
 									if (s != number_rain){
 										Field[0][1][s] = 7;
+										if (allocation != 0) {
+											Sf_allocation[0][1][s] = 0;
+										}
 									}
 								}
 							} else if (rain_drops == 6){
 								for (unsigned int s=0; s<(n-1)/2; s+=1){
 									Field[0][1][s] = 7;
+									if (allocation != 0) {
+										Sf_allocation[0][1][s] = 0;
+									}
 								}
 							}
 							
@@ -4531,18 +4644,31 @@ int main (void) {
 												while ((Field[0][i+1][j] != 0)&&((i+1)<=(m-2))){
 													if ((i+1)<=(m-2)){
 														Field[0][mem][j] = Field[0][i+1][j];
+														if (allocation != 0) {
+															Sf_allocation[0][mem][j] = Sf_allocation[0][i+1][j];
+														}
 													}
 													
 													if (i == mem) {
 														
 														if ((Field[0][mem+2][j] == 0)&&((mem+2)<=(m-2))) {
 															Field[0][mem+2][j] = Field[0][mem][j];
+															if (allocation != 0) {
+																Sf_allocation[0][mem+2][j] = Sf_allocation[0][mem][j];
+															}
 															break;
 														} else if ((Field[0][mem+2][j] != 0)&&((mem+2)<=(m-2))) {
 															Field[0][mem+1][j] = Field[0][mem+2][j];
 															Field[0][mem+2][j] = Field[0][mem][j];
+															if (allocation != 0) {
+																Sf_allocation[0][mem+1][j] = Sf_allocation[0][mem+2][j];
+																Sf_allocation[0][mem+2][j] = Sf_allocation[0][mem][j];
+															}
 															if ((Field[0][mem+3][j] == 0)&&((mem+3)<=(m-2))) {
 																Field[0][mem+3][j] = Field[0][mem+1][j];
+																if (allocation != 0) {
+																	Sf_allocation[0][mem+3][j] = Sf_allocation[0][mem+1][j];
+																}
 															}
 														}
 														
@@ -4552,28 +4678,49 @@ int main (void) {
 														i += 1;
 														
 														Field[0][i][j] = Field[0][mem+1][j];
+														if (allocation != 0) {
+															Sf_allocation[0][i][j] = Sf_allocation[0][mem+1][j];
+														}
 														
 														if ((Field[0][i+1][j] == 0)&&((i+1)<=(m-2))){
 															Field[0][i+1][j] = Field[0][mem][j];
+															if (allocation != 0) {
+																Sf_allocation[0][i+1][j] = Sf_allocation[0][mem][j];
+															}
 															break;
 														}
 														Field[0][mem+1][j] = Field[0][mem][j];
+														if (allocation != 0) {
+															Sf_allocation[0][mem+1][j] = Sf_allocation[0][mem][j];
+														}
 														
 													}
 												}
 												i = mem;
 												Field[0][i][j] = 0;
+												if (allocation != 0) {
+													Sf_allocation[0][i][j] = 0;
+												}
 												if (i < (m-2)) {
 													Field[0][i+1][j] = 7;
+													if (allocation != 0) {
+														Sf_allocation[0][i+1][j] = 0;
+													}
 												}
 											} else if (rain == 2){
 												Field[0][i+1][j] = 7;
 												Field[0][i][j] = 0;
+												if (allocation != 0) {
+													Sf_allocation[0][i+1][j] = 0;
+												}
 											} else if (rain == 31){
 												for (unsigned int h=i; h<=i+2; h+=1){
 													for (unsigned int k=j-1; k<=j+1; k+=1){
 														if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
 															Field[0][h][k] = 0;
+															if (allocation != 0) {
+																Sf_allocation[0][h][k] = 0;
+															}
 														}
 													}
 												}
@@ -4583,58 +4730,108 @@ int main (void) {
 														if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
 															if (Field[0][h][k] == 7){
 																Field[0][h][k] = geben;
+																if (allocation != 0) {
+																	Sf_allocation[0][h][k] = 1;
+																}
 															} else {
 																Field[0][h][k] = 0;
+																if (allocation != 0) {
+																	Sf_allocation[0][h][k] = 0;
+																}
 															}
 														}
 													}
 												}
 												Field[0][i][j] = 0;
 												Field[0][i+1][j] = geben;
+												if (allocation != 0) {
+													Sf_allocation[0][i][j] = Sf_allocation[0][i+1][j];
+													Sf_allocation[0][i+1][j] = 0;
+												}
 											} else if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i+1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
 													Field[0][i][j] = geben;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j] = 1;
+													}
 												} else {
 													if (i != (m-2)){
 														Field[0][i+1][j] = 7;
+														if (allocation != 0) {
+															Sf_allocation[0][i+1][j] = 0;
+														}
 													}
 													Field[0][i][j] = 0;									
 												}
 											} else if (rain == 5){
 												if (Field[0][i+1][j] == geben){
 													Field[0][i-1][j] = geben;
-													Field[0][i+1][j] = 0;						
+													Field[0][i+1][j] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i-1][j] = Sf_allocation[0][i+1][j];
+														Sf_allocation[0][i+1][j] = 0;
+													}					
 												} else if (Field[0][i][j+1] == geben){
 													Field[0][i][j-1] = geben;
-													Field[0][i][j+1] = 0;	
+													Field[0][i][j+1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j-1] = Sf_allocation[0][i][j+1];
+														Sf_allocation[0][i][j+1] = 0;
+													}	
 												} else if ((Field[0][i][j-1] == geben) && ((Field[0][i][j-2] != 7)||(Field[0][i+1][j-2] != geben)) &&(Field[0][i-1][j-1] != 7)){
 													Field[0][i][j+1] = geben;
 													Field[0][i][j-1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j+1] = Sf_allocation[0][i][j-1];
+														Sf_allocation[0][i][j-1] = 0;
+													}
 												} else if ((Field[0][i-1][j] == geben) && (Field[0][i-2][j] != 7) && (Field[0][i-1][j+1] != 7)){
 													Field[0][i+1][j] = geben;
 													Field[0][i-1][j] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i+1][j] = Sf_allocation[0][i-1][j];
+														Sf_allocation[0][i-1][j] = 0;
+													}
 												}
 												Field[0][i+1][j] = 7;
 												Field[0][i][j] = 0;
+												if (allocation != 0) {
+													Sf_allocation[0][i+1][j] = 0;
+												}
 											}
 										} else {
 											
 											if (rain == 5){
 												 if (Field[0][i][j+1] == geben){
 													Field[0][i][j-1] = geben;
-													Field[0][i][j+1] = 0;	
+													Field[0][i][j+1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j-1] = Sf_allocation[0][i][j+1];
+														Sf_allocation[0][i][j+1] = 0;
+													}
 												} else if ((Field[0][i][j-1] == geben) && ((Field[0][i][j-2] != 7)||(Field[0][i+1][j-2] != geben)) &&(Field[0][i-1][j-1] != 7)){
 													Field[0][i][j+1] = geben;
 													Field[0][i][j-1] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j+1] = Sf_allocation[0][i][j-1];
+														Sf_allocation[0][i][j-1] = 0;
+													}
 												} else if ((Field[0][i-1][j] == geben) && (Field[0][i-2][j] != 7) && (Field[0][i-1][j+1] != 7)){
 													Field[0][i+1][j] = geben;
 													Field[0][i-1][j] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i+1][j] = Sf_allocation[0][i-1][j];
+														Sf_allocation[0][i-1][j] = 0;
+													}
 												}
 											}
 											
 											if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
 													Field[0][i][j] = geben;
+													if (allocation != 0) {
+														Sf_allocation[0][i][j] = 1;
+													}
 												} else {
 													if (i != (m-2)){
 														Field[0][i+1][j] = 7;
@@ -4653,24 +4850,40 @@ int main (void) {
 							}
 							if (rain_drops == 1){
 								Field[0][1][n-(1+number_rain)] = 7;
+								if (allocation != 0) {
+									Sf_allocation[0][1][n-(1+number_rain)] = 0;
+								}
 							} else if (rain_drops == 2){
 								Field[0][1][n-(1+number_rain)] = 7;
 								Field[0][1][((n-1)/2)+number_rain] = 7;
+								if (allocation != 0) {
+									Sf_allocation[0][1][n-(1+number_rain)] = 0;
+									Sf_allocation[0][1][((n-1)/2)+number_rain] = 0;
+								}
 							} else if (rain_drops == 4){
 								for (unsigned int s=(n+1)/2; s<(n-1); s+=1){
 									if ((s != (n-(1+number_rain)))&&(s != (((n-1)/2)+number_rain))){
 										Field[0][1][s] = 7;
+										if (allocation != 0) {
+											Sf_allocation[0][1][s] = 0;
+										}
 									}
 								}
 							} else if (rain_drops == 5){
 								for (unsigned int s=(n+1)/2; s<(n-1); s+=1){
 									if (s != (n-(1+number_rain))){
 										Field[0][1][s] = 7;
+										if (allocation != 0) {
+											Sf_allocation[0][1][s] = 0;
+										}
 									}
 								}
 							} else if (rain_drops == 6){
 								for (unsigned int s=(n+1)/2; s<(n-1); s+=1){
 									Field[0][1][s] = 7;
+									if (allocation != 0) {
+										Sf_allocation[0][1][s] = 0;
+									}
 								}
 							}
 							
@@ -4776,6 +4989,11 @@ int main (void) {
 									
 									Field[0][i][j] = Field_journey[0][i][j];
 									Field_journey[0][i][j] = 0;
+									if (allocation != 0) {
+										if ((Field[0][i][j] != 0)&&(Field[0][i][j] <= number_of_players)) {
+											Sf_allocation[0][i][j] = 1;
+										}
+									}
 									
 								} else if (Field[0][i][j] == 7) {
 									Field_journey[0][i][j] = 0;
@@ -4797,6 +5015,11 @@ int main (void) {
 							for (unsigned int j=1; j<n-1; j+=1){
 								Field[0][i][j] = Field_journey[0][i][j];
 								Field_journey[0][i][j] = 0;
+								if (allocation != 0) {
+									if ((Field[0][i][j] != 0)&&(Field[0][i][j] <= number_of_players)) {
+										Sf_allocation[0][i][j] = 1;
+									}
+								}
 							}
 						}
 						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -4818,6 +5041,11 @@ int main (void) {
 									
 									Field[0][i][j+1] = Field_journey[0][i][j];
 									Field_journey[0][i][j] = 0;
+									if (allocation != 0) {
+										if ((Field[0][i][j] != 0)&&(Field[0][i][j] <= number_of_players)) {
+											Sf_allocation[0][i][j] = 1;
+										}
+									}
 									
 								} else if (Field[0][i][j] == 7) {
 									Field_journey[0][i][j] = 0;
@@ -4847,7 +5075,7 @@ int main (void) {
 					printf("	It moved forward! \n");
 					printf("\n");
 					printf("\n");
-					ahead (Field, m, count_freq);
+					ahead (Field, m, count_freq, Sf_allocation, allocation);
 					
 					if (opague >= 1) {
 						show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -5506,6 +5734,11 @@ int main (void) {
 							for (unsigned int j=1; j<n-1; j+=1){
 								Field[0][i][j] = Field_journey[0][i][j];
 								Field_journey[0][i][j] = 0;
+								if (allocation != 0) {
+									if ((Field[0][i][j] != 0)&&(Field[0][i][j] <= number_of_players)) {
+										Sf_allocation[0][i][j] = 1;
+									}
+								}
 							}
 						}
 						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -5526,6 +5759,11 @@ int main (void) {
 								if (Field[0][i][j] != 77) {
 									Field[0][i][j] = Field_journey[0][i][j];
 									Field_journey[0][i][j] = 0;
+									if (allocation != 0) {
+										if ((Field[0][i][j] != 0)&&(Field[0][i][j] <= number_of_players)) {
+											Sf_allocation[0][i][j] = 1;
+										}
+									}
 								} else {
 									Field[0][i][j] = 77;
 								}
@@ -5735,6 +5973,10 @@ int main (void) {
 									if ((Field[0][i+lim][j] != 0)&&(i+lim+1 != m-1)&&(Field[0][i+lim+1][j] == 0)) {
 										Field[0][i+lim+1][j] = Field[0][i+lim][j];
 										Field[0][i+lim][j] = 0;
+										if (allocation != 0) {
+											Sf_allocation[0][i+lim+1][j] = Sf_allocation[0][i+lim][j];
+											Sf_allocation[0][i+lim][j] = 0;
+										}
 									}
 									lim += 1;
 								}
@@ -5749,6 +5991,10 @@ int main (void) {
 									if ((Field[0][i+lim][j] != 0)&&(i+lim+1 != m-1)&&(Field[0][i+lim+1][j] == 0)) {
 										Field[0][i+lim+1][j] = Field[0][i+lim][j];
 										Field[0][i+lim][j] = 0;
+										if (allocation != 0) {
+											Sf_allocation[0][i+lim+1][j] = Sf_allocation[0][i+lim][j];
+											Sf_allocation[0][i+lim][j] = 0;
+										}
 									}
 									lim += 1;
 								}
@@ -5792,7 +6038,7 @@ int main (void) {
 					
 					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					
-					figure_check (Field, m, n, number_of_players, Colored);
+					figure_check (Field, m, n, number_of_players, Colored, Sf_allocation, allocation);
 				}
 			}
 			
@@ -6016,6 +6262,14 @@ int main (void) {
 		// printf("	\n ");
 		// scanf("%u", &pause);	//test
 		// printf("	#line 6k, 11\n");	//test
+		
+		Spielfeld_Destroy (Sf_allocation, m, number_of_players);
+		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		// printf("	\n ");
+		// scanf("%u", &pause);	//test
+		// printf("	#line 6k, 12\n");	//test
 	}
 	
 	return 0;
@@ -7830,8 +8084,13 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 						if (Sf_allocation[0][i][j] == 0) {
 							Field[0][i][j] = 0;
 							
+							if ((gamemode_played == Ulcer)&&(ges[geben%number_of_players+1] != 1010*geben)) {
+								Field[0][i][j] = geben%number_of_players+1;
+								Sf_allocation[0][i][j] = 1;
+							}
 							if (undead != 0) {
 								Field[0][i][j] = undead_duration*10000;
+								Sf_allocation[0][i][j] = 0;
 							}
 						}
 						
@@ -7864,6 +8123,9 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 				Field[0][i][j]-=10000;
 				if ((Field[0][i][j] == 0)&&(gamemode_played == Ulcer)) {
 					Field[0][i][j] = geben%number_of_players+1;
+					if (allocation != 0) {
+						Sf_allocation[0][i][j] = 1;
+					}
 				}
 			}
 		}
@@ -8487,26 +8749,42 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 		for (unsigned int h=1; h<=(m-2); h+=1){
 			for (unsigned int k=1; k<=(n-2); k+=1){
 				
-				if (((Field[0][h][k]==11)||(Field[0][h][k]==1))&&(gamemode_played == Hunt)&&(geben == 1)) {
+				if (Field[0][h][k]==11) {
 					if ((Field[0][h-1][k]==0)&&((h-1)>=1)){
 						b = 1;
 						Field[0][h-1][k] = 1;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h-1][k] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					} else if ((Field[0][h][k-1]==0)&&((k-1)>=1)){
 						b = 1;
 						Field[0][h][k-1] = 1;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h][k-1] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					} else if ((Field[0][h][k+1]==0)&&((k+1)<=(n-2))){
 						b = 1;
 						Field[0][h][k+1] = 1;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h][k+1] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					} else if ((Field[0][h+1][k]==0)&&((h+1)<=(m-2))){
 						b = 1;
 						Field[0][h+1][k] = 1;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h+1][k] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					}
 				} else if (Field[0][h][k] == geben){
@@ -8514,21 +8792,37 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 						b = 1;
 						Field[0][h-1][k] = geben;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h-1][k] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					} else if ((Field[0][h][k-1]==0)&&((k-1)>=1)){
 						b = 1;
 						Field[0][h][k-1] = geben;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h][k-1] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					} else if ((Field[0][h][k+1]==0)&&((k+1)<=(n-2))){
 						b = 1;
 						Field[0][h][k+1] = geben;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h][k+1] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					} else if ((Field[0][h+1][k]==0)&&((h+1)<=(m-2))){
 						b = 1;
 						Field[0][h+1][k] = geben;
 						Field[0][h][k] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][h+1][k] = Sf_allocation[0][h][k];
+							Sf_allocation[0][h][k] = 0;
+						}
 						break;
 					}
 				}
@@ -8602,6 +8896,10 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 							} else {
 								Field[0][Zeile_neu][Spalte_neu] = 1;
 								Field[0][Zeile_alt][Spalte_alt] = 0;
+								if (allocation != 0) {
+									Sf_allocation[0][Zeile_neu][Spalte_neu] = Sf_allocation[0][Zeile_alt][Spalte_alt];
+									Sf_allocation[0][Zeile_alt][Spalte_alt] = 0;
+								}
 							}
 						} else if (Field[0][Zeile_alt][Spalte_alt] == 11) {
 							temp_move[0][Zeile_alt][Spalte_alt] = 11;
@@ -8618,6 +8916,10 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 							} else {
 								Field[0][Zeile_neu][Spalte_neu] = 11;
 								Field[0][Zeile_alt][Spalte_alt] = 0;
+								if (allocation != 0) {
+									Sf_allocation[0][Zeile_neu][Spalte_neu] = Sf_allocation[0][Zeile_alt][Spalte_alt];
+									Sf_allocation[0][Zeile_alt][Spalte_alt] = 0;
+								}
 							}
 						}
 					}
@@ -8663,6 +8965,10 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 							} else {
 								Field[0][Zeile_neu][Spalte_neu] = geben;
 								Field[0][Zeile_alt][Spalte_alt] = 0;
+								if (allocation != 0) {
+									Sf_allocation[0][Zeile_neu][Spalte_neu] = Sf_allocation[0][Zeile_alt][Spalte_alt];
+									Sf_allocation[0][Zeile_alt][Spalte_alt] = 0;
+								}
 							}
 						}
 						
@@ -10506,7 +10812,7 @@ unsigned int random_number (unsigned int num_1, unsigned int num_2, unsigned int
 	return new_number;
 }
 
-void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf_nl_){
+void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf_nl_, Spielfeld Sf_allocation, unsigned int allocation){
 	unsigned int einmal;
 	einmal = 0;
 	for (unsigned int i=1; i<m-1; i+=1){
@@ -10519,29 +10825,53 @@ void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben,
 					if (((Sf_nl_[geben][i][j-1] == 1) || (Field[0][i][j-1] == 1))&&(j != (n-2))){
 						Field[0][i][j+1] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i][j+1] = 0;
+						}
 					} else if (((Sf_nl_[geben][i+1][j] == 1)  || (Field[0][i+1][j] == 1))&&(i != 1)){
 						Field[0][i-1][j] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i-1][j] = 0;
+						}
 					} else if (((Sf_nl_[geben][i-1][j] == 1) || (Field[0][i-1][j] == 1))&&(i != (m-2))){
 						Field[0][i+1][j] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i+1][j] = 0;
+						}
 					} else if (((Sf_nl_[geben][i][j+1] == 1) || (Field[0][i][j+1] == 1))&&(j != 1)){
 						Field[0][i][j-1] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i][j-1] = 0;
+						}
 					}
 				} else if (geben == 2){
 					if (((Sf_nl_[geben][i][j+1] == 2) || (Field[0][i][j+1] == 2))&&(j != 1)){
 						Field[0][i][j-1] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i][j-1] = 0;
+						}
 					} else if (((Sf_nl_[geben][i+1][j] == 2) || (Field[0][i+1][j] == 2))&&(i != 1)){
 						Field[0][i-1][j] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i-1][j] = 0;
+						}
 					} else if (((Sf_nl_[geben][i-1][j] == 2) || (Field[0][i-1][j] == 2))&&(i != (m-2))){
 						Field[0][i+1][j] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i+1][j] = 0;
+						}
 					} else if (((Sf_nl_[geben][i][j-1] == 2) || (Field[0][i][j-1] == 2))&&(j != (n-2))){
 						Field[0][i][j+1] = 7;
 						Field[0][i][j] = 0;
+						if (allocation != 0) {
+							Sf_allocation[0][i][j+1] = 0;
+						}
 					}
 				}
 				einmal = 1;
@@ -10561,13 +10891,16 @@ void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben,
 	
 }
 
-void ahead (Spielfeld Field, unsigned int m, unsigned int count_freq){
+void ahead (Spielfeld Field, unsigned int m, unsigned int count_freq, Spielfeld Sf_allocation, unsigned int allocation){
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<count_freq; j+=1){
 			if (Field[0][i][j] == 7){
 				Field[0][i][j] = 0;
 				Field[0][i][j+1] = 7;
+				if (allocation != 0) {
+					Sf_allocation[0][i][j] = 0;
+				}
 			}
 		}
 	}
@@ -13257,7 +13590,7 @@ void show_figures () {	//in order of calculation
 	// }
 }
 
-void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int number_of_players, unsigned int* Colored) {
+void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int number_of_players, unsigned int* Colored, Spielfeld Sf_allocation, unsigned int allocation) {
 	unsigned int figure_check_counter;
 	figure_check_counter = 0;
 	
@@ -13289,10 +13622,16 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 						for (unsigned int z=0; z<=2; z++) {
 							if ((t+z)%2 == 1) {
 								Field[0][i+t][j+z] = Field[0][i+1][j+1];
+								if (allocation != 0) {
+									Sf_allocation[0][i+t][j+z] = 1;
+								}
 							}
 						}
 					}
 					Field[0][i+1][j+1] = 0;
+					if (allocation != 0) {
+						Sf_allocation[0][i+1][j+1] = 0;
+					}
 				}
 			} else {
 				figure_check_counter = 0;
@@ -13312,6 +13651,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 					
 					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
 						Field[0][i][j+1] = Field[0][i+1][j+1];
+						if (allocation != 0) {
+							Sf_allocation[0][i][j+1] = 1;
+						}
 						
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+1]]);
@@ -13359,8 +13701,14 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 									for (unsigned int z=2; z>=1; z--) {
 										if ((z+t)%2 == 1) {
 											Field[0][i+t][j+z] = Field[0][i+1][j+1];
+											if (allocation != 0) {
+												Sf_allocation[0][i+t][j+z] = 1;
+											}
 										} else if ((z+t)%2 == 0) {
 											Field[0][i+t][j+z] = 0;
+											if (allocation != 0) {
+												Sf_allocation[0][i+t][j+z] = 0;
+											}
 										}
 									}
 								}
@@ -13375,14 +13723,25 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 								for (unsigned int t=1; t<=2; t++) {
 									Field[0][i+t][j] = Field[0][i+1][j+1];
 									Field[0][i+t][j+3] = Field[0][i+1][j+1];
+									if (allocation != 0) {
+										Sf_allocation[0][i+t][j] = 1;
+										Sf_allocation[0][i+t][j+3] = 1;
+									}
 								}
 								for (unsigned int z=1; z<=2; z++) {
 									Field[0][i][j+z] = Field[0][i+1][j+1];
 									Field[0][i+3][j+z] = Field[0][i+1][j+1];
+									if (allocation != 0) {
+										Sf_allocation[0][i][j+z] = 1;
+										Sf_allocation[0][i+3][j+z] = 1;
+									}
 								}
 								for (unsigned int t=2; t>=1; t--) {
 									for (unsigned int z=2; z>=1; z--) {
 										Field[0][i+t][j+z] = 0;
+										if (allocation != 0) {
+											Sf_allocation[0][i+t][j+z] = 0;
+										}
 									}
 								}
 							}
@@ -13400,8 +13759,14 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 									for (unsigned int z=1; z<=2; z++) {
 										if ((z+t)%2 == 0) {
 											Field[0][i+t][j+z] = Field[0][i+1][j+2];
+											if (allocation != 0) {
+												Sf_allocation[0][i+t][j+z] = 1;
+											}
 										} else if ((z+t)%2 == 1) {
 											Field[0][i+t][j+z] = 0;
+											if (allocation != 0) {
+												Sf_allocation[0][i+t][j+z] = 0;
+											}
 										}
 									}
 								}
@@ -13443,6 +13808,10 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 									
 									Field[0][i+2][j] = Field[0][i+1][j+2];
 									Field[0][i+2][j+4] = Field[0][i+1][j+2];
+									if (allocation != 0) {
+										Sf_allocation[0][i+2][j] = 1;
+										Sf_allocation[0][i+2][j+4] = 1;
+									}
 								}
 							}
 						} else {
@@ -13453,7 +13822,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 									figure_check_counter += 2;
 								}
 							}
-							for (unsigned int t=1; t<=2; t++) {
+							for (unsigned int t=1; t<=3; t++) {
 								if ((j+4<=n-2)&&(i+4<=m-2)&&(Field[0][i+t][j] == 0)&&(Field[0][i+t][j+4] == 0)) {
 									figure_check_counter += 2;
 								}
@@ -13473,7 +13842,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 											}
 										}
 									}
-									if (figure_check_counter == 6) {	//Flower
+									if (figure_check_counter == 9) {	//Flower
 										figure_check_counter = 0;
 										
 										if (Colored[0] == 1) {
@@ -13483,6 +13852,17 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 										
 										Field[0][i+2][j] = Field[0][i+1][j+2];
 										Field[0][i+2][j+4] = Field[0][i+1][j+2];
+										if (allocation != 0) {
+											Sf_allocation[0][i+2][j] = 1;
+											Sf_allocation[0][i+2][j+4] = 1;
+										}
+										
+										Field[0][i][j+2] = Field[0][i+1][j+2];
+										Field[0][i+4][j+2] = Field[0][i+1][j+2];
+										if (allocation != 0) {
+											Sf_allocation[0][i][j+2] = 1;
+											Sf_allocation[0][i+4][j+2] = 1;
+										}
 										
 									} else if (figure_check_counter == 49) {	//Black hole
 										
@@ -13495,6 +13875,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 											for (unsigned int z=1; z<=3; z++) {
 												if ((t != 2)&&(z != 2)) {
 													Field[0][i+t][j+z] = 0;
+													if (allocation != 0) {
+														Sf_allocation[0][i+t][j+z] = 0;
+													}
 												}
 											}
 										}
