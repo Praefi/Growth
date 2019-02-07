@@ -16,11 +16,11 @@ void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned
 unsigned int* unsigned_int_Vektor_Create (unsigned int);
 int* int_Vektor_Create (unsigned int);
 
-void new_life (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld);
+void new_life (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int);
 void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int);
-void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, Spielfeld, unsigned int);
+void change (Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld);
 
-void show_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int);
+void show_field (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int);
 void show_whose_turn (unsigned int, unsigned int, unsigned int*, unsigned int*);
 void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int);
 void show_options_of_actions (unsigned int, unsigned int*, unsigned int);
@@ -28,7 +28,7 @@ void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, u
 void show_figures ();
 
 unsigned int Vorganger (unsigned int, unsigned int);
-void figure_check (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int);
+void figure_check (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, Spielfeld, unsigned int);
 
 void Spielfeld_Destroy (Spielfeld, unsigned int, unsigned int);
 void unsigned_int_Vektor_Destroy (unsigned int*);
@@ -41,7 +41,7 @@ void Change (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, 
 void Destroy (unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, unsigned int*, unsigned int, Spielfeld, Spielfeld, unsigned int);
 void Revive (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, Spielfeld, unsigned int);
 
-void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
+void Boost (unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
 
 void Initialisierung (unsigned int, unsigned int*);
 unsigned int Initialisierung_limit_at_all (unsigned int);
@@ -52,7 +52,7 @@ void unsigned_int_array_null_initialisierung (unsigned int*, unsigned int);
 void int_array_null_initialisierung (int*, unsigned int);
 
 void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
-void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int);
+void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int, unsigned int);
 unsigned int get_m (unsigned int, unsigned int, unsigned int);
 unsigned int get_n (unsigned int, unsigned int, unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4 (unsigned int);
@@ -64,21 +64,23 @@ int get_signed_numeric_input_with_not_more_than_1_letter (int);
 void get_colors (unsigned int*, unsigned int, unsigned int, unsigned int);
 
 void choose_your_ability (unsigned int, unsigned int*, unsigned int*);
-unsigned int dynamic_take_out (unsigned int*, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int, unsigned int);
+unsigned int dynamic_take_out (unsigned int*, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
 unsigned int who_is_out (unsigned int*, unsigned int, unsigned int);
+
+void set_Spielfeld_Eintrag (unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
 
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int);
 
-void opague_builder (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void opague_builder (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int);
 
 unsigned int random_number (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*);
 
 void battle (unsigned int, unsigned int, Spielfeld, unsigned int);
 unsigned int chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
 
-void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
+void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, Spielfeld, unsigned int);
 
-void ahead (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int);
+void ahead (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int);
 
 void choose_heart (Spielfeld, unsigned int, unsigned int);
 void heart_ground (unsigned int, unsigned int, Spielfeld, Spielfeld);
@@ -2047,7 +2049,7 @@ int main (void) {
 		Field = Spielfeld_Create (m, n, number_of_players);
 		start_normal (Field, m, n, gamemode_played, number_of_players);
 		
-		//show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);	//test
+		//show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);	//test
 		
 		if (allocation != 0) {
 			for (unsigned int i=1; i<=m-2; i++) {
@@ -2089,7 +2091,7 @@ int main (void) {
 		}
 		
 		if (gamemode_played == Rain) {
-			show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+			show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 		}
 		
 		// scanf("%u", &pause);	//test
@@ -2189,7 +2191,7 @@ int main (void) {
 			// printf("	#line 1989, after geben-def \n");	//test
 			
 			/* printf("	test \n");
-			show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);	//test
+			show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);	//test
 			printf("	test \n"); */
 			round_counter_before = round_counter;
 			round_counter = 0;
@@ -2204,20 +2206,17 @@ int main (void) {
 					for (unsigned int i=1; i<m-1; i+=1){
 						for (unsigned int j=1; j<n-1; j+=1){
 							if (Field[0][i][j] == 75) {
-								Field[0][i][j] = 0;
+								set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 							}
 						}
 					}
 				}
 				
 				if (opague >= 1) {
-					opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
-				}
-				
-				if (opague >= 1) {
-					show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					opague_builder (Field, Sf_opague, m, n, geben%number_of_players, opague, AOP, Sf_allocation, allocation, number_of_players);
+					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				} else {
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				}
 				
 				for (unsigned int i=1; i<m-1; i+=1){
@@ -2257,7 +2256,7 @@ int main (void) {
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
 						if (Field[0][i][j] == 75) {
-							Field[0][i][j] = 0;
+							set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						}
 					}
 				}
@@ -2312,9 +2311,9 @@ int main (void) {
 			if ((gamemode_played == Dynamic)&&((g-1)%number_of_players == 0)&&(var_[1] != 1010)) {	//Object-77 movement
 				
 				if (opague >= 1) {
-					show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				} else {
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				}
 				
 				dynamic_pointer[6] = 0;		//impact y_horizontal
@@ -2334,7 +2333,7 @@ int main (void) {
 				while (abs(dynamic_pointer[1])+abs(dynamic_pointer[0]) != 0){
 					
 					// printf("	Test-print \n");
-					// show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);		//test
+					// show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);		//test
 					// printf("	Test-print \n");
 					// printf("	\n");
 					// printf("	indikator1: %u \n", indikator1);
@@ -2355,7 +2354,7 @@ int main (void) {
 					
 					// iteration += 1;
 					
-					player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n);
+					player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n, Sf_opague, Sf_allocation, allocation, geben);
 					
 					indikator1 = 0;		
 					indikator2 = 0;		//Staffelung: grösser im Betrag 1, anderer nur geblockt 3, anderer reflektiert 5, anderer Null-Betrag 5		3 und 5 und 5 schließen sich aus
@@ -2728,7 +2727,7 @@ int main (void) {
 						
 					}
 					
-					player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n);
+					player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n, Sf_opague, Sf_allocation, allocation, geben);
 					
 					if ((abs(dynamic_pointer[1])+abs(dynamic_pointer[0])) == 0) {
 						
@@ -2976,7 +2975,7 @@ int main (void) {
 			
 			if (gamemode_played == Dynamic) {	//Ausscheiden der Teams?
 				
-				player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n);
+				player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n, Sf_opague, Sf_allocation, allocation, geben);
 				
 			}
 			
@@ -3054,7 +3053,7 @@ int main (void) {
 			//previous if(geben == 1){}
 			
 			if (opague >= 1) {
-				opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
+				opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 			}
 			
 			if ((ttt != 0)&&(pere[geben] == 100)) {
@@ -3127,9 +3126,9 @@ int main (void) {
 					information_code[0] = 9;
 				
 					if (opague >= 1) {
-						show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					}
 					
 					for (unsigned int i=1; i<m-1; i+=1){	//push of electric
@@ -3207,7 +3206,7 @@ int main (void) {
 					continue;
 				} else if ((pere[geben] != 0)&&(warning_system != 0)&&(((warning_system <= 5)&&((pere[geben]+warning_system) == 8))||((warning_system == 6)&&(pere[geben] == 1)))) {
 					old_dying (Field, m, n, d, e, gamemode_played, information_code, geben, Sf_od_, w, Sf_allocation, allocation);
-					change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation); 	//Change befreit
+					change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation, Sf_opague); 	//Change befreit
 					g += 1;
 					printf(" \n ");
 					printf("	You got a penalty. \n ");
@@ -3219,7 +3218,7 @@ int main (void) {
 					for (unsigned int i=1; i<m-1; i+=1){
 						for (unsigned int j=1; j<n-1; j+=1){
 							if (Field[0][i][j] == geben) {
-								Field[0][i][j] = 0;
+								set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 							}
 						}
 					}
@@ -3277,9 +3276,9 @@ int main (void) {
 				
 				if (gamemode_played != Rain) {
 					if (opague >= 1) {
-						show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					}
 				}
 				
@@ -3361,9 +3360,9 @@ int main (void) {
 							}
 						} else if (menuoperator == 5){
 							
-							get_hints (gamemode_played, Field, geben, w, d, e, m, n, information_code, Sf_opague, opague, Colored, AOP, Sf_allocation, allocation);
+							get_hints (gamemode_played, Field, geben, w, d, e, m, n, information_code, Sf_opague, opague, Colored, AOP, Sf_allocation, allocation, number_of_players);
 							
-							//show_field (hint, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);		//teste die destroy-funktion für Spielfelder, done
+							//show_field (Sf_opague, hint, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);		//teste die destroy-funktion für Spielfelder, done
 						} else if (menuoperator == 6){
 							
 							if (suprise == 0) {
@@ -3403,7 +3402,7 @@ int main (void) {
 													if (Field[0][i][j] == geben){
 														Field[0][i][j] = geben%number_of_players+1;
 													} else if (Field[0][i][j] == geben%number_of_players+1){
-														Field[0][i][j] = geben;
+														set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 													}
 												}
 											}
@@ -3421,7 +3420,7 @@ int main (void) {
 										for (unsigned int i=1; i<m-1; i+=1){
 											for (unsigned int j=1; j<n-1; j+=1){
 												if (Field[0][i][j] == geben%number_of_players+1){
-													Field[0][i][j] = 0;
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												}
 												if (i == (m-2)){
 													Field[0][m-2][j] = geben%number_of_players+1;
@@ -3452,9 +3451,9 @@ int main (void) {
 					
 					if (gamemode_played == Rain) {		//##
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}	//show_field über menuoperator = 7 und stack und so löschen, (verschiebe menuoperator!=0 - Schleife) ,done
 						
 						printf("\n");
@@ -3591,13 +3590,10 @@ int main (void) {
 					}
 					
 					if (opague >= 1) {
-						opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
-					}
-					
-					if (opague >= 1) {
-						show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						opague_builder (Field, Sf_opague, m, n, Vorganger(geben, number_of_players), opague, AOP, Sf_allocation, allocation, number_of_players);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					}
 					
 					g-=1;
@@ -3644,7 +3640,7 @@ int main (void) {
 						if (var_[geben] == 42){
 							numbers_of_[geben][4][0] += 1;
 							if ((gamemode_played != Hunt)||(geben != 1)) {
-								Boost (geben, Field, m, n, temp, gamemode_played);
+								Boost (geben, Field, m, n, temp, gamemode_played, Sf_opague, Sf_allocation, allocation, number_of_players);
 							} else if ((gamemode_played == Hunt)&&(geben == 1)) {
 								boost_hunt_activator = 1;
 							}
@@ -3732,11 +3728,11 @@ int main (void) {
 						//printf("	pere[%u]: %u \n", geben, pere[geben] );	//test
 					}
 					
-					new_life (Field, m, n, w, gamemode_played, information_code, geben, Sf_nl_, Sf_od_);
+					new_life (Field, m, n, w, gamemode_played, information_code, geben, Sf_nl_, Sf_od_, Sf_opague, Sf_allocation, allocation, number_of_players);
 					
 					// printf("	Checkpoint: new_life accepted \n");	//test
 					
-					// show_field (Sf_nl_, m, n, gamemode_played, information_code, geben, Colored, geben, Sf_allocation, allocation);	// test
+					// show_field (Sf_opague, Sf_nl_, m, n, gamemode_played, information_code, geben, Colored, geben, Sf_allocation, allocation);	// test
 					
 					if (gamemode_played == Hunt) {
 						
@@ -3786,11 +3782,11 @@ int main (void) {
 							for (unsigned int i=1; i<m-1; i+=1){
 								for (unsigned int j=1; j<n-1; j+=1){
 									if (Sf_nl_[geben][i][j] == geben) {
-										Field[0][i][j] = geben;
+										set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 									}
 								}
 							}
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							break;
 						}
 					}
@@ -3804,7 +3800,7 @@ int main (void) {
 										Field[0][k][n-2] = geben;
 									}
 								}
-								show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 								printf("	Sieg:	Spieler %u \n", geben);
 								controll = 1;
 							}
@@ -3830,7 +3826,7 @@ int main (void) {
 								for (unsigned int j=1; j<n-1; j+=1){
 									if (gamemode_played == Rain) {
 										if (temp[0][i][j] == geben){
-											Field[0][i][j] = 0;
+											set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 										}
 									} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 										if (temp[0][i][j] != 0){
@@ -3876,7 +3872,7 @@ int main (void) {
 				
 					old_dying (Field, m, n, d, e, gamemode_played, information_code, geben, Sf_od_, w, Sf_allocation, allocation);
 					
-					// show_field (Sf_od_, m, n, gamemode_played, information_code, geben, Colored, geben, Sf_allocation, allocation);	//test
+					// show_field (Sf_opague, Sf_od_, m, n, gamemode_played, information_code, geben, Colored, geben, Sf_allocation, allocation);	//test
 					
 					if ((boost_hunt_activator == 1)&&(gamemode_played == Hunt)&&(geben == 1)) {
 						for (unsigned int i=1; i<m-1; i+=1){
@@ -4066,10 +4062,10 @@ int main (void) {
 					ent = 0;
 					
 					if (gamemode_played == Fall) {
-						touch (Field, m, n, geben, Sf_nl_, Sf_allocation, allocation);
+						touch (Field, m, n, geben, Sf_nl_, Sf_allocation, allocation, Sf_opague, number_of_players);
 					}
 					
-					change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation); 	//Change setzt auf null
+					change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation, Sf_opague); 	//Change setzt auf null
 					
 					/*
 					get_sequence (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int w, unsigned int d, unsigned int e, unsigned int gamemode_played, unsigned int* information_code, unsigned int number_of_players, unsigned int ges, unsigned int opague, Spielfeld Sf_opague, Spielfeld sequence, unsigned int seq_max, unsigned int nosv);
@@ -4079,9 +4075,10 @@ int main (void) {
 						sequence[0][0] = 100;
 						
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
 						
 						while (sequence[0][0] == 100) {
@@ -4100,14 +4097,15 @@ int main (void) {
 								
 								for (unsigned int p=1; p<=sequence[0][0]; p+=1) {		//Index?
 									
-									new_life (Field, m, n, w, gamemode_played, information_code, geben, Sf_nl_, Sf_od_);		//let Index go over it, even without reason? What will Index do? Nothing, i guess...
+									new_life (Field, m, n, w, gamemode_played, information_code, geben, Sf_nl_, Sf_od_, Sf_opague, Sf_allocation, allocation, number_of_players);		//let Index go over it, even without reason? What will Index do? Nothing, i guess...
 									old_dying (Field, m, n, d, e, gamemode_played, information_code, Sf_od_, w, Sf_allocation, allocation);
-									Field[0] = change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation)
+									Field[0] = change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation, Sf_opague)
 									if (p == sequence[0][0]) {
 										if (opague >= 1) {
-											show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+											opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+											show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 										} else {
-											show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+											show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 										}
 									}
 								}
@@ -4131,11 +4129,14 @@ int main (void) {
 					}*/
 					
 					if ((gamemode_played == Hunt)&&(geben == 1)) {	//if geben == 1
+						
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
+						
 						printf("\n");
 						printf("\n");
 						choose_heart (Field, m, n);
@@ -4204,7 +4205,7 @@ int main (void) {
 							printf("\n");
 							printf("	Sieg: Spieler %u \n", geben);
 							printf("\n");
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							break;
 						}
 					} else if (gamemode_played == Sand) {
@@ -4220,11 +4221,14 @@ int main (void) {
 					if ((gamemode_played == Hunt)&&(geben == number_of_players)) {
 						lim = 1;
 						printf("	\n");
+						
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
+						
 						printf("	\n");
 						while (lim == 1) {
 							printf("	\n");
@@ -4255,10 +4259,12 @@ int main (void) {
 						printf("	hboa=%u	\n", hboa);
 						printf("\n");
 						*/
+						
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
 						
 						for (unsigned int s = 1; s <= 20; s+=1) {	//Abstandhalter
@@ -4267,11 +4273,14 @@ int main (void) {
 					}
 					
 					if (gamemode_played == Contact) {
+						
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
+						
 						battle (m, n, Field, geben);
 					}
 					
@@ -4310,14 +4319,13 @@ int main (void) {
 			
 			if (gamemode_played == Rain) {
 				
-				opague_builder (Field, Sf_opague, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
-				
 				if (opague >= 1) {
-					show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				} else {
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				}
-			
+				
 				printf("\n");
 				printf("\n");
 				printf("\n");
@@ -4349,9 +4357,9 @@ int main (void) {
 					printf("	Falling slowly...\n");
 					printf("	\n");
 					if (opague >= 1) {
-						show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);	//already build
 					} else {
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					}
 				} else {
 					if (rain_speed == 0){
@@ -4441,7 +4449,7 @@ int main (void) {
 													}
 												}
 												i = mem;
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												if (allocation != 0) {
 													Sf_allocation[0][i][j] = 0;
 												}
@@ -4454,7 +4462,7 @@ int main (void) {
 												
 											} else if (rain == 2){
 												Field[0][i+1][j] = 7;
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												if (allocation != 0) {
 													Sf_allocation[0][i+1][j] = 0;
 												}
@@ -4487,7 +4495,7 @@ int main (void) {
 														}
 													}
 												}
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												Field[0][i+1][j] = geben;
 												if (allocation != 0) {
 													Sf_allocation[0][i][j] = Sf_allocation[0][i+1][j];
@@ -4495,7 +4503,7 @@ int main (void) {
 												}
 											} else if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i+1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
-													Field[0][i][j] = geben;
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 													if (allocation != 0) {
 														Sf_allocation[0][i][j] = 1;
 													}
@@ -4506,7 +4514,7 @@ int main (void) {
 															Sf_allocation[0][i+1][j] = 0;
 														}
 													}
-													Field[0][i][j] = 0;									
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);									
 												}
 											} else if (rain == 5){
 												
@@ -4540,7 +4548,7 @@ int main (void) {
 													}
 												}
 												Field[0][i+1][j] = 7;
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												if (allocation != 0) {
 													Sf_allocation[0][i+1][j] = 0;
 												}
@@ -4573,7 +4581,7 @@ int main (void) {
 											}
 											if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i+1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
-													Field[0][i][j] = geben;
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 													if (allocation != 0) {
 														Sf_allocation[0][i][j] = 1;
 													}
@@ -4581,13 +4589,13 @@ int main (void) {
 													if (i != (m-2)){
 														Field[0][i+1][j] = 7;
 													}
-													Field[0][i][j] = 0;									
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);									
 												}
 											} else {
 												if (i != (m-2)){
 													Field[0][i+1][j] = 7;
 												}
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 											}
 										}
 									}
@@ -4697,7 +4705,7 @@ int main (void) {
 													}
 												}
 												i = mem;
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												if (allocation != 0) {
 													Sf_allocation[0][i][j] = 0;
 												}
@@ -4709,7 +4717,7 @@ int main (void) {
 												}
 											} else if (rain == 2){
 												Field[0][i+1][j] = 7;
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												if (allocation != 0) {
 													Sf_allocation[0][i+1][j] = 0;
 												}
@@ -4742,7 +4750,7 @@ int main (void) {
 														}
 													}
 												}
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												Field[0][i+1][j] = geben;
 												if (allocation != 0) {
 													Sf_allocation[0][i][j] = Sf_allocation[0][i+1][j];
@@ -4750,7 +4758,7 @@ int main (void) {
 												}
 											} else if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i+1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
-													Field[0][i][j] = geben;
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 													if (allocation != 0) {
 														Sf_allocation[0][i][j] = 1;
 													}
@@ -4761,7 +4769,7 @@ int main (void) {
 															Sf_allocation[0][i+1][j] = 0;
 														}
 													}
-													Field[0][i][j] = 0;									
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);									
 												}
 											} else if (rain == 5){
 												if (Field[0][i+1][j] == geben){
@@ -4794,7 +4802,7 @@ int main (void) {
 													}
 												}
 												Field[0][i+1][j] = 7;
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 												if (allocation != 0) {
 													Sf_allocation[0][i+1][j] = 0;
 												}
@@ -4828,7 +4836,7 @@ int main (void) {
 											
 											if (rain == 4){
 												if((Field[0][i-1][j] == geben)||(Field[0][i][j-1] == geben)||(Field[0][i][j+1] == geben)){
-													Field[0][i][j] = geben;
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 													if (allocation != 0) {
 														Sf_allocation[0][i][j] = 1;
 													}
@@ -4836,13 +4844,13 @@ int main (void) {
 													if (i != (m-2)){
 														Field[0][i+1][j] = 7;
 													}
-													Field[0][i][j] = 0;									
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);									
 												}
 											} else {
 												if (i != (m-2)){
 													Field[0][i+1][j] = 7;
 												}
-												Field[0][i][j] = 0;
+												set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 											}
 										}
 									}
@@ -4890,9 +4898,9 @@ int main (void) {
 						}
 						number_rain = (number_rain%6) + 1;
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
 						if (rain_save == 6){
 							rain = 6;
@@ -4920,7 +4928,7 @@ int main (void) {
 				printf("\n");
 				
 				if (Field[0][1][((n-1)/2)] != 0){
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					for (unsigned int p=1; p<=number_of_players; p+=1) {
 						if (Field[0][1][((n-1)/2)] == p){
 							printf ("	Sieg: 	Spieler %u \n", p);
@@ -5000,7 +5008,14 @@ int main (void) {
 								}
 							}
 						}
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
 					}
 				}
 			}
@@ -5022,7 +5037,14 @@ int main (void) {
 								}
 							}
 						}
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
 					}
 				}
 			}
@@ -5052,7 +5074,14 @@ int main (void) {
 								}
 							}
 						}
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
 					}
 				}
 			}
@@ -5060,14 +5089,14 @@ int main (void) {
 			if (gamemode_played == Race) {
 				
 				if (opague >= 1) {
-					opague_builder (Field, Sf_opague, m, n, (geben % 2)+1, opague, AOP);	//possible to modify
+					opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);	//possible to modify
 				}
 				
 				if ((g-1)%freq == (freq-1)){
 					count_freq += 1;
 					if (count_freq == n-4){
 						printf("	Both lost! \n");
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						break;
 					}
 					printf("\n");
@@ -5075,12 +5104,12 @@ int main (void) {
 					printf("	It moved forward! \n");
 					printf("\n");
 					printf("\n");
-					ahead (Field, m, count_freq, Sf_allocation, allocation);
+					ahead (Field, m, count_freq, Sf_allocation, allocation, Sf_opague, number_of_players, geben);
 					
 					if (opague >= 1) {
-						show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					}
 				}
 				
@@ -5118,7 +5147,7 @@ int main (void) {
 							printf ("	It reached the ground!\n");
 							printf ("\n");
 							
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							
 							if (j == (n-1)/2){
 								Points[0] += 1;
@@ -5148,7 +5177,7 @@ int main (void) {
 								printf ("\n");
 								printf ("	It is time for a journey!\n");
 								printf ("\n");
-								show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							}
 							
 							break;
@@ -5160,7 +5189,7 @@ int main (void) {
 					for (unsigned int i=1; i<m-2; i+=1){
 						for (unsigned int j=1; j<n-1; j+=1){
 							if (Field[0][i][j] == 7){
-								Field[0][i][j] = 0;
+								set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 								if ((i+speed_of_fall) <= (m-2)) {
 									for (unsigned int k=i; k<(i+speed_of_fall); k+=1) {
 										Field[0][k][j] = 0;
@@ -5176,7 +5205,7 @@ int main (void) {
 								printf ("\n");
 								printf ("	It fell down!\n");
 								printf ("\n");
-								show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 								break;
 							}
 						}
@@ -5263,7 +5292,7 @@ int main (void) {
 				if (ges[2] == 0){
 					printf("\n");
 					printf("	Sieg:	Spieler 1 \n");
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 				ges[2] = 0;
@@ -5283,7 +5312,7 @@ int main (void) {
 				if (ges[1] == 0){
 					printf("\n");
 					printf("	Sieg:	Spieler 2 \n");
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 				ges[1] = 0;
@@ -5369,7 +5398,7 @@ int main (void) {
 					}
 				}
 				if (a > 0) {
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 				
@@ -5410,7 +5439,7 @@ int main (void) {
 				
 				if (player_counter == (number_of_players - 1)) {
 					printf("		Game over. \n		Sieg: Spieler 1. \n");
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 			}
@@ -5432,12 +5461,12 @@ int main (void) {
 				
 				if (player_counter == (number_of_players - 1)) {
 					printf("		Game over, you can see the master of the Arena. \n");
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 				if (player_counter == number_of_players) {
 					printf("		Game over, everybody died. \n");
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 				
@@ -5696,12 +5725,12 @@ int main (void) {
 				
 				if (player_counter == (number_of_players - 1)) {
 					printf("		Game over, you can see the master of Ulcer. \n");
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 				if (player_counter == number_of_players) {
 					printf("		Game over, everybody died. \n");
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					break;
 				}
 				if ((geben == number_of_players)&&(rtp == round_counter)) {
@@ -5741,8 +5770,15 @@ int main (void) {
 								}
 							}
 						}
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-					}
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						}
 				}
 			}
 			
@@ -5770,7 +5806,14 @@ int main (void) {
 								
 							}
 						}
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
 					}
 				}
 				
@@ -5963,7 +6006,12 @@ int main (void) {
 				
 				if (g%(number_of_players*information_code[3]) == 0) {
 					
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					if (opague >= 1) {
+						opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					} else {
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					}
 					
 					if (information_code[1] == 1) {
 						for (unsigned int i=1; i<=m-2; i++) {
@@ -6036,9 +6084,14 @@ int main (void) {
 			if (figures != 0) {
 				if (g%number_of_players == 0) {
 					
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					if (opague >= 1) {
+						opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					} else {
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					}
 					
-					figure_check (Field, m, n, number_of_players, Colored, Sf_allocation, allocation);
+					figure_check (Field, m, n, number_of_players, Colored, Sf_allocation, allocation, Sf_opague, geben);
 				}
 			}
 			
@@ -6127,7 +6180,7 @@ int main (void) {
 		printf("	Round: %u \n", round_counter);
 		printf("\n");
 		
-		show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+		show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 		
 		printf("	\n ");
 		printf("	\n ");
@@ -7663,7 +7716,7 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 	
 }
 
-void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Spielfeld Sf_nl_, Spielfeld Sf_od_){
+void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Spielfeld Sf_nl_, Spielfeld Sf_od_, Spielfeld Sf_opague, Spielfeld Sf_allocation, unsigned int allocation, unsigned int number_of_players){
 	Spielfeld Sf_temp;
 	unsigned int a, inhi;
 	
@@ -7824,7 +7877,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 						if (Field[0][i][j] == geben) {	//sinnlos?
 							Sf_od_[geben][i][j] = 101*geben;
 						} else {
-							Field[0][i][j] = 0;
+							set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						}
 						Sf_temp[0][i][j] = 0;
 						
@@ -8067,7 +8120,7 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 	
 }
 
-void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int* ges, unsigned int geben, unsigned int undead_duration, Spielfeld Sf_allocation, unsigned int allocation){	
+void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int* ges, unsigned int geben, unsigned int undead_duration, Spielfeld Sf_allocation, unsigned int allocation, Spielfeld Sf_opague){	
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
@@ -8082,7 +8135,7 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 							}
 						}
 						if (Sf_allocation[0][i][j] == 0) {
-							Field[0][i][j] = 0;
+							set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 							
 							if ((gamemode_played == Ulcer)&&(ges[geben%number_of_players+1] != 1010*geben)) {
 								Field[0][i][j] = geben%number_of_players+1;
@@ -8095,7 +8148,7 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 						}
 						
 					} else {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if ((gamemode_played == Ulcer)&&(ges[geben%number_of_players+1] != 1010*geben)) {
 							Field[0][i][j] = geben%number_of_players+1;
 						}
@@ -8107,7 +8160,7 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 				}
 			} else if (Field[0][i][j] == 0){
 				if (Sf_nl_[geben][i][j] == geben){
-					Field[0][i][j] = geben;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 					if (allocation != 0) {
 						Sf_allocation[0][i][j] = 1;
 					}
@@ -8155,7 +8208,13 @@ unsigned int Vorganger (unsigned int geben, unsigned int number_of_players) {
 	return vorher;
 }
 
-void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, unsigned int* Colored, unsigned int auswerter, Spielfeld Sf_allocation, unsigned int allocation){
+void show_field (Spielfeld Sf_opague, Spielfeld Spiel, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, unsigned int* Colored, unsigned int auswerter, Spielfeld Sf_allocation, unsigned int allocation){
+	unsigned int allocation_choice;
+	allocation_choice = 0;
+	
+	if (Spiel == Sf_opague) {
+		allocation_choice = 2;
+	}
 	
 	printf("\n");
 	
@@ -8207,19 +8266,19 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 				printf("	%u |", i);
 			}
 			for (unsigned int j=1; j<n-1; j+=1){	//Haupzeilen
-				if (Field[auswerter][i][j] == 0){
+				if (Spiel[auswerter][i][j] == 0){
 					printf("  ");
-				} else if (Field[auswerter][i][j] == 15){
+				} else if (Spiel[auswerter][i][j] == 15){
 					if (Colored[0] == 1) {
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[geben]);
 					}
 					printf("NN");
-				} else if (Field[auswerter][i][j] == 16){
+				} else if (Spiel[auswerter][i][j] == 16){
 					if (Colored[0] == 1) {
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[geben]);
 					}
 					printf("D ");
-				} else if (Field[auswerter][i][j] >= 10000){
+				} else if (Spiel[auswerter][i][j] >= 10000){
 					if (Colored[0] == 1) {
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);
 					}
@@ -8227,70 +8286,70 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 				} 
 				
 				if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
-					if (Field[auswerter][i][j] == 1){
+					if (Spiel[auswerter][i][j] == 1){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("**");
-					} else if (Field[auswerter][i][j] == 2){
+					} else if (Spiel[auswerter][i][j] == 2){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("OO");
-					} else if (Field[auswerter][i][j] == 7){
+					} else if (Spiel[auswerter][i][j] == 7){
 						printf("##");
 					}
 				} else if (gamemode_played == Hunt) {
-					if (Field[auswerter][i][j] == 1) {
-						if ((geben == 1)||((information_code[3] == 1)&&((Field[auswerter][i+1][j] == geben)||(Field[auswerter][i-1][j] == geben)||(Field[auswerter][i][j+1] == geben)||(Field[auswerter][i][j-1] == geben)))||((information_code[1] == 1)&&(information_code[2] == 1))){
+					if (Spiel[auswerter][i][j] == 1) {
+						if ((geben == 1)||((information_code[3] == 1)&&((Spiel[auswerter][i+1][j] == geben)||(Spiel[auswerter][i-1][j] == geben)||(Spiel[auswerter][i][j+1] == geben)||(Spiel[auswerter][i][j-1] == geben)))||((information_code[1] == 1)&&(information_code[2] == 1))){
 							if (Colored[0] == 1) {
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 							}
 							printf("##");
 						} else {
 							printf("  ");
 						}
-					} else if (Field[auswerter][i][j] == 2){
+					} else if (Spiel[auswerter][i][j] == 2){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("AA");
-					} else if (Field[auswerter][i][j] == 3){
+					} else if (Spiel[auswerter][i][j] == 3){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("BB");
-					} else if (Field[auswerter][i][j] == 4){
+					} else if (Spiel[auswerter][i][j] == 4){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("CC");
-					} else if (Field[auswerter][i][j] == 5){
+					} else if (Spiel[auswerter][i][j] == 5){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("DD");
-					} else if (Field[auswerter][i][j] == 6){
+					} else if (Spiel[auswerter][i][j] == 6){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("EE");
-					} else if (Field[auswerter][i][j] == 7){
+					} else if (Spiel[auswerter][i][j] == 7){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("GG");
-					} else if (Field[auswerter][i][j] == 8){
+					} else if (Spiel[auswerter][i][j] == 8){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("HH");
-					} else if (Field[auswerter][i][j] == 9){
+					} else if (Spiel[auswerter][i][j] == 9){
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("II");
-					} else if (Field[auswerter][i][j] == 11){
+					} else if (Spiel[auswerter][i][j] == 11){
 						if ((geben == 1)||(((information_code[2] == 2)||(information_code[2] == 1))&&(information_code[1] == 1))){
 							if (Colored[0] == 1) {
 								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[1]);
@@ -8299,13 +8358,13 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 						} else {
 							printf("  ");
 						}
-					} else if (Field[auswerter][i][j] == 17){
+					} else if (Spiel[auswerter][i][j] == 17){
 						printf("::");
 					}
 				} else if (gamemode_played == Arena) {
-					if (Field[auswerter][i][j] == geben) {
+					if (Spiel[auswerter][i][j] == geben) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						if (information_code[0] == 1) {
 							printf("UU");
@@ -8326,83 +8385,83 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 						} else if (information_code[0] == 9) {
 							printf("EE");
 						}
-					} else if ((information_code[1] != 0)&&(information_code[1] != 100)&&(Field[auswerter][i][j] == information_code[1])) {
+					} else if ((information_code[1] != 0)&&(information_code[1] != 100)&&(Spiel[auswerter][i][j] == information_code[1])) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("II");
-					} else if ((information_code[2] != 0)&&(information_code[2] != 100)&&(Field[auswerter][i][j] == information_code[2])) {
+					} else if ((information_code[2] != 0)&&(information_code[2] != 100)&&(Spiel[auswerter][i][j] == information_code[2])) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("PP");
-					} else if ((information_code[3] != 0)&&(information_code[3] != 100)&&(Field[auswerter][i][j] == information_code[3])) {
+					} else if ((information_code[3] != 0)&&(information_code[3] != 100)&&(Spiel[auswerter][i][j] == information_code[3])) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("HH");
-					} else if ((Field[auswerter][1][0] != 0)&&(Field[auswerter][1][0] != 1000)&&(Field[auswerter][i][j] == Field[auswerter][1][0]/10)) {
+					} else if ((Spiel[auswerter][1][0] != 0)&&(Spiel[auswerter][1][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][1][0]/10)) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("UU");
-					} else if ((Field[auswerter][0][0] != 0)&&(Field[auswerter][0][0] != 1000)&&(Field[auswerter][i][j] == Field[auswerter][0][0]/10)) {
+					} else if ((Spiel[auswerter][0][0] != 0)&&(Spiel[auswerter][0][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][0]/10)) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("LL");
-					} else if ((Field[auswerter][0][1] != 0)&&(Field[auswerter][0][1] != 1000)&&(Field[auswerter][i][j] == Field[auswerter][0][1]/10)) {
+					} else if ((Spiel[auswerter][0][1] != 0)&&(Spiel[auswerter][0][1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][1]/10)) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("AA");
-					} else if ((Field[auswerter][0][n-1] != 0)&&(Field[auswerter][0][n-1] != 1000)&&(Field[auswerter][i][j] == Field[auswerter][0][n-1]/10)) {
+					} else if ((Spiel[auswerter][0][n-1] != 0)&&(Spiel[auswerter][0][n-1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][n-1]/10)) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("CC");
-					} else if ((Field[auswerter][m-1][n-1] != 0)&&(Field[auswerter][m-1][n-1] != 1000)&&(Field[auswerter][i][j] == Field[auswerter][m-1][n-1]/10)) {
+					} else if ((Spiel[auswerter][m-1][n-1] != 0)&&(Spiel[auswerter][m-1][n-1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][m-1][n-1]/10)) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("SS");
-					} else if ((Field[auswerter][m-1][0] != 0)&&(Field[auswerter][m-1][0] != 1000)&&(Field[auswerter][i][j] == Field[auswerter][m-1][0]/10)) {
+					} else if ((Spiel[auswerter][m-1][0] != 0)&&(Spiel[auswerter][m-1][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][m-1][0]/10)) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
 						printf("EE");
-					} else if (Field[auswerter][i][j] == 17){	//hint
+					} else if (Spiel[auswerter][i][j] == 17){	//hint
 						printf("::");
 					}
 				} else if ((gamemode_played == Ulcer)||(gamemode_played == Sand)) {
 					for (unsigned int p=1; p<=information_code[0]; p+=1) {	//information_code[0] == number_of_players
-						if (Field[auswerter][i][j] == p) {
+						if (Spiel[auswerter][i][j] == p) {
 							if (Colored[0] == 1) {
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 							}
 							printf("%u%u", p, p);
 							break;
 						}
 					}
-					if (Field[auswerter][i][j] == 17){	//hint
+					if (Spiel[auswerter][i][j] == 17){	//hint
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
 						printf("::");
 					}
 				} else if (gamemode_played == Dynamic) {
-					if (Field[auswerter][i][j] == 77) {
+					if (Spiel[auswerter][i][j] == 77) {
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("##");
-					} else if (Field[auswerter][i][j] == 17){	//hint
+					} else if (Spiel[auswerter][i][j] == 17){	//hint
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
 						printf("::");
 					}
 					
 					for (unsigned int p=1; p<=information_code[0]; p+=1) {	//information_code[0] == number_of_players
-						if (Field[auswerter][i][j] == p) {
+						if (Spiel[auswerter][i][j] == p) {
 							if (Colored[0] == 1) {
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 							}
 							printf("%u%u", p, p);
 							break;
@@ -8410,32 +8469,32 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 					}
 					
 				} else if (gamemode_played == Survive) {
-					if (Field[auswerter][i][j] == 71) {	//Trap
+					if (Spiel[auswerter][i][j] == 71) {	//Trap
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("TT");
-					} else if (Field[auswerter][i][j] == 84) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == 84) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B4");
-					} else if (Field[auswerter][i][j] == 83) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == 83) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B3");
-					} else if (Field[auswerter][i][j] == 82) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == 82) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B2");
-					} else if (Field[auswerter][i][j] == 81) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == 81) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B1");
-					} else if (Field[auswerter][i][j] == 75) {	//Wave
+					} else if (Spiel[auswerter][i][j] == 75) {	//Wave
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
@@ -8443,9 +8502,9 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 					}
 					
 					for (unsigned int p=1; p<=information_code[0]; p+=1) {	//information_code[0] == number_of_players
-						if (Field[auswerter][i][j] == p) {
+						if (Spiel[auswerter][i][j] == p) {
 							if (Colored[0] == 1) {
-								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+								SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 							}
 							printf("%u%u", p, p);
 							break;
@@ -8475,16 +8534,16 @@ void show_field (Spielfeld Field, unsigned int m, unsigned int n, unsigned int g
 				}
 				
 				for (unsigned int j=1; j<n-1; j+=1){
-					if ((Sf_allocation[0][i][j] < 10)&&(Sf_allocation[0][i][j] != 0)) {
+					if ((Sf_allocation[allocation_choice][i][j] < 10)&&(Sf_allocation[allocation_choice][i][j] != 0)) {
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
-						printf("0%u", Sf_allocation[0][i][j]);
-					} else if ((Sf_allocation[0][i][j] >= 10)&&(Sf_allocation[0][i][j] != 0)) {	//last one can be left
+						printf("0%u", Sf_allocation[allocation_choice][i][j]);
+					} else if ((Sf_allocation[allocation_choice][i][j] >= 10)&&(Sf_allocation[allocation_choice][i][j] != 0)) {	//last one can be left
 						if (Colored[0] == 1) {
-							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[auswerter][i][j]]);
+							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Spiel[auswerter][i][j]]);
 						}
-						printf("%u", Sf_allocation[0][i][j]);
+						printf("%u", Sf_allocation[allocation_choice][i][j]);
 					} else {	//no allocation possible for objects
 						printf("  ");
 					}
@@ -8594,9 +8653,9 @@ void Plus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 				printf("	you made a mistake, try again: \n");
 				
 				if (opague >= 1) {
-					show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				} else {
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				}
 				Plus (m, n, geben, Field, limit_at_all, gamemode_played, information_code, number_of_players, Colored, opague, Sf_opague, Sf_allocation, allocation);
 			} else {
@@ -8672,9 +8731,9 @@ void Minus (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field,
 		if (((Zeile<1)||(Zeile>(m-2))) || ((Spalte<1)||(Spalte>n-2))){
 			printf("	you made a mistake, try again: \n");
 			if (opague >= 1) {
-				show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+				show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 			} else {
-				show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+				show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 			}
 			Minus (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, Sf_allocation, allocation);
 		} else if (Field[0][Zeile][Spalte] != geben){
@@ -8851,9 +8910,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 			if (((Zeile_alt<1)||(Zeile_alt>(m-2))) || ((Spalte_alt<1)||(Spalte_alt>n-2))){
 				printf("	you made a mistake, try again: \n");
 				if (opague >= 1) {
-					show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				} else {
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				}
 				Move (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, Sf_allocation, allocation);
 				
@@ -8875,9 +8934,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 						if (((Zeile_neu<1)||(Zeile_neu>(m-2))) || ((Spalte_neu<1)||(Spalte_neu>n-2))){
 							printf("	you made a mistake, try again: \n");
 							if (opague >= 1) {
-								show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							} else {
-								show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);		//transform Spielfeld in Spielfeld[0], übergebe nur noch personal, done
+								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);		//transform Spielfeld in Spielfeld[0], übergebe nur noch personal, done
 							}
 							Move (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, Sf_allocation, allocation);
 							
@@ -8942,9 +9001,9 @@ void Move (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, 
 						if (((Zeile_neu<1)||(Zeile_neu>(m-2))) || ((Spalte_neu<1)||(Spalte_neu>n-2))){
 							printf("	you made a mistake, try again: \n");
 							if (opague >= 1) {
-								show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							} else {
-								show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							}
 							Move (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, Sf_allocation, allocation);
 							
@@ -9105,9 +9164,9 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 					if (((normal_Zeile<1)||(normal_Zeile>(m-2))) || ((normal_Spalte<1)||(normal_Spalte>n-2))){
 						printf("	you made a mistake, try again: \n");
 						if (opague >= 1) {
-							show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
-							show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
 						Change (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, position, Sf_allocation, allocation);
 						
@@ -9419,9 +9478,9 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 			if (((eigene_Zeile<1)||(eigene_Zeile>(m-2))) || ((eigene_Spalte<1)||(eigene_Spalte>n-2))){
 				printf("	you made a mistake, try again: \n");
 				if (opague >= 1) {
-					show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				} else {
-					show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				}
 				Change (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, position, Sf_allocation, allocation);
 				
@@ -9473,9 +9532,9 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 						if (((fremde_Zeile<1)||(fremde_Zeile>(m-2))) || ((fremde_Spalte<1)||(fremde_Spalte>n-2))){
 							printf("	you made a mistake, try again: \n");
 							if (opague >= 1) {
-								show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							} else {
-								show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							}
 							Change (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, position, Sf_allocation, allocation);
 							
@@ -9848,9 +9907,9 @@ void Destroy (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Fiel
 				if (((fremde_Zeile<1)||(fremde_Zeile>(m-2))) || ((fremde_Spalte<1)||(fremde_Spalte>n-2))){
 					printf("	you made a mistake, try again: \n");
 					if (opague >= 1) {
-						show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
-						show_field (Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					}
 					Destroy (m, n, geben, Field, gamemode_played, information_code, Colored, opague, Sf_opague, Sf_allocation, allocation);
 					
@@ -9941,7 +10000,7 @@ void Revive (unsigned int m, unsigned int n, Spielfeld Sf_od_, Spielfeld Field, 
 	Spielfeld_Destroy (temp, m, 0);
 }
 
-void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n, Spielfeld temp, unsigned int gamemode_played){
+void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n, Spielfeld temp, unsigned int gamemode_played, Spielfeld Sf_opague, Spielfeld Sf_allocation, unsigned int allocation, unsigned int number_of_players){
 	unsigned int geben_Boost;
 				//printf("?");
 	if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
@@ -10005,11 +10064,11 @@ void Boost (unsigned int geben, Spielfeld Field, unsigned int m, unsigned int n,
 		for (unsigned int j=1; j<n-1; j+=1){
 			if ((gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 				if (temp[0][i][j] == geben){
-					Field[0][i][j] = geben;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 				}
 			} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 				if (temp[0][i][j] != 0){
-					Field[0][i][j] = geben;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, geben);
 				}
 			}
 		}
@@ -10812,7 +10871,7 @@ unsigned int random_number (unsigned int num_1, unsigned int num_2, unsigned int
 	return new_number;
 }
 
-void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf_nl_, Spielfeld Sf_allocation, unsigned int allocation){
+void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Sf_nl_, Spielfeld Sf_allocation, unsigned int allocation, Spielfeld Sf_opague, unsigned int number_of_players){
 	unsigned int einmal;
 	einmal = 0;
 	for (unsigned int i=1; i<m-1; i+=1){
@@ -10824,25 +10883,25 @@ void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben,
 				if (geben == 1){
 					if (((Sf_nl_[geben][i][j-1] == 1) || (Field[0][i][j-1] == 1))&&(j != (n-2))){
 						Field[0][i][j+1] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i][j+1] = 0;
 						}
 					} else if (((Sf_nl_[geben][i+1][j] == 1)  || (Field[0][i+1][j] == 1))&&(i != 1)){
 						Field[0][i-1][j] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i-1][j] = 0;
 						}
 					} else if (((Sf_nl_[geben][i-1][j] == 1) || (Field[0][i-1][j] == 1))&&(i != (m-2))){
 						Field[0][i+1][j] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i+1][j] = 0;
 						}
 					} else if (((Sf_nl_[geben][i][j+1] == 1) || (Field[0][i][j+1] == 1))&&(j != 1)){
 						Field[0][i][j-1] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i][j-1] = 0;
 						}
@@ -10850,25 +10909,25 @@ void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben,
 				} else if (geben == 2){
 					if (((Sf_nl_[geben][i][j+1] == 2) || (Field[0][i][j+1] == 2))&&(j != 1)){
 						Field[0][i][j-1] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i][j-1] = 0;
 						}
 					} else if (((Sf_nl_[geben][i+1][j] == 2) || (Field[0][i+1][j] == 2))&&(i != 1)){
 						Field[0][i-1][j] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i-1][j] = 0;
 						}
 					} else if (((Sf_nl_[geben][i-1][j] == 2) || (Field[0][i-1][j] == 2))&&(i != (m-2))){
 						Field[0][i+1][j] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i+1][j] = 0;
 						}
 					} else if (((Sf_nl_[geben][i][j-1] == 2) || (Field[0][i][j-1] == 2))&&(j != (n-2))){
 						Field[0][i][j+1] = 7;
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						if (allocation != 0) {
 							Sf_allocation[0][i][j+1] = 0;
 						}
@@ -10891,12 +10950,12 @@ void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben,
 	
 }
 
-void ahead (Spielfeld Field, unsigned int m, unsigned int count_freq, Spielfeld Sf_allocation, unsigned int allocation){
+void ahead (Spielfeld Field, unsigned int m, unsigned int count_freq, Spielfeld Sf_allocation, unsigned int allocation, Spielfeld Sf_opague, unsigned int number_of_players, unsigned int geben){
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<count_freq; j+=1){
 			if (Field[0][i][j] == 7){
-				Field[0][i][j] = 0;
+				set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 				Field[0][i][j+1] = 7;
 				if (allocation != 0) {
 					Sf_allocation[0][i][j] = 0;
@@ -10977,7 +11036,7 @@ void heart_ground (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld gr
 	}
 }
 
-void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsigned int n, unsigned int geben, unsigned int opague, unsigned int AOP) {
+void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsigned int n, unsigned int geben, unsigned int opague, unsigned int AOP, Spielfeld Sf_allocation, unsigned int allocation, unsigned int number_of_players) {
 	unsigned int extra;
 	unsigned int* opague_counter; 
 	Spielfeld temp;
@@ -11001,7 +11060,7 @@ void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsig
 					if (Field[0][i][j] == geben) {
 						temp[0][i][j] = geben;
 					} else if ((Field[0][i][j] != 0)) {
-						if (Field[0][i][j] == 77) {	//Nur für Objekte=77, go on
+						if (Field[0][i][j] == 77) {	//Nur für Objekte=77 bisher , go on
 							opague_counter[AOP+1] += 1;
 						} else {
 							opague_counter[Field[0][i][j]] += 1;
@@ -11097,7 +11156,7 @@ void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsig
 							
 							if ((opague_counter[0] == AOP+extra-1)&&(temp[0][i][j] == 0)) {	//bei Gleichstand zweier Objekte bleibt temp[0][i][j] unbesetzt, da die AOP+extra-1 von keinem erreicht wird
 								if (a == AOP+1) {
-									temp[0][i][j] = 77;	//für AOP=9 programmiert
+									temp[0][i][j] = 77;
 								} else {
 									temp[0][i][j] = a;
 								}
@@ -11183,14 +11242,14 @@ void opague_builder (Spielfeld Field, Spielfeld Sf_opague, unsigned int m, unsig
 			}
 			
 			if (Field[0][i][j] == 11) {
-				temp[0][i][j] = 11;
+				set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, temp, 0, i, j, 11);
 			}
 		}
 	}
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			Sf_opague[0][i][j] = temp[0][i][j];
+			set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_opague, 0, i, j, temp[0][i][j]);
 		}
 	}
 	
@@ -11525,7 +11584,7 @@ void show_the_numbers (unsigned int gamemode_played, unsigned int w, unsigned in
 	printf("\n");
 }
 
-void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int geben, unsigned int w, unsigned int d, unsigned int e, unsigned int m, unsigned int n, unsigned int* information_code, Spielfeld Sf_opague, unsigned int opague, unsigned int* Colored, unsigned int AOP, Spielfeld Sf_allocation, unsigned int allocation) {
+void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int geben, unsigned int w, unsigned int d, unsigned int e, unsigned int m, unsigned int n, unsigned int* information_code, Spielfeld Sf_opague, unsigned int opague, unsigned int* Colored, unsigned int AOP, Spielfeld Sf_allocation, unsigned int allocation, unsigned int number_of_players) {
 	
 	Spielfeld hint;
 	unsigned int b, a, menuoperator;
@@ -11539,43 +11598,43 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 		for (unsigned int j=1; j<(n-1); j+=1){
 			if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//10
 				if (Field[0][i][j] == geben){
-					hint[0][i][j] = geben;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, geben);
 				} else if (Field[0][i][j] == (geben%2)+1){
-					hint[0][i][j] = (geben%2)+1;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, (geben%2)+1);
 				} else if (Field[0][i][j] == 7){
-					hint[0][i][j] = 7;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 7);
 				}
 			} else if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Sand)) {	//10
 				if (Field[0][i][j] == geben){
-					hint[0][i][j] = geben;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, geben);
 				} else if (Field[0][i][j] != 0){
-					hint[0][i][j] = 17;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 17);
 				}
 			} else if (gamemode_played == Dynamic) {
 				if (Field[0][i][j] == geben){
-					hint[0][i][j] = geben;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, geben);
 				} else if (Field[0][i][j] == 77){
-					hint[0][i][j] = 77;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 77);
 				} else if (Field[0][i][j] != 0){
-					hint[0][i][j] = 17;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 17);
 				}
 			} else if (gamemode_played == Survive) {
 				if (Field[0][i][j] == geben){
-					hint[0][i][j] = geben;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, geben);
 				} else if (Field[0][i][j] == 81){
-					hint[0][i][j] = 81;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 81);
 				} else if (Field[0][i][j] == 82){
-					hint[0][i][j] = 82;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 82);
 				} else if (Field[0][i][j] == 83){
-					hint[0][i][j] = 83;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 83);
 				} else if (Field[0][i][j] == 84){
-					hint[0][i][j] = 84;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 84);
 				} else if (Field[0][i][j] == 75){
-					hint[0][i][j] = 75;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 75);
 				} else if (Field[0][i][j] == 71){
-					hint[0][i][j] = 71;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 71);
 				} else if (Field[0][i][j] != 0){
-					hint[0][i][j] = 17;
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 17);
 				}
 			}
 		}
@@ -11599,7 +11658,7 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 						}
 					}
 					if ((a > e+1) || (a <= d)){
-						hint[0][i][j] = 16;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 16);
 					}
 				}
 			}
@@ -11621,7 +11680,7 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 						}
 					}
 					if (b == w){
-						hint[0][i][j] = 15;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 15);
 					}
 				}
 			}
@@ -11629,17 +11688,17 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 	}
 	
 	if (opague >= 1) {
-		opague_builder (hint, Sf_opague, m, n, geben, opague, AOP);
+		opague_builder (hint, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 	}
 	
 	if (opague >= 1) {
-		show_field (Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+		show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 	} else {
-		show_field (hint, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+		show_field (Sf_opague, hint, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 	}
 	
 	if (opague >= 1) {
-		opague_builder (Field, Sf_opague, m, n, geben, opague, AOP);
+		opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 	}
 	
 	Spielfeld_Destroy (hint, m, 0);
@@ -13183,14 +13242,14 @@ void get_colors (unsigned int* Colored, unsigned int gamemode_played, unsigned i
 	unsigned_int_array_null_initialisierung (Color_choice, 12);
 }
 
-unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_players, Spielfeld Field, unsigned int* ges, unsigned int player_counter, unsigned int m, unsigned int n) {
+unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_players, Spielfeld Field, unsigned int* ges, unsigned int player_counter, unsigned int m, unsigned int n, Spielfeld Sf_opague, Spielfeld Sf_allocation, unsigned int allocation, unsigned int geben) {
 	
 	if (position[0] == 1) {	//links
 		if ((number_of_players == 2)||(number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if (Field[0][i][j] == 1) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13204,7 +13263,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13223,7 +13282,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 1)||(Field[0][i][j] == 5)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13242,7 +13301,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 1)||(Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13268,7 +13327,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if (Field[0][i][j] == 2) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13282,7 +13341,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13302,7 +13361,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 2)||(Field[0][i][j] == 6)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13322,7 +13381,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 2)||(Field[0][i][j] == 5)||(Field[0][i][j] == 8)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13348,7 +13407,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if (Field[0][i][j] == 3) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13362,7 +13421,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13382,7 +13441,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 3)||(Field[0][i][j] == 7)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13401,7 +13460,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if (Field[0][i][j] == 2) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13415,7 +13474,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 3)||(Field[0][i][j] == 6)||(Field[0][i][j] == 9)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13442,7 +13501,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if (Field[0][i][j] == 4) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13456,7 +13515,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 4)||(Field[0][i][j] == 5)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13475,7 +13534,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 4)||(Field[0][i][j] == 7)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13494,7 +13553,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
 					if ((Field[0][i][j] == 4)||(Field[0][i][j] == 8)) {
-						Field[0][i][j] = 0;
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 					}
 				}
 			}
@@ -13590,7 +13649,7 @@ void show_figures () {	//in order of calculation
 	// }
 }
 
-void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int number_of_players, unsigned int* Colored, Spielfeld Sf_allocation, unsigned int allocation) {
+void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int number_of_players, unsigned int* Colored, Spielfeld Sf_allocation, unsigned int allocation, Spielfeld Sf_opague, unsigned int geben) {
 	unsigned int figure_check_counter;
 	figure_check_counter = 0;
 	
@@ -13621,17 +13680,11 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 					for (unsigned int t=0; t<=2; t++) {
 						for (unsigned int z=0; z<=2; z++) {
 							if ((t+z)%2 == 1) {
-								Field[0][i+t][j+z] = Field[0][i+1][j+1];
-								if (allocation != 0) {
-									Sf_allocation[0][i+t][j+z] = 1;
-								}
+								set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+z, Field[0][i+1][j+1]);
 							}
 						}
 					}
-					Field[0][i+1][j+1] = 0;
-					if (allocation != 0) {
-						Sf_allocation[0][i+1][j+1] = 0;
-					}
+					set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+1, j+1, 0);
 				}
 			} else {
 				figure_check_counter = 0;
@@ -13650,16 +13703,12 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 					figure_check_counter = 0;
 					
 					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
-						Field[0][i][j+1] = Field[0][i+1][j+1];
-						if (allocation != 0) {
-							Sf_allocation[0][i][j+1] = 1;
-						}
-						
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i+1][j+1]]);
 						}
 						printf("	Time for Grass \n\n");
 						
+						set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j+1, Field[0][i+1][j+1]);
 					}
 				} else {
 					figure_check_counter = 0;
@@ -13700,15 +13749,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 								for (unsigned int t=2; t>=1; t--) {
 									for (unsigned int z=2; z>=1; z--) {
 										if ((z+t)%2 == 1) {
-											Field[0][i+t][j+z] = Field[0][i+1][j+1];
-											if (allocation != 0) {
-												Sf_allocation[0][i+t][j+z] = 1;
-											}
+											set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+z, Field[0][i+1][j+1]);
 										} else if ((z+t)%2 == 0) {
-											Field[0][i+t][j+z] = 0;
-											if (allocation != 0) {
-												Sf_allocation[0][i+t][j+z] = 0;
-											}
+											set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+z, 0);
 										}
 									}
 								}
@@ -13721,27 +13764,16 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 								printf("	Time for Popcorn \n\n");
 								
 								for (unsigned int t=1; t<=2; t++) {
-									Field[0][i+t][j] = Field[0][i+1][j+1];
-									Field[0][i+t][j+3] = Field[0][i+1][j+1];
-									if (allocation != 0) {
-										Sf_allocation[0][i+t][j] = 1;
-										Sf_allocation[0][i+t][j+3] = 1;
-									}
+									set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j, Field[0][i+1][j+1]);
+									set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+3, Field[0][i+1][j+1]);
 								}
 								for (unsigned int z=1; z<=2; z++) {
-									Field[0][i][j+z] = Field[0][i+1][j+1];
-									Field[0][i+3][j+z] = Field[0][i+1][j+1];
-									if (allocation != 0) {
-										Sf_allocation[0][i][j+z] = 1;
-										Sf_allocation[0][i+3][j+z] = 1;
-									}
+									set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j+z, Field[0][i+1][j+1]);
+									set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+3, j+z, Field[0][i+1][j+1]);
 								}
 								for (unsigned int t=2; t>=1; t--) {
 									for (unsigned int z=2; z>=1; z--) {
-										Field[0][i+t][j+z] = 0;
-										if (allocation != 0) {
-											Sf_allocation[0][i+t][j+z] = 0;
-										}
+										set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+z, 0);
 									}
 								}
 							}
@@ -13758,15 +13790,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 								for (unsigned int t=2; t>=1; t--) {
 									for (unsigned int z=1; z<=2; z++) {
 										if ((z+t)%2 == 0) {
-											Field[0][i+t][j+z] = Field[0][i+1][j+2];
-											if (allocation != 0) {
-												Sf_allocation[0][i+t][j+z] = 1;
-											}
+											set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+z, Field[0][i+1][j+2]);
 										} else if ((z+t)%2 == 1) {
-											Field[0][i+t][j+z] = 0;
-											if (allocation != 0) {
-												Sf_allocation[0][i+t][j+z] = 0;
-											}
+											set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+z, 0);
 										}
 									}
 								}
@@ -13806,12 +13832,9 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 									}
 									printf("	Time for a Shield \n\n");
 									
-									Field[0][i+2][j] = Field[0][i+1][j+2];
-									Field[0][i+2][j+4] = Field[0][i+1][j+2];
-									if (allocation != 0) {
-										Sf_allocation[0][i+2][j] = 1;
-										Sf_allocation[0][i+2][j+4] = 1;
-									}
+									set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+2, j, Field[0][i+1][j+2]);
+									set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+2, j+4, Field[0][i+1][j+2]);
+									
 								}
 							}
 						} else {
@@ -13850,19 +13873,10 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 										}
 										printf("	Time for a Flower \n\n");
 										
-										Field[0][i+2][j] = Field[0][i+1][j+2];
-										Field[0][i+2][j+4] = Field[0][i+1][j+2];
-										if (allocation != 0) {
-											Sf_allocation[0][i+2][j] = 1;
-											Sf_allocation[0][i+2][j+4] = 1;
-										}
-										
-										Field[0][i][j+2] = Field[0][i+1][j+2];
-										Field[0][i+4][j+2] = Field[0][i+1][j+2];
-										if (allocation != 0) {
-											Sf_allocation[0][i][j+2] = 1;
-											Sf_allocation[0][i+4][j+2] = 1;
-										}
+										set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+2, j, Field[0][i+1][j+2]);
+										set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+2, j+4, Field[0][i+1][j+2]);
+										set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j+2, Field[0][i+1][j+2]);
+										set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+4, j+2, Field[0][i+1][j+2]);
 										
 									} else if (figure_check_counter == 49) {	//Black hole
 										
@@ -13874,10 +13888,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 										for (unsigned int t=1; t<=3; t++) {
 											for (unsigned int z=1; z<=3; z++) {
 												if ((t != 2)&&(z != 2)) {
-													Field[0][i+t][j+z] = 0;
-													if (allocation != 0) {
-														Sf_allocation[0][i+t][j+z] = 0;
-													}
+													set_Spielfeld_Eintrag (geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i+t, j+z, 0);
 												}
 											}
 										}
@@ -13896,6 +13907,31 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
 	}
 	
+}
+
+void set_Spielfeld_Eintrag (unsigned int geben, Spielfeld Sf_opague, unsigned int gamemode_played, Spielfeld Sf_allocation, unsigned int allocation, unsigned int number_of_players, Spielfeld Spiel, unsigned int first, unsigned int i, unsigned int j, unsigned int Eintrag) {
+	
+	Spiel[first][i][j] = Eintrag;
+	
+	if (allocation != 0) {
+		if (((Eintrag != 0)&&(Eintrag <= number_of_players))||((gamemode_played == Hunt)&&(Eintrag == 11))) {
+			if (Spiel == Sf_opague) {
+				if (Eintrag == geben) {
+					Sf_allocation[2][i][j] = Sf_allocation[0][i][j];
+				} else {
+					Sf_allocation[2][i][j] = 1;
+				}
+			} else {
+				Sf_allocation[0][i][j] = 1;
+			}
+		} else {
+			if (Spiel == Sf_opague) {
+				Sf_allocation[2][i][j] = 0;
+			} else {
+				Sf_allocation[0][i][j] = 0;
+			}
+		}
+	}
 }
 
 //Dynamic (gamemode_played)	, done		(just notes following)
