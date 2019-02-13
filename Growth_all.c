@@ -108,8 +108,9 @@ enum options {
 	undead	= 10,
 	Figures	= 11,
 	Allocation = 12,
+	Cards = 13,
 	
-	back = 13,		//synchronisiere mit back!
+	back = 14,		//synchronisiere mit back!
 } beginningmenu;
 
 enum gamemode {
@@ -142,16 +143,23 @@ int main (void) {
 	Spielfeld Sf_nl_, Sf_od_;
 	Spielfeld Sf_opague, Sf_allocation;	//Sf_opague[0]==Opague-Spielfeld,
 	
-	unsigned int m, n, geben, ent, controll_1, controll_2, journey, tac, playtime;
 	enum options beginningmenu;
 	enum gamemode gamemode_played;
-	unsigned int fall_controll, fall_back, turns_per_drop, speed_of_fall, count_freq, rain, rain_drops, rain_save, rain_obj, rain_speed, rain_speed_save;
-	unsigned int w, d, e;
-	unsigned int opt, limit_new, limit_at_all, lim, suprise, sup_num, menuoperator, points_for_win, freq;
-	unsigned int use_number, num_1, num_2, num_3, num_temp, number_rain, figures, allocation;
-	unsigned int count_new, einmal, boost_hunt_activator, zeitgewinner;
+	unsigned int m, n;	//Höhe, Breite
+	unsigned int number_of_players, geben;	//spielende Spieler, aktiver Spieler
+	unsigned int count_new, ent, zeitgewinner, limit_new, limit_at_all, limit_at_all_saver;	//Index and limits
+	unsigned int lim; //Die Variable für alles mögliche
+	unsigned int fall_controll, fall_back, turns_per_drop, speed_of_fall, points_for_win, einmal;	//Gamemode = Fall, "einmal" als Bezeichnung auch in einer Funktion
+	unsigned int count_freq, freq;	//Gamemode = Race
+	unsigned int rain, rain_drops, rain_save, rain_obj, rain_speed, rain_speed_save, number_rain;	//Gamemode = Rain
+	unsigned int w, d, e;	//Entwicklungsparameter
+	unsigned int menuoperator, playtime;	//Navigationsparameter
+	unsigned int opt, use_number, num_1, num_2, num_3, num_temp, tac, cards, controll_1, controll_2;	//How to get the numbers, and to controll them
+	unsigned int suprise, sup_num;	//specialeffects
+	unsigned int figures, allocation, iteration, journey, undead_duration, opague;	//options, selected with beginningmenu
+	unsigned int rtc, spf, scwhp, hboa, boost_hunt_activator, precounter;	//Spezieller Boost für the hunted one in gamemode Hunt
 	unsigned int nosv, AOP;		//number of saved variables; amount of players
-	unsigned int range, d_wert, indikator1, indikator2, indikator3, space_i, space_j, controll, iteration;
+	unsigned int range, d_wert, indikator1, indikator2, indikator3, space_i, space_j, controll;		//Gamemode = Dynamic
 	//unsigned int cons[1]_fort, cons[2]_fort, cons[3]_fort, cons[4]_fort, cons[5]_fort, cons[6]_fort, cons[7]_fort, cons[8]_fort, cons[9]_fort;
 	
 	//sort the variables, go on
@@ -159,8 +167,8 @@ int main (void) {
 	//scanf("%u", &pause); //test
 	//printf ("	ok 2 \n");	//test
 	
-	unsigned int number_of_players, rtc, spf, scwhp, round_counter, round_counter_before, hboa, precounter, opague, undead_duration;
-	unsigned int ttt, warning_system, exclude_counter, player_counter, rtp, limit_at_all_saver, information_code[4];	//time-to-think, rounds-to-play, 0 == rtc, 1 == spf, 2 == hboa, 3 == scwhp (gamemode_played == Hunt)
+	unsigned int round_counter, round_counter_before;	//Rundenanzahl und ihre Sicherung
+	unsigned int ttt, warning_system, exclude_counter, player_counter, rtp, information_code[4];	//time-to-think, rounds-to-play, 0 == rtc, 1 == spf, 2 == hboa, 3 == scwhp (gamemode_played == Hunt)
 	unsigned int* same;	//immer aktualisieren
 	unsigned int* position;		// "*" bezieht sich auf "position", nicht auf "unsigned int" !!!!
 	int erd;	//erdbeschleunigung
@@ -284,6 +292,7 @@ int main (void) {
 		
 		lim = 0;
 		opt = 0;
+		cards = 0;
 		tac = 0;
 		journey = 0;
 		
@@ -414,7 +423,7 @@ int main (void) {
 				
 				while (beginningmenu != Start){
 			
-					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
+					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n 	Cards	  : 13\n \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	Points for win: %u \n", back+1);
 						printf("	Turns per drop: %u \n", back+2);
@@ -481,15 +490,17 @@ int main (void) {
 					
 					if (beginningmenu == Tactics){
 						opt = 0;
-						printf("	Do not activate Random, it will replace the Tactics-Mode! \n");
+						cards = 0;
+						printf("	Do not activate Random or Cards, it will replace the Tactics-Mode! \n");
 						printf("	Stack of every number until refresh: \n");
 						tac = get_unsigned_numeric_input_with_not_more_than_2_letters (tac);
 						printf("\n");
 					}
-				
+					
 					if ((beginningmenu == Random)&&(gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&(gamemode_played != Dynamic)&(gamemode_played != Survive)){
 						tac = 0;
-						printf("	Do not activate Tactics, it will replace the Random-Mode! \n");
+						cards = 0;
+						printf("	Do not activate Tactics or Cards, it will replace the Random-Mode! \n");
 						printf("	Random activated \n");
 						printf("	A Player :	Give me three random numbers from 1 to 60 \n");
 						number_[1] = get_unsigned_numeric_input_with_not_more_than_2_letters (number_[1]);
@@ -549,7 +560,8 @@ int main (void) {
 						
 					} else if ((beginningmenu == Random)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive))) {
 						tac = 0;
-						
+						cards = 0;
+						printf("	Do not activate Tactics or Cards, it will replace the Random-Mode! \n");
 						printf("	This only works if the number of players is correct! \n");
 						
 						printf("	Random activated \n");
@@ -1059,26 +1071,26 @@ int main (void) {
 					}
 					
 					if (beginningmenu == undead) {
-						printf("	Going here again will reset the undead-mode! \n");
 						
 						if (undead_duration != 0) {
 							printf("	undead-mode reseted! \n");
 							printf(" \n");
 							undead_duration = 0;
 						} else {
+							printf("	Going here again will reset the undead-mode! \n");
 							printf("	How many turns the undead-square should survive? \n");
 							undead_duration = get_unsigned_numeric_input_with_not_more_than_2_letters (undead_duration);
 						}
 					}
 					
 					if (beginningmenu == Figures) {
-						printf("	Going here again will reset the Figures-mode! \n");
 						
 						if (figures != 0) {
 							printf("	Figures-mode reseted! \n");
 							printf(" \n");
 							figures = 0;
 						} else {
+							printf("	Going here again will reset the Figures-mode! \n");
 							figures = 1;	//make a selection possible, go on
 							
 							show_figures ();
@@ -1087,7 +1099,6 @@ int main (void) {
 					
 					if (beginningmenu == Allocation) {
 						
-						printf("	Going here again will reset the Allocation-mode! \n");
 						printf("	Every movement of a square owned by a player caused by gamemode-special actions will reduce its allocation to 1 \n");
 						
 						if (allocation != 0) {
@@ -1095,16 +1106,37 @@ int main (void) {
 							printf(" \n");
 							allocation = 0;
 						} else {
+							printf("	Going here again will reset the Allocation-mode! \n");
 							printf("	Maximum of possession? (<100)\n");
 							
 							allocation = get_unsigned_numeric_input_with_not_more_than_2_letters (allocation);
 							
 							if (allocation == 0) {
 								printf("	That's not possible !!! \n");
-								allocation = 0;
 							}
 						}
 					}
+					
+					
+					if (beginningmenu == Cards) {
+						tac = 0;
+						opt = 0;
+						
+						if (cards != 0) {
+							printf("	Cards-mode reseted! \n");
+							printf(" \n");
+							cards = 0;
+						} else {
+							printf("	Do not activate Tactics or Random, it will replace the Cards-Mode! \n");
+							printf("	This only works if the number of players is correct! \n");
+							printf("	Going here again will reset the Cards-mode! \n");
+							
+							time3 = time(NULL);
+							cards = 1;
+						}
+						
+					}
+					
 					
 					if ((beginningmenu == back+1)&&(gamemode_played == Fall)){
 						printf("	Points for win: (0<...<10)			(normal: 3) \n");
@@ -1733,15 +1765,8 @@ int main (void) {
 					printf(" \n");
 					if (journey == 1){
 						printf("	Journey   activated \n");
-					}
-					if (journey == 0){
+					} else if (journey == 0){
 						printf("	Journey deactivated \n");
-					}
-					printf(" \n");
-					if (tac != 0){
-						printf("	Tactics   activated, 	stack = %u \n", tac);	
-					} else {
-						printf("	Tactics deactivated \n");	
 					}
 					printf(" \n");
 					if (opague != 0){
@@ -1818,6 +1843,18 @@ int main (void) {
 						
 					} else if (opt == 0) {
 						printf("	Random  deactivated \n");
+					}
+					printf(" \n");
+					if (tac != 0){
+						printf("	Tactics   activated, 	stack = %u \n", tac);	
+					} else {
+						printf("	Tactics deactivated \n");	
+					}
+					printf(" \n");
+					if (cards != 0){
+						printf("	Cards     activated \n");
+					} else {
+						printf("	Cards   deactivated \n");	
 					}
 					printf(" \n");
 					printf("	limit_new:    %u \n	limit_at_all: %u \n", limit_new, limit_at_all);
@@ -1937,6 +1974,7 @@ int main (void) {
 			same[68] = undead_duration;
 			same[69] = figures;
 			same[70] = allocation;
+			same[71] = cards;
 			
 		} else if (same[0] == 1) {
 			same[0] = 0;
@@ -2014,6 +2052,10 @@ int main (void) {
 			undead_duration = same[68];
 			figures = same[69];
 			allocation = same[70];
+			cards = same[71];
+			
+			time3 = time(NULL);
+			
 		}
 		
 		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
@@ -2089,6 +2131,67 @@ int main (void) {
 					stack_of_[p][q][0] = tac;
 				}
 			}
+			
+		} else if (cards != 0) {
+			time1 = time(NULL);
+			printf("	How many cards to own (1<...<10)?\n");
+			
+			cards = get_unsigned_numeric_input_with_not_more_than_1_letter (cards);
+			
+			if (cards == 0) {
+				printf("	That's not possible, you will take 6 !!! \n");
+				cards = 6;
+			}
+			time2 = time(NULL);
+			time_saver = difftime(time2, time1);
+			
+			// printf("	Zeitdifferenz12: %f \n", time_saver);	//test
+			// scanf("%lf", &time_saver);
+			
+			lim = 0;
+			unsigned int c = 0;
+			unsigned int x = 0;
+			while (lim == 0) {
+				c += 1;
+				if ((time_saver) <= 1.0*c) {
+					lim = (c%6)+1;
+				}
+			}
+			c = 0;
+			
+			time_saver = difftime(time1, time3);
+			
+			// printf("	Zeitdifferenz31: %f \n", time_saver);	//test
+			// scanf("%lf", &time_saver);
+			
+			while (x == 0) {
+				c += 1;
+				if ((time_saver) <= 1.0*c) {
+					x = (c%6)+1;
+				}
+			}
+			
+			for (unsigned int q=1; q<=cards; q++) {
+				for (unsigned int p=1; p<=number_of_players; p++) {
+					stack_of_[p][((((lim+(((9+p*q)/10)%6)+1)%6)+1)*(((x+q/2)%6)+1))%7][0] += 1;
+				}
+			}
+			
+			// for (unsigned f=1; f<=number_of_players; f++) {	//test
+				// printf("Spieler %u:", f);
+				// for (unsigned int g=1; g<=6; g++) {
+					// printf("	[%u]=%u", g, stack_of_[f][g][0]);
+				// }
+				// printf("\n");
+			// }
+			
+			c = 0;
+			x = 0;
+			lim = 0;
+			time1 = 0;
+			time2 = 0;
+			time3 = 0;
+			time_saver = 0.0;
 		}
 		
 		if (gamemode_played == Rain) {
@@ -3226,12 +3329,14 @@ int main (void) {
 			
 			if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
 				if (tac != 0) {
-					
-					numbers_of_[geben][number_[geben]][0] += 1;
-					
+					stack_of_[geben][number_[geben]][0] += 1;
+					numbers_of_[geben][number_[geben]][0] -= 1;	//?
 				} else if (opt == 5) {
 					use_number = cons[geben];
 					numbers_of_[geben][use_number][0] -= 1;
+				} else if (cards != 0) {
+					stack_of_[geben][number_[geben]][0] += 1;
+					numbers_of_[geben][number_[geben]][0] -= 1;	//?
 				} else {
 					numbers_of_[geben][number_[geben]][0] -= 1;
 				}
@@ -3446,8 +3551,8 @@ int main (void) {
 				
 				
 				
-				if ((tac != 0)&&(var_[geben] <= 62)&&(var_[geben] > 10)){
-					unsigned int tac_controll;
+				if (((tac != 0)||(cards != 0))&&(var_[geben] <= 62)&&(var_[geben] > 10)){
+					unsigned int tac_controll;	//also used for cards
 					tac_controll = 0;
 					if (((var_[geben]%10) > 2)||((var_[geben]%10) == 0)){
 						var_[geben] = 7;
@@ -3463,7 +3568,7 @@ int main (void) {
 							stack_of_[geben][tac_controll][0] -= 1;		//Die tac-Abrechnung
 						}
 					}
-				} else if ((tac != 0)&&(var_[geben] != 100)&&(var_[geben] != 1010)&&(var_[geben] != 0)&&(var_[geben] != 5)) {
+				} else if (((tac != 0)||(cards != 0))&&(var_[geben] != 100)&&(var_[geben] != 1010)&&(var_[geben] != 0)&&(var_[geben] != 5)) {
 					var_[geben] = 7;
 				}		
 				//tac-mode
@@ -3547,14 +3652,14 @@ int main (void) {
 					for (unsigned int i=1; i<m-1; i+=1){
 						for (unsigned int j=1; j<n-1; j+=1){
 							
-							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, geben, i, j, Field[Vorganger(geben, number_of_players)][i][j]);
+							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field[Vorganger(geben, number_of_players)][i][j]);
 							
 							if (allocation != 0) {
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_allocation, Vorganger(geben, number_of_players)+2, i, j, Sf_allocation[0][i][j]);	//geben+2 wegen indexverschiebung
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_allocation, 0, i, j, Sf_allocation[Vorganger(geben, number_of_players)+2][i][j]);	//+2 wegen Indexverschiebung
 							}
 						
 							if (journey == 1){
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, geben, i, j, Field_journey[Vorganger(geben, number_of_players)][i][j]);
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, Field_journey[Vorganger(geben, number_of_players)][i][j]);
 
 							}
 							
@@ -3592,6 +3697,15 @@ int main (void) {
 								}
 							}
 						}
+						
+						if (gamemode_played == Dynamic) {
+							for (unsigned int p=2; p<=5; p+=1) {
+								
+								dynamic_pointer_save[geben][p-2] = dynamic_pointer[p];
+								
+							}
+						}
+						
 						
 					}
 					
@@ -4255,15 +4369,6 @@ int main (void) {
 					
 					if (var_[geben%number_of_players+1] != 1010) {
 						cons[geben] = use_number;
-						
-						if (gamemode_played == Dynamic) {
-							for (unsigned int p=2; p<=5; p+=1) {
-								
-								dynamic_pointer_save[geben][p-2] = dynamic_pointer[p];
-								
-							}
-						}
-						
 					}
 					
 					use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_);
