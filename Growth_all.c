@@ -2134,9 +2134,9 @@ int main (void) {
 			
 		} else if (cards != 0) {
 			time1 = time(NULL);
-			printf("	How many cards to own (1<...<10)?\n");
+			printf("	How many cards to own (1<...<100)?\n");
 			
-			cards = get_unsigned_numeric_input_with_not_more_than_1_letter (cards);
+			cards = get_unsigned_numeric_input_with_not_more_than_2_letters (cards);
 			
 			if (cards == 0) {
 				printf("	That's not possible, you will take 6 !!! \n");
@@ -3311,7 +3311,6 @@ int main (void) {
 			if (var_[geben] == 1010) {
 				use_number = cons[geben];
 				if (opt == 5) {
-				
 					printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
 					printf("	Keep the number: 	1 \n");
 					printf("	Get the next one:	2 \n");
@@ -3323,25 +3322,39 @@ int main (void) {
 						printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
 					}
 					lim = 0;
-				
+				} else if (cards != 0) {
+					printf("	Player %u ,do you want to keep your Card (%u) or do you want to get the next one? \n", geben, cons[geben]);
+					printf("	Keep the number: 	1 \n");
+					printf("	Get the next one:	2 \n");
+					lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
+					
+					if (lim == 2) {
+						use_number = random_number (num_1, num_2, num_3, use_number, g, var_, number_);
+					} else if (lim != 1) {
+						printf("	Well, you keep your number, but next time please take an option i offered. \n\n");
+					}
+					lim = 0;
 				}
 			}
 			
 			if (var_[geben%number_of_players+1] == 1010){		//geben%number_of_players+1 ist der Nachfolger von geben.
 				if (tac != 0) {
 					stack_of_[geben][number_[geben]][0] += 1;
-					numbers_of_[geben][number_[geben]][0] -= 1;	//?
+					numbers_of_[geben][number_[geben]][0] -= 1;
 				} else if (opt == 5) {
 					use_number = cons[geben];
 					numbers_of_[geben][use_number][0] -= 1;
 				} else if (cards != 0) {
 					stack_of_[geben][number_[geben]][0] += 1;
-					numbers_of_[geben][number_[geben]][0] -= 1;	//?
+					numbers_of_[geben][number_[geben]][0] -= 1;
 				} else {
 					numbers_of_[geben][number_[geben]][0] -= 1;
 				}
 				
+			} else if (cards != 0) {
+				stack_of_[geben][use_number][0] += 1;	//Drawing a card
 			}
+			
 			
 			if ((tac != 0)&&((stack_of_[geben][1][0]+stack_of_[geben][2][0]+stack_of_[geben][3][0]+stack_of_[geben][4][0]+stack_of_[geben][5][0]+stack_of_[geben][6][0]) == 0)){
 				for (unsigned int p=1; p<=6; p+=1){
@@ -3383,7 +3396,13 @@ int main (void) {
 				
 				show_whose_turn (gamemode_played, geben, ability, Colored);
 				
-				if (tac != 0){
+				if ((cards != 0)&&(var_[geben%number_of_players+1] != 1010)) {
+					printf("	You draw a %u. \n\n", use_number);
+				} else if ((cards != 0)&&(var_[geben%number_of_players+1] == 1010)) {
+					printf("	You still draw a %u. \n\n", cons[geben]);
+				}
+				
+				if ((tac != 0)||(cards != 0)){
 					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", stack_of_[geben][1][0], stack_of_[geben][2][0], stack_of_[geben][3][0], stack_of_[geben][4][0], stack_of_[geben][5][0], stack_of_[geben][6][0]);
 					printf("\n");
 					printf("\n");
@@ -3565,13 +3584,13 @@ int main (void) {
 							var_[geben] = 7;
 							menuoperator = 1;
 						} else {
-							stack_of_[geben][tac_controll][0] -= 1;		//Die tac-Abrechnung
+							stack_of_[geben][tac_controll][0] -= 1;		//Die tac/cards-Abrechnung
 						}
 					}
 				} else if (((tac != 0)||(cards != 0))&&(var_[geben] != 100)&&(var_[geben] != 1010)&&(var_[geben] != 0)&&(var_[geben] != 5)) {
 					var_[geben] = 7;
 				}		
-				//tac-mode
+				//tac/cards-mode
 				
 				if (opt == 5){
 					controll_1 = 10+use_number;
@@ -3645,6 +3664,9 @@ int main (void) {
 							dynamic_pointer[p] = dynamic_pointer_save[Vorganger(geben, number_of_players)][p-2];	//if
 							
 						}
+					}
+					if (cards != 0) {
+						stack_of_[geben][use_number][0] -= 1;
 					}
 					
 					cons[geben] = use_number;
