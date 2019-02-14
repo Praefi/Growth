@@ -69,6 +69,23 @@ unsigned int who_is_out (unsigned int*, unsigned int, unsigned int);
 
 void set_Spielfeld_Eintrag (Spielfeld, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
 
+void set_gleiter_oben_links (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_gleiter_links_oben (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_gleiter_oben_rechts (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_gleiter_rechts_oben (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_gleiter_unten_links (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_gleiter_links_unten (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_gleiter_unten_rechts (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_gleiter_rechts_unten (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_triangle_oben_links (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_triangle_oben_rechts (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_triangle_unten_rechts (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_triangle_unten_links (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_mountain_oben (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_mountain_unten (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_mountain_rechts (Spielfeld, unsigned int, unsigned int, unsigned int);
+void set_mountain_links (Spielfeld, unsigned int, unsigned int, unsigned int);
+
 void Index (unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int);
 
 void opague_builder (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int);
@@ -6309,205 +6326,114 @@ void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m, unsigned int number_of_
 void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int geben, Spielfeld Sf_opague, Spielfeld Sf_allocation, unsigned int allocation){
 	
 	if (gamemode_played == Classic){
-		unsigned int n_2;
-		n_2 = n/2;
 		
-		Field[0][1][n_2-1] 	= 1;		//Spieler 1
-		Field[0][1][n_2+1] 	= 1;
-		Field[0][2][n_2-1]	= 1;
-		Field[0][2][n_2]		= 1;
-		Field[0][3][n_2]		= 1;
-		
+		set_gleiter_links_unten (Field, 1, 2, n/2);		//Spieler 1
 		
 		//Field[0][8][3] = 2;	Field[0][9][3] = 2;	//Test
 		//Field[0][8][4] = 2;	Field[0][9][6] = 2;
 		//Field[0][8][5] = 2;	Field[0][10][3] = 2;
 		//Field[0][8][6] = 2;	Field[0][10][4] = 2;
 		
-		
-		Field[0][m-2][n_2-2] 	= 2;		//Spieler 2
-		Field[0][m-2][n_2] 	= 2;
-		Field[0][m-3][n_2]	= 2;
-		Field[0][m-3][n_2-1] 	= 2;
-		Field[0][m-4][n_2-1]	= 2;
+		set_gleiter_rechts_oben (Field, 2, m-3, (n/2)-1);		//Spieler 2
 		
 	} else if (gamemode_played == Collect){
-		unsigned int n_2;
-		n_2 = (n-1)/2;
 		
-		Field[0][1][n_2-1] 	= 1;		//Spieler 1
-		Field[0][1][n_2+1] 	= 1;
-		Field[0][2][n_2-1]	= 1;
-		Field[0][2][n_2]		= 1;
-		Field[0][3][n_2]		= 1;
-		
+		set_gleiter_links_unten (Field, 1, 2, (n-1)/2);		//Spieler 1
 		
 		//Field[0][9][1] = 1;	Field[0][8][5] = 1;	//Test
 		//Field[0][8][5] = 1;	Field[0][8][6] = 1;
 		//Field[0][2][1] = 2;	Field[0][5][2] = 1;
 		//Field[0][5][5] = 1;	Field[0][5][6] = 1;
 		
+		set_gleiter_rechts_oben (Field, 2, m-3, (n/2)-1);		//Spieler 2
 		
-		Field[0][m-2][n_2-1] 	= 2;		//Spieler 2
-		Field[0][m-2][n_2+1] 	= 2;
-		Field[0][m-3][n_2]	= 2;
-		Field[0][m-3][n_2+1] 	= 2;
-		Field[0][m-4][n_2]	= 2;
-		
-		
-		Field[0][(m-1)/2][2] 		= 7;		//to Collect
+		Field[0][(m-1)/2][2] 	= 7;		//to Collect
 		Field[0][(m-1)/2][n-3] 	= 7;
-		Field[0][(m-1)/2][n_2]	= 7;
+		Field[0][(m-1)/2][(n-1)/2]	= 7;
 		
 	} else if (gamemode_played == Contact){
-		unsigned int n_2;
-		n_2 = n/2;
 		
-		Field[0][1][n_2-1] 	= 1;		//Spieler 1
-		Field[0][1][n_2+1] 	= 1;
-		Field[0][2][n_2-1]	= 1;
-		Field[0][2][n_2]		= 1;
-		Field[0][3][n_2]		= 1;
-		
-		Field[0][1][2] = 1;
-		Field[0][2][2] = 1;
-		Field[0][2][1] = 1;
-		Field[0][1][n-3] = 1;
-		Field[0][2][n-2] = 1;
-		Field[0][2][n-3] = 1;
+		set_gleiter_links_unten (Field, 1, 2, n/2);		//Spieler 1
+		set_triangle_oben_links (Field, 1, 1, 1);
+		set_triangle_oben_rechts (Field, 1, 1, n-2);
 		
 		//Field[0][9][1] = 1;	Field[0][8][5] = 1;	//Test
 		//Field[0][8][5] = 1;	Field[0][8][6] = 1;
 		//Field[0][2][1] = 2;	Field[0][5][2] = 1;
 		//Field[0][5][5] = 1;	Field[0][5][6] = 1;
 		
-		
-		Field[0][m-2][n_2-2] 	= 2;		//Spieler 2
-		Field[0][m-2][n_2] 	= 2;
-		Field[0][m-3][n_2]	= 2;
-		Field[0][m-3][n_2-1] 	= 2;
-		Field[0][m-4][n_2-1]	= 2;
-		
-		Field[0][m-2][2] = 2;
-		Field[0][m-3][2] = 2;
-		Field[0][m-3][1] = 2;
-		Field[0][m-3][n-3] = 2;
-		Field[0][m-3][n-2] = 2;
-		Field[0][m-2][n-3] = 2;
+		set_gleiter_rechts_oben (Field, 2, m-3, (n/2)-1);		//Spieler 2
+		set_triangle_unten_links (Field, 2, m-2, 1);
+		set_triangle_unten_rechts (Field, 2, m-2, n-2);
 		
 	} else if (gamemode_played == Fall){
-		Field[0][m-2][1] 	= 1;		//Spieler 1
-		Field[0][m-2][3] 	= 1;
-		Field[0][m-3][2]	= 1;
-		Field[0][m-3][3]	= 1;
-		Field[0][m-4][2]	= 1;
 		
+		set_gleiter_rechts_oben (Field, 1, m-3, 2);		//Spieler 1
 		
 		//Field[0][9][1] = 1;	Field[0][8][5] = 1;	//Test
 		//Field[0][8][5] = 1;	Field[0][8][6] = 1;
 		//Field[0][2][1] = 2;	Field[0][5][2] = 1;
 		//Field[0][5][5] = 1;	Field[0][5][6] = 1;
 		
-		
-		Field[0][m-2][n-2] 	= 2;		//Spieler 2
-		Field[0][m-2][n-4] 	= 2;
-		Field[0][m-3][n-3]	= 2;
-		Field[0][m-3][n-4] 	= 2;
-		Field[0][m-4][n-3]	= 2;
+		set_gleiter_links_oben (Field, 2, m-3, n-3);		//Spieler 2
 		
 		Field[0][1][(n-1)/2] = 7;
 		
 	} else if (gamemode_played == Fight){
-		unsigned int n_2;
-		n_2 = n/2;
 		
-		Field[0][1][n_2-1] 	= 1;		//Spieler 1
-		Field[0][1][n_2+1] 	= 1;
-		Field[0][2][n_2-1]	= 1;
-		Field[0][2][n_2]		= 1;
-		Field[0][3][n_2]		= 1;
-		
+		set_gleiter_links_unten (Field, 1, 2, n/2);		//Spieler 1
 		
 		//Field[0][9][1] = 1;	Field[0][8][5] = 1;	//Test
 		//Field[0][8][5] = 1;	Field[0][8][6] = 1;
 		//Field[0][2][1] = 2;	Field[0][5][2] = 1;
 		//Field[0][5][5] = 1;	Field[0][5][6] = 1;
 		
-		
-		Field[0][m-2][n_2-2] 	= 2;		//Spieler 2
-		Field[0][m-2][n_2] 	= 2;
-		Field[0][m-3][n_2]	= 2;
-		Field[0][m-3][n_2-1] 	= 2;
-		Field[0][m-4][n_2-1]	= 2;
+		set_gleiter_rechts_oben (Field, 2, m-3, (n/2)-1);		//Spieler 2
 		
 	} else if (gamemode_played == Hunt){
 		if (number_of_players == 2) {
 			unsigned int m_2;
 			m_2 = (m-1)/2;
 			
-			Field[0][m_2-1][3] = 1;		//Spieler 1
-			Field[0][m_2][2] 	 = 1;
-			Field[0][m_2][3]	 = 11;
-			Field[0][m_2][4]	 = 1;
-			Field[0][m_2+1][3] = 1;
+			Field[0][m_2-1][3]	= 1;		//Spieler 1
+			Field[0][m_2][2]	= 1;
+			Field[0][m_2][3]	= 11;
+			Field[0][m_2][4]	= 1;
+			Field[0][m_2+1][3]	= 1;
 			
-			Field[0][m_2-1][n-2]	= 2;		//Spieler 2
-			Field[0][m_2][n-3]	= 2;
-			Field[0][m_2][n-4]	= 2;
-			Field[0][m_2+1][n-3]	= 2;
-			Field[0][m_2+1][n-2]	= 2;
+			set_gleiter_unten_links (Field, 2, m_2, n-3);		//Spieler 2
 			
 		} else if (number_of_players == 3) {
 			unsigned int m_2, n_2;
 			m_2 = (m-1)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
-			Field[0][m_2][n_2-1] 	= 1;
-			Field[0][m_2][n_2]	= 11;
-			Field[0][m_2][n_2+1]	= 1;
-			Field[0][m_2+1][n_2]	= 1;
+			Field[0][m_2-1][n_2] = 1;		//Spieler 1
+			Field[0][m_2][n_2-1] = 1;
+			Field[0][m_2][n_2]	 = 11;
+			Field[0][m_2][n_2+1] = 1;
+			Field[0][m_2+1][n_2] = 1;
 			
-			Field[0][m_2-1][n-2]	= 2;		//Spieler 2
-			Field[0][m_2][n-3]	= 2;
-			Field[0][m_2][n-4]	= 2;
-			Field[0][m_2+1][n-3]	= 2;
-			Field[0][m_2+1][n-2]	= 2;
+			set_gleiter_unten_links (Field, 2, m_2, n-3);		//Spieler 2
 			
-			Field[0][m_2-1][1] = 3;		//Spieler 3
-			Field[0][m_2-1][2] = 3;
-			Field[0][m_2][2]	 = 3;
-			Field[0][m_2][3]	 = 3;
-			Field[0][m_2+1][1] = 3;
+			set_gleiter_oben_rechts (Field, 3, m_2, 2);		//Spieler 3
 			
 		} else if (number_of_players == 4) {
 			unsigned int m_2, n_2;
 			m_2 = (m-1)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-2][n_2]	 = 1;		//Spieler 1
-			Field[0][m_2-1][n_2-1] = 1;
-			Field[0][m_2-1][n_2]	 = 11;
-			Field[0][m_2-1][n_2+1] = 1;
-			Field[0][m_2][n_2]	 = 1;
+			Field[0][m_2-2][n_2]	= 1;		//Spieler 1
+			Field[0][m_2-1][n_2-1]	= 1;
+			Field[0][m_2-1][n_2]	= 11;
+			Field[0][m_2-1][n_2+1]	= 1;
+			Field[0][m_2][n_2]		= 1;
 			
-			Field[0][m-2][n_2-1]	= 2;		//Spieler 2
-			Field[0][m-2][n_2+1]	= 2;
-			Field[0][m-3][n_2]	= 2;
-			Field[0][m-3][n_2+1]	= 2;
-			Field[0][m-4][n_2]	= 2;
+			set_gleiter_rechts_oben (Field, 2, m-3, n_2);		//Spieler 2
 			
-			Field[0][1][n-2]	= 3;		//Spieler 3
-			Field[0][2][n-3]	= 3;
-			Field[0][2][n-4]	= 3;
-			Field[0][3][n-2]	= 3;
-			Field[0][3][n-3]	= 3;
+			set_gleiter_unten_links (Field, 3, 2, n-3);		//Spieler 3
 			
-			Field[0][1][1] = 4;		//Spieler 4
-			Field[0][2][2] = 4;
-			Field[0][2][3] = 4;
-			Field[0][3][1] = 4;
-			Field[0][3][2] = 4;
+			set_gleiter_unten_rechts (Field, 4, 2, 2);		//Spieler 4
 			
 		} else if (number_of_players == 5) {
 			unsigned int m_2, n_2;
@@ -6516,33 +6442,17 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			
 			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
 			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]	= 11;
+			Field[0][m_2][n_2]		= 11;
 			Field[0][m_2][n_2+1]	= 1;
 			Field[0][m_2+1][n_2]	= 1;
 			
-			Field[0][m-2][n-2] = 2;		//Spieler 2
-			Field[0][m-4][n-2] = 2;
-			Field[0][m-3][n-3] = 2;
-			Field[0][m-3][n-4] = 2;
-			Field[0][m-4][n-3] = 2;
+			set_gleiter_oben_links (Field, 2, m-3, n-3);		//Spieler 2
 			
-			Field[0][1][n-2]	= 3;		//Spieler 3
-			Field[0][2][n-3]	= 3;
-			Field[0][2][n-4]	= 3;
-			Field[0][1][n-4]	= 3;
-			Field[0][3][n-3]	= 3;
+			set_gleiter_links_unten (Field, 3, 2, n-3);		//Spieler 3
 			
-			Field[0][1][1] = 4;		//Spieler 4
-			Field[0][2][2] = 4;
-			Field[0][2][3] = 4;
-			Field[0][3][1] = 4;
-			Field[0][3][2] = 4;
+			set_gleiter_unten_rechts (Field, 4, 2, 2);		//Spieler 4
 			
-			Field[0][m-2][1] = 5;		//Spieler 5
-			Field[0][m-3][2] = 5;
-			Field[0][m-3][3] = 5;
-			Field[0][m-4][2] = 5;
-			Field[0][m-2][3] = 5;
+			set_gleiter_rechts_oben (Field, 5, m-3, 2);		//Spieler 5
 			
 		} else if (number_of_players == 6) {
 			unsigned int m_2, nn;
@@ -6551,39 +6461,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			
 			Field[0][m_2-1][nn]	= 1;		//Spieler 1
 			Field[0][m_2][nn-1]	= 1;
-			Field[0][m_2][nn]		= 11;
+			Field[0][m_2][nn]	= 11;
 			Field[0][m_2][nn+1]	= 1;
 			Field[0][m_2+1][nn]	= 1;
 			
-			Field[0][m_2-1][n-2]	= 2;		//Spieler 2
-			Field[0][m_2-1][n-3]	= 2;
-			Field[0][m_2][n-3]	= 2;
-			Field[0][m_2][n-4]	= 2;
-			Field[0][m_2+1][n-2]	= 2;
+			set_gleiter_oben_links (Field, 2, m_2, n-3);		//Spieler 2
 			
-			Field[0][1][n-8]	= 3;		//Spieler 3
-			Field[0][2][n-8]	= 3;
-			Field[0][2][n-7]	= 3;
-			Field[0][1][n-6]	= 3;
-			Field[0][3][n-7]	= 3;
+			set_gleiter_links_unten (Field, 3, 2, n-7);		//Spieler 3
 			
-			Field[0][1][1] = 4;		//Spieler 4
-			Field[0][2][2] = 4;
-			Field[0][2][3] = 4;
-			Field[0][1][3] = 4;
-			Field[0][3][2] = 4;
+			set_gleiter_rechts_unten (Field, 4, 2, 2);		//Spieler 4
 			
-			Field[0][m-2][1] = 5;		//Spieler 5
-			Field[0][m-3][2] = 5;
-			Field[0][m-3][3] = 5;
-			Field[0][m-4][2] = 5;
-			Field[0][m-2][3] = 5;
+			set_gleiter_rechts_oben (Field, 5, m-3, 2);		//Spieler 5
 			
-			Field[0][m-2][n-8] = 6;		//Spieler 6
-			Field[0][m-3][n-8] = 6;
-			Field[0][m-3][n-7] = 6;
-			Field[0][m-4][n-7] = 6;
-			Field[0][m-2][n-6] = 6;
+			set_gleiter_links_oben (Field, 6, m-3, n-7);		//Spieler 6
 			
 		} else if (number_of_players == 7) {
 			unsigned int m_2, n_2;
@@ -6592,45 +6482,21 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			
 			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
 			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]	= 11;
+			Field[0][m_2][n_2]		= 11;
 			Field[0][m_2][n_2+1]	= 1;
 			Field[0][m_2+1][n_2]	= 1;
 			
-			Field[0][m_2-1][n-2]	= 2;		//Spieler 2
-			Field[0][m_2-1][n-3]	= 2;
-			Field[0][m_2][n-3]	= 2;
-			Field[0][m_2][n-4]	= 2;
-			Field[0][m_2+1][n-2]	= 2;
+			set_gleiter_oben_links (Field, 2, m_2, n-3);		//Spieler 2
 			
-			Field[0][1][n-7]	= 3;		//Spieler 3
-			Field[0][2][n-7]	= 3;
-			Field[0][2][n-6]	= 3;
-			Field[0][1][n-5]	= 3;
-			Field[0][3][n-6]	= 3;
+			set_gleiter_links_unten (Field, 3, 2, n-6);		//Spieler 3
 			
-			Field[0][1][4] = 4;		//Spieler 4
-			Field[0][2][5] = 4;
-			Field[0][2][6] = 4;
-			Field[0][1][6] = 4;
-			Field[0][3][5] = 4;
+			set_gleiter_rechts_unten (Field, 4, 2, 5);		//Spieler 4
 			
-			Field[0][m_2-1][1] = 5;		//Spieler 5
-			Field[0][m_2][2]	 = 5;
-			Field[0][m_2][3]	 = 5;
-			Field[0][m_2+1][2] = 5;
-			Field[0][m_2+1][1] = 5;
+			set_gleiter_unten_rechts (Field, 5, m_2, 2);		//Spieler 5
 			
-			Field[0][m-2][4] = 6;		//Spieler 6
-			Field[0][m-3][5] = 6;
-			Field[0][m-3][6] = 6;
-			Field[0][m-4][5] = 6;
-			Field[0][m-2][6] = 6;
+			set_gleiter_rechts_oben (Field, 6, m-3, 5);		//Spieler 6
 			
-			Field[0][m-2][n-7] = 7;		//Spieler 7
-			Field[0][m-3][n-7] = 7;
-			Field[0][m-3][n-6] = 7;
-			Field[0][m-4][n-6] = 7;
-			Field[0][m-2][n-5] = 7;
+			set_gleiter_links_oben (Field, 7, m-3, n-6);		//Spieler 7
 			
 		} else if (number_of_players == 8) {
 			unsigned int m_2, n_2;
@@ -6639,50 +6505,23 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			
 			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
 			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]	= 11;
+			Field[0][m_2][n_2]		= 11;
 			Field[0][m_2][n_2+1]	= 1;
 			Field[0][m_2+1][n_2]	= 1;
 			
-			Field[0][m_2-1][n-2]	= 2;		//Spieler 2
-			Field[0][m_2-1][n-3]	= 2;
-			Field[0][m_2][n-3]	= 2;
-			Field[0][m_2][n-4]	= 2;
-			Field[0][m_2+1][n-2]	= 2;
+			set_gleiter_oben_links (Field, 2, m_2, n-3);		//Spieler 2
 			
-			Field[0][1][n-8]	= 3;		//Spieler 3
-			Field[0][2][n-8]	= 3;
-			Field[0][2][n-7]	= 3;
-			Field[0][1][n-6]	= 3;
-			Field[0][3][n-7]	= 3;
+			set_gleiter_links_unten (Field, 3, 2, n-7);		//Spieler 3
 			
-			Field[0][1][5] = 4;		//Spieler 4
-			Field[0][2][6] = 4;
-			Field[0][2][7] = 4;
-			Field[0][1][7] = 4;
-			Field[0][3][6] = 4;
+			set_gleiter_rechts_unten (Field, 4, 2, 6);		//Spieler 4
 			
-			Field[0][m_2-1][1] = 5;		//Spieler 5
-			Field[0][m_2][2]	 = 5;
-			Field[0][m_2][3]	 = 5;
-			Field[0][m_2-1][2] = 5;
-			Field[0][m_2+1][1] = 5;
+			set_gleiter_oben_rechts (Field, 5, m_2, 2);		//Spieler 5
 			
-			Field[0][m-4][3] = 6;		//Spieler 6
-			Field[0][m-5][4] = 6;
-			Field[0][m-5][5] = 6;
-			Field[0][m-6][4] = 6;
-			Field[0][m-4][5] = 6;
+			set_gleiter_rechts_oben (Field, 6, m-5, 4);		//Spieler 6
 			
-			Field[0][m-2][n_2]	= 7;		//Spieler 7
-			Field[0][m-3][n_2-1]	= 7;
-			Field[0][m-3][n_2]	= 7;
-			Field[0][m-3][n_2+1]	= 7;
+			set_mountain_unten (Field, 7, m-3, n_2);		//Spieler 7
 			
-			Field[0][m-4][n-6] = 8;		//Spieler 8
-			Field[0][m-5][n-6] = 8;
-			Field[0][m-5][n-5] = 8;
-			Field[0][m-6][n-5] = 8;
-			Field[0][m-4][n-4] = 8;
+			set_gleiter_rechts_oben (Field, 8, m-5, n-5);		//Spieler 8
 			
 		} else if (number_of_players == 9) {
 			unsigned int m_2, n_2;
@@ -6691,79 +6530,37 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			
 			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
 			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]	= 11;
+			Field[0][m_2][n_2]		= 11;
 			Field[0][m_2][n_2+1]	= 1;
 			Field[0][m_2+1][n_2]	= 1;
 			
-			Field[0][m_2-1][n-3]	= 2;		//Spieler 2
-			Field[0][m_2][n-2]	= 2;
-			Field[0][m_2][n-3]	= 2;
-			Field[0][m_2+1][n-3]	= 2;
+			set_mountain_rechts (Field, 2, m_2, n-3);		//Spieler 2
 			
-			Field[0][2][n-3]	= 3;		//Spieler 3
-			Field[0][2][n-5]	= 3;
-			Field[0][3][n-5]	= 3;
-			Field[0][4][n-5]	= 3;
-			Field[0][4][n-4]	= 3;
-			Field[0][4][n-3]	= 3;
+			set_edge_oben_rechts (Field, 3, 2, n-3);		//Spieler 3
 			
-			Field[0][1][n_2]	 = 4;		//Spieler 4
-			Field[0][2][n_2-1] = 4;
-			Field[0][2][n_2]	 = 4;
-			Field[0][2][n_2+1] = 4;
+			set_mountain_oben (Field, 4, 2, n_2);		//Spieler 4
 			
-			Field[0][2][2] = 5;		//Spieler 5
-			Field[0][2][4] = 5;
-			Field[0][3][4] = 5;
-			Field[0][4][4] = 5;
-			Field[0][4][3] = 5;
-			Field[0][4][2] = 5;
+			set_edge_oben_links (Field, 5, 2, 2);		//Spieler 5
 			
-			Field[0][m_2-1][2] = 6;		//Spieler 6
-			Field[0][m_2][1]	 = 6;
-			Field[0][m_2][2]	 = 6;
-			Field[0][m_2+1][2] = 6;
+			set_mountain_links (Field, 6, m_2, 2);		//Spieler 6
 			
-			Field[0][m-3][2] = 7;		//Spieler 7
-			Field[0][m-3][4] = 7;
-			Field[0][m-4][4] = 7;
-			Field[0][m-5][4] = 7;
-			Field[0][m-5][3] = 7;
-			Field[0][m-5][2] = 7;
+			set_edge_unten_links (Field, 7, m-3, 2);		//Spieler 7
 			
-			Field[0][m-2][n_2]	= 8;		//Spieler 8
-			Field[0][m-3][n_2-1]	= 8;
-			Field[0][m-3][n_2]	= 8;
-			Field[0][m-3][n_2+1]	= 8;
+			set_mountain_unten (Field, 8, m-3, n_2);		//Spieler 8
 			
-			Field[0][m-3][n-3] = 9;		//Spieler 9
-			Field[0][m-5][n-3] = 9;
-			Field[0][m-5][n-4] = 9;
-			Field[0][m-5][n-5] = 9;
-			Field[0][m-4][n-5] = 9;
-			Field[0][m-3][n-5] = 9;
-			
+			set_edge_unten_rechts (Field, 9, m-3, n-3);		//Spieler 9
 		}
 		
 	} else if (gamemode_played == Race){
-		Field[0][1][2] 	= 1;		//Spieler 1
-		Field[0][2][3] 	= 1;
-		Field[0][2][4]	= 1;
-		Field[0][3][2]	= 1;
-		Field[0][3][3]	= 1;
 		
+		set_gleiter_unten_rechts (Field, 1, 2, 3);		//Spieler 1
 		
 		//Field[0][9][1] = 1;	Field[0][8][5] = 1;	//Test
 		//Field[0][8][5] = 1;	Field[0][8][6] = 1;
 		//Field[0][2][1] = 2;	Field[0][5][2] = 1;
 		//Field[0][5][5] = 1;	Field[0][5][6] = 1;
 		
-		
-		Field[0][m-2][2] 	= 2;		//Spieler 2
-		Field[0][m-3][3] 	= 2;
-		Field[0][m-3][4]	= 2;
-		Field[0][m-4][2] 	= 2;
-		Field[0][m-4][3]	= 2;
+		set_gleiter_oben_rechts (Field, 2, m-3, 3);		//Spieler 2
 		
 		for (unsigned int i=1; i<m-1; i+=1){
 			Field[0][i][1] = 7;
@@ -6771,28 +6568,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 		Field[0][(m-1)/2][n-2] = 7;
 		
 	} else if (gamemode_played == Rain){
-		Field[0][m-2][1] 	= 1;		//Spieler 1
-		Field[0][m-2][3] 	= 1;
-		Field[0][m-3][2]	= 1;
-		Field[0][m-3][3]	= 1;
-		Field[0][m-4][2]	= 1;
 		
+		set_gleiter_rechts_oben (Field, 1, m-3, 2);		//Spieler 1
 		
 		//Field[0][4][10] = 2;	Field[0][5][10] = 2;	//Test
 		//Field[0][4][11] = 2;	Field[0][5][13] = 2;
 		//Field[0][4][12] = 2;	Field[0][6][10] = 2;
 		//Field[0][4][13] = 2;	Field[0][6][11] = 2;
 		
-		
-		Field[0][m-2][n-2] 	= 2;		//Spieler 2
-		Field[0][m-2][n-4] 	= 2;
-		Field[0][m-3][n-3]	= 2;
-		Field[0][m-3][n-4] 	= 2;
-		Field[0][m-4][n-3]	= 2;
+		set_gleiter_links_oben (Field, 2, m-3, n-3);		//Spieler 2
 		
 		//Field[0][1][(n-1)/2] = 7;
 		
-	} else if (gamemode_played == Arena){
+	} else if (gamemode_played == Arena){ go on
 		if (number_of_players == 2) {
 			unsigned int m_2;
 			m_2 = (m-1)/2;
@@ -13728,6 +13516,158 @@ void set_Spielfeld_Eintrag (Spielfeld Field, unsigned int geben, Spielfeld Sf_op
 			}
 		}
 	}
+}
+
+void set_gleiter_oben_links (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//oben das Bein, oben links das Wachstum, zentral aufgetragen
+	Field[0][i-1][j]	= geben;
+	Field[0][i-1][j+1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i][j-1]	= geben;
+	Field[0][i+1][j+1]	= geben;
+}
+
+void set_gleiter_links_oben (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {
+	Field[0][i-1][j]	= geben;
+	Field[0][i+1][j-1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i][j-1]	= geben;
+	Field[0][i+1][j+1]	= geben;
+}
+
+void set_gleiter_oben_rechts (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {
+	Field[0][i-1][j]	= geben;
+	Field[0][i-1][j-1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i][j+1]	= geben;
+	Field[0][i+1][j-1]	= geben;
+}
+
+void set_gleiter_rechts_oben (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {
+	Field[0][i-1][j]	= geben;
+	Field[0][i+1][j+1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i][j+1]	= geben;
+	Field[0][i+1][j-1]	= geben;
+}
+
+void set_gleiter_unten_links (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {
+	Field[0][i-1][j+1]	= geben;
+	Field[0][i][j-1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i+1][j]	= geben;
+	Field[0][i+1][j+1]	= geben;
+}
+
+void set_gleiter_links_unten (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {
+	Field[0][i-1][j-1]	= geben;
+	Field[0][i-1][j+1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i][j-1]	= geben;
+	Field[0][i+1][j]	= geben;
+}
+
+void set_gleiter_unten_rechts (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {
+	Field[0][i-1][j-1]	= geben;
+	Field[0][i][j+1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i+1][j-1]	= geben;
+	Field[0][i+1][j]	= geben;
+}
+
+void set_gleiter_rechts_unten (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {
+	Field[0][i-1][j-1]	= geben;
+	Field[0][i][j+1]	= geben;
+	Field[0][i][j]		= geben;
+	Field[0][i-1][j+1]	= geben;
+	Field[0][i+1][j]	= geben;
+}
+
+void set_triangle_oben_links (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Wachstum, in der angegebenen Ecke
+	Field[0][i][j+1] = geben;
+	Field[0][i+1][j] = geben;
+	Field[0][i+1][j+1] = geben;
+}
+
+void set_triangle_oben_rechts (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Wachstum, in der angegebenen Ecke
+	Field[0][i][j-1] = geben;
+	Field[0][i+1][j] = geben;
+	Field[0][i+1][j-1] = geben;
+}
+
+void set_triangle_unten_rechts (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Wachstum, in der angegebenen Ecke
+	Field[0][i-1][j-1] = geben;
+	Field[0][i-1][j] = geben;
+	Field[0][i][j-1] = geben;
+}
+
+void set_triangle_unten_links (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Wachstum, in der angegebenen Ecke
+	Field[0][i-1][j] = geben;
+	Field[0][i-1][j+1] = geben;
+	Field[0][i][j+1] = geben;
+}
+
+void set_mountain_oben (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schwerpunkt
+	Field[0][i][j] = geben;
+	Field[0][i-1][j] = geben;
+	Field[0][i][j-1] = geben;
+	Field[0][i][j+1] = geben;
+}
+
+void set_mountain_unten (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schwerpunkt
+	Field[0][i][j] = geben;
+	Field[0][i+1][j] = geben;
+	Field[0][i][j-1] = geben;
+	Field[0][i][j+1] = geben;
+}
+
+void set_mountain_rechts (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schwerpunkt
+	Field[0][i][j] = geben;
+	Field[0][i][j+1] = geben;
+	Field[0][i-1][j] = geben;
+	Field[0][i+1][j] = geben;
+}
+
+void set_mountain_links (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schwerpunkt
+	Field[0][i][j] = geben;
+	Field[0][i][j-1] = geben;
+	Field[0][i-1][j] = geben;
+	Field[0][i+1][j] = geben;
+}
+
+void set_edge_oben_links (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schweif
+	Field[0][i][j] = geben;
+	Field[0][i+2][j] = geben;
+	Field[0][i+2][j+1] = geben;
+	Field[0][i+2][j+2] = geben;
+	Field[0][i][j+2] = geben;
+	Field[0][i+1][j+2] = geben;
+}
+
+void set_edge_oben_rechts (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schweif
+	Field[0][i][j] = geben;
+	Field[0][i+2][j] = geben;
+	Field[0][i+2][j-1] = geben;
+	Field[0][i+2][j-2] = geben;
+	Field[0][i][j-2] = geben;
+	Field[0][i+1][j-2] = geben;
+}
+
+void set_edge_unten_rechts (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schweif
+	Field[0][i][j] = geben;
+	Field[0][i-2][j] = geben;
+	Field[0][i-2][j-1] = geben;
+	Field[0][i-2][j-2] = geben;
+	Field[0][i][j-2] = geben;
+	Field[0][i-1][j-2] = geben;
+}
+
+void set_edge_unten_links (Spielfeld Field, unsigned int geben, unsigned int i, unsigned int j) {	//platziert beim Schweif
+	Field[0][i][j] = geben;
+	Field[0][i-2][j] = geben;
+	Field[0][i-2][j+1] = geben;
+	Field[0][i-2][j+2] = geben;
+	Field[0][i][j+2] = geben;
+	Field[0][i-1][j+2] = geben;
 }
 
 //Dynamic (gamemode_played)	, done		(just notes following)
