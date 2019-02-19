@@ -26,6 +26,7 @@ void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsi
 void show_options_of_actions (unsigned int, unsigned int*, unsigned int);
 void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void show_figures ();
+void show_abilities (unsigned int*);
 
 unsigned int Vorganger (unsigned int, unsigned int);
 void figure_check (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, Spielfeld, unsigned int);
@@ -109,6 +110,8 @@ unsigned int chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsi
 
 void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, Spielfeld, unsigned int);
 
+void addition_maker (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int);
+
 void ahead (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int);
 
 void choose_heart (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
@@ -139,8 +142,9 @@ enum options {
 	Allocation = 12,
 	Cards = 13,
 	Inverted = 14,
+	Addition = 15,
 	
-	back = 15,		//synchronisiere mit back!
+	back = 16,		//synchronisiere mit back!
 } beginningmenu;
 
 enum gamemode {
@@ -186,19 +190,20 @@ int main (void) {
 	unsigned int menuoperator, playtime;	//Navigationsparameter
 	unsigned int opt, use_number, num_1, num_2, num_3, num_temp, tac, cards, controll_1, controll_2;	//How to get the numbers, and to controll them
 	unsigned int suprise, sup_num;	//specialeffects
-	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted;	//options, selected with beginningmenu
+	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition;	//options, selected with beginningmenu
 	unsigned int rtc, spf, scwhp, hboa, boost_hunt_activator, precounter;	//Spezieller Boost für the hunted one in gamemode Hunt
 	unsigned int nosv, AOP;		//number of saved variables; amount of players
 	unsigned int range, d_wert, indikator1, indikator2, indikator3, space_i, space_j, controll;		//Gamemode = Dynamic
 	//unsigned int cons[1]_fort, cons[2]_fort, cons[3]_fort, cons[4]_fort, cons[5]_fort, cons[6]_fort, cons[7]_fort, cons[8]_fort, cons[9]_fort;
 	
-	//sort the variables, go on
+	//sort the variables, done
 	
 	//scanf("%u", &pause); //test
 	//printf ("	ok 2 \n");	//test
 	
 	unsigned int round_counter, round_counter_before;	//Rundenanzahl und ihre Sicherung
-	unsigned int ttt, warning_system, exclude_counter, player_counter, rtp, information_code[4];	//time-to-think, rounds-to-play, 0 == rtc, 1 == spf, 2 == hboa, 3 == scwhp (gamemode_played == Hunt)
+	unsigned int ttt, warning_system;		//time-to-think
+	unsigned int exclude_counter, player_counter, rtp, information_code[4];	//rounds-to-play, 0 == rtc, 1 == spf, 2 == hboa, 3 == scwhp (gamemode_played == Hunt)
 	unsigned int* same;	//immer aktualisieren
 	unsigned int* position;		// "*" bezieht sich auf "position", nicht auf "unsigned int" !!!!
 	int erd;	//erdbeschleunigung
@@ -225,7 +230,7 @@ int main (void) {
 	
 	unsigned int pere[AOP+1], ability[AOP+1], Colored[AOP+1], ulcer_start[AOP+1], ulcer_lifes[AOP+1], out_counter[AOP+1];		//pere==penalty-reminder, ulcer_start==Are you on the field, out_counter== Are you out of play
 	
-	//gamemode_played == Hunt, geben == 1: information_code: [0]=0, [1]=1, [2]=1, [3]=0, [4]=0
+	//gamemode_played == Hunt, geben == 1: information_code: [0]=0, [1]=1, [2]=1, [3]=0
 	
 	//Benutzbar, aber benutzt:	unsigned int: lim, suprise, 
 	//Benutzbar, und unbenutzt:	unsigned int: 	(cons[0]?)		int (in int-Vektor): dynamic_pointer_save[p][0] (p=0,1,2,3)
@@ -240,7 +245,7 @@ int main (void) {
 	
 	playtime = 1;	//playing game after game after...
 	
-	nosv = 73;	//Number_of_saved_variables, drücke abhängig von AOP aus go on
+	nosv = 74;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
 	//same_counter = 0; 		//for variable length of same
 	
 	same = unsigned_int_Vektor_Create (nosv);
@@ -299,6 +304,7 @@ int main (void) {
 		undead_duration = 0;
 		allocation = 0;
 		inverted = 0;
+		addition = 0;
 		
 		fall_back = 0;
 		fall_controll = 0;
@@ -454,7 +460,7 @@ int main (void) {
 				
 				while (beginningmenu != Start){
 			
-					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n 	Cards	  : 13\n 	Inverted  : 14\n  \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
+					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n 	Cards	  : 13\n 	Inverted  : 14\n 	Addition  : 15\n  \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	Points for win: %u \n", back+1);
 						printf("	Turns per drop: %u \n", back+2);
@@ -1200,6 +1206,19 @@ int main (void) {
 						}
 					}
 					
+					if (beginningmenu == Addition) {
+						
+						if (addition != 0) {
+							printf("	Addition-mode reseted! \n");
+							printf(" \n");
+							addition = 0;
+						} else {
+							printf("	Going here again will reset the Addition-mode! \n");
+							printf("	Addition overrides the limits of development! \n");
+							addition = 1;
+						}
+					}
+					
 					if ((beginningmenu == back+1)&&(gamemode_played == Fall)){
 						printf("	Points for win: (0<...<10)			(normal: 3) \n");
 						points_for_win = get_unsigned_numeric_input_with_not_more_than_1_letter (points_for_win);
@@ -1277,144 +1296,34 @@ int main (void) {
 						while (((lim == 0)||(lim > 10))&&(exclude_counter < (AOP-number_of_players))) {
 							printf("	Which ability do you want to exclude? \n");
 							printf(" \n");
-							if (ability[1] == 0) {
-								printf("	Ultra light: 1 \n");
-							}
-							if (ability[2] == 0) {
-								printf("	Light	   : 2 \n");
-							}
-							if (ability[3] == 0) {
-								printf("	Anti	   : 3 \n");
-							}
-							if (ability[4] == 0) {
-								printf("	Cornered   : 4 \n");
-							}
-							if (ability[5] == 0) {
-								printf("	Inhibitor  : 5 \n");
-							}
-							if (ability[6] == 0) {
-								printf("	Shield	   : 6 \n");
-							}
-							if (ability[7] == 0) {
-								printf("	Poisoning  : 7 \n");
-							}
-							if (ability[8] == 0) {
-								printf("	Pressure   : 8 \n");
-							}
-							if (ability[9] == 0) {
-								printf("	Electric   : 9 \n");
-							}
+							
+							show_abilities (ability);
+							
 							printf(" \n");
 							printf(" \n");
 							if ((ability[1] == 100)||(ability[2] == 100)||(ability[3] == 100)||(ability[4] == 100)||(ability[5] == 100)||(ability[6] == 100)||(ability[7] == 100)||(ability[8] == 100)||(ability[9] == 100)) {
 								printf("	Which ability do you want to include? \n");
 							}
 							printf(" \n");
-							if (ability[1] == 100) {
-								printf("	Ultra light: 1 \n");
-							}
-							if (ability[2] == 100) {
-								printf("	Light	   : 2 \n");
-							}
-							if (ability[3] == 100) {
-								printf("	Anti	   : 3 \n");
-							}
-							if (ability[4] == 100) {
-								printf("	Cornered   : 4 \n");
-							}
-							if (ability[5] == 100) {
-								printf("	Inhibitor  : 5 \n");
-							}
-							if (ability[6] == 100) {
-								printf("	Shield	   : 6 \n");
-							}
-							if (ability[7] == 100) {
-								printf("	Poisoning  : 7 \n");
-							}
-							if (ability[8] == 100) {
-								printf("	Pressure   : 8 \n");
-							}
-							if (ability[9] == 100) {
-								printf("	Electric   : 9 \n");
-							}
+							
+							show_abilities (ability);
+							
 							printf(" \n");
 							printf(" \n");
 							printf("	Back: 10 \n");
 							printf(" \n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
 							
-							if ((lim == 1)&&(ability[1] == 0)) {
-								ability[1] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 1)&&(ability[1] == 100)) {
-								ability[1] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 2)&&(ability[2] == 0)) {
-								ability[2] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 2)&&(ability[2] == 100)) {
-								ability[2] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 3)&&(ability[3] == 0)) {
-								ability[3] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 3)&&(ability[3] == 100)) {
-								ability[3] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 4)&&(ability[4] == 0)) {
-								ability[4] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 4)&&(ability[4] == 100)) {
-								ability[4] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 5)&&(ability[5] == 0)) {
-								ability[5] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 5)&&(ability[5] == 100)) {
-								ability[5] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 6)&&(ability[6] == 0)) {
-								ability[6] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 6)&&(ability[6] == 100)) {
-								ability[6] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 7)&&(ability[7] == 0)) {
-								ability[7] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 7)&&(ability[7] == 100)) {
-								ability[7] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 8)&&(ability[8] == 0)) {
-								ability[8] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 8)&&(ability[8] == 100)) {
-								ability[8] = 0;
-								exclude_counter -= 1;
-								lim = 0;
-							} else if ((lim == 9)&&(ability[9] == 0)) {
-								ability[9] = 100;
-								exclude_counter += 1;
-								lim = 0;
-							} else if ((lim == 9)&&(ability[9] == 100)) {
-								ability[9] = 0;
-								exclude_counter -= 1;
-								lim = 0;
+							for (unsigned int u=0; u<=AOP; u++) {
+								if ((lim == u)&&(ability[u] == 0)) {
+									ability[u] = 100;
+									exclude_counter += 1;
+									lim = 0;
+								} else if ((lim == u)&&(ability[u] == 100)) {
+									ability[u] = 0;
+									exclude_counter -= 1;
+									lim = 0;
+								}
 							}
 						}
 						
@@ -1831,6 +1740,23 @@ int main (void) {
 						printf("	Journey deactivated \n");
 					}
 					printf(" \n");
+					if (gamemode_played == Ulcer) {
+						if (ulcer_start[0] == 1){
+							printf("	K.O.-Mode   activated. \n");	
+						} else if (ulcer_start[0] == 0){
+							printf("	K.O.-Mode deactivated \n");	
+						}
+						
+						printf(" \n");
+					}
+					
+					if (ttt == 0) {
+						printf("	Time	deactivated \n");
+					} else if (ttt != 0) {
+						printf("	Time	  activated \n");
+					}
+					printf("\n");
+					
 					if (opague != 0){
 						printf("	Opague   activated \n");
 						printf(" \n");
@@ -1851,23 +1777,6 @@ int main (void) {
 					}
 					printf(" \n");
 					
-					if (gamemode_played == Ulcer) {
-						if (ulcer_start[0] == 1){
-							printf("	K.O.-Mode   activated. \n");	
-						} else if (ulcer_start[0] == 0){
-							printf("	K.O.-Mode deactivated \n");	
-						}
-						
-						printf(" \n");
-					}
-					
-					if (ttt == 0) {
-						printf("	Time	deactivated \n");
-					} else if (ttt != 0) {
-						printf("	Time	  activated \n");
-					}
-					printf("\n");
-					
 					if (undead_duration == 0) {
 						printf("	undead	deactivated \n");
 					} else if (undead_duration != 0) {
@@ -1882,6 +1791,13 @@ int main (void) {
 					}
 					printf("\n");
 					
+					if (allocation == 0) {
+						printf("	Allocation deactivated \n");
+					} else if (allocation != 0) {
+						printf("	Allocation   activated \n");
+					}
+					printf("\n");
+					
 					if (inverted == 0) {
 						printf("	Inverted deactivated \n");
 					} else if (inverted != 0) {
@@ -1889,10 +1805,10 @@ int main (void) {
 					}
 					printf("\n");
 					
-					if (allocation == 0) {
-						printf("	Allocation deactivated \n");
-					} else if (allocation != 0) {
-						printf("	Allocation   activated \n");
+					if (addition == 0) {
+						printf("	Addition deactivated \n");
+					} else if (addition != 0) {
+						printf("	Addition   activated \n");
 					}
 					printf("\n");
 					
@@ -2045,6 +1961,7 @@ int main (void) {
 			same[70] = allocation;
 			same[71] = cards;
 			same[72] = inverted;
+			same[73] = addition;
 			
 		} else if (same[0] == 1) {
 			same[0] = 0;
@@ -2124,6 +2041,7 @@ int main (void) {
 			allocation = same[70];
 			cards = same[71];
 			inverted = same[72];
+			addition = same[73];
 			
 			time3 = time(NULL);
 			
@@ -3474,7 +3392,7 @@ int main (void) {
 				}
 				
 				if ((tac != 0)||(cards != 0)){
-					printf("	Your stack of numbers:	\n	1) [%u],		2) [%u],		3) [%u], \n\n	4) [%u],		5) [%u],		6) [%u],\n", stack_of_[geben][1][0], stack_of_[geben][2][0], stack_of_[geben][3][0], stack_of_[geben][4][0], stack_of_[geben][5][0], stack_of_[geben][6][0]);
+					printf("	Your stack of numbers:	\n	1) [%u], 	2) [%u], 	3) [%u],  \n\n	4) [%u], 	5) [%u], 	6) [%u], \n", stack_of_[geben][1][0], stack_of_[geben][2][0], stack_of_[geben][3][0], stack_of_[geben][4][0], stack_of_[geben][5][0], stack_of_[geben][6][0]);
 					printf("\n");
 					printf("\n");
 				}
@@ -4157,7 +4075,7 @@ int main (void) {
 						ent = (ent + (number_of_players-3));
 					}
 					
-					if ((count_new > limit_new)&&(inverted == 0)){		//Abfrage auf max. 10 neue Steine, normalerweise
+					if ((count_new > limit_new)&&(inverted == 0)&&(addition == 0)){		//Abfrage auf max. 10 neue Steine, normalerweise
 						if ((gamemode_played != Ulcer)&&(gamemode_played != Survive)) {
 							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode_played, number_of_players, rain, Sf_opague, Sf_allocation, allocation);
 						} else {
@@ -4228,7 +4146,7 @@ int main (void) {
 						ent = (ent + 2* (number_of_players-3));
 					}
 					
-					if ((count_new > ent)&&(inverted == 0)){		//Abfrage auf insgesamt max. 20 Steine, normalerweise
+					if ((count_new > ent)&&(inverted == 0)&&(addition == 0)){		//Abfrage auf insgesamt max. 20 Steine, normalerweise
 						if ((gamemode_played != Contact)&&(gamemode_played != Ulcer)&&(gamemode_played != Survive)) {
 							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode_played, number_of_players, rain, Sf_opague, Sf_allocation, allocation);
 						} else {
@@ -4245,6 +4163,25 @@ int main (void) {
 					}
 					
 					change (Field, Sf_nl_, Sf_od_, m, n, gamemode_played, number_of_players, ges, geben, undead_duration, Sf_allocation, allocation, Sf_opague, information_code, Colored, inverted); 	//Change setzt auf null
+					
+					if (addition != 0) {
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						addition_maker (Field, m, n, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+					}
 					
 					/*
 					get_sequence (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int w, unsigned int d, unsigned int e, unsigned int gamemode_played, unsigned int* information_code, unsigned int number_of_players, unsigned int ges, unsigned int opague, Spielfeld Sf_opague, Spielfeld sequence, unsigned int seq_max, unsigned int nosv);
@@ -13443,6 +13380,78 @@ void iverted_organism (Spielfeld Field, unsigned int geben, Spielfeld Sf_opague,
 	
 }
 
+void show_abilities (unsigned int* ability) {
+	if ((ability[1] == 0)||(ability[1] == 100)) {
+		printf("	Ultra light: 1 \n");
+	}
+	if ((ability[2] == 0)||(ability[2] == 100)) {
+		printf("	Light	   : 2 \n");
+	}
+	if ((ability[3] == 0)||(ability[3] == 100)) {
+		printf("	Anti	   : 3 \n");
+	}
+	if ((ability[4] == 0)||(ability[4] == 100)) {
+		printf("	Cornered   : 4 \n");
+	}
+	if ((ability[5] == 0)||(ability[5] == 100)) {
+		printf("	Inhibitor  : 5 \n");
+	}
+	if ((ability[6] == 0)||(ability[6] == 100)) {
+		printf("	Shield	   : 6 \n");
+	}
+	if ((ability[7] == 0)||(ability[7] == 100)) {
+		printf("	Poisoning  : 7 \n");
+	}
+	if ((ability[8] == 0)||(ability[8] == 100)) {
+		printf("	Pressure   : 8 \n");
+	}
+	if ((ability[9] == 0)||(ability[9] == 100)) {
+		printf("	Electric   : 9 \n");
+	}
+	
+}
+
+void addition_maker (Spielfeld Field, unsigned int m, unsigned int n, unsigned int number_of_players, unsigned int geben, Spielfeld Sf_opague, unsigned int gamemode_played, Spielfeld Sf_allocation, unsigned int allocation) {
+	Spielfeld Field_addition;
+	unsigned int additional_counter;
+	
+	additional_counter = 0;
+	Field_addition = Spielfeld_Create (m, n, 0);
+	
+	for (unsigned int i=1; i<=m-2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			if (Field[0][i][j] == geben) {
+				for (unsigned int t=0; t<=2; t++) {
+					for (unsigned int z=0; z<=2; z++) {
+						if (((t+z)%2 == 1)&&(Field[0][i-1+t][j-1+z] != 0)&&(Field[0][i-1+t][j-1+z] <= number_of_players)&&(Field[0][i-1+t][j-1+z] != geben)) {
+							if (Field_addition[0][i-1+t][j-1+z] == 0) {
+								additional_counter += Field[0][i-1+t][j-1+z];
+								Field_addition[0][i-1+t][j-1+z] = 1;
+							}
+							if (Field_addition[0][i][j] == 0) {
+								additional_counter += Field[0][i][j];
+								Field_addition[0][i][j] = 1;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	additional_counter = additional_counter%(number_of_players+1);
+	
+	for (unsigned int i=1; i<=m-2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			if (Field_addition[0][i][j] != 0) {
+				set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, additional_counter);
+			}
+		}
+	}
+	
+	Spielfeld_Destroy (Field_addition, m, 0);
+}
+
 //Dynamic (gamemode_played)	, done		(just notes following)
 //Geschwindigkeit (vertikal, horizontal)
 //Beschleunigung (vertikal, horizontal)
@@ -13472,17 +13481,27 @@ void iverted_organism (Spielfeld Field, unsigned int geben, Spielfeld Sf_opague,
 // limited to an amount
 
 // figures (option), done
-// activate movements though building special figures.
+// activate movements by building special figures.
 
 // cards (option), done
 // get numbers as cards every round, choose one to play.
 
-// inverse (option), go on
-// after round: look at smallest rectangle containing the organism
-// and invertate dead and owned squares for each player
+// inverse (option), done
+// after turn: look at smallest rectangle containing the organism
+// and invertate dead and owned squares
 
 // numbers (gamemode), go on
 // try to own the requested number of squares for getting a point.
 // (numbers= squares and primes<20)
 // Start with 13, end with 2 and 1 and 0.
 
+// matrix [multiplication] (option), go on
+// take the field as a matrix, multiply it with itself or with A € Z^mxm/Z^nxn
+
+// Addition (option), go on
+// if players touch each other, the player-numbers will be count together and %(number_of_players+1)
+// local/global, only global
+
+// projections (option), go on
+// after number_of_players+1 turns, look at lines (vertikal/horizontal) and project parallel lines to it.
+// Loss of intesity per line? 0<L<1 , exponetiell
