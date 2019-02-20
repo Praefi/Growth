@@ -40,8 +40,6 @@ At the beginning of your turn you get a number which is bound to two options:
 
 6: 1-min or 4-max.
 
-You can always skip the choice of an option, but what are the options saying?
-
 Plus: Click on a square of yours. After that you can click on a dead square in its surrounding 	which will be owned by you now.
 
 Minus: Click on a square of yours, it will be dead now.
