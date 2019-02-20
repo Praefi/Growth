@@ -56,7 +56,7 @@ void About_the_game (unsigned int, unsigned int, unsigned int, unsigned int, uns
 void get_hints (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int, unsigned int);
 unsigned int get_m (unsigned int, unsigned int, unsigned int);
 unsigned int get_n (unsigned int, unsigned int, unsigned int);
-unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4 (unsigned int);
+unsigned int get_unsigned_numeric_input_with_not_more_than_3_letters (unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_2_letters (unsigned int);
 unsigned int split_unsigned_numeric_input_with_letters_4 (unsigned int, unsigned int);
 unsigned int get_unsigned_numeric_input_with_not_more_than_1_letter (unsigned int);
@@ -111,6 +111,7 @@ unsigned int chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsi
 void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, Spielfeld, unsigned int);
 
 void addition_maker (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int);
+void projection_maker (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 
 void ahead (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int);
 
@@ -143,9 +144,20 @@ enum options {
 	Cards = 13,
 	Inverted = 14,
 	Addition = 15,
+	Projection = 16,
 	
-	back = 16,		//synchronisiere mit back!
+	back = 17,		//synchronisiere mit back!
 } beginningmenu;
+
+enum directions {
+	
+	Horizontal	= 0,
+	Vertikal 	= 1,
+	Changing = 2,
+	
+	undefined = 3,	//undefined immer als letzter Wert
+	
+} direction;
 
 enum gamemode {
 	nothing	= 0,
@@ -209,7 +221,7 @@ int main (void) {
 	int erd;	//erdbeschleunigung
 	int* dynamic_pointer;	//Dynamic direction
 	int** dynamic_pointer_save;	//saved Dynamic direction
-	//unsigned int position[1], position[0];
+	unsigned int intensity_minimum, intensity_loss_per_line_multiplication;
 	
 	unsigned int ges[10], var_[10], cons[10], number_[10];	//ges==How much squares do you have, var_==your choice, cons==saved numbers,
 	//unsigned int same_counter;
@@ -245,7 +257,7 @@ int main (void) {
 	
 	playtime = 1;	//playing game after game after...
 	
-	nosv = 74;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
+	nosv = 77;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
 	//same_counter = 0; 		//for variable length of same
 	
 	same = unsigned_int_Vektor_Create (nosv);
@@ -324,6 +336,10 @@ int main (void) {
 		range = 1;
 		erd = 1;
 		
+		intensity_minimum = 0;
+		intensity_loss_per_line_multiplication = 0;
+		direction = undefined;
+		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.2 \n");	//test
 		
@@ -387,8 +403,8 @@ int main (void) {
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.4 \n");	//test
 		
-		position[0] = 0;
-		position[1] = 0;
+		position[Horizontal] = 0;
+		position[Vertikal] = 0;
 		
 		int_array_null_initialisierung (dynamic_pointer, 7);
 		
@@ -460,7 +476,7 @@ int main (void) {
 				
 				while (beginningmenu != Start){
 			
-					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n 	Cards	  : 13\n 	Inverted  : 14\n 	Addition  : 15\n  \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
+					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n 	Cards	  : 13\n 	Inverted  : 14\n 	Addition  : 15\n  	Projection: 16\n  \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	Points for win: %u \n", back+1);
 						printf("	Turns per drop: %u \n", back+2);
@@ -1219,6 +1235,44 @@ int main (void) {
 						}
 					}
 					
+					if (beginningmenu == Projection) {
+						
+						if (intensity_loss_per_line_multiplication != 0) {
+							printf("	Projection-mode reseted! \n");
+							printf(" \n");
+							intensity_loss_per_line_multiplication = 0;
+							intensity_minimum = 0;
+							direction = undefined;
+						} else {
+							printf("	Going here again will reset the Projection-mode! \n");
+							printf("	Projection overrides the limits of development! \n \n");
+							printf("	Loss of intensity per line passed in per cent: 0<Loss<100		(normal: 30) \n");
+							lim = 0;
+							lim = get_unsigned_numeric_input_with_not_more_than_2_letters (lim);
+							
+							if (lim == 0) {
+								printf("	Than you should not use this option, you will get 30. \n \n");
+								lim = 30;
+							}
+							intensity_loss_per_line_multiplication = 100-lim;
+							lim = 0;
+							
+							printf("	Minimum of intensity in per cent:  0=<Minimum<1000		(normal: %u) \n \n", intensity_loss_per_line_multiplication);
+							lim = get_unsigned_numeric_input_with_not_more_than_3_letters (lim);
+							intensity_minimum = lim;
+							lim = 0;
+							
+							direction = undefined;
+							while ((direction != Horizontal)&&(direction != Vertikal)&&(direction != Changing)) {
+								printf("	Direction of projection:\n		Horizontal = 0 \n		Vertikal = 1\n		Changing = 2 \n");
+								lim = get_unsigned_numeric_input_with_not_more_than_1_letter (lim);
+								direction = lim;
+							}
+							lim = 0;
+							
+						}
+					}
+					
 					if ((beginningmenu == back+1)&&(gamemode_played == Fall)){
 						printf("	Points for win: (0<...<10)			(normal: 3) \n");
 						points_for_win = get_unsigned_numeric_input_with_not_more_than_1_letter (points_for_win);
@@ -1812,6 +1866,13 @@ int main (void) {
 					}
 					printf("\n");
 					
+					if (intensity_loss_per_line_multiplication == 0) {
+						printf("	Projection deactivated \n");
+					} else if (intensity_loss_per_line_multiplication != 0) {
+						printf("	Projection   activated \n");
+					}
+					printf("\n");
+					
 					if (opt == 5) {
 						printf("	Random    activated \n");
 						if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {
@@ -1962,6 +2023,9 @@ int main (void) {
 			same[71] = cards;
 			same[72] = inverted;
 			same[73] = addition;
+			same[74] = intensity_minimum;
+			same[75] = intensity_loss_per_line_multiplication;
+			same[76] = direction;
 			
 		} else if (same[0] == 1) {
 			same[0] = 0;
@@ -2042,8 +2106,11 @@ int main (void) {
 			cards = same[71];
 			inverted = same[72];
 			addition = same[73];
+			intensity_minimum = same[74];
+			intensity_loss_per_line_multiplication = same[75];
+			direction = same[76];
 			
-			time3 = time(NULL);
+			time3 = time(NULL);	//because of cards
 			
 		}
 		
@@ -2257,8 +2324,8 @@ int main (void) {
 				for (unsigned int i=1; i<m-1; i+=1) {
 					for (unsigned int j=1; j<n-1; j+=1) {
 						if (Field[0][i][j] == 77) {
-							position[0] = j;
-							position[1] = i;
+							position[Horizontal] = j;
+							position[Vertikal] = i;
 							controll = 1;
 						}
 						if (controll == 1) {
@@ -2406,8 +2473,8 @@ int main (void) {
 				dynamic_pointer[6] = 0;		//impact y_horizontal
 				dynamic_pointer[7] = 0;		//impact y_vertikal
 				
-				dynamic_pointer[0] = dynamic_pointer[4] + dynamic_pointer[2];	//aus "sgn(a)*a^2" mach "a", done
-				dynamic_pointer[1] = dynamic_pointer[5] + dynamic_pointer[3];
+				dynamic_pointer[Horizontal] = dynamic_pointer[4] + dynamic_pointer[2];	//aus "sgn(a)*a^2" mach "a", done
+				dynamic_pointer[Vertikal] = dynamic_pointer[5] + dynamic_pointer[3];
 				
 				dynamic_pointer[2] += dynamic_pointer[4];
 				dynamic_pointer[3] += dynamic_pointer[5];
@@ -2417,7 +2484,7 @@ int main (void) {
 				dynamic_pointer[4] += dynamic_pointer[6];
 				dynamic_pointer[5] += dynamic_pointer[7] + erd;
 				
-				while (abs(dynamic_pointer[1])+abs(dynamic_pointer[0]) != 0){
+				while (abs(dynamic_pointer[Vertikal])+abs(dynamic_pointer[Horizontal]) != 0){
 					
 					// printf("	Test-print \n");
 					// show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);		//test
@@ -2425,14 +2492,14 @@ int main (void) {
 					// printf("	\n");
 					// printf("	indikator1: %u \n", indikator1);
 					// printf("	indikator2: %u \n", indikator2);
-					// printf("	sgn(dynamic_pointer[0]): %d \n", sgn(dynamic_pointer[0]));
-					// printf("	sgn(dynamic_pointer[1]): %d \n", sgn(dynamic_pointer[1]));
-					// printf("	position[0]: %u \n", position[0]);
-					// printf("	position[1]: %u \n", position[1]);
+					// printf("	sgn(dynamic_pointer[Horizontal]): %d \n", sgn(dynamic_pointer[Horizontal]));
+					// printf("	sgn(dynamic_pointer[Vertikal]): %d \n", sgn(dynamic_pointer[Vertikal]));
+					// printf("	position[Horizontal]: %u \n", position[Horizontal]);
+					// printf("	position[Vertikal]: %u \n", position[Vertikal]);
 					
 					// printf("	\n");
-					// printf("	Object position: (%u, %u) \n", position[1], position[0]);
-					// printf("	Weg s: (%d, %d) \n", dynamic_pointer[1], dynamic_pointer[0]);
+					// printf("	Object position: (%u, %u) \n", position[Vertikal], position[Horizontal]);
+					// printf("	Weg s: (%d, %d) \n", dynamic_pointer[Vertikal], dynamic_pointer[Horizontal]);
 					// printf("	Geschw. v: (%d, %d) \n", dynamic_pointer[3], dynamic_pointer[2]);
 					// printf("	Beschl. a: (%d, %d) \n", dynamic_pointer[5], dynamic_pointer[4]);
 					// printf("	Impact  y(+erd): (%d, %d) \n", dynamic_pointer[7]+erd, dynamic_pointer[6]);
@@ -2448,17 +2515,17 @@ int main (void) {
 					
 					controll = 0;
 					
-					if (abs(dynamic_pointer[0])>abs(dynamic_pointer[1])) {	//indikator1, position[0], dynamic_pointer[0] horizontal
+					if (abs(dynamic_pointer[Horizontal])>abs(dynamic_pointer[Vertikal])) {	//indikator1, position[Horizontal], dynamic_pointer[Horizontal] horizontal
 						indikator1 += 1;
-					} else if (abs(dynamic_pointer[0])<abs(dynamic_pointer[1])) {
+					} else if (abs(dynamic_pointer[Horizontal])<abs(dynamic_pointer[Vertikal])) {
 						indikator2 += 1;
 					}
 					
-					if (sgn(dynamic_pointer[0])>0) {	//Betrag = 0 wird verhindert
-						for (unsigned int j=position[0]+1; j<n-1; j+=1) {
-							if ((Field[0][position[1]][j] == 0)&&(position[0]+1 < n-1)) {
+					if (sgn(dynamic_pointer[Horizontal])>0) {	//Betrag = 0 wird verhindert
+						for (unsigned int j=position[Horizontal]+1; j<n-1; j+=1) {
+							if ((Field[0][position[Vertikal]][j] == 0)&&(position[Horizontal]+1 < n-1)) {
 								space_j = j;
-								if (j != position[0]+1) {
+								if (j != position[Horizontal]+1) {
 									indikator2 += 3;
 								}
 								controll = 1;
@@ -2468,11 +2535,11 @@ int main (void) {
 						if ((indikator2 < 3)&&(controll != 1)) {
 							indikator2 += 5;
 						}
-					} else if (sgn(dynamic_pointer[0])<0) {
-						for (unsigned int j=position[0]-1; j>0; j-=1) {
-							if ((Field[0][position[1]][j] == 0)&&(position[0]-1 > 0)) {
+					} else if (sgn(dynamic_pointer[Horizontal])<0) {
+						for (unsigned int j=position[Horizontal]-1; j>0; j-=1) {
+							if ((Field[0][position[Vertikal]][j] == 0)&&(position[Horizontal]-1 > 0)) {
 								space_j = j; 
-								if (j != position[0]-1) {
+								if (j != position[Horizontal]-1) {
 									indikator2 += 3;
 								}
 								controll = 1;
@@ -2482,16 +2549,16 @@ int main (void) {
 						if ((indikator2 < 3)&&(controll != 1)) {
 							indikator2 += 5;
 						}
-					} else if (sgn(dynamic_pointer[0]) == 0) {
+					} else if (sgn(dynamic_pointer[Horizontal]) == 0) {
 						indikator2 += 5;
 					}
 					controll = 0;
 					
-					if (sgn(dynamic_pointer[1])>0) {	//Betrag = 0 wird verhindert
-						for (unsigned int i=position[1]+1; i<m-1; i+=1) {
-							if ((Field[0][i][position[0]] == 0)&&(position[1]+1 < m-1)) {
+					if (sgn(dynamic_pointer[Vertikal])>0) {	//Betrag = 0 wird verhindert
+						for (unsigned int i=position[Vertikal]+1; i<m-1; i+=1) {
+							if ((Field[0][i][position[Horizontal]] == 0)&&(position[Vertikal]+1 < m-1)) {
 								space_i = i;
-								if (i != position[1]+1) {
+								if (i != position[Vertikal]+1) {
 									indikator1 += 3;
 								}
 								controll = 1;
@@ -2501,11 +2568,11 @@ int main (void) {
 						if ((indikator1 < 3)&&(controll != 1)) {
 							indikator1 += 5;
 						}
-					} else if (sgn(dynamic_pointer[1])<0) {
-						for (unsigned int i=position[1]-1; i>0; i-=1) {
-							if ((Field[0][i][position[0]] == 0)&&(position[1]-1 > 0)) {
+					} else if (sgn(dynamic_pointer[Vertikal])<0) {
+						for (unsigned int i=position[Vertikal]-1; i>0; i-=1) {
+							if ((Field[0][i][position[Horizontal]] == 0)&&(position[Vertikal]-1 > 0)) {
 								space_i = i;
-								if (i != position[1]-1) {
+								if (i != position[Vertikal]-1) {
 									indikator1 += 3;
 								}
 								controll = 1;
@@ -2515,41 +2582,41 @@ int main (void) {
 						if ((indikator1 < 3)&&(controll != 1)) {
 							indikator1 += 5;
 						}
-					} else if (sgn(dynamic_pointer[1]) == 0) {	//Betrag = 0 hier angenommen
+					} else if (sgn(dynamic_pointer[Vertikal]) == 0) {	//Betrag = 0 hier angenommen
 						indikator1 += 5;
 					}
 					controll = 0;
 					
 					
-					if ((abs(dynamic_pointer[0]) == abs(dynamic_pointer[1])) && (indikator3 == 0)) {	//Betrag gleich, indikator3 = 1 zeigt kein Fortschritt auf diesem Weg.
+					if ((abs(dynamic_pointer[Horizontal]) == abs(dynamic_pointer[Vertikal])) && (indikator3 == 0)) {	//Betrag gleich, indikator3 = 1 zeigt kein Fortschritt auf diesem Weg.
 						
-						if (sgn(dynamic_pointer[0]) == sgn(dynamic_pointer[1])) {	//Vorzeichen gleich
+						if (sgn(dynamic_pointer[Horizontal]) == sgn(dynamic_pointer[Vertikal])) {	//Vorzeichen gleich
 							
-							if (sgn(dynamic_pointer[0])>0) {	//Vorzeichen positiv
+							if (sgn(dynamic_pointer[Horizontal])>0) {	//Vorzeichen positiv
 								
-								if ((position[0] +1 < n-1) && (position[1] +1 < m-1) && (Field[0][position[1] +1][position[0] +1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
+								if ((position[Horizontal] +1 < n-1) && (position[Vertikal] +1 < m-1) && (Field[0][position[Vertikal] +1][position[Horizontal] +1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
 									
-									Field[0][position[1] +1][position[0] +1] = 77;
-									Field[0][position[1]][position[0]] = 0;
-									position[1] += 1;
-									position[0] += 1;
-									dynamic_pointer[0] -= 1;
-									dynamic_pointer[1] -= 1;
+									Field[0][position[Vertikal] +1][position[Horizontal] +1] = 77;
+									Field[0][position[Vertikal]][position[Horizontal]] = 0;
+									position[Vertikal] += 1;
+									position[Horizontal] += 1;
+									dynamic_pointer[Horizontal] -= 1;
+									dynamic_pointer[Vertikal] -= 1;
 									
-								} else if ((position[0] +1 >= n-1) && (position[1] +1 >= m-1)) { //beide nein
+								} else if ((position[Horizontal] +1 >= n-1) && (position[Vertikal] +1 >= m-1)) { //beide nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									Reflection (dynamic_pointer, 1, erd);
 									
 									continue;
 									
-								} else if (position[0]+1 >= n-1) {	//horizontal nein
+								} else if (position[Horizontal]+1 >= n-1) {	//horizontal nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									
 									continue;
 									
-								} else if (position[1]+1 >= m-1) {	//vertikal nein
+								} else if (position[Vertikal]+1 >= m-1) {	//vertikal nein
 									
 									Reflection (dynamic_pointer, 1, erd);
 									
@@ -2560,31 +2627,31 @@ int main (void) {
 									continue;
 								}
 								
-							} else if (sgn(dynamic_pointer[0])<0) {	//Vorzeichen negativ
+							} else if (sgn(dynamic_pointer[Horizontal])<0) {	//Vorzeichen negativ
 								
-								if ((position[0]-1 > 0) && (position[1]-1 > 0) && (Field[0][position[1]-1][position[0]-1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
+								if ((position[Horizontal]-1 > 0) && (position[Vertikal]-1 > 0) && (Field[0][position[Vertikal]-1][position[Horizontal]-1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
 									
-									Field[0][position[1]-1][position[0]-1] = 77;
-									Field[0][position[1]][position[0]] = 0;
-									position[1] -= 1;
-									position[0] -= 1;
-									dynamic_pointer[0] += 1;
-									dynamic_pointer[1] += 1;
+									Field[0][position[Vertikal]-1][position[Horizontal]-1] = 77;
+									Field[0][position[Vertikal]][position[Horizontal]] = 0;
+									position[Vertikal] -= 1;
+									position[Horizontal] -= 1;
+									dynamic_pointer[Horizontal] += 1;
+									dynamic_pointer[Vertikal] += 1;
 									
-								} else if ((position[0]-1 == 0) && (position[1]-1 == 0)) { //beide nein
+								} else if ((position[Horizontal]-1 == 0) && (position[Vertikal]-1 == 0)) { //beide nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									Reflection (dynamic_pointer, 1, erd);
 									
 									continue;
 									
-								} else if (position[0]-1 == 0) {	//horizontal nein
+								} else if (position[Horizontal]-1 == 0) {	//horizontal nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									
 									continue;
 									
-								} else if (position[1]-1 == 0) {	//vertikal nein
+								} else if (position[Vertikal]-1 == 0) {	//vertikal nein
 									
 									Reflection (dynamic_pointer, 1, erd);
 									
@@ -2599,31 +2666,31 @@ int main (void) {
 							
 						} else {	//unterschiedliches Vorzeichen
 							
-							if (sgn(dynamic_pointer[0])>0) {	//Vorzeichen horizontal positiv
+							if (sgn(dynamic_pointer[Horizontal])>0) {	//Vorzeichen horizontal positiv
 							
-								if ((position[0]+1 < n-1) && (position[1]-1 > 0) && (Field[0][position[1]-1][position[0]+1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
+								if ((position[Horizontal]+1 < n-1) && (position[Vertikal]-1 > 0) && (Field[0][position[Vertikal]-1][position[Horizontal]+1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
 									
-									Field[0][position[1]-1][position[0]+1] = 77;
-									Field[0][position[1]][position[0]] = 0;
-									position[1] -= 1;
-									position[0] += 1;
-									dynamic_pointer[0] -= 1;
-									dynamic_pointer[1] += 1;
+									Field[0][position[Vertikal]-1][position[Horizontal]+1] = 77;
+									Field[0][position[Vertikal]][position[Horizontal]] = 0;
+									position[Vertikal] -= 1;
+									position[Horizontal] += 1;
+									dynamic_pointer[Horizontal] -= 1;
+									dynamic_pointer[Vertikal] += 1;
 									
-								} else if ((position[0]+1 >= n-1) && (position[1]-1 == 0)) { //beide nein
+								} else if ((position[Horizontal]+1 >= n-1) && (position[Vertikal]-1 == 0)) { //beide nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									Reflection (dynamic_pointer, 1, erd);
 									
 									continue;
 									
-								} else if (position[0]+1 >= n-1) {	//horizontal nein
+								} else if (position[Horizontal]+1 >= n-1) {	//horizontal nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									
 									continue;
 									
-								} else if (position[1]-1 == 0) {	//vertikal nein
+								} else if (position[Vertikal]-1 == 0) {	//vertikal nein
 									
 									Reflection (dynamic_pointer, 1, erd);
 									
@@ -2634,31 +2701,31 @@ int main (void) {
 									continue;
 								}
 								
-							}  else if (sgn(dynamic_pointer[0])<0) {	//Vorzeichen horizontal negativ
+							}  else if (sgn(dynamic_pointer[Horizontal])<0) {	//Vorzeichen horizontal negativ
 								
-								if ((position[0]-1 > 0) && (position[1]+1 < m-1) && (Field[0][position[1]+1][position[0]-1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
+								if ((position[Horizontal]-1 > 0) && (position[Vertikal]+1 < m-1) && (Field[0][position[Vertikal]+1][position[Horizontal]-1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
 									
-									Field[0][position[1]+1][position[0]-1] = 77;
-									Field[0][position[1]][position[0]] = 0;
-									position[1] += 1;
-									position[0] -= 1;
-									dynamic_pointer[0] += 1;
-									dynamic_pointer[1] -= 1;
+									Field[0][position[Vertikal]+1][position[Horizontal]-1] = 77;
+									Field[0][position[Vertikal]][position[Horizontal]] = 0;
+									position[Vertikal] += 1;
+									position[Horizontal] -= 1;
+									dynamic_pointer[Horizontal] += 1;
+									dynamic_pointer[Vertikal] -= 1;
 									
-								} else if ((position[0]-1 == 0) && (position[1]+1 >= m-1)) { //beide nein
+								} else if ((position[Horizontal]-1 == 0) && (position[Vertikal]+1 >= m-1)) { //beide nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									Reflection (dynamic_pointer, 1, erd);
 									
 									continue;
 									
-								} else if (position[0] -1 == 0) {	//horizontal nein
+								} else if (position[Horizontal] -1 == 0) {	//horizontal nein
 									
 									Reflection (dynamic_pointer, 0, erd);
 									
 									continue;
 									
-								} else if (position[1] +1 >= m-1) {	//vertikal nein
+								} else if (position[Vertikal] +1 >= m-1) {	//vertikal nein
 									
 									Reflection (dynamic_pointer, 1, erd);
 									
@@ -2673,13 +2740,13 @@ int main (void) {
 							
 						}
 						
-					} else if (indikator1 >= indikator2) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_horizontal = dynamic_pointer[0]
+					} else if (indikator1 >= indikator2) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_horizontal = dynamic_pointer[Horizontal]
 						if (indikator2 >= 5) {
 							
-							if (abs(dynamic_pointer[0]) > 0) {
+							if (abs(dynamic_pointer[Horizontal]) > 0) {
 								Reflection (dynamic_pointer, 0, erd);
 							}
-							if (abs(dynamic_pointer[1]) > 0) {
+							if (abs(dynamic_pointer[Vertikal]) > 0) {
 								Reflection (dynamic_pointer, 1, erd);
 							}
 							
@@ -2687,74 +2754,74 @@ int main (void) {
 							
 						} else if (indikator2 >= 3) {	//moveable crash, um Reflection zu verhindern
 							
-							if (sgn(dynamic_pointer[0])>0) {
-								for (unsigned int r=space_j; r>position[0]; r-=1) {
-									Field[0][position[1]][r] = Field[0][position[1]][r-1];
+							if (sgn(dynamic_pointer[Horizontal])>0) {
+								for (unsigned int r=space_j; r>position[Horizontal]; r-=1) {
+									Field[0][position[Vertikal]][r] = Field[0][position[Vertikal]][r-1];
 								}
-								Field[0][position[1]][position[0]] = 0;
-								position[0] += 1;
-								dynamic_pointer[0] -= 1;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								position[Horizontal] += 1;
+								dynamic_pointer[Horizontal] -= 1;
 								dynamic_pointer[2] -= 1;
 								dynamic_pointer[4] -= 1;
 								
-								if (dynamic_pointer[0] != 0) {
-									dynamic_pointer[0] -= 1;
+								if (dynamic_pointer[Horizontal] != 0) {
+									dynamic_pointer[Horizontal] -= 1;
 								}
 								
-							} else if (sgn(dynamic_pointer[0])<0) {
-								for (unsigned int r=space_j; r<position[0]; r+=1) {
-									Field[0][position[1]][r] = Field[0][position[1]][r+1];
+							} else if (sgn(dynamic_pointer[Horizontal])<0) {
+								for (unsigned int r=space_j; r<position[Horizontal]; r+=1) {
+									Field[0][position[Vertikal]][r] = Field[0][position[Vertikal]][r+1];
 								}
-								Field[0][position[1]][position[0]] = 0;
-								position[0] -= 1;
-								dynamic_pointer[0] += 1;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								position[Horizontal] -= 1;
+								dynamic_pointer[Horizontal] += 1;
 								dynamic_pointer[2] += 1;
 								dynamic_pointer[4] += 1;
 								
-								if (dynamic_pointer[0] != 0) {
-									dynamic_pointer[0] += 1;
+								if (dynamic_pointer[Horizontal] != 0) {
+									dynamic_pointer[Horizontal] += 1;
 								}
 							}
 							
 						} else {		//freier Schritt
-							if (sgn(dynamic_pointer[0])>0) {
+							if (sgn(dynamic_pointer[Horizontal])>0) {
 								
-								Field[0][position[1]][position[0]+1] = 77;
-								Field[0][position[1]][position[0]] = 0;
-								dynamic_pointer[0] -= 1;
-								position[0] += 1;
+								Field[0][position[Vertikal]][position[Horizontal]+1] = 77;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								dynamic_pointer[Horizontal] -= 1;
+								position[Horizontal] += 1;
 								
-							} else if (sgn(dynamic_pointer[0])<0) {
+							} else if (sgn(dynamic_pointer[Horizontal])<0) {
 								
-								Field[0][position[1]][position[0]-1] = 77;
-								Field[0][position[1]][position[0]] = 0;
-								dynamic_pointer[0] += 1;
-								position[0] -= 1;
+								Field[0][position[Vertikal]][position[Horizontal]-1] = 77;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								dynamic_pointer[Horizontal] += 1;
+								position[Horizontal] -= 1;
 							
 							}		//Diagonal-Schritt mit partieller Reflection entzieht sich dem freien Schritt
 						}
 						
-					} else if (indikator2 >= indikator1) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_vertikal = dynamic_pointer[1]
+					} else if (indikator2 >= indikator1) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_vertikal = dynamic_pointer[Vertikal]
 						if (indikator1 >= 5) {
 							
-							if (abs(dynamic_pointer[0]) > 0) {
+							if (abs(dynamic_pointer[Horizontal]) > 0) {
 								Reflection (dynamic_pointer, 0, erd);
 							}
-							if (abs(dynamic_pointer[1]) > 0) {
+							if (abs(dynamic_pointer[Vertikal]) > 0) {
 								Reflection (dynamic_pointer, 1, erd);
 							}
 							/*
 							printf("	\n");	//test
 							printf("	indikator1: %u \n", indikator1);
 							printf("	indikator2: %u \n", indikator2);
-							printf("	sgn(dynamic_pointer[0]): %d \n", sgn(dynamic_pointer[0]));
-							printf("	sgn(dynamic_pointer[1]): %d \n", sgn(dynamic_pointer[1]));
-							printf("	position[0]: %u \n", position[0]);
-							printf("	position[1]: %u \n", position[1]);
+							printf("	sgn(dynamic_pointer[Horizontal]): %d \n", sgn(dynamic_pointer[Horizontal]));
+							printf("	sgn(dynamic_pointer[Vertikal]): %d \n", sgn(dynamic_pointer[Vertikal]));
+							printf("	position[Horizontal]: %u \n", position[Horizontal]);
+							printf("	position[Vertikal]: %u \n", position[Vertikal]);
 							
 							printf("	\n");
-							printf("	Object position: (%u, %u) \n", position[1], position[0]);
-							printf("	Weg s: (%d, %d) \n", dynamic_pointer[1], dynamic_pointer[0]);
+							printf("	Object position: (%u, %u) \n", position[Vertikal], position[Horizontal]);
+							printf("	Weg s: (%d, %d) \n", dynamic_pointer[Vertikal], dynamic_pointer[Horizontal]);
 							printf("	Geschw. v: (%d, %d) \n", dynamic_pointer[3], dynamic_pointer[2]);
 							printf("	Beschl. a: (%d, %d) \n", dynamic_pointer[5], dynamic_pointer[4]);
 							printf("	Impact  y(+erd): (%d, %d) \n", dynamic_pointer[7]+erd, dynamic_pointer[6]);
@@ -2765,49 +2832,49 @@ int main (void) {
 							
 						} else if (indikator1 >= 3) {	//moveable crash, um Reflection zu verhindern
 							
-							if (sgn(dynamic_pointer[1])>0) {
-								for (unsigned int r=space_i; r>position[1]; r-=1) {
-									Field[0][r][position[0]] = Field[0][r-1][position[0]];
+							if (sgn(dynamic_pointer[Vertikal])>0) {
+								for (unsigned int r=space_i; r>position[Vertikal]; r-=1) {
+									Field[0][r][position[Horizontal]] = Field[0][r-1][position[Horizontal]];
 								}
-								Field[0][position[1]][position[0]] = 0;
-								position[1] += 1;
-								dynamic_pointer[1] -= 1;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								position[Vertikal] += 1;
+								dynamic_pointer[Vertikal] -= 1;
 								dynamic_pointer[3] -= 1;
 								dynamic_pointer[5] -= 1;
 								
-								if (dynamic_pointer[1] != 0) {
-									dynamic_pointer[1] -= 1;
+								if (dynamic_pointer[Vertikal] != 0) {
+									dynamic_pointer[Vertikal] -= 1;
 								}
 								
-							} else if (sgn(dynamic_pointer[1])<0) {
-								for (unsigned int r=space_i; r<position[1]; r+=1) {
-									Field[0][r][position[0]] = Field[0][r+1][position[0]];
+							} else if (sgn(dynamic_pointer[Vertikal])<0) {
+								for (unsigned int r=space_i; r<position[Vertikal]; r+=1) {
+									Field[0][r][position[Horizontal]] = Field[0][r+1][position[Horizontal]];
 								}
-								Field[0][position[1]][position[0]] = 0;
-								position[1] -= 1;
-								dynamic_pointer[1] += 1;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								position[Vertikal] -= 1;
+								dynamic_pointer[Vertikal] += 1;
 								dynamic_pointer[3] += 1;
 								dynamic_pointer[5] += 1;
 								
-								if (dynamic_pointer[1] != 0) {
-									dynamic_pointer[1] += 1;
+								if (dynamic_pointer[Vertikal] != 0) {
+									dynamic_pointer[Vertikal] += 1;
 								}
 							}
 							
 						} else {		//freier Schritt
-							if (sgn(dynamic_pointer[1])>0) {
+							if (sgn(dynamic_pointer[Vertikal])>0) {
 								
-								Field[0][position[1]+1][position[0]] = 77;
-								Field[0][position[1]][position[0]] = 0;
-								dynamic_pointer[1] -= 1;
-								position[1] += 1;
+								Field[0][position[Vertikal]+1][position[Horizontal]] = 77;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								dynamic_pointer[Vertikal] -= 1;
+								position[Vertikal] += 1;
 								
-							} else if (sgn(dynamic_pointer[1])<0) {
+							} else if (sgn(dynamic_pointer[Vertikal])<0) {
 								
-								Field[0][position[1]-1][position[0]] = 77;
-								Field[0][position[1]][position[0]] = 0;
-								dynamic_pointer[1] += 1;
-								position[1] -= 1;
+								Field[0][position[Vertikal]-1][position[Horizontal]] = 77;
+								Field[0][position[Vertikal]][position[Horizontal]] = 0;
+								dynamic_pointer[Vertikal] += 1;
+								position[Vertikal] -= 1;
 								
 							}
 						}
@@ -2816,12 +2883,12 @@ int main (void) {
 					
 					player_counter = dynamic_take_out (position, number_of_players, Field, ges, player_counter, m, n, Sf_opague, Sf_allocation, allocation, geben);
 					
-					if ((abs(dynamic_pointer[1])+abs(dynamic_pointer[0])) == 0) {
+					if ((abs(dynamic_pointer[Vertikal])+abs(dynamic_pointer[Horizontal])) == 0) {
 						
 						/*
 						printf("	\n");	//test
-						printf("	Object position: (%u, %u) \n", position[1], position[0]);
-						printf("	Weg s: (%d, %d) \n", dynamic_pointer[1], dynamic_pointer[0]);
+						printf("	Object position: (%u, %u) \n", position[Vertikal], position[Horizontal]);
+						printf("	Weg s: (%d, %d) \n", dynamic_pointer[Vertikal], dynamic_pointer[Horizontal]);
 						printf("	Geschw. v: (%d, %d) \n", dynamic_pointer[3], dynamic_pointer[2]);
 						printf("	Beschl. a: (%d, %d) \n", dynamic_pointer[5], dynamic_pointer[4]);
 						printf("	Impact  y(+erd): (%d, %d) \n", dynamic_pointer[7]+erd, dynamic_pointer[6]);
@@ -2868,11 +2935,11 @@ int main (void) {
 								}
 							}
 							
-							if ((abs(dynamic_pointer[4]) < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[4]) == sgn(dynamic_pointer[0]))&&(sgn(dynamic_pointer[0]) != 0)) {	//s_horizontal-Verringerung
+							if ((abs(dynamic_pointer[4]) < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[4]) == sgn(dynamic_pointer[Horizontal]))&&(sgn(dynamic_pointer[Horizontal]) != 0)) {	//s_horizontal-Verringerung
 								
 								for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {
-									dynamic_pointer[0] += 1;
-									if (dynamic_pointer[0] == 0) {
+									dynamic_pointer[Horizontal] += 1;
+									if (dynamic_pointer[Horizontal] == 0) {
 										break;
 									}
 								}
@@ -2888,11 +2955,11 @@ int main (void) {
 								}
 							}
 							
-							if ((abs(dynamic_pointer[4]) < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[4]) == sgn(dynamic_pointer[0]))&&(sgn(dynamic_pointer[0]) != 0)) {
+							if ((abs(dynamic_pointer[4]) < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[4]) == sgn(dynamic_pointer[Horizontal]))&&(sgn(dynamic_pointer[Horizontal]) != 0)) {
 								
 								for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {	//s_horizontal-Verringerung
-									dynamic_pointer[0] -= 1;
-									if (dynamic_pointer[0] == 0) {
+									dynamic_pointer[Horizontal] -= 1;
+									if (dynamic_pointer[Horizontal] == 0) {
 										break;
 									}
 								}
@@ -2903,11 +2970,11 @@ int main (void) {
 						
 						if (sgn(dynamic_pointer[6]) < sgn(dynamic_pointer[2])) {
 							
-							if ((0 < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[2]) == sgn(dynamic_pointer[0]))) {
+							if ((0 < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[2]) == sgn(dynamic_pointer[Horizontal]))) {
 								
 								for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {	//s_horizontal-Verringerung
-									dynamic_pointer[0] -= 1;
-									if (dynamic_pointer[0] == 0) {
+									dynamic_pointer[Horizontal] -= 1;
+									if (dynamic_pointer[Horizontal] == 0) {
 										break;
 									}
 								}
@@ -2915,11 +2982,11 @@ int main (void) {
 							
 						} else if (sgn(dynamic_pointer[6]) > sgn(dynamic_pointer[2])) {
 							
-							if ((0 < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[2]) == sgn(dynamic_pointer[0]))) {	//s_horizontal-Verringerung
+							if ((0 < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[2]) == sgn(dynamic_pointer[Horizontal]))) {	//s_horizontal-Verringerung
 								
 								for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {
-									dynamic_pointer[0] += 1;
-									if (dynamic_pointer[0] == 0) {
+									dynamic_pointer[Horizontal] += 1;
+									if (dynamic_pointer[Horizontal] == 0) {
 										break;
 									}
 								}
@@ -2960,11 +3027,11 @@ int main (void) {
 								}
 							}
 							
-							if ((abs(dynamic_pointer[5]) < abs(dynamic_pointer[7]+erd))&&(sgn(dynamic_pointer[5]) == sgn(dynamic_pointer[1]))&&(sgn(dynamic_pointer[1]) != 0)) {	//s_vertikal-Verringerung
+							if ((abs(dynamic_pointer[5]) < abs(dynamic_pointer[7]+erd))&&(sgn(dynamic_pointer[5]) == sgn(dynamic_pointer[Vertikal]))&&(sgn(dynamic_pointer[Vertikal]) != 0)) {	//s_vertikal-Verringerung
 								
 								for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {
-									dynamic_pointer[1] += 1;
-									if (dynamic_pointer[1] == 0) {
+									dynamic_pointer[Vertikal] += 1;
+									if (dynamic_pointer[Vertikal] == 0) {
 										break;
 									}
 								}
@@ -2980,11 +3047,11 @@ int main (void) {
 								}
 							}
 							
-							if ((abs(dynamic_pointer[5]) < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[5]) == sgn(dynamic_pointer[1]))&&(sgn(dynamic_pointer[1]) != 0)) {
+							if ((abs(dynamic_pointer[5]) < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[5]) == sgn(dynamic_pointer[Vertikal]))&&(sgn(dynamic_pointer[Vertikal]) != 0)) {
 								
 								for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {	//s_vertikal-Verringerung
-									dynamic_pointer[1] -= 1;
-									if (dynamic_pointer[1] == 0) {
+									dynamic_pointer[Vertikal] -= 1;
+									if (dynamic_pointer[Vertikal] == 0) {
 										break;
 									}
 								}
@@ -2995,11 +3062,11 @@ int main (void) {
 						
 						if (sgn(dynamic_pointer[7]+erd) < sgn(dynamic_pointer[3])) {
 							
-							if ((0 < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[3]) == sgn(dynamic_pointer[1]))) {
+							if ((0 < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[3]) == sgn(dynamic_pointer[Vertikal]))) {
 								
 								for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {	//s_vertikal-Verringerung
-									dynamic_pointer[1] -= 1;
-									if (dynamic_pointer[1] == 0) {
+									dynamic_pointer[Vertikal] -= 1;
+									if (dynamic_pointer[Vertikal] == 0) {
 										break;
 									}
 								}
@@ -3007,11 +3074,11 @@ int main (void) {
 							
 						} else if (sgn(dynamic_pointer[7]+erd) > sgn(dynamic_pointer[3])) {
 							
-							if ((0 < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[3]) == sgn(dynamic_pointer[1]))) {	//s_vertikal-Verringerung
+							if ((0 < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[3]) == sgn(dynamic_pointer[Vertikal]))) {	//s_vertikal-Verringerung
 								
 								for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {
-									dynamic_pointer[1] += 1;
-									if (dynamic_pointer[1] == 0) {
+									dynamic_pointer[Vertikal] += 1;
+									if (dynamic_pointer[Vertikal] == 0) {
 										break;
 									}
 								}
@@ -3020,15 +3087,15 @@ int main (void) {
 						
 					}
 					
-					if ((sgn(dynamic_pointer[0]) > 0)&&(sgn(dynamic_pointer[2]) >= 0)&&(sgn(dynamic_pointer[4]) < 0)) {		//a_horizontal-verringerung
+					if ((sgn(dynamic_pointer[Horizontal]) > 0)&&(sgn(dynamic_pointer[2]) >= 0)&&(sgn(dynamic_pointer[4]) < 0)) {		//a_horizontal-verringerung
 						dynamic_pointer[4] += 1;
-					} else if ((sgn(dynamic_pointer[0]) < 0)&&(sgn(dynamic_pointer[2]) <= 0)&&(sgn(dynamic_pointer[4]) > 0)) {
+					} else if ((sgn(dynamic_pointer[Horizontal]) < 0)&&(sgn(dynamic_pointer[2]) <= 0)&&(sgn(dynamic_pointer[4]) > 0)) {
 						dynamic_pointer[4] -= 1;
 					}
 					
-					if ((sgn(dynamic_pointer[1]) > 0)&&(sgn(dynamic_pointer[3]) >= 0)&&(sgn(dynamic_pointer[5]) < 0)) {		//a_vertikal-verringerung
+					if ((sgn(dynamic_pointer[Vertikal]) > 0)&&(sgn(dynamic_pointer[3]) >= 0)&&(sgn(dynamic_pointer[5]) < 0)) {		//a_vertikal-verringerung
 						dynamic_pointer[5] += 1;
-					} else if ((sgn(dynamic_pointer[1]) < 0)&&(sgn(dynamic_pointer[3]) <= 0)&&(sgn(dynamic_pointer[5]) > 0)) {
+					} else if ((sgn(dynamic_pointer[Vertikal]) < 0)&&(sgn(dynamic_pointer[3]) <= 0)&&(sgn(dynamic_pointer[5]) > 0)) {
 						dynamic_pointer[5] -= 1;
 					}
 					
@@ -3036,14 +3103,14 @@ int main (void) {
 					printf("	\n");	//test
 					printf("	indikator1: %u \n", indikator1);
 					printf("	indikator2: %u \n", indikator2);
-					printf("	sgn(dynamic_pointer[0]): %d \n", sgn(dynamic_pointer[0]));
-					printf("	sgn(dynamic_pointer[1]): %d \n", sgn(dynamic_pointer[1]));
-					printf("	position[0]: %u \n", position[0]);
-					printf("	position[1]: %u \n", position[1]);
+					printf("	sgn(dynamic_pointer[Horizontal]): %d \n", sgn(dynamic_pointer[Horizontal]));
+					printf("	sgn(dynamic_pointer[Vertikal]): %d \n", sgn(dynamic_pointer[Vertikal]));
+					printf("	position[Horizontal]: %u \n", position[Horizontal]);
+					printf("	position[Vertikal]: %u \n", position[Vertikal]);
 					
 					printf("	\n");
-					printf("	Object position: (%u, %u) \n", position[1], position[0]);
-					printf("	Weg s: (%d, %d) \n", dynamic_pointer[1], dynamic_pointer[0]);
+					printf("	Object position: (%u, %u) \n", position[Vertikal], position[Horizontal]);
+					printf("	Weg s: (%d, %d) \n", dynamic_pointer[Vertikal], dynamic_pointer[Horizontal]);
 					printf("	Geschw. v: (%d, %d) \n", dynamic_pointer[3], dynamic_pointer[2]);
 					printf("	Beschl. a: (%d, %d) \n", dynamic_pointer[5], dynamic_pointer[4]);
 					printf("	Impact  y(+erd): (%d, %d) \n", dynamic_pointer[7]+erd, dynamic_pointer[6]);
@@ -3120,8 +3187,22 @@ int main (void) {
 			} else if ((journey == 1)&&(gamemode_played == Race)) {
 				printf("	All turns until the journey starts: %u \n", ((2*freq) - ((g-1)%(2*freq))));
 				printf("\n");
-			} else if ((journey == 1)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//10
+			} else if ((journey == 1)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//mehr-gamemode_played
 				printf("	All turns until the journey starts: %u \n", ((10*(number_of_players-player_counter) - 1) - ((g-1)%(10*(number_of_players-player_counter) - 1))));
+				printf("\n");
+			}
+			
+			if ((intensity_loss_per_line_multiplication != 0)&&((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Contact))){	//journey-frequence
+				printf("	All turns until the projection starts: %u \n", (17 - ((g-1)%17)));
+				printf("\n");
+			} else if ((intensity_loss_per_line_multiplication != 0)&&((gamemode_played == Fight)||(gamemode_played == Rain))) {
+				printf("	All turns until the projection starts: %u \n", (13 - ((g-1)%13)));
+				printf("\n");
+			} else if ((intensity_loss_per_line_multiplication != 0)&&(gamemode_played == Race)) {
+				printf("	All turns until the projection starts: %u \n", ((2*freq-2) - ((g-1)%(2*freq-2))));
+				printf("\n");
+			} else if ((intensity_loss_per_line_multiplication != 0)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//mehr-gamemode_played
+				printf("	All turns until the projection starts: %u \n", ((9*(number_of_players-player_counter) - 1) - ((g-1)%(9*(number_of_players-player_counter) - 1))));
 				printf("\n");
 			}
 			
@@ -3411,7 +3492,7 @@ int main (void) {
 				if ((ttt != 0)&&(time_saver == 0.0)) {
 					time1 = time(NULL);
 				}
-				var_[geben] = get_unsigned_numeric_input_with_not_more_than_letters_4 (var_[geben]);
+				var_[geben] = get_unsigned_numeric_input_with_not_more_than_3_letters (var_[geben]);
 				//printf("	Checkpoint: var_[geben] \n");	//test
 				
 				if (var_[geben] == 10){
@@ -4075,7 +4156,7 @@ int main (void) {
 						ent = (ent + (number_of_players-3));
 					}
 					
-					if ((count_new > limit_new)&&(inverted == 0)&&(addition == 0)){		//Abfrage auf max. 10 neue Steine, normalerweise
+					if ((count_new > limit_new)&&(inverted == 0)&&(addition == 0)&&(intensity_loss_per_line_multiplication == 0)){		//Abfrage auf max. 10 neue Steine, normalerweise
 						if ((gamemode_played != Ulcer)&&(gamemode_played != Survive)) {
 							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode_played, number_of_players, rain, Sf_opague, Sf_allocation, allocation);
 						} else {
@@ -4146,7 +4227,7 @@ int main (void) {
 						ent = (ent + 2* (number_of_players-3));
 					}
 					
-					if ((count_new > ent)&&(inverted == 0)&&(addition == 0)){		//Abfrage auf insgesamt max. 20 Steine, normalerweise
+					if ((count_new > ent)&&(inverted == 0)&&(addition == 0)&&(intensity_loss_per_line_multiplication == 0)){		//Abfrage auf insgesamt max. 20 Steine, normalerweise
 						if ((gamemode_played != Contact)&&(gamemode_played != Ulcer)&&(gamemode_played != Survive)) {
 							Index (ent, count_new, m, n, Sf_nl_, Sf_od_, limit_new, limit_at_all, zeitgewinner, Field, w, d, e, geben, position, gamemode_played, number_of_players, rain, Sf_opague, Sf_allocation, allocation);
 						} else {
@@ -4923,6 +5004,24 @@ int main (void) {
 						
 					}
 				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((g-1)%17) == 16){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+					}
+				}
 			}
 			if ((gamemode_played == Fight)||(gamemode_played == Rain)) {
 				if (journey == 1){
@@ -4947,8 +5046,25 @@ int main (void) {
 						
 					}
 				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((g-1)%13) == 12){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+					}
+				}
 			}
-			
 			
 			if (gamemode_played == Race) {
 				if (journey == 1){
@@ -4967,6 +5083,24 @@ int main (void) {
 								}
 							}
 						}
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+					}
+				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((g-1)%(2*freq-2)) == (2*freq-3)){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
 						
 						if (opague >= 1) {
 							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
@@ -5655,7 +5789,7 @@ int main (void) {
 				// ges-x in ges[x], done
 			}
 			
-			if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)) {
+			if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
 				if (journey == 1){
 					if (((10*number_of_players - 1) - ((g-1)%(10*number_of_players - 1))) == 1){
 						printf (" \n");
@@ -5676,7 +5810,25 @@ int main (void) {
 							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
 						
+					}
+				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((9*number_of_players - 1) - ((g-1)%(9*number_of_players - 1))) == 1){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						}
+						
+					}
 				}
 			}
 			
@@ -5700,6 +5852,24 @@ int main (void) {
 							}
 						}
 							
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+					}
+				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((9*number_of_players - 1) - ((g-1)%(9*number_of_players - 1))) == 1){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
 						if (opague >= 1) {
 							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
 							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -8502,8 +8672,8 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 						}
 						
 						if (Field[0][h][k] == 77) {	//object instead of geben, nach dem change
-							position[1] = h;
-							position[0] = k;
+							position[Vertikal] = h;
+							position[Horizontal] = k;
 						}
 						
 						if (b == 1){
@@ -8634,8 +8804,8 @@ void Change (unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field
 								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, fremde_Zeile, fremde_Spalte, geben);
 								
 								if (Field[0][eigene_Zeile][eigene_Spalte] == 77) {	//object instead of geben
-									position[1] = eigene_Zeile;
-									position[0] = eigene_Spalte;
+									position[Vertikal] = eigene_Zeile;
+									position[Horizontal] = eigene_Spalte;
 								}
 							}
 						}
@@ -9399,7 +9569,7 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 							}
 							
 							if (gamemode_played == Dynamic) {		//gamemode_played depending specials
-								if ((i == position[1])||(j == position[0])) {
+								if ((i == position[Vertikal])||(j == position[Horizontal])) {
 									Index_Wert = 1;
 								}
 							} else if (gamemode_played == Hunt) {
@@ -9490,7 +9660,7 @@ void Index (unsigned int ent, unsigned int count_new, unsigned int m, unsigned i
 						if (Sf_nl_[geben][i][j] == geben){
 							
 							if (gamemode_played == Dynamic) {
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Index_Feld, 0, i, j, abs(i-position[1])+abs(j-position[0]));
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Index_Feld, 0, i, j, abs(i-position[Vertikal])+abs(j-position[Horizontal]));
 							} else if (gamemode_played == Arena) {
 								for (unsigned int h=i-1; h<=i+1; h+=1){
 									for (unsigned int k=j-1; k<=j+1; k+=1){
@@ -10327,12 +10497,12 @@ void impact_y_semi_square (unsigned int m, unsigned int n, unsigned int* positio
 	for (unsigned int i=0; i<m-1; i+=1) {	//Berechnung impact y
 		for (unsigned int j=0; j<n-1; j+=1) {
 			if ((Field[0][i][j] != 0)&&(Field[0][i][j] != 77)) {
-				if ((abs(position[1]-i)+abs(position[0]-j))<=(abs(range)+1)) {	//Manhatten-Norm
-					if ((position[1]-i) != 0) {
-						dynamic_pointer[7] += (sgn(position[1]-i))*(d_wert*(range+1-abs(position[1]-i))*(range+1-abs(position[1]-i)) +1);
+				if ((abs(position[Vertikal]-i)+abs(position[Horizontal]-j))<=(abs(range)+1)) {	//Manhatten-Norm
+					if ((position[Vertikal]-i) != 0) {
+						dynamic_pointer[7] += (sgn(position[Vertikal]-i))*(d_wert*(range+1-abs(position[Vertikal]-i))*(range+1-abs(position[Vertikal]-i)) +1);
 					}
-					if ((position[0]-j) != 0) {
-						dynamic_pointer[6] += (sgn(position[0]-j))*(d_wert*(range+1-abs(position[0]-j))*(range+1-abs(position[0]-j)) +1);
+					if ((position[Horizontal]-j) != 0) {
+						dynamic_pointer[6] += (sgn(position[Horizontal]-j))*(d_wert*(range+1-abs(position[Horizontal]-j))*(range+1-abs(position[Horizontal]-j)) +1);
 					}
 				}
 			}
@@ -11969,10 +12139,10 @@ unsigned int get_n (unsigned int gamemode_played, unsigned int number_of_players
 	return n;
 }
 	
-unsigned int get_unsigned_numeric_input_with_not_more_than_letters_4 (unsigned int parameter) {
-	char input[4];
+unsigned int get_unsigned_numeric_input_with_not_more_than_3_letters (unsigned int parameter) {
+	char input[3];
 	
-	scanf("%4s", input);
+	scanf("%3s", input);
 	
 	if (isdigit(*input) == 0) {
 		printf("	You should give me natural numbers, sometimes including 0. \n");
@@ -12268,7 +12438,7 @@ void get_colors (unsigned int* Colored, unsigned int gamemode_played, unsigned i
 
 unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_players, Spielfeld Field, unsigned int* ges, unsigned int player_counter, unsigned int m, unsigned int n, Spielfeld Sf_opague, Spielfeld Sf_allocation, unsigned int allocation, unsigned int geben) {
 	
-	if (position[0] == 1) {	//links
+	if (position[Horizontal] == 1) {	//links
 		if ((number_of_players == 2)||(number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
@@ -12346,7 +12516,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			}
 		}
 		
-	} else if (position[1] == 1) {	//oben
+	} else if (position[Vertikal] == 1) {	//oben
 		if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)||(number_of_players == 7)) {
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
@@ -12426,7 +12596,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			}
 		}
 		
-	} else if (position[0] == n-2) {	//rechts
+	} else if (position[Horizontal] == n-2) {	//rechts
 		if ((number_of_players == 3)||(number_of_players == 4)||(number_of_players == 5)) {
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
@@ -12520,7 +12690,7 @@ unsigned int dynamic_take_out (unsigned int* position, unsigned int number_of_pl
 			
 		}
 		
-	} else if (position[1] == m-2) {		//unten
+	} else if (position[Vertikal] == m-2) {		//unten
 		if (number_of_players == 4) {
 			for (unsigned int i=1; i<m-1; i+=1) {
 				for (unsigned int j=1; j<n-1; j+=1) {
@@ -13452,6 +13622,95 @@ void addition_maker (Spielfeld Field, unsigned int m, unsigned int n, unsigned i
 	Spielfeld_Destroy (Field_addition, m, 0);
 }
 
+void projection_maker (Spielfeld Field, unsigned int number_of_players, unsigned int geben, Spielfeld Sf_opague, unsigned int gamemode_played, Spielfeld Sf_allocation, unsigned int allocation, unsigned int direction, unsigned int intensity_minimum, unsigned int intensity_loss_per_line_multiplication, unsigned int m, unsigned int n) {
+	
+	double intensity_counter, intensity_minimum_real, intensity_loss_per_line_multiplication_real;
+	double Spielfeld_intensity[number_of_players][m][n];	//enthält die Intensitäten der Spieler, index_verschiebung geben-->Spielfeld_intensity[geben-1]
+	unsigned int a;
+	
+	printf("projection_maker ok1\n");	//test
+	
+	a = 0;
+	intensity_counter = 1;
+	intensity_minimum_real = 1.0*intensity_minimum/100;
+	intensity_loss_per_line_multiplication_real = 1.0*intensity_loss_per_line_multiplication/100;
+	
+	for (unsigned int p=0; p<number_of_players; p++) {
+		for (unsigned int i=0; i<=m-1; i++) {
+			for (unsigned int j=0; j<=n-1; j++) {
+				Spielfeld_intensity[p][i][j] = 0.0;
+			}
+		}
+	}
+	
+	// printf("projection_maker ok2\n");	//test
+	
+	for (unsigned int i=1; i<=m-2; i++) {
+		
+		// printf("projection_maker ok i=%u\n", i);	//test
+		
+		for (unsigned int j=1; j<=n-2; j++) {
+			
+			// printf("projection_maker ok i=%u, j=%u\n", i, j);	//test
+			
+			if (Field[0][i][j] <= number_of_players) {
+				for (unsigned int p=1; p<=number_of_players; p++) {	//p entspricht den Spielern
+					
+					// printf("projection_maker ok i=%u, j=%u, p=%u \n", i, j, p);	//test
+					
+					if (direction == Changing) {
+						direction = geben%Changing;
+					}
+					if (direction == Vertikal) {
+						for (unsigned int k=1; k<=n-2; k++) {
+							if (Field[0][i][k] == p) {
+								if (j != k) {
+									for (int q=1; q<=abs(j-k); q+=1) {
+										intensity_counter *= intensity_loss_per_line_multiplication_real;
+									}
+								}
+								Spielfeld_intensity[p-1][i][j] += intensity_counter;
+								intensity_counter = 1;
+							}
+						}
+					} else if (direction == Horizontal) {
+						for (unsigned int h=1; h<=n-2; h++) {
+							if (Field[0][h][j] == p) {
+								if (i != h) {
+									for (int q=1; q<=abs(i-h); q+=1) {
+										intensity_counter *= intensity_loss_per_line_multiplication_real;
+									}
+								}
+								Spielfeld_intensity[p-1][i][j] += intensity_counter;
+								intensity_counter = 1;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	for (unsigned int i=1; i<=m-2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			for (unsigned int p=1; p<=number_of_players; p++) {
+				for (unsigned int q=1; q<=number_of_players; q++) {
+					if (p != q) {
+						if (Spielfeld_intensity[p-1][i][j] > Spielfeld_intensity[q-1][i][j]) {
+							a += 1;
+						}
+					}
+				}
+				if ((a == number_of_players-1)&&(Spielfeld_intensity[p-1][i][j] >= intensity_minimum_real)) {
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, p);
+				}
+				a = 0;
+			}
+		}
+	}
+	
+}
+
 //Dynamic (gamemode_played)	, done		(just notes following)
 //Geschwindigkeit (vertikal, horizontal)
 //Beschleunigung (vertikal, horizontal)
@@ -13495,13 +13754,13 @@ void addition_maker (Spielfeld Field, unsigned int m, unsigned int n, unsigned i
 // (numbers= squares and primes<20)
 // Start with 13, end with 2 and 1 and 0.
 
-// matrix [multiplication] (option), go on
-// take the field as a matrix, multiply it with itself or with A € Z^mxm/Z^nxn
+// matrix [multiplication] (option), frozen
+// take the field as a matrix, multiply it with itself (or with A € Z^mxm/Z^nxn)
 
-// Addition (option), go on
+// Addition (option), done
 // if players touch each other, the player-numbers will be count together and %(number_of_players+1)
 // local/global, only global
 
 // projections (option), go on
 // after number_of_players+1 turns, look at lines (vertikal/horizontal) and project parallel lines to it.
-// Loss of intesity per line? 0<L<1 , exponetiell
+// Loss of intesity per line in percent, requested minimum? 0<L<1 given in per cent.
