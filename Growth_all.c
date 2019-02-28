@@ -161,6 +161,24 @@ enum directions {
 	
 } direction;
 
+enum survive_objects {
+	
+	Waves		= 75,
+	Waves_new	= 74,
+	Traps 		= 71,
+	Bomb_4		= 84,
+	Bomb_3		= 83,
+	Bomb_2		= 82,
+	Bomb_1		= 81,
+	
+};
+
+enum ulcer_start_values {
+	
+	missing = 0,
+	existing = 1,
+};
+
 enum gamemode {
 	nothing	= 0,
 	Classic	= 1,
@@ -428,7 +446,7 @@ int main (void) {
 			pere[p] = 0;
 			ability[p] = 0;
 			Colored[p] = 0;
-			ulcer_start[p] = 0;
+			ulcer_start[p] = missing;
 			ulcer_lifes[p] = 0;
 			out_counter[p] = 0;
 			ges[p] = 0;
@@ -439,6 +457,7 @@ int main (void) {
 				ulcer_lifes[p] = p-1;
 			}
 		}
+		ulcer_start[1] = existing;
 		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.5 \n");	//test
@@ -464,9 +483,9 @@ int main (void) {
 					
 					printf("	Choose your gamemode\n  \n");
 
-					// enum: gamemode_played[done], (traps, bombs, waves), in menu (about the game, limits, hints, numbers), beginningmenu 	//go on
+					// enum: gamemode_played[done], (traps, bombs, waves, done), in menu (about the game, limits, hints, numbers), beginningmenu done 	//go on
 					
-					printf("	Classic: 1\n	Collect: 2\n	Contact: 3\n	Fall   : 4\n	Fight  : 5\n	Hunt   : 6\n	Race   : 7\n	Rain   : 8\n	Arena  : 9\n  	Ulcer  : 10\n   	Dynamic: 11\n   	Survive: 12\n   	Sand   : 13\n  \n");
+					printf("	Classic: 1\n	Collect: 2\n	Contact: 3\n	Fall   : 4\n	Fight  : 5\n	Hunt   : 6\n	Race   : 7\n	Rain   : 8\n	Arena  : 9\n  	Ulcer  : 10\n   	Dynamic: 11\n   	Survive: 12\n   	Sand   : 13\n  \n");	//mehr-gamemode_played
 					gamemode_played = get_unsigned_numeric_input_with_not_more_than_2_letters (gamemode_played);
 					printf("\n");
 					//Players?
@@ -534,7 +553,7 @@ int main (void) {
 						
 					}
 				
-					if (beginningmenu == Journey){		//Growth
+					if (beginningmenu == Journey){
 						if (journey == 1){
 							journey = 0;
 							printf("	journey deactivated \n");
@@ -2369,7 +2388,7 @@ int main (void) {
 				if ((round_counter % 5 == 0)&&(information_code[3] >= 1)) {	//delete Waves
 					for (unsigned int i=1; i<m-1; i+=1){
 						for (unsigned int j=1; j<n-1; j+=1){
-							if (Field[0][i][j] == 75) {
+							if (Field[0][i][j] == Waves) {
 								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 							}
 						}
@@ -2387,13 +2406,13 @@ int main (void) {
 					for (unsigned int j=1; j<n-1; j+=1){
 						
 						if (information_code[2] >= 1) {	//Bombs
-							if (Field[0][i][j] == 84) {
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 83);
-							} else if (Field[0][i][j] == 83) {
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 82);
-							} else if (Field[0][i][j] == 82) {
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 81);
-							} else if (Field[0][i][j] == 81) {
+							if (Field[0][i][j] == Bomb_4) {
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Bomb_3);
+							} else if (Field[0][i][j] == Bomb_3) {
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Bomb_2);
+							} else if (Field[0][i][j] == Bomb_2) {
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Bomb_1);
+							} else if (Field[0][i][j] == Bomb_1) {
 								for (unsigned int h=i-1; h<=i+1; h+=1){
 									for (unsigned int k=j-1; k<=j+1; k+=1){
 										if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -2404,8 +2423,8 @@ int main (void) {
 							}
 						}
 						if (information_code[3] >= 1) {	//Waves
-							if (((Field[0][i-1][j] == 75)&&(Field[0][i+1][j] != 75)&&(Field[0][i][j+1] != 75)&&(Field[0][i][j-1] != 75))||((Field[0][i-1][j] != 75)&&(Field[0][i+1][j] == 75)&&(Field[0][i][j+1] != 75)&&(Field[0][i][j-1] != 75))||((Field[0][i-1][j] != 75)&&(Field[0][i+1][j] != 75)&&(Field[0][i][j+1] == 75)&&(Field[0][i][j-1] != 75))||((Field[0][i-1][j] != 75)&&(Field[0][i+1][j] != 75)&&(Field[0][i][j+1] != 75)&&(Field[0][i][j-1] == 75))) {
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 74);
+							if (((Field[0][i-1][j] == Waves)&&(Field[0][i+1][j] != Waves)&&(Field[0][i][j+1] != Waves)&&(Field[0][i][j-1] != Waves))||((Field[0][i-1][j] != Waves)&&(Field[0][i+1][j] == Waves)&&(Field[0][i][j+1] != Waves)&&(Field[0][i][j-1] != Waves))||((Field[0][i-1][j] != Waves)&&(Field[0][i+1][j] != Waves)&&(Field[0][i][j+1] == Waves)&&(Field[0][i][j-1] != Waves))||((Field[0][i-1][j] != Waves)&&(Field[0][i+1][j] != Waves)&&(Field[0][i][j+1] != Waves)&&(Field[0][i][j-1] == Waves))) {
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Waves_new);
 							}
 						}
 					}
@@ -2413,15 +2432,15 @@ int main (void) {
 				
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
-						if (Field[0][i][j] == 75) {
+						if (Field[0][i][j] == Waves) {
 							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
 						}
 					}
 				}
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
-						if (Field[0][i][j] == 74) {
-							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 75);
+						if (Field[0][i][j] == Waves_new) {
+							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Waves);
 						}
 					}
 				}
@@ -2442,7 +2461,7 @@ int main (void) {
 						unsigned int j;
 						i = ((survive_different%10)+ges[1]+ges[3]+ges[5]+ges[7]+ges[9]+var_[2]+var_[4]+var_[6]+var_[8]+Colored[1]+Colored[3]+Colored[5]+Colored[7]+Colored[9]+7*p+g+2*use_number+tac)%(m-2) + 1;
 						j = ((survive_different%6)+ges[2]+ges[4]+ges[6]+ges[8]+var_[1]+var_[3]+var_[5]+var_[7]+var_[9]+Colored[0]+Colored[2]+Colored[4]+Colored[6]+Colored[8]+11*p+g+3*use_number+ttt)%(n-2) + 1;
-						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 75);
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Waves);
 					}
 				}
 				if (information_code[1] >= 1) {	//new Traps
@@ -2451,7 +2470,7 @@ int main (void) {
 						unsigned int j;
 						i = ((survive_different%5)+ges[1]+ges[3]+ges[5]+ges[7]+ges[9]+var_[2]+var_[4]+var_[6]+var_[8]+Colored[1]+Colored[3]+Colored[5]+Colored[7]+Colored[9]+3*p+g+use_number+tac)%(m-2) + 1;
 						j = ((survive_different%12)+ges[2]+ges[4]+ges[6]+ges[8]+var_[1]+var_[3]+var_[5]+var_[7]+var_[9]+Colored[0]+Colored[2]+Colored[4]+Colored[6]+Colored[8]+6*p+g+2*use_number+ttt)%(n-2) + 1;
-						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 71);
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Traps);
 					}
 				}
 				if (information_code[2] >= 1) {	//new Bombs
@@ -2460,7 +2479,7 @@ int main (void) {
 						unsigned int j;
 						i = ((survive_different%15)+ges[1]+ges[3]+ges[5]+ges[7]+ges[9]+var_[2]+var_[4]+var_[6]+var_[8]+Colored[1]+Colored[3]+Colored[5]+Colored[7]+Colored[9]+8*p+g+3*use_number+tac)%(m-2) + 1;
 						j = ((survive_different%4)+ges[2]+ges[4]+ges[6]+ges[8]+var_[1]+var_[3]+var_[5]+var_[7]+var_[9]+Colored[0]+Colored[2]+Colored[4]+Colored[6]+Colored[8]+5*p+g+use_number+ttt)%(n-2) + 1;
-						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 84);
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Bomb_4);
 					}
 				}
 				
@@ -2469,6 +2488,7 @@ int main (void) {
 			if ((gamemode_played == Dynamic)&&((g-1)%number_of_players == 0)&&(var_[1] != 1010)) {	//Object-77 movement
 				
 				if (opague >= 1) {
+					opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				} else {
 					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -3197,8 +3217,8 @@ int main (void) {
 				continue;
 			}
 			
-			if ((ges[geben] == 1010*geben)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//10	//Überspringen, wenn ausgeschieden
-				g+=1;
+			if ((ges[geben] == 1010*geben)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//mehr-gamemode_played	//Überspringen, wenn ausgeschieden
+				
 				all_turns_correction += 1;
 				var_[geben] = 1010*geben;		//eigentlich var_[geben] = 1010*geben, done
 				for (unsigned int i=1; i<m-1; i+=1){
@@ -3224,8 +3244,24 @@ int main (void) {
 					}
 				}
 				if (var_[0] == 1) {	//if "go back" is used
-					g-=2;
+					g-=1;
 					all_turns_correction -= 1;
+				} else {
+					g+=1;
+				}
+				continue;
+			}
+			
+			if ((gamemode_played == Ulcer)&&(ulcer_start[geben] == missing)) {
+				
+				all_turns_correction += 1;
+				
+				if (var_[0] == 1) {	//if "go back" is used
+					g-=1;
+					all_turns_correction -= 1;
+					var_[geben] = 1010*geben;
+				} else {
+					g+=1;
 				}
 				continue;
 			}
@@ -3244,7 +3280,7 @@ int main (void) {
 				printf("\n");
 			}
 			
-			if ((intensity_loss_per_line_multiplication != 0)&&((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Contact))){	//journey-frequence
+			if ((intensity_loss_per_line_multiplication != 0)&&((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Contact))){	//projection-frequence
 				printf("	All turns until the projection starts: %u \n", (17 - ((g-1)%17)));
 				printf("\n");
 			} else if ((intensity_loss_per_line_multiplication != 0)&&((gamemode_played == Fight)||(gamemode_played == Rain))) {
@@ -3296,6 +3332,7 @@ int main (void) {
 					information_code[0] = 9;
 				
 					if (opague >= 1) {
+						opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
 						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -3445,6 +3482,7 @@ int main (void) {
 				
 				if (gamemode_played != Rain) {
 					if (opague >= 1) {
+						opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
 						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -3458,7 +3496,7 @@ int main (void) {
 				
 				if (gamemode_played == Ulcer) {
 					printf("\n");
-					printf("	Lifes player %u: 	%u Life(s) \n", geben, ulcer_lifes[1]);
+					printf("	Lifes player %u: 	%u Life(s) \n", geben, ulcer_lifes[geben]);
 				}
 				
 				if (gamemode_played == Dynamic) {
@@ -3622,6 +3660,7 @@ int main (void) {
 					
 					if (gamemode_played == Rain) {		//##
 						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 						} else {
 							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -3775,7 +3814,7 @@ int main (void) {
 					var_[geben] = 1010*geben;
 					if (gamemode_played == Ulcer) {
 						ulcer_lifes[geben] += 1;
-						ulcer_start[geben] = 0;
+						ulcer_start[geben] = missing;
 					}
 					continue;
 				} else {
@@ -4262,12 +4301,6 @@ int main (void) {
 						
 						addition_maker (Field, m, n, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, ges);
 						
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
 					}
 					
 					/*
@@ -4504,6 +4537,192 @@ int main (void) {
 			//normal_end
 			
 			printf("\n");
+			
+			if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Contact)) {
+				if (journey == 1){
+					if (((g-1)%19) == 18){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a journey... \n");
+						printf (" \n");
+						for (unsigned int i=1; i<m-1; i+=1){
+							for (unsigned int j=1; j<n-1; j+=1){
+								if (Field[0][i][j] != 7) {
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field_journey[0][i][j]);
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
+									
+								} else if (Field[0][i][j] == 7) {
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
+								}
+							}
+						}
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+					}
+				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((g-1)%17) == 16){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+					}
+				}
+			}
+			
+			if ((gamemode_played == Fight)||(gamemode_played == Rain)) {
+				if (journey == 1){
+					if (((g-1)%15) == 14){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a journey... \n");
+						printf (" \n");
+						for (unsigned int i=1; i<m-1; i+=1){
+							for (unsigned int j=1; j<n-1; j+=1){
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field_journey[0][i][j]);
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
+							}
+						}
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+					}
+				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((g-1)%13) == 12){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+					}
+				}
+			}
+			
+			if (gamemode_played == Race) {
+				if (journey == 1){
+					if (((g-1)%(2*freq)) == (2*freq-1)){
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a journey... \n");
+						printf (" \n");
+						for (unsigned int i=1; i<m-1; i+=1){
+							for (unsigned int j=1; j<n-1; j+=1){
+								if (Field[0][i][j+1] != 7) {	//Schub um 1
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j+1, Field_journey[0][i][j]);
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
+								} else if (Field[0][i][j] == 7) {
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
+								}
+							}
+						}
+						
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+					}
+				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((g-1)%(2*freq-2)) == (2*freq-3)){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+					}
+				}
+			}
+			
+			if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
+				if (journey == 1){
+					if (((10*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(10*(number_of_players - player_counter) - 1))) == 1){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a journey... \n");
+						printf (" \n");
+						for (unsigned int i=1; i<m-1; i+=1){
+							for (unsigned int j=1; j<n-1; j+=1){
+								if ((Field[0][i][j] != 77)||(gamemode_played != Dynamic)) {	//The ball has to exist.
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field_journey[0][i][j]);
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
+								} else {
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 77);
+									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
+								}
+							}
+						}
+						
+					}
+				}
+				
+				if (intensity_loss_per_line_multiplication != 0){
+					if (((9*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(9*(number_of_players - player_counter) - 1))) == 1){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a projection... \n");
+						printf (" \n");
+						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+					}
+				}
+			}
 			
 			// printf("	gamemode_played = %u \n", gamemode_played);	//test
 			// printf("	Rain = %u \n", Rain);	//test
@@ -4949,9 +5168,7 @@ int main (void) {
 				}
 				if (ges[2] == 0){
 					if (rain_obj == 1){
-						Field[0][m-3][n-3] = 2;
-						Field[0][m-3][n-2] = 2;
-						Field[0][m-2][n-3] = 2;
+						set_triangle_unten_rechts (inverted, Field, 1, m-2, n-2);
 					} else {
 						printf("	Sieg:	Spieler 1 \n");
 						break;
@@ -4970,9 +5187,7 @@ int main (void) {
 				}
 				if (ges[1] == 0){
 					if (rain_obj == 1){
-						Field[0][m-3][2] = 1;
-						Field[0][m-3][1] = 1;
-						Field[0][m-2][2] = 1;
+						set_triangle_unten_links (inverted, Field, 1, m-2, 1);
 					} else {
 						printf("	Sieg:	Spieler 2 \n");
 						break;
@@ -4982,148 +5197,7 @@ int main (void) {
 				ges[1] = 0;
 			}
 			
-			if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Contact)) {
-				if (journey == 1){
-					if (((g-1)%19) == 18){
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a journey... \n");
-						printf (" \n");
-						for (unsigned int i=1; i<m-1; i+=1){
-							for (unsigned int j=1; j<n-1; j+=1){
-								if (Field[0][i][j] != 7) {
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field_journey[0][i][j]);
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
-									
-								} else if (Field[0][i][j] == 7) {
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
-								}
-							}
-						}
-						
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-					}
-				}
-				
-				if (intensity_loss_per_line_multiplication != 0){
-					if (((g-1)%17) == 16){
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a projection... \n");
-						printf (" \n");
-						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
-						
-					}
-				}
-			}
-			if ((gamemode_played == Fight)||(gamemode_played == Rain)) {
-				if (journey == 1){
-					if (((g-1)%15) == 14){
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a journey... \n");
-						printf (" \n");
-						for (unsigned int i=1; i<m-1; i+=1){
-							for (unsigned int j=1; j<n-1; j+=1){
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field_journey[0][i][j]);
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
-							}
-						}
-						
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-					}
-				}
-				
-				if (intensity_loss_per_line_multiplication != 0){
-					if (((g-1)%13) == 12){
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a projection... \n");
-						printf (" \n");
-						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
-						
-					}
-				}
-			}
-			
 			if (gamemode_played == Race) {
-				if (journey == 1){
-					if (((g-1)%(2*freq)) == (2*freq-1)){
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a journey... \n");
-						printf (" \n");
-						for (unsigned int i=1; i<m-1; i+=1){
-							for (unsigned int j=1; j<n-1; j+=1){
-								if (Field[0][i][j+1] != 7) {	//Schub um 1
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j+1, Field_journey[0][i][j]);
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
-								} else if (Field[0][i][j] == 7) {
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
-								}
-							}
-						}
-						
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-					}
-				}
-				
-				if (intensity_loss_per_line_multiplication != 0){
-					if (((g-1)%(2*freq-2)) == (2*freq-3)){
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a projection... \n");
-						printf (" \n");
-						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
-						
-					}
-				}
-			}
-			
-			if (gamemode_played == Race) {
-				
-				if (opague >= 1) {
-					opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);	//possible to modify
-				}
 				
 				if ((g-1)%freq == (freq-1)){
 					count_freq += 1;
@@ -5140,6 +5214,7 @@ int main (void) {
 					ahead (Field, m, count_freq, Sf_allocation, allocation, Sf_opague, number_of_players, geben);
 					
 					if (opague >= 1) {
+						opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
 						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 					} else {
 						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
@@ -5158,10 +5233,6 @@ int main (void) {
 			}
 			
 			if (gamemode_played == Fall) {
-				
-				if (opague >= 1) {
-					opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);	//possible to modify
-				}
 				
 				if (((g-1)%turns_per_drop) == 1){
 					for (unsigned int j=1; j<n-1; j+=1){
@@ -5185,7 +5256,12 @@ int main (void) {
 							printf ("	It reached the ground!\n");
 							printf ("\n");
 							
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							if (opague >= 1) {
+								opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+								show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							} else {
+								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+							}
 							
 							if (j == (n-1)/2){
 								Points[0] += 1;
@@ -5200,6 +5276,12 @@ int main (void) {
 							fall_back = j;
 							
 							if (journey == 1){			//Übertragung		journey-Frequenz = Fall-Frequenz
+								
+								printf ("\n");
+								printf ("\n");
+								printf ("	It is time for a journey... \n");
+								printf ("\n");
+								
 								for (unsigned int i=1; i<m-1; i+=1){
 									for (unsigned int j=1; j<n-1; j+=1){
 										if (Field[0][i][j] != 7){
@@ -5209,17 +5291,6 @@ int main (void) {
 											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
 										}
 									}
-								}
-								printf ("\n");
-								printf ("\n");
-								printf ("\n");
-								printf ("	It is time for a journey!\n");
-								printf ("\n");
-								
-								if (opague >= 1) {
-									show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-								} else {
-									show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 								}
 							}
 							
@@ -5248,7 +5319,14 @@ int main (void) {
 								printf ("\n");
 								printf ("	It fell down!\n");
 								printf ("\n");
-								show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								
+								if (opague >= 1) {
+									opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+									show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								} else {
+									show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								}
+								
 								break;
 							}
 						}
@@ -5291,9 +5369,9 @@ int main (void) {
 				}
 				if (ges[2] == 0){
 					printf("	Sieg:	Spieler 1 \n");
-						break;
+					break;
 				} else if ((ges[2]<5)&&(gamemode_played == Fight)){
-					numbers_of_[2][0] += 1;
+					numbers_of_[2][0][0] += 1;
 				}
 				/*if (ges[2] > limit_at_all){	//test
 					printf("too much\n");
@@ -5312,7 +5390,7 @@ int main (void) {
 					printf("	Sieg:	Spieler 2 \n");
 					break;
 				} else if ((ges[1]<5)&&(gamemode_played == Fight)){
-					numbers_of_[1][0] += 1;
+					numbers_of_[1][0][0] += 1;
 				}
 				/*if (ges[1] > limit_at_all){	//test
 					printf("too much\n");
@@ -5329,7 +5407,7 @@ int main (void) {
 					}
 				}
 				if (ges[2] <= 5){
-				numbers_of_[2][0] += 1;
+				numbers_of_[2][0][0] += 1;
 				}
 				
 				if (ges[2] == 0){
@@ -5349,7 +5427,7 @@ int main (void) {
 					}
 				}
 				if (ges[1] <= 5){
-					numbers_of_[1][0] += 1;
+					numbers_of_[1][0][0] += 1;
 				}
 				
 				if (ges[1] == 0){
@@ -5464,13 +5542,8 @@ int main (void) {
 				if (ges[1] == 0) {
 					printf("		Niederlage: Spieler 1 \n");
 					break;
-				}
-				for (unsigned int p=2; p<=number_of_players; p+=1) {
-					if (ges[p] == 0) {
-						printf("		Spieler %u, you are out. \n", p);
-						player_counter += 1;
-						ges[p] = 1010*p;
-					}
+				} else {
+					player_counter = who_is_out (ges, number_of_players, player_counter);
 				}
 				
 				ges[1] = 0;
@@ -5535,56 +5608,19 @@ int main (void) {
 					}
 				}
 				
-			}		//lesezeichen
+			}
 			
 			if (gamemode_played == Ulcer) {
 				
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
-						if ((Field[0][i][j] == 1)&&(ges[1] < 1000)) {
-							ges[1] += 1;
-							if (ulcer_start[1] == 0) {
-								ulcer_start[1] = 1;
-							}
-						} else if ((Field[0][i][j] == 2)&&(ges[2] < 1000)) {
-							ges[2] += 1;
-							if (ulcer_start[2] == 0) {
-								ulcer_start[2] = 1;
-							}
-						} else if ((Field[0][i][j] == 3)&&(ges[3] < 1000)) {
-							ges[3] += 1;
-							if (ulcer_start[3] == 0) {
-								ulcer_start[3] = 1;
-							}
-						} else if ((Field[0][i][j] == 4)&&(ges[4] < 1000)) {
-							ges[4] += 1;
-							if (ulcer_start[4] == 0) {
-								ulcer_start[4] = 1;
-							}
-						} else if ((Field[0][i][j] == 5)&&(ges[5] < 1000)) {
-							ges[5] += 1;
-							if (ulcer_start[5] == 0) {
-								ulcer_start[5] = 1;
-							}
-						} else if ((Field[0][i][j] == 6)&&(ges[6] < 1000)) {
-							ges[6] += 1;
-							if (ulcer_start[6] == 0) {
-								ulcer_start[6] = 1;
-							}
-						} else if ((Field[0][i][j] == 7)&&(ges[7] < 1000)) {
-							ges[7] += 1;
-							if (ulcer_start[7] == 0) {
-								ulcer_start[7] = 1;
-							}
-						} else if ((Field[0][i][j] == 8)&&(ges[8] < 1000)) {
-							ges[8] += 1;
-							if (ulcer_start[8] == 0) {
-								ulcer_start[8] = 1;
-							}
-						} else if ((Field[0][i][j] == 9)&&(ges[9] < 1000)) {
-							ges[9] += 1;
-							if (ulcer_start[9] == 0) {
-								ulcer_start[9] = 1;
+						for (unsigned int p=1; p<=number_of_players; p++) {
+							if ((Field[0][i][j] == p)&&(ges[p] < 1000)) {
+								ges[p] += 1;
+								if (ulcer_start[p] == missing) {
+									ulcer_start[p] = existing;
+								}
+								break;
 							}
 						}
 					}
@@ -5594,8 +5630,8 @@ int main (void) {
 					ges[0] += ges[p];
 				}
 				
-				if ((ges[1] == 0)&&(ulcer_start[1] == 1)&&(geben == 1)) {
-					ulcer_start[1] = 0;
+				if ((ges[1] == 0)&&(ulcer_start[1] == existing)&&(geben == 1)) {
+					ulcer_start[1] = missing;
 					if (ulcer_lifes[1] > 0) {
 						printf("		Spieler 1, you lost a life. \n");
 						ulcer_lifes[1] -= 1;
@@ -5618,149 +5654,23 @@ int main (void) {
 					
 				}
 				
-				if ((ges[2] == 0)&&(number_of_players >= 2)&&(ulcer_start[2] == 1)&&(geben == 2)) {
-					ulcer_start[2] = 0;
-					if (ulcer_lifes[2] > 0) {
-						printf("		Spieler 2, you lost a life. \n");
-						ulcer_lifes[2] -= 1;
-					} else {
-						printf("		Spieler 2, you are out. \n");
-						player_counter += 1;
-						ges[2] = 2020;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 2;
-								break;
-							}
-						}
-					}
-				}
-				if ((ges[3] == 0)&&(number_of_players >= 3)&&(ulcer_start[3] == 1)&&(geben == 3)) {
-					ulcer_start[3] = 0;
-					if (ulcer_lifes[3] > 0) {
-						printf("		Spieler 3, you lost a life. \n");
-						ulcer_lifes[3] -= 1;
-					} else {
-						printf("		Spieler 3, you are out. \n");
-						player_counter += 1;
-						ges[3] = 3030;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 3;
-								break;
-							}
-						}
-					}
+				for (unsigned int p=1; p<=number_of_players; p+=1) {
 					
-				}
-				if ((ges[4] == 0)&&(number_of_players >= 4)&&(ulcer_start[4] == 1)&&(geben == 4)) {
-					ulcer_start[4] = 0;
-					if (ulcer_lifes[4] > 0) {
-						printf("		Spieler 4, you lost a life. \n");
-						ulcer_lifes[4] -= 1;
-					} else {
-						printf("		Spieler 4, you are out. \n");
-						player_counter += 1;
-						ges[4] = 4040;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 4;
-								break;
-							}
-						}
-					}
-					
-				}
-				if ((ges[5] == 0)&&(number_of_players >= 5)&&(ulcer_start[5] == 1)&&(geben == 5)) {
-					ulcer_start[5] = 0;
-					if (ulcer_lifes[5] > 0) {
-						printf("		Spieler 5, you lost a life. \n");
-						ulcer_lifes[5] -= 1;
-					} else {
-						printf("		Spieler 5, you are out. \n");
-						player_counter += 1;
-						ges[5] = 5050;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 5;
-								break;
-							}
-						}
-					}
-					
-				}
-				if ((ges[6] == 0)&&(number_of_players >= 6)&&(ulcer_start[6] == 1)&&(geben == 6)) {
-					ulcer_start[6] = 0;
-					if (ulcer_lifes[6] > 0) {
-						printf("		Spieler 6, you lost a life. \n");
-						ulcer_lifes[6] -= 1;
-					} else {
-						printf("		Spieler 6, you are out. \n");
-						player_counter += 1;
-						ges[6] = 6060;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 6;
-								break;
-							}
-						}
-					}
-				}
-				if ((ges[7] == 0)&&(number_of_players >= 7)&&(ulcer_start[7] == 1)&&(geben == 7)) {
-					ulcer_start[7] = 0;
-					if (ulcer_lifes[7] > 0) {
-						printf("		Spieler 7, you lost a life. \n");
-						ulcer_lifes[7] -= 1;
-					} else {
-						printf("		Spieler 7, you are out. \n");
-						player_counter += 1;
-						ges[7] = 7070;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 7;
-								break;
-							}
-						}
-					}
-				}
-				if ((ges[8] == 0)&&(number_of_players >= 8)&&(ulcer_start[8] == 1)&&(geben == 8)) {
-					ulcer_start[8] = 0;
-					if (ulcer_lifes[8] > 0) {
-						printf("		Spieler 8, you lost a life. \n");
-						ulcer_lifes[8] -= 1;
-					} else {
-						printf("		Spieler 8, you are out. \n");
-						player_counter += 1;
-						ges[8] = 8080;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 8;
-								break;
-							}
-						}
-					}
-				}
-				if ((ges[9] == 0)&&(number_of_players == 9)&&(ulcer_start[9] == 1)&&(geben == 9)) {
-					ulcer_start[9] = 0;
-					if (ulcer_lifes[9] > 0) {
-						printf("		Spieler 9, you lost a life. \n");
-						ulcer_lifes[9] -= 1;
-					} else {
-						printf("		Spieler 9, you are out. \n");
-						player_counter += 1;
-						ges[9] = 9090;
-						
-						for (unsigned int p=1; p<=number_of_players; p+=1) {
-							if (out_counter[p] == 0) {
-								out_counter[p] = 9;
-								break;
+					if ((ges[p] == 0)&&(number_of_players >= p)&&(ulcer_start[p] == existing)&&(geben == p)) {
+						ulcer_start[p] = missing;
+						if (ulcer_lifes[p] > 0) {
+							printf("		Spieler %u, you lost a life. \n", p);
+							ulcer_lifes[p] -= 1;
+						} else {
+							printf("		Spieler %u, you are out. \n", p);
+							player_counter += 1;
+							ges[p] = 1010*p;
+							
+							for (unsigned int q=1; q<=number_of_players; q+=1) {
+								if (out_counter[q] == 0) {
+									out_counter[q] = p;
+									break;
+								}
 							}
 						}
 					}
@@ -5795,97 +5705,7 @@ int main (void) {
 				// ges-x in ges[x], done
 			}
 			
-			if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
-				if (journey == 1){
-					if (((10*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(10*(number_of_players - player_counter) - 1))) == 1){
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a journey... \n");
-						printf (" \n");
-						for (unsigned int i=1; i<m-1; i+=1){
-							for (unsigned int j=1; j<n-1; j+=1){
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field_journey[0][i][j]);
-								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
-							}
-						}
-						
-					}
-				}
-				
-				if (intensity_loss_per_line_multiplication != 0){
-					if (((9*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(9*(number_of_players - player_counter) - 1))) == 1){
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a projection... \n");
-						printf (" \n");
-						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
-						
-					}
-				}
-			}
-			
-			if (gamemode_played == Dynamic) {
-				
-				if (journey == 1){
-					if (((10*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(10*(number_of_players - player_counter) - 1))) == 1){
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a journey... \n");
-						printf (" \n");
-						for (unsigned int i=1; i<m-1; i+=1){
-							for (unsigned int j=1; j<n-1; j+=1){
-								if (Field[0][i][j] != 77) {
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Field_journey[0][i][j]);
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field_journey, 0, i, j, 0);
-								} else {
-									set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 77);
-								}
-								
-							}
-						}
-						
-					}
-				}
-				
-				if (intensity_loss_per_line_multiplication != 0){
-					if (((9*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(9*(number_of_players - player_counter) - 1))) == 1){
-						if (opague >= 1) {
-							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-							show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						} else {
-							show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-						}
-						
-						printf (" \n");
-						printf (" \n");
-						printf ("	It is time for a projection... \n");
-						printf (" \n");
-						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
-						
-					}
-				}
-				
+			if (gamemode_played == Dynamic) {	
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
 						for (unsigned int p=1; p<=number_of_players; p+=1) {
@@ -6087,17 +5907,14 @@ int main (void) {
 			}
 			
 			if (figures != 0) {
-				if (g%number_of_players == 0) {
-					
-					if (opague >= 1) {
-						opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
-						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-					} else {
-						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-					}
-					
-					figure_check (Field, m, n, number_of_players, Colored, Sf_allocation, allocation, Sf_opague, geben);
+				if (opague >= 1) {
+					opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+					show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+				} else {
+					show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 				}
+				
+				figure_check (Field, m, n, number_of_players, Colored, Sf_allocation, allocation, Sf_opague, geben);
 			}
 			
 			if (player_counter == number_of_players) {	//Notbremse
@@ -6146,7 +5963,7 @@ int main (void) {
 				}
 				
 				if (out_counter[p] != 0) {
-					if (out_counter[p] < number_of_players) {
+					if (out_counter[p] < number_of_players) {	//It is < and not <=, because the first one has not the aim to kill the last player
 						printf("		No.%u: %u \n", p-ulcer_start[0], out_counter[p]+1);
 					} else {
 						ulcer_start[0] = 1;
@@ -6952,7 +6769,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 	if (gamemode_played != Race) {
 		for (unsigned int i=1; i<m-1; i+=1){
 			for (unsigned int j=1; j<n-1; j+=1){
-				if ((Field[0][i][j] == 0)||(Field[0][i][j] == 71)) {	//71 = Trap, only used in Survive
+				if ((Field[0][i][j] == 0)||(Field[0][i][j] == Traps)) {	//Traps only used in Survive
 					for (unsigned int h=i-1; h<=i+1; h+=1){
 						for (unsigned int k=j-1; k<=j+1; k+=1){
 							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -7093,7 +6910,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 			for (unsigned int i=1; i<m-1; i+=1){
 				for (unsigned int j=1; j<n-1; j+=1){
 					
-					if ((Field[0][i][j] == 71)&&(Sf_temp[0][i][j] == geben)) {
+					if ((Field[0][i][j] == Traps)&&(Sf_temp[0][i][j] == geben)) {
 						
 						if (Field[0][i][j] == geben) {	//sinnlos?
 							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_od_, geben, i, j, 101*geben);
@@ -7692,32 +7509,32 @@ void show_field (Spielfeld Sf_opague, Spielfeld Spiel, unsigned int m, unsigned 
 					}
 					
 				} else if (gamemode_played == Survive) {
-					if (Spiel[auswerter][i][j] == 71) {	//Trap
+					if (Spiel[auswerter][i][j] == Traps) {	//Trap
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("TT");
-					} else if (Spiel[auswerter][i][j] == 84) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == Bomb_4) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B4");
-					} else if (Spiel[auswerter][i][j] == 83) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == Bomb_3) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B3");
-					} else if (Spiel[auswerter][i][j] == 82) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == Bomb_2) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B2");
-					} else if (Spiel[auswerter][i][j] == 81) {	//Bomb
+					} else if (Spiel[auswerter][i][j] == Bomb_1) {	//Bomb
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
 						printf("B1");
-					} else if (Spiel[auswerter][i][j] == 75) {	//Wave
+					} else if (Spiel[auswerter][i][j] == Waves) {	//Wave
 						if (Colored[0] == 1) {
 							SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+6);	//6 --> brown, but it is white
 						}
@@ -10774,18 +10591,18 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 			} else if (gamemode_played == Survive) {
 				if (Field[0][i][j] == geben){
 					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, geben);
-				} else if (Field[0][i][j] == 81){
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 81);
-				} else if (Field[0][i][j] == 82){
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 82);
-				} else if (Field[0][i][j] == 83){
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 83);
-				} else if (Field[0][i][j] == 84){
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 84);
-				} else if (Field[0][i][j] == 75){
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 75);
-				} else if (Field[0][i][j] == 71){
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 71);
+				} else if (Field[0][i][j] == Bomb_1){
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, Bomb_1);
+				} else if (Field[0][i][j] == Bomb_2){
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, Bomb_2);
+				} else if (Field[0][i][j] == Bomb_3){
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, Bomb_3);
+				} else if (Field[0][i][j] == Bomb_4){
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, Bomb_4);
+				} else if (Field[0][i][j] == Waves){
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, Waves);
+				} else if (Field[0][i][j] == Traps){
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, Traps);
 				} else if (Field[0][i][j] != 0){
 					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, 17);
 				}
@@ -13723,6 +13540,10 @@ void projection_maker (Spielfeld Field, unsigned int number_of_players, unsigned
 // if players touch each other, the player-numbers will be count together and %(number_of_players+1)
 // local/global, only global
 
-// projections (option), go on
+// projections (option), done
 // after number_of_players+1 turns, look at lines (vertikal/horizontal) and project parallel lines to it.
 // Loss of intesity per line in percent, requested minimum? 0<L<1 given in per cent.
+
+// labyrinth (gamemode), go on
+// try to reach the mid, but there are walls in the center (3 lines from endings are free)
+// the walls can move after a period of turns.
