@@ -114,6 +114,7 @@ void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spie
 
 void addition_maker (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int*);
 void projection_maker (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void assassin_maker (Spielfeld, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*);
 
 void ahead (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int);
 
@@ -147,8 +148,9 @@ enum options {
 	Inverted = 14,
 	Addition = 15,
 	Projection = 16,
+	Assassin = 17,
 	
-	back = 17,		//synchronisiere mit back!
+	back = 18,		//synchronisiere mit back, tivialerweise!
 } beginningmenu;
 
 enum directions {
@@ -165,7 +167,9 @@ enum survive_objects {
 	
 	Waves		= 75,
 	Waves_new	= 74,
+	
 	Traps 		= 71,
+	
 	Bomb_4		= 84,
 	Bomb_3		= 83,
 	Bomb_2		= 82,
@@ -222,7 +226,7 @@ int main (void) {
 	unsigned int menuoperator, playtime;	//Navigationsparameter
 	unsigned int opt, use_number, num_1, num_2, num_3, num_temp, tac, cards, controll_1, controll_2;	//How to get the numbers, and to controll them
 	unsigned int suprise, sup_num;	//specialeffects
-	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition;	//options, selected with beginningmenu
+	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition, assassin;	//options, selected with beginningmenu
 	unsigned int rtc, spf, scwhp, hboa, boost_hunt_activator, precounter;	//Spezieller Boost für the hunted one in gamemode Hunt
 	unsigned int nosv, AOP;		//number of saved variables; amount of players
 	unsigned int range, d_wert, indikator1, indikator2, indikator3, space_i, space_j, controll;		//Gamemode = Dynamic
@@ -277,7 +281,7 @@ int main (void) {
 	
 	playtime = 1;	//playing game after game after...
 	
-	nosv = 77;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
+	nosv = 78;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
 	//same_counter = 0; 		//for variable length of same
 	
 	same = unsigned_int_Vektor_Create (nosv);
@@ -324,21 +328,24 @@ int main (void) {
 		pause = 0;
 		
 		letters_4 = 0;
-		rain_speed = 1;
+		
+		rain_speed = 1;		//Rain
 		rain_speed_save = 0;
 		rain_obj = 0;
 		rain = 1;		//Push
 		rain_drops = 1;
 		rain_save = 0;
-		freq = 6;
 		
-		figures = 0;
+		freq = 6;	//Race
+		
+		figures = 0;	//options
 		undead_duration = 0;
 		allocation = 0;
 		inverted = 0;
 		addition = 0;
+		assassin = 0;
 		
-		fall_back = 0;
+		fall_back = 0;		//Fall
 		fall_controll = 0;
 		points_for_win = 3;
 		turns_per_drop = 3;
@@ -346,17 +353,19 @@ int main (void) {
 		
 		iteration = 0;		//eine Iteration-Option, go on
 		controll = 0;
+		
 		space_i = 0;
 		space_j = 0;
 		indikator1 = 0;		//für horizontal
 		indikator2 = 0;		//für vertikal
 		indikator3 = 0;
+		
 		d_wert = 1;
 		
-		range = 1;
+		range = 1;	//Dynamic parameter
 		erd = 1;
 		
-		intensity_minimum = 0;
+		intensity_minimum = 0;	//projection
 		intensity_loss_per_line_multiplication = 0;
 		direction = undefined;
 		
@@ -375,9 +384,11 @@ int main (void) {
 		num_temp = 0;
 		limit_new = 0;		//if
 		limit_at_all = 0;		//if
-		w = 3;
+		
+		w = 3;	//most important parameters
 		d = 2;
 		e = 3;
+		
 		sup_num = 0;
 		use_number = 1;
 		
@@ -395,7 +406,7 @@ int main (void) {
 		hboa = 1;
 		precounter = 0;
 		
-		ttt = 0;
+		ttt = 0;	//time
 		time_warning = 0.0;
 		time_saver = 0.0;
 		warning_system = 0;
@@ -499,7 +510,7 @@ int main (void) {
 				
 				while (beginningmenu != Start){
 			
-					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n 	Cards	  : 13\n 	Inverted  : 14\n 	Addition  : 15\n  	Projection: 16\n  \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
+					printf("	Start game: 1\n \n	Game size : 2\n	Journey   : 3\n	Tactics   : 4\n	Random    : 5\n	Limits    : 6\n 	Time	  : 7\n 	Color	  : 8\n 	Opague	  : 9\n	undead	  : 10\n	Figures	  : 11\n 	Allocation: 12\n 	Cards	  : 13\n 	Inverted  : 14\n 	Addition  : 15\n  	Projection: 16\n   	Assassin  : 17\n  \n	Back      : %u\n \n", back);	//synchronisiere stets back mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	Points for win: %u \n", back+1);
 						printf("	Turns per drop: %u \n", back+2);
@@ -1296,6 +1307,18 @@ int main (void) {
 						}
 					}
 					
+					if (beginningmenu == Assassin) {
+						
+						if (assassin != 0) {
+							printf("	Assassin-mode reseted! \n");
+							printf(" \n");
+							assassin = 0;
+						} else {
+							printf("	Going here again will reset the Assassin-mode! \n");
+							assassin = 1;
+						}
+					}
+					
 					if ((beginningmenu == back+1)&&(gamemode_played == Fall)){
 						printf("	Points for win: (0<...<10)			(normal: 3) \n");
 						points_for_win = get_unsigned_numeric_input_with_not_more_than_1_letter (points_for_win);
@@ -1889,6 +1912,13 @@ int main (void) {
 					}
 					printf("\n");
 					
+					if (assassin == 0) {
+						printf("	Assassin deactivated \n");
+					} else if (assassin != 0) {
+						printf("	Assassin   activated \n");
+					}
+					printf("\n");
+					
 					if (intensity_loss_per_line_multiplication == 0) {
 						printf("	Projection deactivated \n");
 					} else if (intensity_loss_per_line_multiplication != 0) {
@@ -2049,6 +2079,7 @@ int main (void) {
 			same[74] = intensity_minimum;
 			same[75] = intensity_loss_per_line_multiplication;
 			same[76] = direction;
+			same[77] = assassin;
 			
 		} else if (same[0] == 1) {
 			same[0] = 0;
@@ -2132,6 +2163,7 @@ int main (void) {
 			intensity_minimum = same[74];
 			intensity_loss_per_line_multiplication = same[75];
 			direction = same[76];
+			assassin = same[77];
 			
 			time3 = time(NULL);	//because of cards
 			
@@ -4503,6 +4535,10 @@ int main (void) {
 						for (unsigned int s = 1; s <= 20; s+=1) {	//Abstandhalter
 							printf(" \n");
 						}
+					}
+					
+					if (assassin != 0) {
+						assassin_maker (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, m, n, opague, AOP, information_code, Colored);
 					}
 					
 					if (gamemode_played == Contact) {
@@ -10659,16 +10695,9 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 	
 	if (opague >= 1) {
 		opague_builder (hint, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
-	}
-	
-	if (opague >= 1) {
 		show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 	} else {
 		show_field (Sf_opague, hint, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-	}
-	
-	if (opague >= 1) {
-		opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
 	}
 	
 	Spielfeld_Destroy (hint, m, 0);
@@ -12872,7 +12901,6 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			
 		}
 	}
-	
 	if (Colored[0] == 1) {
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
 	}
@@ -13487,6 +13515,54 @@ void projection_maker (Spielfeld Field, unsigned int number_of_players, unsigned
 			}
 		}
 	}
+}
+
+void assassin_maker (Spielfeld Field, unsigned int geben, Spielfeld Sf_opague, unsigned int gamemode_played, Spielfeld Sf_allocation, unsigned int allocation, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int opague, unsigned int AOP, unsigned int* information_code, unsigned int* Colored) {
+	unsigned int assassin_counter;
+	assassin_counter = 0;
+	
+	for (unsigned int i=1; i<=m-2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			if (Field[0][i][j] == geben) {
+				for (unsigned int h=i-1; h<=i+1; h++) {
+					for (unsigned int k=j-1; k<=j+1; k++) {
+						if ((Field[0][h][k] != Field[0][i][j])&&(h>=1)&&(h<=m-2)&&(k>=1)&&(k<=n-2)) {
+							assassin_counter += 1;
+						}
+					}
+				}
+				if (assassin_counter == 8) {
+					
+					if (opague >= 1) {
+						opague_builder (Field, Sf_opague, m, n, geben, opague, AOP, Sf_allocation, allocation, number_of_players);
+						show_field (Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					} else {
+						show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+					}
+					
+					if (Colored[0] == 1) {
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+Colored[Field[0][i][j]]);
+					}
+					printf("\n");
+					printf("	An Assassin \n");
+					printf("\n");
+					if (Colored[0] == 1) {
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE) , 0*16+7);
+					}
+					
+					for (unsigned int h=i-1; h<=i+1; h++) {
+						for (unsigned int k=j-1; k<=j+1; k++) {
+							if ((Field[0][h][k] != Field[0][i][j])) {
+								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, h, k, 0);
+							}
+						}
+					}
+				}
+				assassin_counter = 0;
+			}
+		}
+	}
+	
 	
 }
 
@@ -13506,6 +13582,8 @@ void projection_maker (Spielfeld Field, unsigned int number_of_players, unsigned
 //v= 0:	0	0	-1	-3	-6	-3	-1	0	<--leer	,freier Fall,	1 Hindernis auf Grund-->	v= 0:	0	0	-1	-3	-3	-4	-4	-3	-3	-2	-3	-4	-4		für 1.
 //a= 0:	0	-1	-2	-3	3	2	1	0														a= 0:	0	-1	-2	-3	-1	-2	0	-1	0	-1	-3	0	-1
 //Nimm 2.Geschwindigkeit
+//Write a timeline: Which options and actions happen when and what tey do, according to their time? go on
+
 // undead (option), done
 // no return into dead, but into undead squares for a period of time,
 // undead squares just reserve the place
@@ -13547,3 +13625,6 @@ void projection_maker (Spielfeld Field, unsigned int number_of_players, unsigned
 // labyrinth (gamemode), go on
 // try to reach the mid, but there are walls in the center (3 lines from endings are free)
 // the walls can move after a period of turns.
+
+// assassin (option), go on
+// a lonely square will kill his whole surrounding, mentioned by Arne
