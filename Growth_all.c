@@ -10553,7 +10553,7 @@ void show_the_numbers (unsigned int gamemode_played, unsigned int w, unsigned in
 		printf("	%u-min: A square of yours will survive even by only %u of your squares surrounding it.\n", d-1, d-1);
 	}
 	
-	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Sand)) {	//10
+	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Sand)) {	//mehr-gamemode_played
 		printf("	Change: A square of yours and a near-by square of your enemy will change positions.\n");
 		printf("	Destroy: Delete a near-by square of your enemy.\n");
 		printf("	Boost: Use all near-by squares of your enemy as your own for the development according to dead squares.\n");
@@ -10604,7 +10604,7 @@ void get_hints (unsigned int gamemode_played, Spielfeld Field, unsigned int gebe
 	
 	for (unsigned int i=1; i<(m-1); i+=1){
 		for (unsigned int j=1; j<(n-1); j+=1){
-			if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//10
+			if ((gamemode_played != Hunt)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)) {	//mehr-gamemode_played
 				if (Field[0][i][j] == geben){
 					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, hint, 0, i, j, geben);
 				} else if (Field[0][i][j] == (geben%2)+1){
@@ -13554,7 +13554,7 @@ void assassin_maker (Spielfeld Field, unsigned int geben, Spielfeld Sf_opague, u
 					
 					for (unsigned int h=i-1; h<=i+1; h++) {
 						for (unsigned int k=j-1; k<=j+1; k++) {
-							if ((Field[0][h][k] != Field[0][i][j])) {
+							if ((Field[0][h][k] != Field[0][i][j])&&(Field[0][h][k] <= number_of_players)) {
 								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, h, k, 0);
 							}
 						}
@@ -13628,5 +13628,5 @@ void assassin_maker (Spielfeld Field, unsigned int geben, Spielfeld Sf_opague, u
 // try to reach the mid, but there are walls in the center (3 lines from endings are free)
 // the walls can move after a period of turns.
 
-// assassin (option), go on
+// assassin (option), done
 // a lonely square will kill his whole surrounding, mentioned by Arne
