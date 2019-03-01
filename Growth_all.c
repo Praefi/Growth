@@ -247,7 +247,9 @@ int main (void) {
 	int** dynamic_pointer_save;	//saved Dynamic direction
 	unsigned int intensity_minimum, intensity_loss_per_line_multiplication;
 	
-	unsigned int ges[10], var_[10], cons[10], number_[10];	//ges==How much squares do you have, var_==your choice, cons==saved numbers,
+	AOP = 9;	//Amount Of Players, needed so early - look at the following lines
+	
+	unsigned int ges[AOP+1], var_[AOP+1], cons[AOP+1], number_[AOP+1];	//ges==How much squares do you have, var_==your choice, cons==saved numbers,
 	//unsigned int same_counter;
 	
 	//same: 0, m, n, journey, tac, gamemode_played, fall_controll, turns_per_drop, speed_of_fall, count_freq, rain, rain_drops, rain_obj, rain_speed,	//14
@@ -261,8 +263,6 @@ int main (void) {
 	unsigned int pause; //Fehlersuche
 	
 	unsigned int Points[3];		//undecided, 1, 2
-	
-	AOP = 9;	//Amount Of Players, needed so early - look at the following lines
 	
 	unsigned int pere[AOP+1], ability[AOP+1], Colored[AOP+1], ulcer_start[AOP+1], ulcer_lifes[AOP+1], out_counter[AOP+1];		//pere==penalty-reminder, ulcer_start==Are you on the field, out_counter== Are you out of play
 	
@@ -458,6 +458,7 @@ int main (void) {
 			ability[p] = 0;
 			Colored[p] = 0;
 			ulcer_start[p] = missing;
+			// printf("ulcer_start[%u] = %u \n", p, ulcer_start[p]);	//test
 			ulcer_lifes[p] = 0;
 			out_counter[p] = 0;
 			ges[p] = 0;
@@ -469,6 +470,7 @@ int main (void) {
 			}
 		}
 		ulcer_start[1] = existing;
+		// printf("ulcer_start[1] = %u \n", ulcer_start[1]);	//test
 		
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.5 \n");	//test
@@ -7214,7 +7216,7 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 							if ((gamemode_played == Ulcer)&&(ges[Nachfolger(geben, number_of_players)] != 1010*geben)) {
 								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Nachfolger(geben, number_of_players));
 							}
-							if (undead != 0) {
+							if (undead_duration != 0) {
 								set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, undead_duration*10000);
 							}
 						}
@@ -7224,7 +7226,7 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 						if ((gamemode_played == Ulcer)&&(ges[Nachfolger(geben, number_of_players)] != 1010*geben)) {
 							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Nachfolger(geben, number_of_players));
 						}
-						if (undead != 0) {
+						if (undead_duration != 0) {
 							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, undead_duration*10000);
 						}
 					}
@@ -7238,7 +7240,7 @@ void change (Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m
 				if (Sf_nl_[geben][i][j] == 1){
 					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 1);
 				}
-			} else if ((undead != 0)&&(Field[0][i][j] >= 10000)) {	//because nothing is higher than 10000
+			} else if ((undead_duration != 0)&&(Field[0][i][j] >= 10000)) {	//because nothing is higher than 10000
 				Field[0][i][j]-=10000;
 				if ((Field[0][i][j] == 0)&&(gamemode_played == Ulcer)) {
 					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Nachfolger(geben, number_of_players));
@@ -7279,7 +7281,7 @@ unsigned int Nachfolger (unsigned int geben, unsigned int number_of_players) {
 	unsigned int nachher;
 	nachher = 0;
 	
-	nachher = geben%number_of_players+1;
+	nachher = (geben%number_of_players) + 1;
 	
 	return nachher;
 }
@@ -13306,7 +13308,7 @@ void iverted_organism (Spielfeld Field, unsigned int geben, Spielfeld Sf_opague,
 	
 	show_field (Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 	
-	for (unsigned int p=0; p<=4; p++) {
+	for (unsigned int p=0; p<=3; p++) {
 		edges_of_organism[p] = 0;
 	}
 	
