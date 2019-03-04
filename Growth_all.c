@@ -16,6 +16,7 @@ void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned
 unsigned int* unsigned_int_Vektor_Create (unsigned int);
 int* int_Vektor_Create (unsigned int);
 int** int_2dim_Vektor_Create (unsigned int, unsigned int);
+unsigned int** unsigned_int_2dim_Vektor_Create (unsigned int, unsigned int);
 
 void new_life (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int);
 void old_dying (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int);
@@ -38,6 +39,7 @@ void Spielfeld_Destroy (Spielfeld, unsigned int, unsigned int);
 void unsigned_int_Vektor_Destroy (unsigned int*);
 void int_Vektor_Destroy (int*);
 void int_2dim_Vektor_Destroy (int**, unsigned int);
+void unsigned_int_2dim_Vektor_Destroy (unsigned int**, unsigned int);
 
 void Plus (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int*, unsigned int, Spielfeld, Spielfeld, unsigned int);
 void Minus (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, unsigned int*, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
@@ -130,6 +132,8 @@ void Reflection (int*, unsigned int, int);
 void impact_y_semi_square (unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, int*, Spielfeld);	// unsigned int** wird zu Spielfeld
 
 void translate_permutations_amounts_to_permutations_areas (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld);
+
+unsigned int Fakultaet (unsigned int);
 
 unsigned int letters_4;
 unsigned int letters_2;
@@ -2248,12 +2252,12 @@ int main (void) {
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2k, after same \n");	//test
 		
-		Sf_nl_ = Spielfeld_Create(m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
+		Sf_nl_ = Spielfeld_Create (m, n, number_of_players);	//the order is (1, 2, 3) ==> [3][1][2]
 		
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2k, after Sf_nl \n");	//test
 		
-		Sf_od_ = Spielfeld_Create(m, n, number_of_players);
+		Sf_od_ = Spielfeld_Create (m, n, number_of_players);
 		
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2k, after Sf_od \n");	//test
@@ -2265,6 +2269,28 @@ int main (void) {
 		
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2k, after dynamic_pointer_save \n");	//test
+		
+		if (permutation_number_b == 0) {
+			permutation_number_c = 1;
+		}
+		// sigmas_for_permutation_number_c = unsigned_int_2dim_Vektor_Create (Fakultaet(permutation_number_c - 1), permutation_number_c);
+		if (permutation_number_b == 0) {
+			permutation_number_c = 0;
+		}
+		
+		// scanf("%u", &pause);	//test
+		// printf("	#line 2k, after sigmas_for_permutation_number_c \n");	//test
+		
+		if (permutation_number_c == 0) {
+			permutation_number_b = 1;
+		}
+		// sigmas_for_permutation_number_b = unsigned_int_2dim_Vektor_Create (Fakultaet(permutation_number_b - 1), permutation_number_b);
+		if (permutation_number_c == 0) {
+			permutation_number_b = 0;
+		}
+		
+		// scanf("%u", &pause);	//test
+		// printf("	#line 2k, after sigmas_for_permutation_number_b \n");	//test
 		
 		Field_journey = Spielfeld_Create (m, n, number_of_players);	//gamemode_played 11 journey, done
 		
@@ -6325,6 +6351,34 @@ int main (void) {
 		// printf("	#line 6k, 15\n");	//test
 		// scanf("%u", &pause);	//test
 		
+		if (permutation_number_b == 0) {
+			permutation_number_c = 1;
+		}
+		// unsigned_int_2dim_Vektor_Destroy (sigmas_for_permutation_number_c, Fakultaet(permutation_number_c - 1));
+		if (permutation_number_b == 0) {
+			permutation_number_c = 0;
+		}
+		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		// printf("	\n ");
+		// printf("	#line 6k, 15\n");	//test
+		// scanf("%u", &pause);	//test
+		
+		if (permutation_number_c == 0) {
+			permutation_number_b = 1;
+		}
+		// unsigned_int_2dim_Vektor_Destroy (sigmas_for_permutation_number_b, Fakultaet(permutation_number_b - 1));
+		if (permutation_number_c == 0) {
+			permutation_number_b = 0;
+		}
+		
+		// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		// printf("	\n ");
+		// printf("	#line 6k, 15\n");	//test
+		// scanf("%u", &pause);	//test
+		
 	}
 	
 	unsigned_int_Vektor_Destroy (same);
@@ -6424,6 +6478,32 @@ void int_2dim_Vektor_Destroy (int** Vektor, unsigned int m) {
 	Vektor_counter -= 1;
 }
 
+unsigned int** unsigned_int_2dim_Vektor_Create (unsigned int m, unsigned int n) {
+	unsigned int** Vektor;
+	Vektor = calloc(m, sizeof(unsigned int*));
+	
+	for (unsigned int p=0; p<m; p+=1) {
+		Vektor[p] = calloc(n, sizeof(unsigned int));
+	}
+	
+	Vektor_counter += 1;
+	
+	return Vektor;
+}
+
+void unsigned_intint_2dim_Vektor_Destroy (unsigned int** Vektor, unsigned int m) {
+	
+	for (unsigned int p=0; p<m; p+=1) {
+		Vektor[p] = NULL;
+		free(Vektor[p]);
+	}
+	
+	Vektor = NULL;
+	free(Vektor);
+	
+	Vektor_counter -= 1;
+}
+
 void int_Vektor_Destroy (int* Vektor) {
 	Vektor = NULL;
 	free(Vektor);
@@ -6464,6 +6544,17 @@ void Spielfeld_Destroy (Spielfeld Spiel, unsigned int m, unsigned int number_of_
 	// printf("	Spielfeld_Destroy #4 \n");	//test
 	
 	Spielfeld_counter -= 1;
+}
+
+unsigned int Fakultaet (unsigned int wert) {
+	unsigned int ruckgabe;
+	ruckgabe = 1;
+	
+	for (unsigned int p=1; p<=wert; p++) {
+		ruckgabe *= p;
+	}
+	
+	return ruckgabe;
 }
 
 void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int geben, Spielfeld Sf_opague, Spielfeld Sf_allocation, unsigned int allocation, unsigned int inverted){
