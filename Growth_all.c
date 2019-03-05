@@ -14513,7 +14513,7 @@ void Permutations_permutate_maker (Spielfeld Collector_of_permutation_number_are
 		// printf("Permutations_permutate_maker for(p) ok.2\n");	//test
 		
 		for (unsigned int q=1; q<=permutation_number-2; q++) {	//getting sigma(p)
-			hangi_sigma += Fakultaet(q)*(((rand()%10000)%100)%(permutation_number-1));
+			hangi_sigma += Fakultaet(q)*(((rand()%10000)%100)%(q+1));
 		}
 		
 		// printf("Permutations_permutate_maker for(p) ok.3\n");	//test
