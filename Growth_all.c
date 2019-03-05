@@ -6692,7 +6692,7 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 		//Field[0][2][1] = 2;	Field[0][5][2] = 1;
 		//Field[0][5][5] = 1;	Field[0][5][6] = 1;
 		
-		set_gleiter_rechts_oben (inverted, Field, 2, m-3, (n/2)-1);		//Spieler 2
+		set_gleiter_rechts_oben (inverted, Field, 2, m-3, (n-1)/2);		//Spieler 2
 		
 		Field[0][(m-1)/2][2] 	= 7;		//to Collect
 		Field[0][(m-1)/2][n-3] 	= 7;
@@ -6742,11 +6742,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			unsigned int m_2;
 			m_2 = (m-1)/2;
 			
-			Field[0][m_2-1][3]	= 1;		//Spieler 1
-			Field[0][m_2][2]	= 1;
-			Field[0][m_2][3]	= 11;
-			Field[0][m_2][4]	= 1;
-			Field[0][m_2+1][3]	= 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][3]	= 1;		//Spieler 1
+				Field[0][m_2][2]	= 1;
+				Field[0][m_2][3]	= 11;
+				Field[0][m_2][4]	= 1;
+				Field[0][m_2+1][3]	= 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][2]	= 1;		//Spieler 1
+				Field[0][m_2+1][2]	= 1;
+				Field[0][m_2][3]	= 11;
+				Field[0][m_2-1][4]	= 1;
+				Field[0][m_2+1][4]	= 1;
+			}
 			
 			set_gleiter_unten_links (inverted, Field, 2, m_2, n-3);		//Spieler 2
 			
@@ -6755,11 +6763,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			m_2 = (m-1)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-1][n_2] = 1;		//Spieler 1
-			Field[0][m_2][n_2-1] = 1;
-			Field[0][m_2][n_2]	 = 11;
-			Field[0][m_2][n_2+1] = 1;
-			Field[0][m_2+1][n_2] = 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][n_2] = 1;		//Spieler 1
+				Field[0][m_2][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2][n_2+1] = 1;
+				Field[0][m_2+1][n_2] = 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][n_2-1] = 1;		//Spieler 1
+				Field[0][m_2+1][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2-1][n_2+1] = 1;
+				Field[0][m_2+1][n_2+1] = 1;
+			}
 			
 			set_gleiter_unten_links (inverted, Field, 2, m_2, n-3);		//Spieler 2
 			set_gleiter_oben_rechts (inverted, Field, 3, m_2, 2);		//Spieler 3
@@ -6769,11 +6785,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			m_2 = (m-1)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-2][n_2]	= 1;		//Spieler 1
-			Field[0][m_2-1][n_2-1]	= 1;
-			Field[0][m_2-1][n_2]	= 11;
-			Field[0][m_2-1][n_2+1]	= 1;
-			Field[0][m_2][n_2]		= 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][n_2] = 1;		//Spieler 1
+				Field[0][m_2][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2][n_2+1] = 1;
+				Field[0][m_2+1][n_2] = 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][n_2-1] = 1;		//Spieler 1
+				Field[0][m_2+1][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2-1][n_2+1] = 1;
+				Field[0][m_2+1][n_2+1] = 1;
+			}
 			
 			set_gleiter_rechts_oben (inverted, Field, 2, m-3, n_2);		//Spieler 2
 			set_gleiter_unten_links (inverted, Field, 3, 2, n-3);		//Spieler 3
@@ -6784,11 +6808,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			m_2 = (m-1)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
-			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]		= 11;
-			Field[0][m_2][n_2+1]	= 1;
-			Field[0][m_2+1][n_2]	= 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][n_2] = 1;		//Spieler 1
+				Field[0][m_2][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2][n_2+1] = 1;
+				Field[0][m_2+1][n_2] = 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][n_2-1] = 1;		//Spieler 1
+				Field[0][m_2+1][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2-1][n_2+1] = 1;
+				Field[0][m_2+1][n_2+1] = 1;
+			}
 			
 			set_gleiter_oben_links (inverted, Field, 2, m-3, n-3);		//Spieler 2
 			set_gleiter_links_unten (inverted, Field, 3, 2, n-3);		//Spieler 3
@@ -6800,11 +6832,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			m_2 = (m-1)/2;
 			nn = (n-4)/2;
 			
-			Field[0][m_2-1][nn]	= 1;		//Spieler 1
-			Field[0][m_2][nn-1]	= 1;
-			Field[0][m_2][nn]	= 11;
-			Field[0][m_2][nn+1]	= 1;
-			Field[0][m_2+1][nn]	= 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][nn]	= 1;		//Spieler 1
+				Field[0][m_2][nn-1]	= 1;
+				Field[0][m_2][nn]	= 11;
+				Field[0][m_2][nn+1]	= 1;
+				Field[0][m_2+1][nn]	= 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][nn-1]	= 1;		//Spieler 1
+				Field[0][m_2+1][nn-1]	= 1;
+				Field[0][m_2][nn]	= 11;
+				Field[0][m_2-1][nn+1]	= 1;
+				Field[0][m_2+1][nn+1]	= 1;
+			}
 			
 			set_gleiter_oben_links (inverted, Field, 2, m_2, n-3);		//Spieler 2
 			set_gleiter_links_unten (inverted, Field, 3, 2, n-7);		//Spieler 3
@@ -6817,11 +6857,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			m_2 = (m-1)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
-			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]		= 11;
-			Field[0][m_2][n_2+1]	= 1;
-			Field[0][m_2+1][n_2]	= 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][n_2] = 1;		//Spieler 1
+				Field[0][m_2][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2][n_2+1] = 1;
+				Field[0][m_2+1][n_2] = 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][n_2-1] = 1;		//Spieler 1
+				Field[0][m_2+1][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2-1][n_2+1] = 1;
+				Field[0][m_2+1][n_2+1] = 1;
+			}
 			
 			set_gleiter_oben_links (inverted, Field, 2, m_2, n-3);		//Spieler 2
 			set_gleiter_links_unten (inverted, Field, 3, 2, n-6);		//Spieler 3
@@ -6835,11 +6883,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			m_2 = (m-2)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
-			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]		= 11;
-			Field[0][m_2][n_2+1]	= 1;
-			Field[0][m_2+1][n_2]	= 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][n_2] = 1;		//Spieler 1
+				Field[0][m_2][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2][n_2+1] = 1;
+				Field[0][m_2+1][n_2] = 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][n_2-1] = 1;		//Spieler 1
+				Field[0][m_2+1][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2-1][n_2+1] = 1;
+				Field[0][m_2+1][n_2+1] = 1;
+			}
 			
 			set_gleiter_oben_links (inverted, Field, 2, m_2, n-3);		//Spieler 2
 			set_gleiter_links_unten (inverted, Field, 3, 2, n-7);		//Spieler 3
@@ -6854,11 +6910,19 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 			m_2 = (m-1)/2;
 			n_2 = (n-1)/2;
 			
-			Field[0][m_2-1][n_2]	= 1;		//Spieler 1
-			Field[0][m_2][n_2-1]	= 1;
-			Field[0][m_2][n_2]		= 11;
-			Field[0][m_2][n_2+1]	= 1;
-			Field[0][m_2+1][n_2]	= 1;
+			if (inverted == 0) {
+				Field[0][m_2-1][n_2] = 1;		//Spieler 1
+				Field[0][m_2][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2][n_2+1] = 1;
+				Field[0][m_2+1][n_2] = 1;
+			} else if (inverted == 1) {
+				Field[0][m_2-1][n_2-1] = 1;		//Spieler 1
+				Field[0][m_2+1][n_2-1] = 1;
+				Field[0][m_2][n_2]	 = 11;
+				Field[0][m_2-1][n_2+1] = 1;
+				Field[0][m_2+1][n_2+1] = 1;
+			}
 			
 			set_mountain_rechts (inverted, Field, 2, m_2, n-3);		//Spieler 2
 			set_edge_oben_rechts (inverted, Field, 3, 2, n-3);		//Spieler 3
@@ -14508,64 +14572,66 @@ void Permutations_permutate_maker (Spielfeld Collector_of_permutation_number_are
 	
 	// printf("Permutations_permutate_maker ok.1\n");	//test
 	
-	for (unsigned int p=0; p<amount_of_permutation_number; p++) {	//going through Collector_of_permutation_number_areas
+	if (permutation_number > 1) {
 		
-		// printf("Permutations_permutate_maker for(p) ok.2\n");	//test
-		
-		for (unsigned int q=1; q<=permutation_number-2; q++) {	//getting sigma(p)
-			hangi_sigma += Fakultaet(q)*(((rand()%10000)%100)%(q+1));
-		}
-		
-		// printf("Permutations_permutate_maker for(p) ok.3\n");	//test
-		
-		for (unsigned int r=0; r<permutation_number; r++) {
-			if (Field[0][Collector_of_permutation_number_areas[p][r][Horizontal]][Collector_of_permutation_number_areas[p][r][Vertikal]] <= number_of_players) {
-				unutma_r = r;
-				break;
-			}
-		}
-		
-		// printf("Permutations_permutate_maker for(p) ok.4\n");	//test
-		
-		unutma_i = Collector_of_permutation_number_areas[p][unutma_r][Horizontal];
-		unutma_j = Collector_of_permutation_number_areas[p][unutma_r][Vertikal];
-		temp = Field[0][unutma_i][unutma_j];
-		
-		// printf("Permutations_permutate_maker for(p) ok.5\n");	//test
-		
-		for (unsigned int s=0; s<permutation_number; s++) {
-			if (sigmas_for_permutation_number[hangi_sigma][s] == unutma_r) {
-				unutma_s = s;
-				break;
-			}
-		}
-		
-		// printf("Permutations_permutate_maker for(p) ok.6\n");	//test
-		
-		unutma_r = 1;	//übernimmt neue Aufgabe
-		
-		for (unsigned int q=0; q<permutation_number; q++) {
+		for (unsigned int p=0; p<amount_of_permutation_number; p++) {	//going through Collector_of_permutation_number_areas
 			
-			if (Field[0][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Horizontal]][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Vertikal]] <= number_of_players) {	//Vorheriger in sigma <= number_of_players
-				if (q == permutation_number-1) {
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Horizontal], Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Vertikal], temp);
-				} else {
-					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Horizontal], Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Vertikal], Field[0][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Horizontal]][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Vertikal]]);
-					unutma_s = (unutma_s+permutation_number-unutma_r)%permutation_number;
-					unutma_r = 1;
-				}
-			} else {
-				unutma_r += 1;
+			// printf("Permutations_permutate_maker for(p) ok.2\n");	//test
+			
+			for (unsigned int q=1; q<=permutation_number-2; q++) {	//getting sigma(p)
+				hangi_sigma += Fakultaet(q)*(((rand()%10000)%100)%(q+1));
 			}
+			
+			// printf("Permutations_permutate_maker for(p) ok.3\n");	//test
+			
+			for (unsigned int r=0; r<permutation_number; r++) {
+				if (Field[0][Collector_of_permutation_number_areas[p][r][Horizontal]][Collector_of_permutation_number_areas[p][r][Vertikal]] <= number_of_players) {
+					unutma_r = r;
+					break;
+				}
+			}
+			
+			// printf("Permutations_permutate_maker for(p) ok.4\n");	//test
+			
+			unutma_i = Collector_of_permutation_number_areas[p][unutma_r][Horizontal];
+			unutma_j = Collector_of_permutation_number_areas[p][unutma_r][Vertikal];
+			temp = Field[0][unutma_i][unutma_j];
+			
+			// printf("Permutations_permutate_maker for(p) ok.5\n");	//test
+			
+			for (unsigned int s=0; s<permutation_number; s++) {
+				if (sigmas_for_permutation_number[hangi_sigma][s] == unutma_r) {
+					unutma_s = s;
+					break;
+				}
+			}
+			
+			// printf("Permutations_permutate_maker for(p) ok.6\n");	//test
+			
+			unutma_r = 1;	//übernimmt neue Aufgabe
+			
+			for (unsigned int q=0; q<permutation_number; q++) {
+				
+				if (Field[0][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Horizontal]][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Vertikal]] <= number_of_players) {	//Vorheriger in sigma <= number_of_players
+					if (q == permutation_number-1) {
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Horizontal], Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Vertikal], temp);
+					} else {
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Horizontal], Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Vertikal], Field[0][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Horizontal]][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Vertikal]]);
+						unutma_s = (unutma_s+permutation_number-unutma_r)%permutation_number;
+						unutma_r = 1;
+					}
+				} else {
+					unutma_r += 1;
+				}
+			}
+			
+			// printf("Permutations_permutate_maker for(p) ok.7\n");	//test
+			
+			hangi_sigma = 0;
 		}
-		
-		// printf("Permutations_permutate_maker for(p) ok.7\n");	//test
-		
-		hangi_sigma = 0;
 	}
 	
 	// printf("Permutations_permutate_maker ok.8\n");	//test
-	
 }
 
 //Dynamic (gamemode_played)	, done		(just notes following)
