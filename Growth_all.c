@@ -72,6 +72,7 @@ unsigned int get_unsigned_numeric_input_with_not_more_than_letters_2_for_splitti
 int get_signed_numeric_input_with_not_more_than_1_letter ();
 void get_colors (unsigned int*, unsigned int, unsigned int, unsigned int);
 void get_two_amounts_for_permutations (unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int);
+void get_sigmas_for_permutation_number (unsigned int**, unsigned int);
 
 void choose_your_ability (unsigned int, unsigned int*, unsigned int*);
 unsigned int dynamic_take_out (unsigned int*, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int);
@@ -121,6 +122,7 @@ void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Spie
 void addition_maker (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int*);
 void projection_maker (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void assassin_maker (Spielfeld, Spielfeld, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*);
+void Permutations_permutate_maker (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int**, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int);
 
 void ahead (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int);
 
@@ -150,6 +152,14 @@ enum directions {	//projection
 	undefined = 3,	//undefined immer als letzter Wert
 	
 } direction;
+
+enum muemkuen {	//projection
+	
+	belki	= 0,
+	evet	= 1,
+	hayir	= 2,
+	
+} muemkuen_mue;
 
 enum where_to_go {	//Permutations
 	
@@ -273,6 +283,8 @@ int main (void) {
 	int erd;	//erdbeschleunigung
 	int* dynamic_pointer;	//Dynamic direction
 	int** dynamic_pointer_save;	//saved Dynamic direction
+	unsigned int** sigmas_for_permutation_number_c;	//permutations in Permutations
+	unsigned int** sigmas_for_permutation_number_b;	//permutations in Permutations
 	unsigned int intensity_minimum, intensity_loss_per_line_multiplication;	//option: projection
 	unsigned int amount_of_permutation_number_b, amount_of_permutation_number_c, permutation_number_b, permutation_number_c;	//option: permutations
 	
@@ -2273,7 +2285,7 @@ int main (void) {
 		if (permutation_number_b == 0) {
 			permutation_number_c = 1;
 		}
-		// sigmas_for_permutation_number_c = unsigned_int_2dim_Vektor_Create (Fakultaet(permutation_number_c - 1), permutation_number_c);
+		sigmas_for_permutation_number_c = unsigned_int_2dim_Vektor_Create (Fakultaet(permutation_number_c - 1), permutation_number_c);
 		if (permutation_number_b == 0) {
 			permutation_number_c = 0;
 		}
@@ -2284,7 +2296,7 @@ int main (void) {
 		if (permutation_number_c == 0) {
 			permutation_number_b = 1;
 		}
-		// sigmas_for_permutation_number_b = unsigned_int_2dim_Vektor_Create (Fakultaet(permutation_number_b - 1), permutation_number_b);
+		sigmas_for_permutation_number_b = unsigned_int_2dim_Vektor_Create (Fakultaet(permutation_number_b - 1), permutation_number_b);
 		if (permutation_number_c == 0) {
 			permutation_number_b = 0;
 		}
@@ -2394,8 +2406,8 @@ int main (void) {
 			time2 = time(NULL);
 			time_saver = difftime(time2, time1);
 			
-			printf("	Zeitdifferenz12: %f \n", time_saver);	//test
-			scanf("%lf", &time_saver);
+			// printf("	Zeitdifferenz12: %f \n", time_saver);	//test
+			// scanf("%lf", &time_saver);
 			
 			lim = 0;
 			unsigned int c = 0;
@@ -2448,8 +2460,15 @@ int main (void) {
 			
 			// scanf("%u", &pause);	//test
 			// printf("	#line 2k, after translate_permutations_amounts_to_permutations_areas \n");	//test
-		
+			
 			// show_field (Sf_permutations, Sf_opague, Sf_permutations, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);	//test
+			
+			get_sigmas_for_permutation_number (sigmas_for_permutation_number_c, permutation_number_c);
+			
+			// scanf("%u", &pause);	//test
+			// printf("	#line 2k, after get_sigmas_for_permutation_number (c) \n");	//test
+			
+			get_sigmas_for_permutation_number (sigmas_for_permutation_number_b, permutation_number_b);
 		}
 		
 		//start of playing/the first print of a field
@@ -3472,6 +3491,20 @@ int main (void) {
 				printf("\n");
 			} else if ((intensity_loss_per_line_multiplication != 0)&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//mehr-gamemode_played
 				printf("	All turns until the projection starts: %u \n", ((9*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(9*(number_of_players - player_counter) - 1))));
+				printf("\n");
+			}
+			
+			if (((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0))&&((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Contact))){	//permutation-frequence
+				printf("	All turns until the permutations start: %u \n", (16 - ((g-1)%16)));
+				printf("\n");
+			} else if (((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0))&&((gamemode_played == Fight)||(gamemode_played == Rain))) {
+				printf("	All turns until the permutations start: %u \n", (12 - ((g-1)%12)));
+				printf("\n");
+			} else if (((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0))&&(gamemode_played == Race)) {
+				printf("	All turns until the permutations start: %u \n", ((2*freq-3) - ((g-1)%(2*freq-3))));
+				printf("\n");
+			} else if (((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0))&&((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand))) {	//mehr-gamemode_played
+				printf("	All turns until the permutations start: %u \n", ((8*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(8*(number_of_players - player_counter) - 1))));
 				printf("\n");
 			}
 			
@@ -4769,6 +4802,25 @@ int main (void) {
 						
 					}
 				}
+				if ((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0)){
+					if (((g-1)%16) == 15){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_permutations, Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_permutations, Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a permutation... \n");
+						printf (" \n");
+						
+						Permutations_permutate_maker (Collector_of_permutation_number_c_areas, Field, number_of_players, permutation_number_c, sigmas_for_permutation_number_c, amount_of_permutation_number_c, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
+						Permutations_permutate_maker (Collector_of_permutation_number_b_areas, Field, number_of_players, permutation_number_b, sigmas_for_permutation_number_b, amount_of_permutation_number_b, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
+						
+					}
+				}
 			}
 			
 			if ((gamemode_played == Fight)||(gamemode_played == Rain)) {
@@ -4809,6 +4861,25 @@ int main (void) {
 						printf ("	It is time for a projection... \n");
 						printf (" \n");
 						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
+						
+					}
+				}
+				if ((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0)){
+					if (((g-1)%12) == 11){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_permutations, Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_permutations, Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a permutation... \n");
+						printf (" \n");
+						
+						Permutations_permutate_maker (Collector_of_permutation_number_c_areas, Field, number_of_players, permutation_number_c, sigmas_for_permutation_number_c, amount_of_permutation_number_c, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
+						Permutations_permutate_maker (Collector_of_permutation_number_b_areas, Field, number_of_players, permutation_number_b, sigmas_for_permutation_number_b, amount_of_permutation_number_b, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
 						
 					}
 				}
@@ -4859,6 +4930,25 @@ int main (void) {
 						
 					}
 				}
+				if ((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0)){
+					if (((g-1)%(2*freq-3)) == (2*freq-4)){
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_permutations, Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_permutations, Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a permutation... \n");
+						printf (" \n");
+						
+						Permutations_permutate_maker (Collector_of_permutation_number_c_areas, Field, number_of_players, permutation_number_c, sigmas_for_permutation_number_c, amount_of_permutation_number_c, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
+						Permutations_permutate_maker (Collector_of_permutation_number_b_areas, Field, number_of_players, permutation_number_b, sigmas_for_permutation_number_b, amount_of_permutation_number_b, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
+						
+					}
+				}
 			}
 			
 			if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Survive)||(gamemode_played == Sand)) {
@@ -4905,6 +4995,27 @@ int main (void) {
 						printf (" \n");
 						projection_maker (Field, number_of_players, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, direction, intensity_minimum, intensity_loss_per_line_multiplication, m, n);
 						
+					}
+				}
+				if ((amount_of_permutation_number_b != 0)||(amount_of_permutation_number_c != 0)){
+					if (((8*(number_of_players - player_counter) - 1) - ((g-all_turns_correction-1)%(8*(number_of_players - player_counter) - 1))) == 1){	//change 2 to 8 again!!
+						if (opague >= 1) {
+							opague_builder (Field, Sf_opague, m, n, (geben%number_of_players)+1, opague, AOP, Sf_allocation, allocation, number_of_players);
+							show_field (Sf_permutations, Sf_opague, Sf_opague, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						} else {
+							show_field (Sf_permutations, Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+						}
+						
+						printf (" \n");
+						printf (" \n");
+						printf ("	It is time for a permutation... \n");
+						printf (" \n");
+						
+						Permutations_permutate_maker (Collector_of_permutation_number_c_areas, Field, number_of_players, permutation_number_c, sigmas_for_permutation_number_c, amount_of_permutation_number_c, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
+						
+						// printf (" #5k after Permutations_permutate_maker(c) ok\n");
+						
+						Permutations_permutate_maker (Collector_of_permutation_number_b_areas, Field, number_of_players, permutation_number_b, sigmas_for_permutation_number_b, amount_of_permutation_number_b, geben, Sf_opague, gamemode_played, Sf_allocation, allocation);
 					}
 				}
 			}
@@ -6354,7 +6465,7 @@ int main (void) {
 		if (permutation_number_b == 0) {
 			permutation_number_c = 1;
 		}
-		// unsigned_int_2dim_Vektor_Destroy (sigmas_for_permutation_number_c, Fakultaet(permutation_number_c - 1));
+		unsigned_int_2dim_Vektor_Destroy (sigmas_for_permutation_number_c, Fakultaet(permutation_number_c - 1));
 		if (permutation_number_b == 0) {
 			permutation_number_c = 0;
 		}
@@ -6368,7 +6479,7 @@ int main (void) {
 		if (permutation_number_c == 0) {
 			permutation_number_b = 1;
 		}
-		// unsigned_int_2dim_Vektor_Destroy (sigmas_for_permutation_number_b, Fakultaet(permutation_number_b - 1));
+		unsigned_int_2dim_Vektor_Destroy (sigmas_for_permutation_number_b, Fakultaet(permutation_number_b - 1));
 		if (permutation_number_c == 0) {
 			permutation_number_b = 0;
 		}
@@ -6491,7 +6602,7 @@ unsigned int** unsigned_int_2dim_Vektor_Create (unsigned int m, unsigned int n) 
 	return Vektor;
 }
 
-void unsigned_intint_2dim_Vektor_Destroy (unsigned int** Vektor, unsigned int m) {
+void unsigned_int_2dim_Vektor_Destroy (unsigned int** Vektor, unsigned int m) {
 	
 	for (unsigned int p=0; p<m; p+=1) {
 		Vektor[p] = NULL;
@@ -6553,6 +6664,8 @@ unsigned int Fakultaet (unsigned int wert) {
 	for (unsigned int p=1; p<=wert; p++) {
 		ruckgabe *= p;
 	}
+	
+	// printf("Fakultaet(%u) = %u \n", wert, ruckgabe);	//test
 	
 	return ruckgabe;
 }
@@ -14158,12 +14271,12 @@ void get_two_amounts_for_permutations (unsigned int* aopn_b, unsigned int* aopn_
 		*aopn_c += permutation_number_b;
 	}
 	
-	printf("	aopn_b: %u \n", *aopn_b);	//test
-	printf("	aopn_c: %u \n", *aopn_c);	//test
-	printf("	permutation_number_b: %u \n", permutation_number_b);	//test
-	printf("	permutation_number_c: %u \n", permutation_number_c);	//test
-	printf("	x*y: %u \n", x*y);	//test
-	printf("	a: %u \n", a);	//test
+	// printf("	aopn_b: %u \n", *aopn_b);	//test
+	// printf("	aopn_c: %u \n", *aopn_c);	//test
+	// printf("	permutation_number_b: %u \n", permutation_number_b);	//test
+	// printf("	permutation_number_c: %u \n", permutation_number_c);	//test
+	// printf("	x*y: %u \n", x*y);	//test
+	// printf("	a: %u \n", a);	//test
 	
 	if (permutation_number_b*(*aopn_b) + permutation_number_c*(*aopn_c) != x*y) {
 		printf("	Bir hata var. Miktarlar yanlis. \n");
@@ -14187,19 +14300,19 @@ void translate_permutations_amounts_to_permutations_areas (Spielfeld Sf_permutat
 	amount_of_permutation_number_c_in_real = amount_of_permutation_number_c;
 	amount_of_permutation_number_b_in_real = amount_of_permutation_number_b;
 	
-	// printf("translate_permutations_amounts_to_permutations_areas ok.1\n");
+	// printf("translate_permutations_amounts_to_permutations_areas ok.1\n");	//test
 	
 	while ((amount_of_permutation_number_c > 0)||(amount_of_permutation_number_b > 0)) {		//the reduction of the amounts only happens intern of this function, because they are copies
 		
-		// printf("translate_permutations_amounts_to_permutations_areas while ok.2\n");
+		// printf("translate_permutations_amounts_to_permutations_areas while ok.2\n");	//test
 		
 		if (amount_of_permutation_number_c >= amount_of_permutation_number_b) {
 			
-			// printf("translate_permutations_amounts_to_permutations_areas while ok.2c\n");
+			// printf("translate_permutations_amounts_to_permutations_areas while ok.2c\n");	//test
 			
 			for (unsigned int p=1; p<=permutation_number_c; p++) {
 				
-				// printf("translate_permutations_amounts_to_permutations_areas while ok.3c\n");
+				// printf("translate_permutations_amounts_to_permutations_areas while ok.3c\n");	//test
 				
 				if (nereye_gitmeliyiz == to_the_right) {	//if it gets needed, work with continue
 					if ((Sf_permutations[0][unutma_i][unutma_j+1] == 0)&&(unutma_j+1 <= n-2)) {
@@ -14255,11 +14368,11 @@ void translate_permutations_amounts_to_permutations_areas (Spielfeld Sf_permutat
 			
 		} else if (amount_of_permutation_number_b >= amount_of_permutation_number_c) {
 			
-			// printf("translate_permutations_amounts_to_permutations_areas while ok.2b\n");
+			// printf("translate_permutations_amounts_to_permutations_areas while ok.2b\n");	//test
 			
 			for (unsigned int p=1; p<=permutation_number_b; p++) {
 				
-				// printf("translate_permutations_amounts_to_permutations_areas while ok.3b\n");
+				// printf("translate_permutations_amounts_to_permutations_areas while ok.3b\n");	//test
 				
 				if (nereye_gitmeliyiz == to_the_right) {	//if it gets needed, work with continue
 					
@@ -14268,15 +14381,15 @@ void translate_permutations_amounts_to_permutations_areas (Spielfeld Sf_permutat
 					if ((Sf_permutations[0][unutma_i][unutma_j+1] == 0)&&(unutma_j+1 <= n-2)) {
 						unutma_j += 1;	//unutma_ already changed, dont forget!
 						
-						// printf("translate_permutations_amounts_to_permutations_areas while ok.5b\n");
+						// printf("translate_permutations_amounts_to_permutations_areas while ok.5b\n");	//test
 						
 						Collector_of_permutation_number_b_areas[(amount_of_permutation_number_b_in_real - amount_of_permutation_number_b)][p-1][Horizontal] = unutma_i;
 						
-						// printf("translate_permutations_amounts_to_permutations_areas while ok.5.1b\n");
+						// printf("translate_permutations_amounts_to_permutations_areas while ok.5.1b\n");	//test
 						
 						Collector_of_permutation_number_b_areas[(amount_of_permutation_number_b_in_real - amount_of_permutation_number_b)][p-1][Vertikal] = unutma_j;
 						
-						// printf("translate_permutations_amounts_to_permutations_areas while ok.6b\n");
+						// printf("translate_permutations_amounts_to_permutations_areas while ok.6b\n");	//test
 						
 						Sf_permutations[0][unutma_i][unutma_j] = (amount_of_permutation_number_b_in_real - amount_of_permutation_number_b)%100 +1;
 					} else {
@@ -14325,20 +14438,135 @@ void translate_permutations_amounts_to_permutations_areas (Spielfeld Sf_permutat
 		}
 	}
 	
-	// printf("translate_permutations_amounts_to_permutations_areas while ok.3\n");
+	// printf("translate_permutations_amounts_to_permutations_areas while ok.3\n");	//test
 }
 
-// get_sigmas_for_permutation_number_c () {
+void get_sigmas_for_permutation_number (unsigned int** sigmas_for_permutation_number, unsigned int permutation_number) {
+	unsigned int Eintrag, hangi_sigma;
 	
-// }
+	Eintrag = 0;
+	hangi_sigma = 0;
+	muemkuen_mue = belki;
+	
+	// printf("get_sigmas_for_permutation_number ok.1\n");	//test
+	
+	for (unsigned int p=1; p<permutation_number; p++) {
+		
+		// printf("get_sigmas_for_permutation_number for(p) ok.2\n");	//test
+		
+		while ((sigmas_for_permutation_number[Fakultaet(permutation_number-1)-1][p] == 0)||(muemkuen_mue != evet)) {
+			
+			// printf("get_sigmas_for_permutation_number while ok.3\n");	//test
+			
+			muemkuen_mue = hayir;
+			sigmas_for_permutation_number[hangi_sigma][p] = Eintrag;
+			
+			for (unsigned int q=0; q<=p; q++) {
+				if (hangi_sigma < Fakultaet(permutation_number-1-p)) {
+					muemkuen_mue = evet;
+					break;
+				} else if (sigmas_for_permutation_number[hangi_sigma][q] != sigmas_for_permutation_number[hangi_sigma-Fakultaet(permutation_number-1-p)][q]) {
+					muemkuen_mue = evet;
+					break;
+				}
+			}
+			for (unsigned int q=0; q<p; q++) {
+				if (Eintrag == sigmas_for_permutation_number[hangi_sigma][q]) {
+					muemkuen_mue = hayir;
+				}
+			}
+			if (muemkuen_mue == hayir) {
+				Eintrag = (Eintrag+1)%permutation_number;
+			} else if (muemkuen_mue == evet) {
+				hangi_sigma += 1;
+			} else if (muemkuen_mue == belki) {
+				printf("	hangi_sigma: %u		neden belki?", hangi_sigma);
+			}
+			
+			// printf("	muemkuen_mue: %u\n", muemkuen_mue);	//test
+		}
+		hangi_sigma = 0;
+	}
+	
+	// for (unsigned int p=0; p<Fakultaet(permutation_number-1); p++) {	//test
+		// for (unsigned int q=0; q<permutation_number; q++) {
+			// printf("	%u", sigmas_for_permutation_number[p][q]);
+		// }
+		// printf("\n");
+	// }	//test
+	
+}
 
-// get_sigmas_for_permutation_number_b () {
+void Permutations_permutate_maker (Spielfeld Collector_of_permutation_number_areas, Spielfeld Field, unsigned int number_of_players, unsigned int permutation_number, unsigned int** sigmas_for_permutation_number, unsigned int amount_of_permutation_number, unsigned int geben, Spielfeld Sf_opague, unsigned int gamemode_played, Spielfeld Sf_allocation, unsigned int allocation) {
+	unsigned int temp, hangi_sigma, unutma_i, unutma_j, unutma_r, unutma_s;
+	temp = 0;
+	hangi_sigma = 0;
+	unutma_i = 0;	//changes
+	unutma_j = 0;	//changes
+	unutma_r = 0;
+	unutma_s = 0;	//changes
 	
-// }
-
-// void Permutations_permutate_maker () {
+	// printf("Permutations_permutate_maker ok.1\n");	//test
 	
-// }
+	for (unsigned int p=0; p<amount_of_permutation_number; p++) {	//going through Collector_of_permutation_number_areas
+		
+		// printf("Permutations_permutate_maker for(p) ok.2\n");	//test
+		
+		for (unsigned int q=1; q<=permutation_number-2; q++) {	//getting sigma(p)
+			hangi_sigma += Fakultaet(q)*(((rand()%10000)%100)%(permutation_number-1));
+		}
+		
+		// printf("Permutations_permutate_maker for(p) ok.3\n");	//test
+		
+		for (unsigned int r=0; r<permutation_number; r++) {
+			if (Field[0][Collector_of_permutation_number_areas[p][r][Horizontal]][Collector_of_permutation_number_areas[p][r][Vertikal]] <= number_of_players) {
+				unutma_r = r;
+				break;
+			}
+		}
+		
+		// printf("Permutations_permutate_maker for(p) ok.4\n");	//test
+		
+		unutma_i = Collector_of_permutation_number_areas[p][unutma_r][Horizontal];
+		unutma_j = Collector_of_permutation_number_areas[p][unutma_r][Vertikal];
+		temp = Field[0][unutma_i][unutma_j];
+		
+		// printf("Permutations_permutate_maker for(p) ok.5\n");	//test
+		
+		for (unsigned int s=0; s<permutation_number; s++) {
+			if (sigmas_for_permutation_number[hangi_sigma][s] == unutma_r) {
+				unutma_s = s;
+				break;
+			}
+		}
+		
+		// printf("Permutations_permutate_maker for(p) ok.6\n");	//test
+		
+		unutma_r = 1;	//übernimmt neue Aufgabe
+		
+		for (unsigned int q=0; q<permutation_number; q++) {
+			
+			if (Field[0][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Horizontal]][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Vertikal]] <= number_of_players) {	//Vorheriger in sigma <= number_of_players
+				if (q == permutation_number-1) {
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Horizontal], Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Vertikal], temp);
+				} else {
+					set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Horizontal], Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][unutma_s]][Vertikal], Field[0][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Horizontal]][Collector_of_permutation_number_areas[p][sigmas_for_permutation_number[hangi_sigma][(unutma_s+permutation_number-unutma_r)%permutation_number]][Vertikal]]);
+					unutma_s = (unutma_s+permutation_number-unutma_r)%permutation_number;
+					unutma_r = 1;
+				}
+			} else {
+				unutma_r += 1;
+			}
+		}
+		
+		// printf("Permutations_permutate_maker for(p) ok.7\n");	//test
+		
+		hangi_sigma = 0;
+	}
+	
+	// printf("Permutations_permutate_maker ok.8\n");	//test
+	
+}
 
 //Dynamic (gamemode_played)	, done		(just notes following)
 //Geschwindigkeit (vertikal, horizontal)
