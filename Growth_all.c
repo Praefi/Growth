@@ -14508,7 +14508,7 @@ void translate_permutations_amounts_to_permutations_areas (Spielfeld Sf_permutat
 void get_sigmas_for_permutation_number (unsigned int** sigmas_for_permutation_number, unsigned int permutation_number) {
 	unsigned int Eintrag, hangi_sigma;
 	
-	Eintrag = 0;
+	Eintrag = 1;
 	hangi_sigma = 0;
 	muemkuen_mue = belki;
 	
