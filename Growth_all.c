@@ -1330,7 +1330,7 @@ int main (void) {
 								lim = 40;
 							}
 							
-							printf("lim = %u \n", lim);	//test
+							// printf("lim = %u \n", lim);	//test
 							
 							intensity_loss_per_line_multiplication = 100 - lim;
 							lim = 0;
@@ -5858,6 +5858,7 @@ int main (void) {
 			
 			
 			if (gamemode_played == Arena) {
+				
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
 						for (unsigned int p=1; p<=number_of_players; p+=1) {
@@ -5886,7 +5887,13 @@ int main (void) {
 					printf(" \n ");
 					printf("	Game over. \n ");
 					printf(" \n ");
-					for (unsigned int p=limit_at_all; p>0; p-=1) {
+					
+					ges[0] = 0;
+					for (unsigned int p=1; p<=number_of_players; p+=1) {
+						ges[0] += ges[p];
+					}
+					
+					for (unsigned int p=ges[0]; p>0; p-=1) {
 						for (unsigned int q=1; q<=number_of_players; q+=1) {
 							if (ges[q] == p) {
 								printf("	Spieler %u: %u \n", q, p);
@@ -11275,7 +11282,7 @@ unsigned int Initialisierung_limit_new (unsigned int gamemode_played) {
 		Ausgabe = 5;
 	} else if (gamemode_played == Hunt) {
 		Ausgabe = 6;
-	} else if (gamemode_played == Ulcer) {
+	} else if (gamemode_played == Arena) {
 		Ausgabe = 8;
 	} else {
 		Ausgabe = 0;
@@ -11298,7 +11305,7 @@ unsigned int Initialisierung_limit_at_all (unsigned int gamemode_played) {
 		Ausgabe = 10;
 	} else if (gamemode_played == Hunt) {
 		Ausgabe = 12;
-	} else if (gamemode_played == Ulcer) {
+	} else if (gamemode_played == Arena) {
 		Ausgabe = 16;
 	} else {
 		Ausgabe = 0;
