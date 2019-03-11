@@ -4180,8 +4180,60 @@ int main (void) {
 					
 					// show_field (Sf_permutations, Sf_opague, Sf_nl_, m, n, gamemode_played, information_code, geben, Colored, geben, Sf_allocation, allocation);	// test
 					
+					controll = 0;
+					if (gamemode_played == Race) {
+						for (unsigned int i=1; i<=(m-1)/2; i+=1){		//Spiel-Ende?
+							if ((Sf_nl_[geben][i][n-2] == geben)||(Field[0][i][n-2] == geben)){
+								for (unsigned int k=1; k<m-1; k+=1){
+									if (Sf_nl_[geben][k][n-2] == geben){
+										set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, k, n-2, geben);
+									}
+								}
+								show_field (Sf_permutations, Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
+								printf("	Sieg:	Spieler %u \n", geben);
+								controll = 1;
+							}
+						}
+						if (controll == 1){
+							break;
+						}
+					}
+					controll = 0;
+					
+					num_1 = 0;
+					for (unsigned int i=1; i<m-1; i+=1){
+						for (unsigned int j=1; j<n-1; j+=1){
+							if (Sf_nl_[geben][i][j] == geben){
+								num_1 += 1;
+							}
+						}
+					}
+					
+					if ((gamemode_played != Hunt)||(geben != 1)) {	//wegen hunted one, if (geben != 1)
+						if (var_[geben] == 42){
+							for (unsigned int i=1; i<m-1; i+=1){
+								for (unsigned int j=1; j<n-1; j+=1){
+									if (gamemode_played == Rain) {
+										if (temp[0][i][j] == geben){
+											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
+										}
+									} else if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
+										if (temp[0][i][j] != 0){
+											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, temp[0][i][j]);
+										}
+									} else if ((gamemode_played != Rain)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)&&(gamemode_played != Hunt)) {	//10
+										if (temp[0][i][j] == 1){
+											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 2);
+										} else if (temp[0][i][j] == 2) {
+											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 1);
+										}
+									}
+								}
+							}
+						}
+					}
+					
 					if (gamemode_played == Hunt) {
-						
 						precounter = 0;
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
@@ -4234,59 +4286,6 @@ int main (void) {
 							}
 							show_field (Sf_permutations, Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
 							break;
-						}
-					}
-			
-					controll = 0;
-					if (gamemode_played == Race) {
-						for (unsigned int i=1; i<=(m-1)/2; i+=1){		//Spiel-Ende?
-							if ((Sf_nl_[geben][i][n-2] == geben)||(Field[0][i][n-2] == geben)){
-								for (unsigned int k=1; k<m-1; k+=1){
-									if (Sf_nl_[geben][k][n-2] == geben){
-										set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, k, n-2, geben);
-									}
-								}
-								show_field (Sf_permutations, Sf_opague, Field, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);
-								printf("	Sieg:	Spieler %u \n", geben);
-								controll = 1;
-							}
-						}
-						if (controll == 1){
-							break;
-						}
-					}
-					controll = 0;
-					
-					num_1 = 0;
-					for (unsigned int i=1; i<m-1; i+=1){
-						for (unsigned int j=1; j<n-1; j+=1){
-							if (Sf_nl_[geben][i][j] == geben){
-								num_1 += 1;
-							}
-						}
-					}
-					
-					if ((gamemode_played != Hunt)||(geben != 1)) {	//wegen hunted one, if (geben != 1)
-						if (var_[geben] == 42){
-							for (unsigned int i=1; i<m-1; i+=1){
-								for (unsigned int j=1; j<n-1; j+=1){
-									if (gamemode_played == Rain) {
-										if (temp[0][i][j] == geben){
-											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 0);
-										}
-									} else if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)||(gamemode_played == Sand)) {	//mehr-gamemode_played
-										if (temp[0][i][j] != 0){
-											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, temp[0][i][j]);
-										}
-									} else if ((gamemode_played != Rain)&&(gamemode_played != Arena)&&(gamemode_played != Ulcer)&&(gamemode_played != Dynamic)&&(gamemode_played != Survive)&&(gamemode_played != Sand)&&(gamemode_played != Hunt)) {	//10
-										if (temp[0][i][j] == 1){
-											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 2);
-										} else if (temp[0][i][j] == 2) {
-											set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, 1);
-										}
-									}
-								}
-							}
 						}
 					}
 					
