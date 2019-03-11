@@ -3376,7 +3376,7 @@ int main (void) {
 				}
 				
 				if (round_counter == (rtc - 1)) {
-					numbers_of_[geben][0][0] = 1;
+					numbers_of_[1][0][0] = 1;
 				} else if ((round_counter == rtc)&&(geben == number_of_players)) {
 					printf(" \n ");
 					printf(" \n ");
@@ -3686,7 +3686,7 @@ int main (void) {
 					numbers_of_[geben][number_[geben]][0] -= 1;
 				}
 				
-			} else if (cards != 0) {
+			} else if ((cards != 0)&&(var_[geben] != 1010)) {	//if you thought about ending the game
 				stack_of_[geben][use_number][0] += 1;	//Drawing a card
 			}
 			
@@ -3981,6 +3981,7 @@ int main (void) {
 					break;
 				} else if (lim == 1){
 					lim = 0;
+					var_[geben] = 1010;
 					continue;
 				} else {
 					printf("	0 or 1, it is so difficult to understand? \n");
@@ -4355,9 +4356,15 @@ int main (void) {
 								}
 							}
 						}
+						
+						// printf("Spieler %u: %u Steine in Field_journey \n", geben, journey_max);	//test
+						
 						for (unsigned int i=1; i<m-1; i+=1){
 							for (unsigned int j=1; j<n-1; j+=1){
 								if ((Sf_od_[geben][i][j] == 101*geben) && (Field_journey[0][i][j] == 0) && (journey_max >= limit_at_all)){
+									
+									// show_field (Sf_permutations, Sf_opague, Field_journey, m, n, gamemode_played, information_code, geben, Colored, 0, Sf_allocation, allocation);	//test
+									
 									for (unsigned int p=0; p<=1; p++) {
 										for (unsigned int q=0; q<=(((minimum(m, n)-2)-1)/2)*2; q++) {
 											if (q%2 == 0) {
@@ -4395,6 +4402,9 @@ int main (void) {
 													}
 												}
 											}
+											if (journey_max < limit_at_all){
+												break;
+											}
 										}
 										if (journey_max < limit_at_all){
 											break;
@@ -4407,6 +4417,9 @@ int main (void) {
 								}
 							}
 						}
+						
+						// printf("Spieler %u: %u Steine in Field_journey \n", geben, journey_max);	//test
+						
 						journey_max = 0;
 						
 						if (temp_limit_at_all == 1) {
@@ -4701,7 +4714,6 @@ int main (void) {
 					}
 					
 					if ((gamemode_played == Hunt)&&(geben == number_of_players)) {
-						lim = 1;
 						printf("	\n");
 						
 						if (opague >= 1) {
@@ -4712,23 +4724,27 @@ int main (void) {
 						}
 						
 						printf("	\n");
-						while (lim == 1) {
-							printf("	\n");
-							printf("	\n");
-							printf("	Are you ready to make your turn, player 1 ? \n");
-							printf("	Yes: 1 \n");
-							printf("	\n");
-							printf("	\n");
-							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-							
-							if (lim != 1) {
-								lim = 1;
-							} else {
-								lim = 0;
+						if (information_code[1] == 0) {
+							lim = 1;
+							while (lim == 1) {
+								printf("	\n");
+								printf("	\n");
+								printf("	Are you ready to make your turn, player 1 ? \n");
+								printf("	Yes: 1 \n");
+								printf("	\n");
+								printf("	\n");
+								lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+								
+								if (lim != 1) {
+									lim = 1;
+								} else {
+									lim = 0;
+								}
 							}
+							lim = 0;
 						}
-						lim = 0;
 					}
+					
 					if (gamemode_played == Hunt) {
 						information_code[3] = 0;
 					}
@@ -5783,30 +5799,14 @@ int main (void) {
 						if (Field[0][i][j] == 11){
 							
 							printf("\n");
-							
-							if (Field[0][i][j-1] > 1) {
-								printf (" Sieg: Spieler %u \n", Field[0][i][j-1]);
-								a += 1;
-							}
-							if (Field[0][i][j+1] > 1) {
-								if (a == 0) {
-									printf (" Sieg: Spieler %u \n", Field[0][i][j+1]);
+							for (unsigned int h=i-1; h<=i+1; h++) {
+								for (unsigned int k=j-1; k<=j+1; k++) {
+									if (((h+k)%2 != (i+j)%2)&&(Field[0][h][k] > 1)) {
+										printf (" Sieg: Spieler %u \n", Field[0][h][k]);
+										a += 1;
+									}
 								}
-								a += 1;
 							}
-							if (Field[0][i-1][j] > 1) {
-								if (a == 0) {
-									printf (" Sieg: Spieler %u \n", Field[0][i-1][j]);
-								}
-								a += 1;
-							}
-							if (Field[0][i+1][j] > 1) {
-								if (a == 0) {
-									printf (" Sieg: Spieler %u \n", Field[0][i+1][j]);
-								}
-								a += 1;
-							}
-							
 							printf("\n");
 							
 							if (a == 2) {
@@ -5818,34 +5818,20 @@ int main (void) {
 							if (a == 4) {
 								printf(" QUADRO-CATCH!!! \n");
 							}
-							if (Field[0][i+1][j+1] > 1) {
-								for (unsigned int p=2; p<=number_of_players; p+=1) {
-									if (Field[0][i+1][j+1] == p) {
-										numbers_of_[p][0][0] += 1;
+							
+							for (unsigned int h=i-1; h<=i+1; h++) {
+								for (unsigned int k=j-1; k<=j+1; k++) {
+									if (((h+k)%2 == (i+j)%2)&&(Field[0][h][k] > 1)) {
+										for (unsigned int p=2; p<=number_of_players; p+=1) {
+											if (Field[0][h][k] == p) {
+												numbers_of_[p][0][0] += 1;
+												break;
+											}
+										}
 									}
 								}
 							}
-							if (Field[0][i-1][j+1] > 1) {
-								for (unsigned int p=2; p<=number_of_players; p+=1) {
-									if (Field[0][i+1][j+1] == p) {
-										numbers_of_[p][0][0] += 1;
-									}
-								}
-							}
-							if (Field[0][i+1][j-1] > 1) {
-								for (unsigned int p=2; p<=number_of_players; p+=1) {
-									if (Field[0][i+1][j+1] == p) {
-										numbers_of_[p][0][0] += 1;
-									}
-								}
-							}
-							if (Field[0][i-1][j-1] > 1) {
-								for (unsigned int p=2; p<=number_of_players; p+=1) {
-									if (Field[0][i+1][j+1] == p) {
-										numbers_of_[p][0][0] += 1;
-									}
-								}
-							}
+							
 							break;
 						}
 					}
@@ -8832,9 +8818,7 @@ void Change (Spielfeld Sf_permutations, unsigned int m, unsigned int n, unsigned
 			}
 		
 		}
-	}
-	
-	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||((gamemode_played == Hunt)&&(geben != 1))) {
+	} else if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||((gamemode_played == Hunt)&&(geben != 1))) {
 		
 		for (unsigned int h=1; h<=(m-2); h+=1){
 			for (unsigned int k=1; k<=(n-2); k+=1){
