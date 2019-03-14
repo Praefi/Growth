@@ -2438,13 +2438,13 @@ int main (void) {
 				}
 			}
 			
-			for (unsigned f=1; f<=number_of_players; f++) {	//test
-				printf("Spieler %u:", f);
-				for (unsigned int g=1; g<=6; g++) {
-					printf("	[%u]=%u", g, stack_of_[f][g][0]);
-				}
-				printf("\n");
-			}
+			// for (unsigned f=1; f<=number_of_players; f++) {	//test
+				// printf("Spieler %u:", f);
+				// for (unsigned int g=1; g<=6; g++) {
+					// printf("	[%u]=%u", g, stack_of_[f][g][0]);
+				// }
+				// printf("\n");
+			// }
 			
 			c = 0;
 			x = 0;
@@ -7394,7 +7394,7 @@ void new_life (Spielfeld Field, unsigned int m, unsigned int n, unsigned int w, 
 										set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_temp, 0, i, j, geben);
 									}
 								}
-							} else if (information_code[0] == 4) {
+							} else if (information_code[0] == 4) {	//Cornered
 								if (w == 4){
 									if ((a == w) || (a == w+1)){
 										set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_temp, 0, i, j, geben);
@@ -7587,6 +7587,7 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 						}
 					}
 				}
+				
 				for (unsigned int h=i-1; h<=i+1; h+=1){
 					for (unsigned int k=j-1; k<=j+1; k+=1){
 						if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -7606,7 +7607,8 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 						}
 					}
 				}
-				if (gamemode_played != Arena) {
+				
+				if ((gamemode_played != Arena)&&(gamemode_played != Ulcer)) {
 					if ((a < d+1) || (a > e+1)){		//d=2, d=1, e=3, e=4, +1 wegen des Steines selbst, da er mitgezählt wird
 						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_temp, 0, i, j, 101*geben);		//Code für das Eleminieren
 					}
@@ -7634,36 +7636,27 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 					}
 					
 					a = 0;
-				} else if (gamemode_played == Arena) {
-					if ((d == 11)||(d == 10)) {
-						d = 0;
-						d_up += 10;
+				} else if (gamemode_played == Ulcer) {
+					if ((a < d+1) || (a > e+1)){		//d=2, d=1, e=3, e=4, +1 wegen des Steines selbst, da er mitgezählt wird
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_temp, 0, i, j, 101*geben);		//Code für das Eleminieren
 					}
-					
-					if ((a < d+1) || (a > e+1)){
-						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_temp, 0, i, j, 101*geben);
-					}
-					
-					if ((d_up == 1)||(d_up == 11)) {
-						d -= 1;
-					}
-					if ((d_up == 10)||(d_up == 11)) {
-						d = 10;
-					}
-					if (e_down == 1) {
-						e += 1;
-					}
-					d_up = 0;
-					e_down = 0;
 					
 					if (allocation != 0) {
-						if (w == 4) {
-							if ((a == w+1)||(a == w+2)) {
-								if (Sf_allocation[0][i][j] < allocation) {
-									Sf_allocation[0][i][j] += 1;
+						if (e-d == 1) {	//e und d nicht verändert
+							if (w == e+1) {
+								if ((a == w+1)||(a == w+2)) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
+								}
+							} else {
+								if (a == w+1) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
 								}
 							}
-						} else {
+						} else if (e-d == 2) {	//e oder d verändert, also w nicht
 							if (a == w+1) {
 								if (Sf_allocation[0][i][j] < allocation) {
 									Sf_allocation[0][i][j] += 1;
@@ -7675,6 +7668,88 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_allocation, 1, i, j, (d+1-a));
 						} else if (a > e+1) {
 							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_allocation, 1, i, j, (a-e-1));
+						}
+					}
+					
+					a = 0;
+				} else if (gamemode_played == Arena) {
+					if ((d == 11)||(d == 10)) {
+						d = 0;
+						d_up += 10;
+					}
+					
+					if ((a < d+1) || (a > e+1)){
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_temp, 0, i, j, 101*geben);
+					}
+					if (allocation != 0) {
+						
+						if (a < d+1){
+							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_allocation, 1, i, j, (d+1-a));
+						} else if (a > e+1) {
+							set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Sf_allocation, 1, i, j, (a-e-1));
+						}
+					}
+					
+					if ((d_up == 1)||(d_up == 11)) {
+						d -= 1;
+					}
+					if ((d_up == 10)||(d_up == 11)) {
+						d = 10;	//für den nächsten Eintrag
+					}
+					if (e_down == 1) {
+						e += 1;
+					}
+					d_up = 0;
+					e_down = 0;	//d und e bereinigt
+					
+					if (allocation != 0) {
+						
+						if (information_code[0] == 3) {	//Anti
+							if (w == 5) {
+								if ((a == w+1)||(a == w+2)) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
+								}
+							} else {
+								if (a == w+1) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
+								}
+							}
+						} else if (e-d == 1) {	//e und d nicht verändert (or ultra_light with changed d)
+							if (w == e+1) {
+								if ((a == w+1)||(a == w+2)) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
+								} else if ((information_code[0] == 4)&&((a == w)||(a == w+1))&&((j == (n-2))||(j == 1)||(i == (m-2))||(i == 1))) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
+								}
+							} else {
+								if (a == w+1) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
+								} else if ((information_code[0] == 4)&&(a == w)&&((j == (n-2))||(j == 1)||(i == (m-2))||(i == 1))) {
+									if (Sf_allocation[0][i][j] < allocation) {
+										Sf_allocation[0][i][j] += 1;
+									}
+								}
+							}
+						} else if (e-d == 2) {	//e oder d verändert, also w nicht
+							if (a == w+1) {
+								if (Sf_allocation[0][i][j] < allocation) {
+									Sf_allocation[0][i][j] += 1;
+								}
+							} else if ((information_code[0] == 4)&&(a == w)&&((j == (n-2))||(j == 1)||(i == (m-2))||(i == 1))) {
+								if (Sf_allocation[0][i][j] < allocation) {
+									Sf_allocation[0][i][j] += 1;
+								}
+							}
 						}
 					}
 					
@@ -7699,6 +7774,9 @@ void old_dying (Spielfeld Field, unsigned int m, unsigned int n, unsigned int d,
 }
 
 void change (Spielfeld Sf_permutations, Spielfeld Field, Spielfeld Sf_nl_, Spielfeld Sf_od_, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int* ges, unsigned int geben, unsigned int undead_duration, Spielfeld Sf_allocation, unsigned int allocation, Spielfeld Sf_opague, unsigned int* information_code, unsigned int* Colored, unsigned int inverted){	
+	
+	unsigned int a;
+	a = 0;
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
@@ -7733,6 +7811,25 @@ void change (Spielfeld Sf_permutations, Spielfeld Field, Spielfeld Sf_nl_, Spiel
 						}
 					}
 					
+				}
+				
+				if ((gamemode_played == Ulcer)&&(geben != 1)) {
+					for (unsigned int h=i-1; h<=i+1; h+=1){
+						for (unsigned int k=j-1; k<=j+1; k+=1){
+							if (Field[0][h][k] == Vorganger (geben, number_of_players)) {
+								a = 1;
+								break;
+							}
+						}
+						if (a == 1) {
+							break;
+						}
+					}
+					if (a != 1) {
+						set_Spielfeld_Eintrag (Field, geben, Sf_opague, gamemode_played, Sf_allocation, allocation, number_of_players, Field, 0, i, j, Nachfolger(geben, number_of_players));
+					}
+					
+					a = 0;
 				}
 			} else if (Field[0][i][j] == 0){
 				if (Sf_nl_[geben][i][j] == geben){
@@ -11062,7 +11159,6 @@ void show_statistics (unsigned int number_of_players, unsigned int gamemode_play
 	if (ttt != 0) {
 		printf("	Number of penalties given until now: %u \n", pere[0]);
 	}
-	printf("\n");
 	
 }
 
