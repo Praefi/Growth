@@ -69,6 +69,10 @@ int main (void) {
 
 	unsigned int beginningmenu, gamemode_played;
 	
+	Quidditch_setup Qs;
+	Quidditch_team_abilities* Qta;
+	Quidditch_object_abilities* Qoa;
+	
 	//gamemode_played == Hunt, geben == 1: information_code: [0]=0, [1]=1, [2]=1, [3]=0
 
 	//Benutzbar, aber benutzt:	unsigned int:	number_[AOP]
@@ -89,6 +93,11 @@ int main (void) {
 
 	same = unsigned_int_Vektor_Create (NOSV);
 
+	Qta = Quidditch_team_abilities_Vektor_Create (7);	//Normal, Player 1, Player 2, Gryffindor, Hufflepuff, Ravenclaw, Slytherin
+	Qoa = Quidditch_object_abilities_Vektor_Create (1);
+	
+	Initialisierung_Qs (Qs, Qta, Qoa);
+	
 	//scanf("%u", &pause); //test
 	//printf("%u \n", same[0]);	//test
 	//printf ("	ok 3 \n");	//test
@@ -220,17 +229,19 @@ int main (void) {
 
 		Initialisierung_Arrays_1 (AOP, ability, ulcer_lifes, number_);
 
-		tac = 1;	//quick start
+		tac = 1;	//quick start, the following colors are Quidditch-compatible
 		Growth_players[0].color = 1;
 		Growth_players[1].color = cLIGHT_MAGENTA; //lightmagenta
 		Growth_players[2].color = cYELLOW; //yellow
-	
-	for (unsigned int p=3; p<=AOP; p++) {
-		 Growth_players[p].color = cNORMAL;
-	}
+		
+		for (unsigned int p=3; p<=AOP; p++) {	//normally to avoid black as color
+			Growth_players[p].color = cNORMAL;
+		}
 		//scanf("%u", &pause); //test
 		//printf ("	ok 5.5 \n");	//test
 
+		Initialisierung_Qta (Qta);
+		
 		if (same[0] == 0) {
 
 			//Startmenü, Anfang
@@ -254,7 +265,7 @@ int main (void) {
 
 					// enum: gamemode_played[done], (traps, bombs, waves, done), in menu (about the game, limits, hints, numbers), beginningmenu done   //go on
 
-					printf("	Tutorial: %u\n	Classic: %u\n	Collect: %u\n	Contact: %u\n	Fall   : %u\n	Fight  : %u\n	Hunt   : %u\n	Race   : %u\n	Rain   : %u\n	Arena  : %u\n   	Ulcer  : %u\n    	Dynamic: %u\n     	Survive: %u\n     	Sand   : %u\n  \n", Tutorial, Classic, Collect, Contact, Fall, Fight, Hunt, Race, Rain, Arena, Ulcer, Dynamic, Survive, Sand);	//mehr-gamemode_played
+					printf("	%u. Tutorial\n	%u. Classic\n	%u. Collect\n	%u. Contact\n	%u. Fall\n	%u. Fight\n	%u. Hunt\n	%u. Race\n	%u. Rain\n	%u. Arena\n   	%u. Ulcer\n    	%u. Dynamic\n     	%u. Survive\n     	%u. Sand\n     	%u. Quidditch\n  \n", Tutorial, Classic, Collect, Contact, Fall, Fight, Hunt, Race, Rain, Arena, Ulcer, Dynamic, Survive, Sand, Quidditch);	//mehr-gamemode_played
 					gamemode_played = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 					printf("\n");
 					//Players?
@@ -274,34 +285,34 @@ int main (void) {
 
 				while (beginningmenu != oStart){
 
-					printf("	Start game:	: %u\n \n	Game size:	: %u\n	Journey:	: %u\n	Tactics:	: %u\n	Random:		: %u\n	Limits:		: %u\n	Time:		: %u\n	Color:		: %u\n	Opague:		: %u\n	undead:		: %u\n	Figures:	: %u\n	Allocation:	: %u\n	Cards:		: %u\n	Inverted:	: %u\n	Addition:	: %u\n	Projection:	: %u\n	Assassin:	: %u\n	Permutations:	: %u\n	Avalanche:	: %u\n	KI:		: %u\n	Number of players: %u\n  \n	Back:		: %u\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
+					printf("	%u. Start game\n \n	%u. Game size\n	%u. Journey\n	%u. Tactics\n	%u. Random\n	%u. Limits\n	%u. Time\n	%u. Color\n	%u. Opague\n	%u. undead\n	%u. Figures\n	%u. Allocation\n	%u. Cards\n	%u. Inverted\n	%u. Addition\n	%u. Projection\n	%u. Assassin\n	%u. Permutations\n	%u. Avalanche\n	%u. KI\n	%u. Number of players\n  \n	%u. Back\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
 					if (gamemode_played == Fall) {
-						printf("	Points for win:	: %u \n", oBack+1);
-						printf("	Turns per drop:	: %u \n", oBack+2);
-						printf("	Speed of the #-square: %u \n", oBack+3);
+						printf("	%u. Points for win\n", oBack+1);
+						printf("	%u. Turns per drop\n", oBack+2);
+						printf("	%u. Speed of the #-square\n", oBack+3);
 					} else if (gamemode_played == Hunt) {
-						printf("	Hunt-conditions:	: %u \n", oBack+1);
+						printf("	%u. Hunt-conditions\n", oBack+1);
 					} else if (gamemode_played == Race) {
-						printf("	Frequence:	: %u \n", oBack+1);
+						printf("	%u. Frequence\n", oBack+1);
 					} else if (gamemode_played == Rain) {
-						printf("	Rain-Modus:	: %u \n", oBack+1);
+						printf("	%u. Rain-Modus\n", oBack+1);
 					} else if (gamemode_played == Arena) {
-						printf("	Abilities:	: %u \n", oBack+1);
-						printf("	Rounds to play:	: %u \n", oBack+2);
+						printf("	%u. Abilities\n", oBack+1);
+						printf("	%u. Rounds to play\n", oBack+2);
 					} else if (gamemode_played == Ulcer) {
-						printf("	Lifes:		: %u \n", oBack+1);
-						printf("	Rounds to play:	: %u \n", oBack+2);
-						printf("	K.O.-Mode : %u \n", oBack+4);
+						printf("	%u. Lifes\n", oBack+1);
+						printf("	%u. Rounds to play\n", oBack+2);
+						printf("	%u. K.O.-Mode\n", oBack+4);
 					} else if (gamemode_played == Dynamic) {
-						printf("	Gravity:	: %u \n", oBack+1);
-						printf("	Range:		: %u \n", oBack+2);
-						printf("	Coefficient:	: %u \n", oBack+3);
+						printf("	%u. Gravity\n", oBack+1);
+						printf("	%u. Range\n", oBack+2);
+						printf("	%u. Coefficient\n", oBack+3);
 					} else if (gamemode_played == Survive) {
-						printf("	obstacles:	: %u \n", oBack+1);
+						printf("	%u. obstacles\n", oBack+1);
 					} else if (gamemode_played == Sand) {
-						printf("	Gravity:	: %u \n", oBack+1);
-						printf("	Speed:		: %u \n", oBack+2);
-						printf("	Period:		: %u \n", oBack+3);
+						printf("	%u. Gravity\n", oBack+1);
+						printf("	%u. Speed\n", oBack+2);
+						printf("	%u. Period\n", oBack+3);
 					}
 
 					printf("\n");
@@ -313,13 +324,16 @@ int main (void) {
 					}
 
 					if (beginningmenu == oSize){
-						if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
-							printf("	This only works if the number of players is correct! \n");
+						if (gamemode_played == Quidditch) {
+							printf("	Quidditch-Fields have static lengths.\n");
+						} else {
+							if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
+								printf("	This only works if the number of players is correct! \n");
+							}
+
+							m = get_m (gamemode_played, number_of_players);
+							n = get_n (gamemode_played, number_of_players);
 						}
-
-						m = get_m (gamemode_played, number_of_players);
-						n = get_n (gamemode_played, number_of_players);
-
 					}
 
 					if (beginningmenu == oJourney){
@@ -516,7 +530,6 @@ int main (void) {
 
 					if (beginningmenu == oLimits){
 						if ((gamemode_played == Classic)||(gamemode_played == Collect)) {
-							printf("	limits.new < limits.at_all - 4  !	\n");
 							printf("	Change limits.new: 1 \n	Change limits.at_all: 2 \n	Change both: 3 \n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							printf("\n");
@@ -538,10 +551,6 @@ int main (void) {
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 								printf("\n");
 							}
-							if (limits.new >= limits.at_all - 4) {
-								limits.at_all = limits.new + 5;
-							}
-
 						} else if (gamemode_played == Contact) {
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -561,7 +570,6 @@ int main (void) {
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if ((gamemode_played == Fall)||(gamemode_played == Race)||(gamemode_played == Rain)) {
-							printf("	limits.new < limits.at_all - 4  !	\n");
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -579,11 +587,7 @@ int main (void) {
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
-							if (limits.new >= limits.at_all - 4) {
-								limits.at_all = limits.new + 5;
-							}
 						} else if (gamemode_played == Fight) {
-							printf("	limits.new < limits.at_all - 4  !	\n");
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -601,12 +605,8 @@ int main (void) {
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
-							if (limits.new >= limits.at_all - 4) {
-								limits.at_all = limits.new + 5;
-							}
 						} else if (gamemode_played == Hunt) {
 							printf("	The limits of the hunted one will be calculated seperatly.\n");
-							printf("	limits.new < limits.at_all - 4  !	\n");
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -624,12 +624,8 @@ int main (void) {
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
-							if (limits.new >= limits.at_all - 4) {
-								limits.at_all = limits.new + 5;
-							}
 						} else if (gamemode_played == Arena) {
 							printf("	limits.new can change with your ability.\n");
-							printf("	limits.new < limits.at_all - 4  !	\n");
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -647,17 +643,12 @@ int main (void) {
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
-							if (limits.new >= limits.at_all - 4) {
-								limits.at_all = limits.new + 5;
-							}
-
 						} else if (gamemode_played == Ulcer) {
 							printf("	Ulcer is unlimited.\n");
 
 						} else if (gamemode_played == Dynamic) {
 							printf("	This only works if the number of players is correct! \n");
 
-							printf("	limits.new < limits.at_all - 4  !	\n");
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -680,16 +671,12 @@ int main (void) {
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
-							if (limits.new >= limits.at_all - 4) {
-								limits.at_all = limits.new + 5;
-							}
 						} else if (gamemode_played == Survive) {
 							printf("	Survive is unlimited.\n");
 
 						} else if (gamemode_played == Sand) {
 							printf("	This only works if the number of players is correct! \n");
 
-							printf("	limits.new < limits.at_all - 4  !	\n");
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -712,11 +699,33 @@ int main (void) {
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
-							if (limits.new >= limits.at_all - 4) {
-								limits.at_all = limits.new + 5;
+						} else if (gamemode_played == Quidditch) {
+							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+
+							if (lim == 1){
+
+								printf("	limits.new:      (normal: 20) \n");
+								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+
+							}
+							if (lim == 2){
+
+								printf("	limits.at_all:       (normal: 40) \n");
+								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+
+							}
+							if (lim == 3){
+
+								printf("	limits.new:				(normal: 20) \n	limits.at_all:				(normal: 40) \n");
+								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						}
-
+						if (limits.new > limits.at_all) {
+							limits.new = limits.at_all;
+						}
 					}
 
 					if (beginningmenu == oTime) {
@@ -748,7 +757,7 @@ int main (void) {
 								printf("\n");
 								printf("\n");
 
-							} else if ((gamemode_played == Contact)||(gamemode_played == Arena)||(gamemode_played == Dynamic)) {
+							} else if ((gamemode_played == Contact)||(gamemode_played == Arena)||(gamemode_played == Dynamic)||(gamemode_played == Quidditch)) {
 								printf("	Choose the limit of time:         (normal: 30sec) \n");
 								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 								if (ttt == 0) {
@@ -831,9 +840,7 @@ int main (void) {
 					}
 
 					if (beginningmenu == oColor) {
-
-							get_colors (Growth_players, number_of_players, AOP);
-
+						get_colors (Growth_players, number_of_players, gamemode_played, AOP);
 					}
 
 					if (beginningmenu == oOpague) {
@@ -1226,145 +1233,147 @@ int main (void) {
 					}
 
 					if (beginningmenu == Numberofplayers){
-						Growth_players[0].color = 0;
-
-						number_of_players = 0;
-
-						if (gamemode_played == Survive) {
-							while ((number_of_players < 1) || (number_of_players > AOP)){
-								printf("	Number of players?		(1 - 9) \n");
-								number_of_players = get_unsigned_numeric_input_with_not_more_than_1_letter ();	//watch out, if AOP gets >= 10
-							}
+						if (gamemode_played == Quidditch) {
+							printf("	Every player is going to controll one team.\n	Therefore Quidditch can be played if, and only if there are two players.\n");
 						} else {
-							while ((number_of_players < 2) || (number_of_players > AOP)){
-								printf("	Number of players?		(2 - 9) \n");
-								number_of_players = get_unsigned_numeric_input_with_not_more_than_1_letter ();	//watch out, if AOP gets >= 10
-							}
-						}
-						if (gamemode_played == Classic) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 10 +2;
-								n = 3*((number_of_players+3)/2) +2;
-							}
-						} else if (gamemode_played == Collect) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 9 +2;
-								n = 4+(4*number_of_players)-1 +2;
-							}
-						} else if (gamemode_played == Contact) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 10+(number_of_players-2) +2;
-								n = 8*((number_of_players+1)/2) +2;
-							}
-						} else if (gamemode_played == Fall) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 6+2*(((number_of_players+1)/2)-1) +2;
-								n = 5*2*((number_of_players+1)/2)+1 +2;
-							}
-						} else if (gamemode_played == Fight) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 6 +2;
-								n = 6+4*((number_of_players+1-2)/2) +2;
-							}
-						} else if (gamemode_played == Race) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 4*number_of_players-1 +2;
-								n = 19 +2;
-							}
-						} else if (gamemode_played == Rain) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 6 +2;
-								n = 7*number_of_players-1 +2;
-							}
-						} else if (gamemode_played == Hunt) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 2*number_of_players + 1 + 2;
-								if ((number_of_players == 4)||(number_of_players == 5)||(number_of_players == 9)) {
-									m+=2;
-								} else if (number_of_players == 8) {
-									m--;
-								}
+							Growth_players[0].color = 0;
 
-								n = 3*number_of_players + 2;
-								if ((number_of_players == 4)||(number_of_players == 5)||(number_of_players == 6)||(number_of_players == 7)) {
-									n-=((number_of_players+1)/3);
-								} else if (number_of_players == 9) {
-									n+=(4-3*(number_of_players%3)-10*(number_of_players/7));
+							number_of_players = 0;
+
+							if (gamemode_played == Survive) {
+								while ((number_of_players < 1) || (number_of_players > AOP)){
+									printf("	Number of players?		(1 - 9) \n");
+									number_of_players = get_unsigned_numeric_input_with_not_more_than_1_letter ();	//watch out, if AOP gets >= 10
+								}
+							} else {
+								while ((number_of_players < 2) || (number_of_players > AOP)){
+									printf("	Number of players?		(2 - 9) \n");
+									number_of_players = get_unsigned_numeric_input_with_not_more_than_1_letter ();	//watch out, if AOP gets >= 10
 								}
 							}
-						} else if (gamemode_played == Arena) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 6 + number_of_players + (number_of_players-1)/3 - number_of_players/7 + number_of_players/8 - number_of_players/9 + 2;
-								n = 6 + number_of_players + (number_of_players-1)/3 - number_of_players/7 + number_of_players/8 - number_of_players/9 + 2;
-							}
-						} else if (gamemode_played == Ulcer) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 5 + number_of_players + 2;
-								n = 5 + number_of_players + 2;
-								if (number_of_players == 3) {
+							if (gamemode_played == Classic) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 10 +2;
+									n = 3*((number_of_players+3)/2) +2;
+								}
+							} else if (gamemode_played == Collect) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 9 +2;
+									n = 4+(4*number_of_players)-1 +2;
+								}
+							} else if (gamemode_played == Contact) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 10+(number_of_players-2) +2;
+									n = 8*((number_of_players+1)/2) +2;
+								}
+							} else if (gamemode_played == Fall) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 6+2*(((number_of_players+1)/2)-1) +2;
+									n = 5*2*((number_of_players+1)/2)+1 +2;
+								}
+							} else if (gamemode_played == Fight) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 6 +2;
+									n = 6+4*((number_of_players+1-2)/2) +2;
+								}
+							} else if (gamemode_played == Race) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 4*number_of_players-1 +2;
+									n = 19 +2;
+								}
+							} else if (gamemode_played == Rain) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 6 +2;
+									n = 7*number_of_players-1 +2;
+								}
+							} else if (gamemode_played == Hunt) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 2*number_of_players + 1 + 2;
+									if ((number_of_players == 4)||(number_of_players == 5)||(number_of_players == 9)) {
+										m+=2;
+									} else if (number_of_players == 8) {
+										m--;
+									}
+									n = 3*number_of_players + 2;
+									if ((number_of_players == 4)||(number_of_players == 5)||(number_of_players == 6)||(number_of_players == 7)) {
+										n-=((number_of_players+1)/3);
+									} else if (number_of_players == 9) {
+										n+=(4-3*(number_of_players%3)-10*(number_of_players/7));
+									}
+								}
+							} else if (gamemode_played == Arena) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 6 + number_of_players + (number_of_players-1)/3 - number_of_players/7 + number_of_players/8 - number_of_players/9 + 2;
+									n = 6 + number_of_players + (number_of_players-1)/3 - number_of_players/7 + number_of_players/8 - number_of_players/9 + 2;
+								}
+							} else if (gamemode_played == Ulcer) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 5 + number_of_players + 2;
+									n = 5 + number_of_players + 2;
+									if (number_of_players == 3) {
+										m--;
+										n--;
+									}
+								}
+							} else if (gamemode_played == Dynamic) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 9 + 2*(number_of_players/4) + 4*(number_of_players/6) + 2;
+									n = 11 + 4*(number_of_players/5) + 2*(number_of_players/8) + 2;
+								}
+							} else if (gamemode_played == Survive) {
+								m = 9 + number_of_players + 2;
+								n = 9 + number_of_players + 2;
+
+								if ((number_of_players == 5)||(number_of_players == 7)) {
+									m++;
+									n++;
+								} else if (number_of_players == 9) {
 									m--;
 									n--;
 								}
-							}
-						} else if (gamemode_played == Dynamic) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 9 + 2*(number_of_players/4) + 4*(number_of_players/6) + 2;
-								n = 11 + 4*(number_of_players/5) + 2*(number_of_players/8) + 2;
-							}
-						} else if (gamemode_played == Survive) {
-							m = 9 + number_of_players + 2;
-							n = 9 + number_of_players + 2;
-
-							if ((number_of_players == 5)||(number_of_players == 7)) {
-								m++;
-								n++;
-							} else if (number_of_players == 9) {
-								m--;
-								n--;
-							}
-						} else if (gamemode_played == Sand) {
-							if (number_of_players == 2) {
-								m = Initialisierung_m (gamemode_played);
-								n = Initialisierung_n (gamemode_played);
-							} else {
-								m = 5+number_of_players + 2;
-								n = 3+4*(number_of_players-1)+ 1/(number_of_players*number_of_players) + 2;
+							} else if (gamemode_played == Sand) {
+								if (number_of_players == 2) {
+									m = Initialisierung_m (gamemode_played);
+									n = Initialisierung_n (gamemode_played);
+								} else {
+									m = 5+number_of_players + 2;
+									n = 3+4*(number_of_players-1)+ 1/(number_of_players*number_of_players) + 2;
+								}
 							}
 						}
-
 					} else if ((beginningmenu == oBack+2)&&((gamemode_played == Arena)||(gamemode_played == Ulcer))) {
 						printf("	Rounds to play:       (normal: 30) \n");
 						rtp = get_unsigned_numeric_input_with_not_more_than_2_letters ();
@@ -1648,6 +1657,8 @@ int main (void) {
 						}
 						printf("	Speed : %u \n", information_code[2]);
 						printf("	Period: %u \n", information_code[3]);
+					} else if (gamemode_played == Quidditch) {
+						printf(" Quidditch \n ");
 					}
 					printf("	Number of players: %u \n", number_of_players);
 					printf(" \n ");
@@ -1931,15 +1942,21 @@ int main (void) {
 			same[90] = level[9];
 
 		}
-	
-	// for (unsigned int p=0; p<=NOSV-1; p++) {
-		// printf("same[%u] = %u \n", p, same[p]);	//test
-	// }
+		
+		if ((gamemode_played == Quidditch)&&(Growth_players[0].color == 0)) {
+			same[49] = 1;
+			same[51] = cLIGHT_MAGENTA; //lightmagenta
+			same[52] = cYELLOW; //yellow
+		}
+		
+		// for (unsigned int p=0; p<=NOSV-1; p++) {
+			// printf("same[%u] = %u \n", p, same[p]);	//test
+		// }
 	
 		//start of playing/the first print of a field
 
 		//	same, Field, position, AOP,   real (evet or hayir) for while{}
-		playing_a_game (same, position, AOP, time3, &playtime, NOSV);
+		playing_a_game (same, position, AOP, time3, &playtime, NOSV, Qs);
 
 	}
 
