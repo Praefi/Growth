@@ -14,6 +14,7 @@
 
 // #define VERBOSE
 // #define Contact_mistake_search
+#define Quidditch_mistake_search
 
 extern unsigned int letters_4;
 extern unsigned int letters_2;
@@ -168,7 +169,7 @@ enum ulcer_start_values {	//ulcer
 	existing = 1,
 };
 
-enum Houses_of_Hogwarts {	//Quidditch
+enum Houses_of_Hogwarts {	//Quidditch, 1&2 are default
 	HGryffindor = 3,
 	HHufflepuff = 4,
 	HRavenclaw = 5,
@@ -270,6 +271,7 @@ typedef struct Quidditch_team_abilities_t {	//Qta
 	unsigned int Jaeger_fly_distance;		//normal: 3
 	unsigned int Jaeger_throw_distance;		//normal: 3
 	unsigned int Hueter_fly_distance;		//normal: 2
+	unsigned int Hueter_throw_distance;		//normal: 3
 	unsigned int Treiber_fly_distance;		//normal: 3
 	unsigned int Treiber_hit_distance;		//normal: 3
 	unsigned int Sucher_fly_distance;		//normal: 3
@@ -279,7 +281,7 @@ typedef struct Quidditch_object_abilities_t {	//Qoa
 	unsigned int Klatscher_fly_distance;		//normal: 3
 	unsigned int Schnatz_fly_distance;			//normal: 3
 	unsigned int Schnatz_appearence_factor;		//normal: 13	(to read as 1/3, necessary to get 2 letters)
-	unsigned int Schnatz_disappearence_factor;	//normal: 23	(to read as 2/3, necessary to get 2 letters)	except a Sucher is in its surrounding
+	unsigned int Schnatz_disappearence_factor;	//normal: 23	(to read as 2/3, necessary to get 2 letters)	(except a Sucher is in its surrounding, frozen);
 } Quidditch_object_abilities;
 
 typedef struct Quidditch_setup_t {	//Quidditch-modifications
@@ -290,12 +292,12 @@ typedef struct Quidditch_setup_t {	//Quidditch-modifications
 } Quidditch_setup;	//all distances are maxima
 
 typedef struct Moveable_objects_condition_t {	//Quidditch: Klatscher, Quaffel, Schnatz
-	unsigned int i;		//horizontal, position (Klatscher, Quaffel, Schnatz)
-	unsigned int j;		//vertikal, position (Klatscher, Quaffel, Schnatz)
+	unsigned int i;		//Horizontal, position (Klatscher, Quaffel, Schnatz)
+	unsigned int j;		//Vertikal, position (Klatscher, Quaffel, Schnatz)
 	unsigned int remaining_squares_to_move;		//how many squares can the object move, Klatscher/Quaffel(<=3)
-	unsigned int directed;		//its direction
-	unsigned int wanted_i;		//horizontal, target (Klatscher, Quaffel, Schnatz)
-	unsigned int wanted_j;		//vertikal, target (Klatscher, Quaffel, Schnatz)
+	unsigned int directed;		//its direction, only important for Klatscher until now, now for Schnatz to indicate if it's on the field or not.
+	unsigned int wanted_i;		//Horizontal, target (Klatscher, Quaffel, Schnatz)
+	unsigned int wanted_j;		//Vertikal, target (Klatscher, Quaffel, Schnatz)
 } Moveable_objects_condition;
 
 typedef struct Special_Fields_t {	//allocation, opague, journey
@@ -374,7 +376,7 @@ unsigned int maximum (unsigned int, unsigned int);
 
 Spielfeld Spielfeld_Create (unsigned int, unsigned int, unsigned int);		//mxn, m >= 6 (+2), n gerade, n >= 4 (+2)		Original: m = 10 (+2), n = 6 (+2)
 
-void playing_a_game (unsigned int*, unsigned int*, unsigned int, time_t, unsigned int*, unsigned int, Quidditch_setup);
+void playing_a_game (unsigned int*, unsigned int*, unsigned int, time_t, unsigned int*, unsigned int, Quidditch_setup*);
 
 void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, unsigned int);
 
@@ -382,6 +384,7 @@ unsigned int* unsigned_int_Vektor_Create (unsigned int);
 int* int_Vektor_Create (unsigned int);
 int** int_2dim_Vektor_Create (unsigned int, unsigned int);
 unsigned int** unsigned_int_2dim_Vektor_Create (unsigned int, unsigned int);
+Moveable_objects_condition* Moveable_objects_condition_Vektor_Create (unsigned int);
 
 void new_life (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Evolution, Spielfeld, Special_Fields, unsigned int);
 void old_dying (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int, Special_Fields, Spielfeld, unsigned int);
@@ -389,7 +392,7 @@ void change (Spielfeld, unsigned int*, Spielfeld, Spielfeld, Evolution, unsigned
 
 void show_field (unsigned int, unsigned int*, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Growth_Player*, unsigned int, Special_Fields);
 void show_whose_turn (unsigned int, unsigned int, unsigned int*, Growth_Player*, unsigned int*, unsigned int);
-void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int);
+void show_statistics (unsigned int, unsigned int, Spielfeld, unsigned int*, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int, Quidditch_setup*);
 void show_options_of_actions (unsigned int, unsigned int*, unsigned int);
 void show_the_numbers (unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void show_figures ();
@@ -405,6 +408,11 @@ void unsigned_int_Vektor_Destroy (unsigned int*);
 void int_Vektor_Destroy (int*);
 void int_2dim_Vektor_Destroy (int**, unsigned int);
 void unsigned_int_2dim_Vektor_Destroy (unsigned int**, unsigned int);
+void Moveable_objects_condition_Vektor_Destroy (Moveable_objects_condition*);
+void Realize_modifications_variables_Vektor_Destroy (Realize_modifications_variables*);
+void Quidditch_team_abilities_Vektor_Destroy (Quidditch_team_abilities*);
+void Quidditch_object_abilities_Vektor_Destroy (Quidditch_object_abilities*);
+void Quidditch_setup_Vektor_Destroy (Quidditch_setup*);
 
 void Plus (unsigned int*, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int*, unsigned int, Growth_Player*, Special_Fields, Special_Fields);
 void Minus (unsigned int*, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, Growth_Player*, Special_Fields, Special_Fields, unsigned int);
@@ -424,43 +432,10 @@ void unsigned_int_array_null_initialisierung (unsigned int*, unsigned int);
 void int_array_null_initialisierung (int*, unsigned int);
 void Initialisierung_Arrays_1 (unsigned int, unsigned int*, unsigned int*, unsigned int*);
 void Initialisierung_Arrays_2 (unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*);
-void Initialisierung_Qs (Quidditch_setup Qs, Quidditch_team_abilities* Qoa, Quidditch_team_abilities* Qta) {
-	for (unsigned int p=0; p<=5; p++) {
-		for (unsigned int p=0; p<=2; p++) {
-			Qs.Qta[p] = Qta[p];
-			Qs.Points[p] = 0;
-		}
-		Qs.Qoa = Qoa;
-	}
-}
-void Initialisierung_Qoa (Quidditch_team_abilities* Qoa) {
-	Qoa[0].Klatscher_fly_distance = 3;
-	Qoa[0].Schnatz_fly_distance = 3;
-	Qoa[0].Schnatz_appearence_factor = 13;	//to read as 1/3
-	Qoa[0].Schnatz_disappearence_factor = 23;	//to read as 2/3
-}
-void Initialisierung_Qta (Quidditch_team_abilities* Qta) {
-	for (unsigned int p=0; p<=5; p++) {
-		Qta[p].Jaeger_fly_distance = 3;
-		Qta[p].Jaeger_throw_distance = 3;
-		Qta[p].Hueter_fly_distance = 2;
-		Qta[p].Treiber_fly_distance = 3;
-		Qta[p].Treiber_hit_distance = 3;
-		Qta[p].Sucher_fly_distance = 3;
-		
-		if (p == HGryffindor) {
-			Qta[p].Sucher_fly_distance = 4;
-		} else if (p == HHufflepuff) {
-			Qta[p].Hueter_fly_distance = 4;
-		} else if (p == HRavenclaw) {
-			Qta[p].Jaeger_fly_distance = 4;
-			Qta[p].Jaeger_throw_distance = 4;
-		} else if (p == HSlytherin) {
-			Qta[p].Treiber_fly_distance = 4;
-			Qta[p].Treiber_hit_distance = 4;
-		}
-	}
-}
+void Initialisierung_Qs (Quidditch_setup*, Quidditch_team_abilities*, Quidditch_object_abilities*, Growth_Player*);
+void Initialisierung_Qoa (Quidditch_object_abilities*);
+void Initialisierung_Qta (Quidditch_team_abilities*);
+void Initialisierung_Moc (Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int, unsigned int);
 
 void About_the_game (unsigned int, unsigned int, Limits, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void get_hints (unsigned int*, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Special_Fields, Growth_Player*, unsigned int, Special_Fields, unsigned int);
@@ -550,13 +525,13 @@ void translate_permutations_amounts_to_permutations_areas (Spielfeld, unsigned i
 
 void survive_obstacles_generator (unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, Special_Fields, unsigned int, Special_Fields, Spielfeld, unsigned int, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int);
 
-void turn_of_KI_random (unsigned int*, Spielfeld, unsigned int, unsigned int, unsigned int, Special_Fields, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int* , unsigned int*, Limits, Single_option_representives, unsigned int, Realize_modifications_variables*);
-void fill_KI_table_of_choice (unsigned int*, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Special_Fields, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, Limits, Single_option_representives, unsigned int, Realize_modifications_variables*);
-void set_KI_table_of_choice (unsigned int*, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Special_Fields, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Limits, Single_option_representives, unsigned int, Realize_modifications_variables*);
+void turn_of_KI_random (Quidditch_setup*, Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int*, Spielfeld, unsigned int, unsigned int, unsigned int, Special_Fields, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int* , unsigned int*, Limits, Single_option_representives, unsigned int, Realize_modifications_variables*);
+void fill_KI_table_of_choice (Quidditch_setup*, Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int*, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Special_Fields, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, Limits, Single_option_representives, unsigned int, Realize_modifications_variables*);
+void set_KI_table_of_choice (Quidditch_setup*, Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int*, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Special_Fields, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Limits, Single_option_representives, unsigned int, Realize_modifications_variables*);
 void update_KI_table_of_choice (unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int*, unsigned int);
 
 void basic_development (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, Evolution, Num_num*, unsigned int*, Special_Fields, Limits, Single_option_representives, unsigned int*, unsigned int*, unsigned int, unsigned int);
-void realize_modifications (Spielfeld, Spielfeld, Special_Fields, Special_Fields, Spielfeld, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*, Growth_Player*, Special_Fields, unsigned int, Single_option_representives, Realize_modifications_variables*, unsigned int);
+void realize_modifications (Quidditch_setup*, Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, Spielfeld, Spielfeld, Special_Fields, Special_Fields, Spielfeld, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*, Growth_Player*, Special_Fields, unsigned int, Single_option_representives, Realize_modifications_variables*, unsigned int);
 
 void dimension_of (unsigned int*, unsigned int*, unsigned int);
 void synchronisation_Field_copy (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, Special_Fields);
@@ -576,8 +551,30 @@ void Square_color_interpretation (Growth_Player*, unsigned int, unsigned int, un
 void set_terminal_color (Color);
 void set_player_color (Growth_Player*, unsigned int, Color);
 
+void Quidditch_Klatscher_players_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*);
+void Quidditch_Quaffel_players_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*);
+void Quidditch_Schnatz_player_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*);
+
+void Quidditch_Klatscher_movements (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, Quidditch_setup*);
+void Quidditch_Klatscher_target_search (Spielfeld, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int);
+void Quidditch_move_of_Klatscher (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int, Quidditch_setup*);
+void Quidditch_Klatscher_steps (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int, int, int, Quidditch_setup*);
+void Klatscher_hits_target (unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int, Quidditch_setup*);
+void Klatscher_hit_allowed_directions (unsigned int, Spielfeld, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int, unsigned int**);
+void Treiber_hits_Klatscher (unsigned int, Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int, Quidditch_setup*);
+
+void Quidditch_Schnatz_movements (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, Quidditch_setup*, unsigned int);
+void Quidditch_move_of_Schnatz (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*);
+
+void dokuz_direction_interpretation_single_step (Moveable_objects_condition*, unsigned int);
+
 void Move_of_a_Quidditch_player (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int*);
 
+void Localization_of_Moc (Spielfeld, unsigned int, unsigned int, Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*);
+
+void Quidditch_Quaffel_Throw (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, Quidditch_setup*);
+void Realize_Moc_Quaffel_Throw_step (Spielfeld, unsigned int, Moveable_objects_condition*, unsigned int);
+void Quidditch_a_goal_has_been_scored (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*);
 
 void Square_color_interpretation (Growth_Player* Growth_players, unsigned int geben, unsigned int number_of_players, unsigned int square_number) {
 	if (square_number != 0) {
@@ -826,9 +823,9 @@ Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_
 	return Spiel;
 }
 
-unsigned int* unsigned_int_Vektor_Create (unsigned int length) {
-	unsigned int* Vektor;
-	Vektor = calloc(length, sizeof(unsigned int));
+Moveable_objects_condition* Moveable_objects_condition_Vektor_Create (unsigned int length) {
+	Moveable_objects_condition* Vektor;
+	Vektor = calloc(length, sizeof(Moveable_objects_condition));
 
 	Vektor_counter += 1;
 
@@ -862,6 +859,24 @@ Quidditch_object_abilities* Quidditch_object_abilities_Vektor_Create (unsigned i
 	return Vektor;
 }
 
+Quidditch_setup* Quidditch_setup_Vektor_Create (unsigned int length) {
+	Quidditch_setup* Vektor;
+	Vektor = calloc(length, sizeof(Quidditch_setup));
+
+	Vektor_counter += 1;
+	
+	return Vektor;
+}
+
+unsigned int* unsigned_int_Vektor_Create (unsigned int length) {
+	unsigned int* Vektor;
+	Vektor = calloc(length, sizeof(unsigned int));
+
+	Vektor_counter += 1;
+
+	return Vektor;
+}
+
 int* int_Vektor_Create (unsigned int length) {
 	int* Vektor;
 	Vektor = calloc(length, sizeof(int));
@@ -884,19 +899,6 @@ int** int_2dim_Vektor_Create (unsigned int m, unsigned int n) {
 	return Vektor;
 }
 
-void int_2dim_Vektor_Destroy (int** Vektor, unsigned int m) {
-
-	for (unsigned int p=0; p<m; p+=1) {
-		free(Vektor[p]);
-		// Vektor[p] = NULL;
-	}
-
-	free(Vektor);
-	Vektor = NULL;
-
-	Vektor_counter -= 1;
-}
-
 unsigned int** unsigned_int_2dim_Vektor_Create (unsigned int m, unsigned int n) {
 	unsigned int** Vektor;
 	Vektor = calloc(m, sizeof(unsigned int*));
@@ -908,6 +910,51 @@ unsigned int** unsigned_int_2dim_Vektor_Create (unsigned int m, unsigned int n) 
 	Vektor_counter += 1;
 
 	return Vektor;
+}
+
+void Moveable_objects_condition_Vektor_Destroy (Moveable_objects_condition* Vektor) {
+	
+	free(Vektor);
+	Vektor = NULL;
+
+	Vektor_counter -= 1;
+}
+
+void Quidditch_team_abilities_Vektor_Destroy (Quidditch_team_abilities* Vektor) {
+	
+	free(Vektor);
+	Vektor = NULL;
+
+	Vektor_counter -= 1;
+}
+
+void Quidditch_object_abilities_Vektor_Destroy (Quidditch_object_abilities* Vektor) {
+	
+	free(Vektor);
+	Vektor = NULL;
+
+	Vektor_counter -= 1;
+}
+
+void Quidditch_setup_Vektor_Destroy (Quidditch_setup* Vektor) {
+	
+	free(Vektor);
+	Vektor = NULL;
+
+	Vektor_counter -= 1;
+}
+
+void int_2dim_Vektor_Destroy (int** Vektor, unsigned int m) {
+
+	for (unsigned int p=0; p<m; p+=1) {
+		free(Vektor[p]);
+		// Vektor[p] = NULL;
+	}
+
+	free(Vektor);
+	Vektor = NULL;
+
+	Vektor_counter -= 1;
 }
 
 void unsigned_int_2dim_Vektor_Destroy (unsigned int** Vektor, unsigned int m) {
@@ -4151,7 +4198,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 						keep = *KI_decision;
 					}
 					ind = 1;
-				} else if (gamemode_played == Contact) {
+				} else if ((gamemode_played == Contact)||(gamemode_played == Quidditch)) {
 					if ((level[geben] == human)&&(real == evet)) {
 						printf(" #produce	keep top: 1		keep bottom: 2		keep left: 3		keep right: 4		don't matter: 5 \n");
 						keep = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -4172,7 +4219,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 					}
 					ind = 1;
 				}
-			} else if ((ent == limits.at_all)&&(gamemode_played != Contact)){		//min 5/10, watch out with Hunt on 2 players
+			} else if ((ent == limits.at_all)&&(gamemode_played != Contact)){		//min 5/10, watch out with Hunt on 2 players (theres no need for it anymore, the 52-break is deleted)
 				if ((gamemode_played == Dynamic)||(gamemode_played == Arena)||(gamemode_played == Sand)) {
 					if ((level[geben] == human)&&(real == evet)) {
 						printf(" #reduce	defensive: 1		offensive: 2 \n");
@@ -4203,6 +4250,18 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 						keep = *KI_decision;
 					}
 					ind = 1;
+				} else if (gamemode_played == Quidditch) {
+					if ((level[geben] == human)&&(real == evet)) {
+						printf(" #produce	keep top: 1		keep bottom: 2		keep left: 3		keep right: 4		don't matter: 5 \n");
+						keep = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+					} else {
+						keep = *KI_decision;
+					}
+					if ((keep >= 5)||(keep == 0)) {
+						ind = 1;
+					} else {
+						ind = 2;
+					}
 				}
 
 			}
@@ -4281,7 +4340,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 									}
 								}
 							}
-							if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Collect)||(gamemode_played == Sand)||(gamemode_played == Contact)||(gamemode_played == Classic)) {
+							if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Collect)||(gamemode_played == Sand)||(gamemode_played == Contact)||(gamemode_played == Classic)||(gamemode_played == Quidditch)) {
 								for (unsigned int h=i-1; h<=i+1; h+=1){		//Stört feindliche Wachstumsmöglichkeiten?
 									for (unsigned int k=j-1; k<=j+1; k+=1){
 										if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -4515,7 +4574,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Having_too_much_Feld, 0, i, j, Having_too_much_Wert);
 								Having_too_much_Wert = 0;
 
-							} else if (gamemode_played == Contact) {
+							} else if ((gamemode_played == Contact)||(gamemode_played == Quidditch)) {
 
 								if (keep == 1) {
 									Having_too_much_Wert = i;
@@ -4566,7 +4625,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, evolution.nl, geben, i, j, 0);
 							count_new -= 1;
 							if (ind  == 2) {
-								if ((gamemode_played == Dynamic)||(gamemode_played == Contact)||((gamemode_played == Hunt)&&(geben == 1))) {
+								if ((gamemode_played == Dynamic)||(gamemode_played == Contact)||(gamemode_played == Quidditch)||((gamemode_played == Hunt)&&(geben == 1))) {
 									ober = m+n;
 								} else if (gamemode_played == Arena) {
 									ober = 10;
@@ -5561,7 +5620,7 @@ void show_whose_turn (unsigned int gamemode_played, unsigned int geben, unsigned
 
 }
 
-void show_statistics (unsigned int number_of_players, unsigned int gamemode_played, Spielfeld numbers_of_, unsigned int* rmv_Points, unsigned int exclude_counter, unsigned int* rmv_ulcer_lifes, unsigned int* ges, unsigned int* pere, unsigned int* ability, unsigned int time_matters_ttt) {
+void show_statistics (unsigned int number_of_players, unsigned int gamemode_played, Spielfeld numbers_of_, unsigned int* rmv_Points, unsigned int exclude_counter, unsigned int* rmv_ulcer_lifes, unsigned int* ges, unsigned int* pere, unsigned int* ability, unsigned int time_matters_ttt, Quidditch_setup* Qs) {
 
 	printf("\n");
 	for (unsigned int p=1; p<=number_of_players; p+=1) {
@@ -5611,6 +5670,11 @@ void show_statistics (unsigned int number_of_players, unsigned int gamemode_play
 			} else if (ges[p] < 1000) {
 				printf("	Spieler %u: You own %u squares.\n", p, ges[p]);
 			}
+		}
+	} else if (gamemode_played == Quidditch) {
+		printf("	Klatscher-hits:     %u \n", Qs->Points[0]);
+		for (unsigned int p=1; p<=number_of_players; p+=1) {
+			printf("	Points player %u:     %u \n", p, Qs->Points[p]);
 		}
 	}
 	printf("\n");
@@ -5845,28 +5909,56 @@ void get_hints (unsigned int* level, Spielfeld Sf_permutations, unsigned int gam
 
 }
 
-void Initialisierung_Qs (Quidditch_setup Qs, Quidditch_team_abilities* Qoa, Quidditch_team_abilities* Qta) {
-	for (unsigned int p=0; p<=5; p++) {
-		for (unsigned int p=0; p<=2; p++) {
-			Qs.Qta[p] = Qta[p];
-			Qs.Points[p] = 0;
+void Initialisierung_Qs (Quidditch_setup* Qs, Quidditch_team_abilities* Qta, Quidditch_object_abilities* Qoa, Growth_Player* Growth_players) {
+	unsigned int color_translation[3], numberofplayers;
+	numberofplayers = 2;
+	
+	color_translation[0] = 0;
+	
+	for (unsigned int p=1; p<=numberofplayers; p++) {
+		unsigned int choice, types;
+		types = 3;
+		choice = types + 1;
+		
+		while (choice > types) {
+			printf("	Which Quidditch-team-abilities do you want to take, player %u ? \n	0 : basic\n	1 : default_1 \n	2 : default_2 \n	%u : classic \n", p, types);
+			choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		}
-		Qs.Qoa = Qoa;
+		
+		if (choice <= 2) {
+			color_translation[p] = choice;	//thats 0,1,2
+		} else if (choice == types) {
+			if (Growth_players[p].color == cLIGHT_MAGENTA) {
+				color_translation[p] = HGryffindor;
+			} else if (Growth_players[p].color == cLIGHT_CYAN) {
+				color_translation[p] = HRavenclaw;
+			} else if (Growth_players[p].color == cYELLOW) {
+				color_translation[p] = HHufflepuff;
+			} else if (Growth_players[p].color == cLIGHT_GREEN) {
+				color_translation[p] = HSlytherin;
+			}
+		}
 	}
+	
+	for (unsigned int q=0; q<=2; q++) {	//the right modification of the abilities, reducing from 1+2+4 to 1+2 ("1+" because of the standard-setting, "2+" because of the defaults).
+		Qs->Qta[q] = Qta[color_translation[p]];	//that means: no copy.
+		Qs->Points[q] = 0;
+	}
+	Qs->Qoa = Qoa;
+	
 }
-
-void Initialisierung_Qoa (Quidditch_team_abilities* Qoa) {
+void Initialisierung_Qoa (Quidditch_object_abilities* Qoa) {
 	Qoa[0].Klatscher_fly_distance = 3;
 	Qoa[0].Schnatz_fly_distance = 3;
 	Qoa[0].Schnatz_appearence_factor = 13;	//to read as 1/3
 	Qoa[0].Schnatz_disappearence_factor = 23;	//to read as 2/3
 }
-
 void Initialisierung_Qta (Quidditch_team_abilities* Qta) {
-	for (unsigned int p=0; p<=5; p++) {
+	for (unsigned int p=0; p<=HSlytherin; p++) {
 		Qta[p].Jaeger_fly_distance = 3;
 		Qta[p].Jaeger_throw_distance = 3;
 		Qta[p].Hueter_fly_distance = 2;
+		Qta[p].Hueter_throw_distance = 3;
 		Qta[p].Treiber_fly_distance = 3;
 		Qta[p].Treiber_hit_distance = 3;
 		Qta[p].Sucher_fly_distance = 3;
@@ -5875,6 +5967,7 @@ void Initialisierung_Qta (Quidditch_team_abilities* Qta) {
 			Qta[p].Sucher_fly_distance = 4;
 		} else if (p == HHufflepuff) {
 			Qta[p].Hueter_fly_distance = 4;
+			Qta[p].Hueter_throw_distance = 4;
 		} else if (p == HRavenclaw) {
 			Qta[p].Jaeger_fly_distance = 4;
 			Qta[p].Jaeger_throw_distance = 4;
@@ -5883,6 +5976,22 @@ void Initialisierung_Qta (Quidditch_team_abilities* Qta) {
 			Qta[p].Treiber_hit_distance = 4;
 		}
 	}
+}
+
+void Initialisierung_Moc (Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int m, unsigned int n) {
+	
+	Moc_Quaffel->i = (m-2)/2;
+	Moc_Quaffel->j = (n-1)/2;
+	
+	Moc_Schnatz->i = (m-2)/2 +1;
+	Moc_Schnatz->j = (n-1)/2;
+	Moc_Schnatz->directed = evet;
+	
+	Moc_Klatscher[0].i = (m-2)/2 -1;
+	Moc_Klatscher[0].j = (n-1)/2;
+	Moc_Klatscher[1].i = (m-2)/2 +2;
+	Moc_Klatscher[1].j = (n-1)/2;
+	
 }
 
 void Initialisierung (unsigned int gamemode_played, unsigned int* information_code) {
@@ -7536,7 +7645,7 @@ void get_colors (Growth_Player* Growth_players, unsigned int number_of_players, 
 				printf(" \n");
 				input = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 				
-				if (gamemode_played == Quidditch) {
+				if (gamemode_played == Quidditch) {	//because the forbidden colors aren't house-colors
 					if ((input != 4)&&(input != 7)&&(input != 11)&&(input != 12)) {
 						input = 0;
 					}
@@ -9285,9 +9394,9 @@ void Permutations_permutate_maker (Spielfeld Collector_of_permutation_number_are
 	// printf("Permutations_permutate_maker ok.8\n");	//test
 }
 
-void turn_of_KI_random (unsigned int* KI_decision, Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
+void turn_of_KI_random (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
 	Spielfeld Field_copy;
-	unsigned int* KI_table_of_choice;		// number/own_square or 0/enemy_square or 0/more (1) or less (2) squares in posession/difference of squares
+	unsigned int* KI_table_of_choice;		// number/own_square or 0/enemy_square or 0/more (1) or less (2) squares in possession/difference of squares
 	unsigned int* ges_copy;
 	unsigned int dimension;
 
@@ -9312,7 +9421,7 @@ void turn_of_KI_random (unsigned int* KI_decision, Spielfeld Field, unsigned int
 	synchronisation_Field_copy (Field, Field_copy, m, n, number_of_players, geben, Opague_o.field, gamemode_played, Allocation_o);
 
 	while (KI_table_of_choice[0] == 0) {
-		fill_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, ges, limits, single_option_representives, rain, rmv);
+		fill_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, ges, limits, single_option_representives, rain, rmv);
 	}
 
 	synchronisation_Field_copy (Field, Field_copy, m, n, number_of_players, geben, Opague_o.field, gamemode_played, Allocation_o);
@@ -9343,7 +9452,7 @@ void turn_of_KI_random (unsigned int* KI_decision, Spielfeld Field, unsigned int
 	#endif
 }
 
-void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
+void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
 
 	unsigned int w, d, e, how_many_ways_of_keeping;
 	Spielfeld Plus_rememory;
@@ -9379,7 +9488,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Plus_rememory, 0, h, k, geben);
 									*KI_decision = p;
-									set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Plus_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+									set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Plus_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 								}
 							}
 						}
@@ -9389,7 +9498,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 						for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 							*KI_decision = p;
-							set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Minus_, 0, 0, i, j, ges, limits, single_option_representives, rain, rmv);
+							set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Minus_, 0, 0, i, j, ges, limits, single_option_representives, rain, rmv);
 						}
 					}
 				}
@@ -9407,14 +9516,14 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, geben);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 11);
 										*KI_decision = p;
-										set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 									}
 								} else if ((Field_copy[0][h][k] == 0)&&(h<=m-2)&&(h>0)&&(k<=n-2)&&(k>0)&&((h+k)%2 == (i+j+1)%2)) {
 									for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 11);
 										*KI_decision = p;
-										set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 									}
 								}
 							}
@@ -9427,14 +9536,14 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 11);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 									}
 								} else if ((Field_copy[0][h][k] == 0)&&(h<=m-2)&&(h>0)&&(k<=n-2)&&(k>0)&&((h+k)%2 == (i+j+1)%2)) {	//Move
 									for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 									}
 								}
 							}
@@ -9449,14 +9558,14 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, Field_copy[0][h][k]);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 									}
 								} else if ((Field_copy[0][h][k] == 0)&&(h<=m-2)&&(h>0)&&(k<=n-2)&&(k>0)&&((h+k)%2 == (i+j+1)%2)) {	//Move
 									for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 									}
 								}
 							}
@@ -9468,7 +9577,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 	} else if (rmv->use_number == 3) {
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Revive_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//Revive_
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Revive_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//Revive_
 		}
 		if (gamemode_played == Rain) {	//Destroy_
 			for (unsigned int h=1; h<=(m-4); h+=1){
@@ -9477,7 +9586,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 						for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 0);
 							*KI_decision = p;
-							set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, 0, 0, ges, limits, single_option_representives, rain, rmv);
+							set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, 0, 0, ges, limits, single_option_representives, rain, rmv);
 						}
 					}
 				}
@@ -9492,7 +9601,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 										for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 											set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 0);
 											*KI_decision = p;
-											set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+											set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 										}
 									}
 								}
@@ -9505,7 +9614,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 	} else if (rmv->use_number == 4) {
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Boost_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//Boost_
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Boost_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//Boost_
 		}
 		for (unsigned int i=1; i<=m-2; i++) {	//Move
 			for (unsigned int j=1; j<=n-2; j++) {
@@ -9517,7 +9626,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 									*KI_decision = p;
-									set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_4, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+									set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_4, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
 								}
 							}
 						}
@@ -9531,7 +9640,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 		e = 3;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_2, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//2-new
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_2, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//2-new
 		}
 
 		w = 4;
@@ -9539,7 +9648,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 		e = 3;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_4_5, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//4/5-new
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_4_5, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//4/5-new
 		}
 	} else if (rmv->use_number == 6) {
 		w = 3;
@@ -9547,7 +9656,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 		e = 3;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, min_1, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//1-min
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, min_1, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//1-min
 		}
 
 		w = 3;
@@ -9555,7 +9664,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 		e = 4;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, max_4, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//4-max
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, max_4, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//4-max
 		}
 	}
 
@@ -9567,7 +9676,7 @@ void fill_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielf
 
 }
 
-void set_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int w, unsigned int d, unsigned int e, unsigned int exactly_number, unsigned int h, unsigned int k, unsigned int i, unsigned int j, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
+void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int w, unsigned int d, unsigned int e, unsigned int exactly_number, unsigned int h, unsigned int k, unsigned int i, unsigned int j, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
 	unsigned int ges_others, ges_difference, Feinstrukturkonstante_1, Feinstrukturkonstante_2, compact, g, how_many_ways_of_keeping, worth_of_turn;
 	unsigned int* ges_average;
 	unsigned int* position;
@@ -9601,7 +9710,7 @@ void set_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielfe
 	basic_development (Field, Field_copy, m, n, geben, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, exactly_number, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, position, KI_decision, rain, hayir);
 
 	if (level[geben] != Hera) {	//gamemode-specials
-		realize_modifications (Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, hayir);
+		realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, hayir);
 		// battle (m, n, Field_copy, geben, Opague_o.field, Allocation_o, number_of_players, gamemode_played);	// Copy from realize_modifications
 
 	}
@@ -9654,7 +9763,7 @@ void set_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielfe
 
 						basic_development (Field, Field_copy, m, n, person, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, q, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, position, &t, rain, hayir);
 		
-						realize_modifications (Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, hayir);
+						realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, hayir);
 
 						// battle (m, n, Field_copy, geben, Opague_o.field, Allocation_o, number_of_players, gamemode_played);	// Copy from realize_modifications
 
@@ -9691,7 +9800,7 @@ void set_KI_table_of_choice (unsigned int* KI_decision, Spielfeld Field, Spielfe
 
 							basic_development (Field, Field_copy, m, n, person, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, q+l, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, position, &t, rain, hayir);
 
-							realize_modifications (Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, hayir);
+							realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, hayir);
 
 							// battle (m, n, Field_copy, geben, Opague_o.field, Allocation_o, number_of_players, gamemode_played);	// Copy from realize_modifications
 
@@ -11012,8 +11121,8 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 	space_i = 0;
 	space_j = 0;
 	controll = 0;
-	indikator1 = 0;		//für horizontal
-	indikator2 = 0;		//für vertikal
+	indikator1 = 0;		//für Horizontal
+	indikator2 = 0;		//für Vertikal
 	indikator3 = 0;
 
 	for (unsigned int i=1; i<m-1; i+=1) {
@@ -11042,8 +11151,8 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 		}
 
-		dynamic_pointer[6] = 0;		//impact y_horizontal
-		dynamic_pointer[7] = 0;		//impact y_vertikal
+		dynamic_pointer[6] = 0;		//impact y_Horizontal
+		dynamic_pointer[7] = 0;		//impact y_Vertikal
 
 		dynamic_pointer[Horizontal] = dynamic_pointer[4] + dynamic_pointer[2];	//aus "sgn(a)*a^2" mach "a", done
 		dynamic_pointer[Vertikal] = dynamic_pointer[5] + dynamic_pointer[3];
@@ -11087,7 +11196,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 			controll = 0;
 
-			if (abs(dynamic_pointer[Horizontal])>abs(dynamic_pointer[Vertikal])) {	//indikator1, position[Horizontal], dynamic_pointer[Horizontal] horizontal
+			if (abs(dynamic_pointer[Horizontal])>abs(dynamic_pointer[Vertikal])) {	//indikator1, position[Horizontal], dynamic_pointer[Horizontal] Horizontal
 				indikator1 += 1;
 			} else if (abs(dynamic_pointer[Horizontal])<abs(dynamic_pointer[Vertikal])) {
 				indikator2 += 1;
@@ -11182,13 +11291,13 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 							continue;
 
-						} else if (position[Horizontal]+1 >= n-1) {	//horizontal nein
+						} else if (position[Horizontal]+1 >= n-1) {	//Horizontal nein
 
 							Reflection (dynamic_pointer, 0, erd);
 
 							continue;
 
-						} else if (position[Vertikal]+1 >= m-1) {	//vertikal nein
+						} else if (position[Vertikal]+1 >= m-1) {	//Vertikal nein
 
 							Reflection (dynamic_pointer, 1, erd);
 
@@ -11217,13 +11326,13 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 							continue;
 
-						} else if (position[Horizontal]-1 == 0) {	//horizontal nein
+						} else if (position[Horizontal]-1 == 0) {	//Horizontal nein
 
 							Reflection (dynamic_pointer, 0, erd);
 
 							continue;
 
-						} else if (position[Vertikal]-1 == 0) {	//vertikal nein
+						} else if (position[Vertikal]-1 == 0) {	//Vertikal nein
 
 							Reflection (dynamic_pointer, 1, erd);
 
@@ -11238,7 +11347,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 				} else {	//unterschiedliches Vorzeichen
 
-					if (sgn(dynamic_pointer[Horizontal])>0) {	//Vorzeichen horizontal positiv
+					if (sgn(dynamic_pointer[Horizontal])>0) {	//Vorzeichen Horizontal positiv
 
 						if ((position[Horizontal]+1 < n-1) && (position[Vertikal]-1 > 0) && (Field[0][position[Vertikal]-1][position[Horizontal]+1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
 
@@ -11256,13 +11365,13 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 							continue;
 
-						} else if (position[Horizontal]+1 >= n-1) {	//horizontal nein
+						} else if (position[Horizontal]+1 >= n-1) {	//Horizontal nein
 
 							Reflection (dynamic_pointer, 0, erd);
 
 							continue;
 
-						} else if (position[Vertikal]-1 == 0) {	//vertikal nein
+						} else if (position[Vertikal]-1 == 0) {	//Vertikal nein
 
 							Reflection (dynamic_pointer, 1, erd);
 
@@ -11273,7 +11382,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 							continue;
 						}
 
-					}  else if (sgn(dynamic_pointer[Horizontal])<0) {	//Vorzeichen horizontal negativ
+					}  else if (sgn(dynamic_pointer[Horizontal])<0) {	//Vorzeichen Horizontal negativ
 
 						if ((position[Horizontal]-1 > 0) && (position[Vertikal]+1 < m-1) && (Field[0][position[Vertikal]+1][position[Horizontal]-1] == 0)) {	//Noch im Spielfeld? Ja und diagonal ist frei
 
@@ -11291,13 +11400,13 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 							continue;
 
-						} else if (position[Horizontal] -1 == 0) {	//horizontal nein
+						} else if (position[Horizontal] -1 == 0) {	//Horizontal nein
 
 							Reflection (dynamic_pointer, 0, erd);
 
 							continue;
 
-						} else if (position[Vertikal] +1 >= m-1) {	//vertikal nein
+						} else if (position[Vertikal] +1 >= m-1) {	//Vertikal nein
 
 							Reflection (dynamic_pointer, 1, erd);
 
@@ -11312,7 +11421,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 				}
 
-			} else if (indikator1 >= indikator2) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_horizontal = dynamic_pointer[Horizontal]
+			} else if (indikator1 >= indikator2) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_Horizontal = dynamic_pointer[Horizontal]
 				if (indikator2 >= 5) {
 
 					if (abs(dynamic_pointer[Horizontal]) > 0) {
@@ -11373,7 +11482,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 					}		//Diagonal-Schritt mit partieller Reflection entzieht sich dem freien Schritt
 				}
 
-			} else if (indikator2 >= indikator1) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_vertikal = dynamic_pointer[Vertikal]
+			} else if (indikator2 >= indikator1) {	//partielle Durchführung, außer bei doppelter Reflektion, nimm s_Vertikal = dynamic_pointer[Vertikal]
 				if (indikator1 >= 5) {
 
 					if (abs(dynamic_pointer[Horizontal]) > 0) {
@@ -11471,12 +11580,12 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 			//Feintuning
 
-			dynamic_pointer[6] = 0;		//impact y_horizontal
-			dynamic_pointer[7] = 0;		//impact y_vertikal
+			dynamic_pointer[6] = 0;		//impact y_Horizontal
+			dynamic_pointer[7] = 0;		//impact y_Vertikal
 
 			impact_y_semi_square (m, n, position, impact_tuple, dynamic_pointer, Field);
 
-			if (sgn(dynamic_pointer[2]) < 0) {		//horizontal (ohne erd)
+			if (sgn(dynamic_pointer[2]) < 0) {		//Horizontal (ohne erd)
 				if (sgn(dynamic_pointer[6]) > 0) {
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[2] += 1;
@@ -11485,7 +11594,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 						}
 					}
 				}
-			} else if (sgn(dynamic_pointer[2]) > 0) {		//dynamic_pointer[2] = v_horizontal
+			} else if (sgn(dynamic_pointer[2]) > 0) {		//dynamic_pointer[2] = v_Horizontal
 				if (sgn(dynamic_pointer[6]) < 0) {
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[2] -= 1;
@@ -11496,7 +11605,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 				}
 			}
 
-			if (sgn(dynamic_pointer[4]) < 0) {		//horizontal (ohne erd)
+			if (sgn(dynamic_pointer[4]) < 0) {		//Horizontal (ohne erd)
 				if (sgn(dynamic_pointer[6]) > 0) {
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[4] += 1;
@@ -11505,7 +11614,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 						}
 					}
 
-					if ((abs(dynamic_pointer[4]) < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[4]) == sgn(dynamic_pointer[Horizontal]))&&(sgn(dynamic_pointer[Horizontal]) != 0)) {	//s_horizontal-Verringerung
+					if ((abs(dynamic_pointer[4]) < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[4]) == sgn(dynamic_pointer[Horizontal]))&&(sgn(dynamic_pointer[Horizontal]) != 0)) {	//s_Horizontal-Verringerung
 
 						for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {
 							dynamic_pointer[Horizontal] += 1;
@@ -11516,7 +11625,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 					}
 				}
 
-			} else if (sgn(dynamic_pointer[4]) > 0) {		//dynamic_pointer[4] = a_horizontal
+			} else if (sgn(dynamic_pointer[4]) > 0) {		//dynamic_pointer[4] = a_Horizontal
 				if (sgn(dynamic_pointer[6]) < 0) {
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[4] -= 1;
@@ -11527,7 +11636,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 					if ((abs(dynamic_pointer[4]) < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[4]) == sgn(dynamic_pointer[Horizontal]))&&(sgn(dynamic_pointer[Horizontal]) != 0)) {
 
-						for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {	//s_horizontal-Verringerung
+						for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {	//s_Horizontal-Verringerung
 							dynamic_pointer[Horizontal] -= 1;
 							if (dynamic_pointer[Horizontal] == 0) {
 								break;
@@ -11542,7 +11651,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 					if ((0 < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[2]) == sgn(dynamic_pointer[Horizontal]))) {
 
-						for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {	//s_horizontal-Verringerung
+						for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {	//s_Horizontal-Verringerung
 							dynamic_pointer[Horizontal] -= 1;
 							if (dynamic_pointer[Horizontal] == 0) {
 								break;
@@ -11552,7 +11661,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 				} else if (sgn(dynamic_pointer[6]) > sgn(dynamic_pointer[2])) {
 
-					if ((0 < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[2]) == sgn(dynamic_pointer[Horizontal]))) {	//s_horizontal-Verringerung
+					if ((0 < abs(dynamic_pointer[6])) && (sgn(dynamic_pointer[2]) == sgn(dynamic_pointer[Horizontal]))) {	//s_Horizontal-Verringerung
 
 						for (int r=1; r<=(abs(dynamic_pointer[6])-abs(dynamic_pointer[4])); r+=1) {
 							dynamic_pointer[Horizontal] += 1;
@@ -11568,7 +11677,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 
 
-			if (sgn(dynamic_pointer[3] < 0)) {		//vertikal (mit erd)
+			if (sgn(dynamic_pointer[3] < 0)) {		//Vertikal (mit erd)
 				if (sgn(dynamic_pointer[7]+erd) > 0) {
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[3] += 1;
@@ -11577,7 +11686,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 						}
 					}
 				}
-			} else if (sgn(dynamic_pointer[3] > 0)) {		//dynamic_pointer[3] = v_vertikal
+			} else if (sgn(dynamic_pointer[3] > 0)) {		//dynamic_pointer[3] = v_Vertikal
 				if (sgn(dynamic_pointer[7]+erd) < 0) {	//<= wegen-erd-Kompensierung, zurückgenommen wegen eventuell negativer erd
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[3] -= 1;
@@ -11588,7 +11697,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 				}
 			}
 
-			if (sgn(dynamic_pointer[5] < 0)) {		//vertikal (mit erd)
+			if (sgn(dynamic_pointer[5] < 0)) {		//Vertikal (mit erd)
 				if (sgn(dynamic_pointer[7]+erd) > 0) {
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[5] += 1;
@@ -11597,7 +11706,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 						}
 					}
 
-					if ((abs(dynamic_pointer[5]) < abs(dynamic_pointer[7]+erd))&&(sgn(dynamic_pointer[5]) == sgn(dynamic_pointer[Vertikal]))&&(sgn(dynamic_pointer[Vertikal]) != 0)) {	//s_vertikal-Verringerung
+					if ((abs(dynamic_pointer[5]) < abs(dynamic_pointer[7]+erd))&&(sgn(dynamic_pointer[5]) == sgn(dynamic_pointer[Vertikal]))&&(sgn(dynamic_pointer[Vertikal]) != 0)) {	//s_Vertikal-Verringerung
 
 						for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {
 							dynamic_pointer[Vertikal] += 1;
@@ -11608,7 +11717,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 					}
 				}
 
-			} else if (sgn(dynamic_pointer[5]) > 0) {		//dynamic_pointer[5] = a_vertikal
+			} else if (sgn(dynamic_pointer[5]) > 0) {		//dynamic_pointer[5] = a_Vertikal
 				if (sgn(dynamic_pointer[7]+erd) < 0) {	//<= wegen-erd-Kompensierung, zurückgenommen wegen eventuell negativer erd
 					for (int r=1; r<=abs(erd); r+=1) {
 						dynamic_pointer[5] -= 1;
@@ -11619,7 +11728,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 					if ((abs(dynamic_pointer[5]) < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[5]) == sgn(dynamic_pointer[Vertikal]))&&(sgn(dynamic_pointer[Vertikal]) != 0)) {
 
-						for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {	//s_vertikal-Verringerung
+						for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {	//s_Vertikal-Verringerung
 							dynamic_pointer[Vertikal] -= 1;
 							if (dynamic_pointer[Vertikal] == 0) {
 								break;
@@ -11634,7 +11743,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 					if ((0 < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[3]) == sgn(dynamic_pointer[Vertikal]))) {
 
-						for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {	//s_vertikal-Verringerung
+						for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {	//s_Vertikal-Verringerung
 							dynamic_pointer[Vertikal] -= 1;
 							if (dynamic_pointer[Vertikal] == 0) {
 								break;
@@ -11644,7 +11753,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 				} else if (sgn(dynamic_pointer[7]+erd) > sgn(dynamic_pointer[3])) {
 
-					if ((0 < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[3]) == sgn(dynamic_pointer[Vertikal]))) {	//s_vertikal-Verringerung
+					if ((0 < abs(dynamic_pointer[7]+erd)) && (sgn(dynamic_pointer[3]) == sgn(dynamic_pointer[Vertikal]))) {	//s_Vertikal-Verringerung
 
 						for (int r=1; r<=(abs(dynamic_pointer[7]+erd)-abs(dynamic_pointer[5])); r+=1) {
 							dynamic_pointer[Vertikal] += 1;
@@ -11657,13 +11766,13 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 			}
 
-			if ((sgn(dynamic_pointer[Horizontal]) > 0)&&(sgn(dynamic_pointer[2]) >= 0)&&(sgn(dynamic_pointer[4]) < 0)) {		//a_horizontal-verringerung
+			if ((sgn(dynamic_pointer[Horizontal]) > 0)&&(sgn(dynamic_pointer[2]) >= 0)&&(sgn(dynamic_pointer[4]) < 0)) {		//a_Horizontal-verringerung
 				dynamic_pointer[4] += 1;
 			} else if ((sgn(dynamic_pointer[Horizontal]) < 0)&&(sgn(dynamic_pointer[2]) <= 0)&&(sgn(dynamic_pointer[4]) > 0)) {
 				dynamic_pointer[4] -= 1;
 			}
 
-			if ((sgn(dynamic_pointer[Vertikal]) > 0)&&(sgn(dynamic_pointer[3]) >= 0)&&(sgn(dynamic_pointer[5]) < 0)) {		//a_vertikal-verringerung
+			if ((sgn(dynamic_pointer[Vertikal]) > 0)&&(sgn(dynamic_pointer[3]) >= 0)&&(sgn(dynamic_pointer[5]) < 0)) {		//a_Vertikal-verringerung
 				dynamic_pointer[5] += 1;
 			} else if ((sgn(dynamic_pointer[Vertikal]) < 0)&&(sgn(dynamic_pointer[3]) <= 0)&&(sgn(dynamic_pointer[5]) > 0)) {
 				dynamic_pointer[5] -= 1;
@@ -11807,7 +11916,7 @@ void survive_obstacles_generator (unsigned int gamemode_played, unsigned int rmv
 	}
 }
 
-void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AOP, time_t time3, unsigned int* playtime, unsigned int NOSV, Quidditch_setup Qs) {
+void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AOP, time_t time3, unsigned int* playtime, unsigned int NOSV, Quidditch_setup* Qs) {
 
 	Realize_modifications_variables* rmv;	//realize_modifications_variables (rmv), contains both copied and new variables
 
@@ -11865,6 +11974,10 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	Earth_impact impact_tuple;
 	Single_option_representives single_option_representives;	// Modifications, Projection matters
 	Time_matters time_matters;	// Time-limits and the penalties
+	
+	Moveable_objects_condition* Moc_Klatscher;
+	Moveable_objects_condition* Moc_Quaffel;
+	Moveable_objects_condition* Moc_Schnatz;
 	
 	rmv = Realize_modifications_variables_Vektor_Create(1);
 	
@@ -12173,6 +12286,11 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// rmv->Collector_of_permutation = Collector_of_permutation;	//static during the game, already made for each component
 	
 	// printf("Checkpoint: i	\n ");	//test
+	
+	Moc_Quaffel = Moveable_objects_condition_Vektor_Create (1);
+	Moc_Schnatz = Moveable_objects_condition_Vektor_Create (1);
+	Moc_Klatscher = Moveable_objects_condition_Vektor_Create (2);
+	Initialisierung_Moc (Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, m, n);
 	
 	if (Allocation_o.characterization != 0) {
 		for (unsigned int i=1; i<=m-2; i++) {
@@ -12740,18 +12858,17 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 			if (gamemode_played == Fall) {
 				printf("\n");
 				printf("	Points player %u:   %u Point(s) \n", geben, rmv->Points[geben]);
-			}
-
-			if (gamemode_played == Ulcer) {
+			} else if (gamemode_played == Ulcer) {
 				printf("\n");
 				printf("	Lifes player %u:  %u Life(s) \n", geben, rmv->ulcer_lifes[geben]);
-			}
-
-			if (gamemode_played == Dynamic) {
+			} else if (gamemode_played == Dynamic) {
 				printf("	\n");
 				printf("	Geschwindigkeit:  Zeile: %d,  Spalte: %d \n", dynamic_pointer[2], dynamic_pointer[3]);
 				printf("	Beschleunigung:   Zeile: %d,  Spalte: %d \n", dynamic_pointer[4], dynamic_pointer[5]);
 				printf("	\n");
+			} else if (gamemode_played == Quidditch) {
+				printf("\n");
+				printf("	Points player %u:   %u Points \n", geben, Qs->Points[geben]);
 			}
 
 			printf("\n");
@@ -12793,7 +12910,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 			} else {
 				// rmv->use_number = 5;	//KI testing... warning
 
-				turn_of_KI_random (&KI_decision, Field, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, limits, single_option_representives, rain, rmv);
+				turn_of_KI_random (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, &KI_decision, Field, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, limits, single_option_representives, rain, rmv);
 
 				// rmv->var_[geben] = 51;	//KI testing... warning
 
@@ -12817,7 +12934,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 						printf("\n");
 						printf("	turns at all: %u \n", g);
 
-						show_statistics (number_of_players, gamemode_played, rmv->numbers_of_, rmv->Points, exclude_counter, rmv->ulcer_lifes, ges, pere, ability, time_matters.ttt);
+						show_statistics (number_of_players, gamemode_played, rmv->numbers_of_, rmv->Points, exclude_counter, rmv->ulcer_lifes, ges, pere, ability, time_matters.ttt, Qs);
 
 					} else if (menuoperator == 3){
 
@@ -13246,7 +13363,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		
 				//development_start
 		
-		// printf("4. g = %u \n", g);	//test
+				// printf("4. g = %u \n", g);	//test
 	
 				// printf("Checkpoint: development_start \n");	//test
 		
@@ -13254,17 +13371,17 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 
 				// printf("Checkpoint: development_end \n");	//test
 		
-		// printf("5. g = %u \n", g);	//test
+				// printf("5. g = %u \n", g);	//test
 	
 				// development_end
 		
 				// printf("Checkpoint: realize_modifications_start \n");	//test
 		
-		realize_modifications (Field, Field, Opague_o, Allocation_o, Sf_permutations, ges, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, evet);
+				realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field, Opague_o, Allocation_o, Sf_permutations, ges, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, evet);
 				
 				// printf("Checkpoint: realize_modifications_end \n");	//test
 		
-		// printf("6. g = %u \n", g);	//test
+				// printf("6. g = %u \n", g);	//test
 	
 				// if (gamemode_played == Contact) {	// Copy from realize_modifications
 
@@ -13320,10 +13437,10 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		}
 
 		//normal_end
-	// printf("Checkpoint: normal_end \n");	//test
-	// printf("7.g = %u \n", g);	//test
-	
-	//end of sections of geben, but geben is still active	//try to put the following section befor this, transfer the undone of special action under "Go back" to the main if. go on
+		// printf("Checkpoint: normal_end \n");	//test
+		// printf("7.g = %u \n", g);	//test
+		
+		//end of sections of geben, but geben is still active	//try to put the following section befor this, transfer the undone of special action under "Go back" to the main if. go on
 		if (level[0] <= 2) {
 			printf("\n");
 		}
@@ -13403,7 +13520,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	anything = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 	if (anything == 1){
 		printf("	\n");
-		show_statistics (number_of_players, gamemode_played, rmv->numbers_of_, rmv->Points, exclude_counter, rmv->ulcer_lifes, ges, pere, ability, time_matters.ttt);
+		show_statistics (number_of_players, gamemode_played, rmv->numbers_of_, rmv->Points, exclude_counter, rmv->ulcer_lifes, ges, pere, ability, time_matters.ttt, Qs);
 
 	}
 
@@ -13694,10 +13811,20 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	#line 12k, 22.1\n");	//test
 	// scanf("%u", &pause);	//test
 
+	Moveable_objects_condition_Vektor_Destroy (Moc_Klatscher);
+	Moveable_objects_condition_Vektor_Destroy (Moc_Quaffel);
+	Moveable_objects_condition_Vektor_Destroy (Moc_Schnatz);
+	
+	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+	// printf("	\n ");
+	// printf("	#line 13k, 23\n");	//test
+	// scanf("%u", &pause);	//test
+
 }
 
 // /*
-void realize_modifications (Spielfeld Field, Spielfeld Spiel, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges, unsigned int* g, unsigned int m, unsigned int n, unsigned int geben, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* level, unsigned int* information_code, Growth_Player* Growth_players, Special_Fields Journey_o, unsigned int rain, Single_option_representives single_option_representives, Realize_modifications_variables* rmv, unsigned int real) {
+void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Klatscher, Spielfeld Field, Spielfeld Spiel, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges, unsigned int* g, unsigned int m, unsigned int n, unsigned int geben, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* level, unsigned int* information_code, Growth_Player* Growth_players, Special_Fields Journey_o, unsigned int rain, Single_option_representives single_option_representives, Realize_modifications_variables* rmv, unsigned int real) {
 
 	unsigned int einmal;	// just to controll something
 	unsigned int rain_save, rain_speed_save, number_rain;	// Gamemode: Rain
@@ -14876,7 +15003,7 @@ void realize_modifications (Spielfeld Field, Spielfeld Spiel, Special_Fields Opa
 	// printf("	realize_modifications ok.15\n ");	//test
 	if (real == evet) {
 		reset_of_ges (ges, number_of_players);
-		if (gamemode_played == Rain) {
+		if (gamemode_played == Rain) {	//checklist
 			ges_counter (Field, m, n, ges, number_of_players);
 
 			for (unsigned int p=1; p<=number_of_players; p++) {
@@ -15012,25 +15139,24 @@ void realize_modifications (Spielfeld Field, Spielfeld Spiel, Special_Fields Opa
 			if ((ges[1] == 0)&&(rmv->ulcer_start[1] == existing)&&(geben == 1)) {
 				rmv->ulcer_start[1] = missing;
 				if (rmv->ulcer_lifes[1] > 0) {
-				printf("		Spieler 1, you lost a life. \n");
-				rmv->ulcer_lifes[1] -= 1;
+					printf("		Spieler 1, you lost a life. \n");
+					rmv->ulcer_lifes[1] -= 1;
 				} else if (rmv->ulcer_start[0] == 0) {	//rmv->ulcer_start[0] ist eine Einstellung des Spielmodus
-				printf("		Niederlage: Spieler 1 \n");
-				rmv->ulcer_start[0] = 100;
-				*g = 0;
+					printf("		Niederlage: Spieler 1 \n");
+					rmv->ulcer_start[0] = 100;
+					*g = 0;
 				} else if (rmv->ulcer_start[0] == 1) {
-				printf("		Spieler 1, you are out. \n");
-				rmv->player_counter += 1;
-				ges[1] = 1010;
+					printf("		Spieler 1, you are out. \n");
+					rmv->player_counter += 1;
+					ges[1] = 1010;
 
-				for (unsigned int p=1; p<=number_of_players; p+=1) {
-					if (rmv->out_counter[p] == 0) {
-					rmv->out_counter[p] = 1;
-					break;	// to be faster
+					for (unsigned int p=1; p<=number_of_players; p+=1) {
+						if (rmv->out_counter[p] == 0) {
+						rmv->out_counter[p] = 1;
+						break;	// to be faster
+						}
 					}
 				}
-				}
-
 			}
 
 			for (unsigned int p=2; p<=number_of_players; p+=1) {
@@ -15147,7 +15273,7 @@ void realize_modifications (Spielfeld Field, Spielfeld Spiel, Special_Fields Opa
 				*g = 0;
 			}
 
-		} else if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)) {
+		} else if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||(gamemode_played == Quidditch)) {
 			ges_counter (Field, m, n, ges, number_of_players);
 			who_is_out (ges, number_of_players, rmv);
 
@@ -15173,7 +15299,43 @@ void realize_modifications (Spielfeld Field, Spielfeld Spiel, Special_Fields Opa
 			}
 		}
 	}
-
+	
+	// /*
+	if (gamemode_played == Quidditch) {	//Selected actions/movements by teammembers
+		Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
+		
+		Quidditch_Klatscher_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
+		
+		Quidditch_Quaffel_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//2-times
+		
+		Quidditch_Schnatz_player_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
+		
+		#ifdef Quidditch_mistake_search
+		printf("	Quidditch_team_actions.ok \n");	//test
+		#endif
+		
+		// Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int Team_member, unsigned int fly_distance, unsigned int m, unsigned int n, unsigned int g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, unsigned int* Points)
+		if (geben == number_of_players) {
+			
+			Quidditch_Schnatz_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz, Qs, rmv->use_number);
+			
+			Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
+			
+			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+			
+			Quidditch_Klatscher_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, Qs);
+			
+			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+			
+			#ifdef Quidditch_mistake_search
+			printf("	Quidditch_S/K_actions.ok \n");	//test
+			#endif
+		}
+		
+		Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
+	}
+	// */
+	
 	#ifdef VERBOSE
 	printf("	realize_modifications ok.16\n ");	//test
 	printf(" player_counter: %u \n ", rmv->player_counter);	//test
@@ -15192,7 +15354,471 @@ void realize_modifications (Spielfeld Field, Spielfeld Spiel, Special_Fields Opa
 }
 // */
 
+void Quidditch_Klatscher_players_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_players_actions-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int Treiber, turns;
+	
+	Treiber = 0;
+	turns = 0;
+	
+	if (Opague_o.characterization >= 1) {
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	} else {
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	}
+	
+	if (geben == 1) {
+		Treiber = Treiber_1;
+	} else if (geben == 2) {
+		Treiber = Treiber_2;
+	}
+	
+	turns = 2;
+	while (turns >= 2) {	//Only 0 or 1 possible
+		printf("	Do you want to move one of your Treiber ? \n	0 : no\n	1 : yes\n");
+		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+	}
+	
+	for (unsigned int p=1; p<=turns; p++) {
+		Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Treiber, Qs->Qta[geben].Treiber_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_players_actions-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Quaffel_players_actions-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int turns;
+	
+	turns = 0;
+	
+	if (Opague_o.characterization >= 1) {
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	} else {
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	}
+	
+	turns = 3;
+	while (turns >= 3) {	//Only 0 or 1 or 2 possible
+	
+		printf("	How many actions do you want to make according to the Quaffel ?		(max.: 2)\n");
+		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+	}
+	
+	unsigned int action_choice, Team_member;
+	action_choice = 0;
+	Team_member = 0;
+	
+	for (unsigned int p=1; p<=turns; p++) {
+		
+		action_choice = 3;
+		while (action_choice >= 3) {	//Only 0 or 1 or 2 possible
+	
+			printf("	What do you want to do ? \n	0: Throw Quaffel \n");
+			printf("	1: Move Jaeger \n");	//Why there was a limit of moving Jaeger/Hueter ?
+			printf("	2: Move Hueter \n");
+			
+			
+			action_choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+		}
+		
+		if (action_choice == 0) {
+			Quidditch_Quaffel_Throw (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Quaffel, Qs);
+		} else if (action_choice == 1) {
+			
+			if (geben == 1) {
+				Team_member = Jaeger_1;
+			} else if (geben == 2) {
+				Team_member = Jaeger_2;
+			}
+			
+			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, Qs->Qta[geben].Jaeger_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+			
+		} else if (action_choice == 2) {
+			
+			if (geben == 1) {
+				Team_member = Hueter_1;
+			} else if (geben == 2) {
+				Team_member = Hueter_2;
+			}
+			
+			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, Qs->Qta[geben].Hueter_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+		}
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Quaffel_players_actions-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_Schnatz_player_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Schnatz_player_actions-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int Sucher, turns;
+	
+	Sucher = undefined;
+	turns = undefined;
+	
+	if (Opague_o.characterization >= 1) {
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	} else {
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	}
+	
+	if (geben == 1) {
+		Sucher = Sucher_1;
+	} else if (geben == 2) {
+		Sucher = Sucher_2;
+	}
+	
+	turns = 2;
+	while (turns >= 2) {	//Only 0 or 1 possible
+		printf("	Do you want to move your Sucher ? \n	0 : no\n	1 : yes\n");
+		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+	}
+	
+	for (unsigned int p=1; p<=turns; p++) {
+		
+		Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Sucher, Qs->Qta[geben].Sucher_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Schnatz_player_actions-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Localization_of_Moc (Spielfeld Field, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Localization_of_Moc-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int klatscher_choice;
+	
+	klatscher_choice = 0;
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quaffel: [%u][%u]		at this position: %u \n", Moc_Quaffel->i, Moc_Quaffel->j, Field[0][Moc_Quaffel->i][Moc_Quaffel->j]);	//test
+	printf("	Schnatz: [%u][%u]		at this position: %u \n", Moc_Schnatz->i, Moc_Schnatz->j, Field[0][Moc_Schnatz->i][Moc_Schnatz->j]);	//test
+	printf("	Klatscher[0]: [%u][%u]		at this position: %u \n", Moc_Klatscher[0].i, Moc_Klatscher[0].j, Field[0][Moc_Klatscher[0].i][Moc_Klatscher[0].j]);	//test
+	printf("	Klatscher[1]: [%u][%u]		at this position: %u \n", Moc_Klatscher[1].i, Moc_Klatscher[1].j, Field[0][Moc_Klatscher[1].i][Moc_Klatscher[1].j]);	//test
+	#endif
+	
+	for (unsigned int h=1; h<=m-2; h++) {
+		for (unsigned int k=1; k<=n-2; k++) {
+			if (Field[0][h][k] == Quaffel) {
+				Moc_Quaffel->i = h;
+				Moc_Quaffel->j = k;
+			} else if (Field[0][h][k] == Schnatz) {
+				Moc_Schnatz->i = h;
+				Moc_Schnatz->j = k;
+			} else if (Field[0][h][k] == Klatscher) {
+				Moc_Klatscher[klatscher_choice].i = h;
+				Moc_Klatscher[klatscher_choice].j = k;
+				klatscher_choice += 1;
+			}
+		}
+	}
+	klatscher_choice = 0;
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Localization_of_Moc-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_Quaffel_Throw (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Quaffel_Throw-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int allowed_to, Hueter, Jaeger, Torring, throw_distance, Zeile_alt, Spalte_alt, Zeile_neu, Spalte_neu;
+	
+	allowed_to = hayir;	//is it possible to reach the Quaffel?
+	Hueter = undefined;
+	Jaeger = undefined;
+	Torring = undefined;
+	throw_distance = 0;	//needs to be 0.
+	Zeile_neu = m;
+	Spalte_neu = n;
+	Zeile_alt = Moc_Quaffel->i;
+	Spalte_alt = Moc_Quaffel->j;
+	
+	if (geben == 1) {
+		Hueter = Hueter_1;
+		Jaeger = Jaeger_1;
+		Torring = Torring_2;
+	} else if (geben == 2) {
+		Hueter = Hueter_2;
+		Jaeger = Jaeger_2;
+		Torring = Torring_1;
+	}
+	
+	for (unsigned int h=0; h<=2; h++) {
+		for (unsigned int k=0; k<=2; k++) {
+			if ((h+k)%2 == 1) {
+				if (Field[0][Moc_Quaffel->i +h-1][Moc_Quaffel->j +k-1] == Jaeger) {
+					if (Qs->Qta[geben].Jaeger_throw_distance > throw_distance) {
+						throw_distance = Qs->Qta[geben].Jaeger_throw_distance;
+					}
+					allowed_to = evet;
+					
+				} else if (Field[0][Moc_Quaffel->i +h-1][Moc_Quaffel->j +k-1] == Hueter) {
+					if (Qs->Qta[geben].Hueter_throw_distance > throw_distance) {
+						throw_distance = Qs->Qta[geben].Hueter_throw_distance;
+					}
+					allowed_to = evet;
+				}
+			}
+		}
+	}
+	
+	if (allowed_to == hayir) {
+		printf("	Sorry, but the Quaffel isn't in your possession. \n");
+	} else if (allowed_to == hayir) {
+		
+		while ((Zeile_neu > m-2)||(Spalte_neu > n-2)||((Zeile_neu == 0)&&(Spalte_neu != 0))||((Spalte_neu == 0)&&(Zeile_neu != 0))||(abs(Moc_Quaffel->i - Zeile_neu) > abs(throw_distance - 0))||(abs(Moc_Quaffel->j - Spalte_neu) > abs(throw_distance - 0))||((Field[0][Zeile_neu][Spalte_neu] != 0)&&(Field[0][Zeile_neu][Spalte_neu] != geben)&&(Field[0][Zeile_neu][Spalte_neu] != Torring))) {
+			
+			printf("	The position of choice of the Quaffel ?		(Range: %u)\n", throw_distance);
+			printf("	neue Zeile: \n neue Spalte: \n");
+			
+			letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+			Zeile_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+			Spalte_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
+		}
+		
+		if ((Spalte_neu == 0)&&(Zeile_neu == 0)) {
+			printf("	Sweet escape...\n");
+		} else {
+			Moc_Quaffel->wanted_i = Zeile_neu;
+			Moc_Quaffel->wanted_j = Spalte_neu;
+			
+			while ((Moc_Quaffel->i != Moc_Quaffel->wanted_i)||(Moc_Quaffel->j != Moc_Quaffel->wanted_j)) {
+				Realize_Moc_Quaffel_Throw_step (Field, geben,  Moc_Quaffel, Torring);
+			}
+			
+			if (Field[0][Moc_Quaffel->wanted_i][Moc_Quaffel->wanted_j] == Torring) {
+				Qs->Points[geben] += 10;
+				Quidditch_a_goal_has_been_scored (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Quaffel);
+			}
+			
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu, Quaffel);
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_alt, Spalte_alt, 0);
+		}
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Quaffel_Throw-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_a_goal_has_been_scored (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Quaffel) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_a_goal_has_been_scored-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int only_need_one_square;
+	
+	only_need_one_square = hayir;
+	
+	for (unsigned int i=(m+1)/2; i<=m-2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			if (Field[0][i][j] == Jaeger_1) {
+				for (unsigned int h=1; h<=(m-3)/2; h++) {
+					for (unsigned int k=1; k<=n-2; k++) {
+						if (Field[0][h][k] == 1) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 1);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Jaeger_1);
+							only_need_one_square = evet;
+							break;
+						}
+					}
+					if (only_need_one_square == evet) {
+						only_need_one_square = hayir;	//there are maybe more than 1 Jaeger who can get back
+						break;
+					}
+				}
+			}
+		}
+	}
+	for (unsigned int i=1; i<=(m-3)/2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			if (Field[0][i][j] == Jaeger_2) {
+				for (unsigned int h=m-2; h>=(m+1)/2; h--) {
+					for (unsigned int k=1; k<=n-2; k++) {
+						if (Field[0][h][k] == 2) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 2);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Jaeger_1);
+							only_need_one_square = evet;
+							break;
+						}
+					}
+					if (only_need_one_square == evet) {
+						only_need_one_square = hayir;	//there are maybe more than 1 Jaeger who can get pulled back
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	only_need_one_square = hayir;
+	if (geben == 1) {	//where to put the Quaffel (look at the h-loop).
+		for (unsigned int h=m-1; h<=m-2; h++) {
+			for (unsigned int k=2; k<=n-1; k++) {	//don't want it at the wall.
+				if (Field[0][h][k] <= 2) {
+					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Quaffel);
+					Moc_Quaffel->i = h;
+					Moc_Quaffel->j = k;
+					only_need_one_square = evet;
+					break;
+				}
+			}
+			if (only_need_one_square == evet) {
+				break;
+			}
+		}
+	} else if (geben == 2) {
+		for (unsigned int h=2; h>=1; h--) {
+			for (unsigned int k=2; k<=n-1; k++) {
+				if (Field[0][h][k] <= 2) {
+					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Quaffel);
+					Moc_Quaffel->i = h;
+					Moc_Quaffel->j = k;
+					only_need_one_square = evet;
+					break;
+				}
+			}
+			if (only_need_one_square == evet) {
+				break;
+			}
+		}
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_a_goal_has_been_scored-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Realize_Moc_Quaffel_Throw_step (Spielfeld Field, unsigned int geben, Moveable_objects_condition* Moc_Quaffel, unsigned int Torring) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Realize_Moc_Quaffel_Throw_step-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int direction_choice, Jaeger, Hueter;
+	int i_difference, j_difference;
+	
+	direction_choice = undefined;
+	Jaeger = undefined;
+	Hueter = undefined;
+	i_difference = 0;
+	j_difference = 0;
+	
+	
+	if (geben == 2) {
+		Hueter = Hueter_1;
+		Jaeger = Jaeger_1;
+	} else if (geben == 1) {
+		Hueter = Hueter_2;
+		Jaeger = Jaeger_2;
+	}
+	i_difference = Moc_Quaffel->wanted_i - Moc_Quaffel->i;
+	j_difference = Moc_Quaffel->wanted_j - Moc_Quaffel->j;
+	
+	if (i_difference == 0) {
+		direction_choice = Vertikal;
+	} else if (j_difference == 0) {
+		direction_choice = Horizontal;
+	} else if (abs(i_difference) == abs(j_difference)) {
+		direction_choice = Changing;
+	} else {
+		while (((direction_choice != Horizontal)||(abs(i_difference) <= abs(j_difference)))&&((direction_choice != Vertikal)||(abs(i_difference) >= abs(j_difference)))&&((direction_choice != Changing)||((i_difference != 0)&&(j_difference != 0)))) {
+			
+		}
+		printf("	How do you want to throw? 	(target: [%u][%u]) \n", Moc_Quaffel->wanted_i, Moc_Quaffel->wanted_j);
+		if (abs(i_difference) > abs(j_difference)) {
+			printf("	%u: Horizontal \n", Horizontal);
+		}
+		if (abs(i_difference) < abs(j_difference)) {
+			printf("	%u: Vertikal \n", Vertikal);
+		}
+		if ((i_difference != 0)&&(j_difference != 0)) {
+			printf("	%u: diagonal \n", Changing);
+		}
+		
+		direction_choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+	}
+	
+	//it is important that Horizontal comes before Vertikal for the scoring of goals
+	
+	if ((direction_choice == Horizontal)||(direction_choice == Changing)) {
+		if (i_difference < 0) {	//have a look on the definition of the difference.
+			Moc_Quaffel->i -= 1;
+		} else if (i_difference > 0) {
+			Moc_Quaffel->i += 1;
+		}
+		
+		if ((Moc_Quaffel->i == Moc_Quaffel->wanted_i)&&(Moc_Quaffel->j == Moc_Quaffel->wanted_j)&&(Field[0][Moc_Quaffel->wanted_i][Moc_Quaffel->wanted_j] == Torring)) {	//only possible if there's no Vertikal anymore
+			
+			if (i_difference < 0) {	//have a look on the definition of the difference.
+				Moc_Quaffel->i += 1;
+			} else if (i_difference > 0) {
+				Moc_Quaffel->i -= 1;
+			}
+			Moc_Quaffel->wanted_i = Moc_Quaffel->i;	//break before reaching the Torring, because you hit it from the side.
+		}
+	}
+	if ((direction_choice == Vertikal)||(direction_choice == Changing)) {
+		if (j_difference < 0) {	//have a look on the definition of the difference.
+			Moc_Quaffel->i -= 1;
+		} else if (j_difference > 0) {
+			Moc_Quaffel->i += 1;
+		}
+	}
+	
+	for (unsigned int h=0; h<=2; h++) {
+		for (unsigned int k=0; k<=2; k++) {
+			if ((h+k)%2 == 1) {
+				if ((Field[0][Moc_Quaffel->i +h-1][Moc_Quaffel->j +k-1] == Jaeger)||(Field[0][Moc_Quaffel->i +h-1][Moc_Quaffel->j +k-1] == Hueter)) {
+					Moc_Quaffel->wanted_i = Moc_Quaffel->i;	//caught by the enemy
+					Moc_Quaffel->wanted_j = Moc_Quaffel->j;
+				}
+			}
+		}
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Realize_Moc_Quaffel_Throw_step-ending.ok \n");	//test
+	#endif
+	
+}
+
 void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int Team_member, unsigned int fly_distance, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, unsigned int* Points) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Move_of_a_Quidditch_player-beginning.ok \n");	//test
+	#endif
 	
 	unsigned int Zeile_alt, Spalte_alt, Zeile_neu, Spalte_neu;
 	unsigned int b, unutma_i, unutma_j;
@@ -15201,115 +15827,917 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 	
 	b = hayir;
 	
-	Zeile_alt = 0;
-	Spalte_alt = 0;
+	Zeile_alt = m;	//to get out of range, because zero would lead to "Sweet..."
+	Spalte_alt = n;
 
 	Zeile_neu = 0;
 	Spalte_neu = 0;
 
-	while ((Zeile_alt > m-2)||(Spalte_alt > n-2)||(Field[0][Zeile_alt][Spalte_alt] != Team_member)) {
-		printf(" The position of the Quidditch-player ?\n");
-		printf(" alte Zeile: \n alte Spalte: \n");
+	while (((Zeile_alt > m-2)||(Spalte_alt > n-2)||(Field[0][Zeile_alt][Spalte_alt] != Team_member))&&((Spalte_alt != 0)||(Zeile_alt != 0))) {
+		printf("	The position of the Quidditch-player ?\n");
+		printf("	alte Zeile: \n	alte Spalte: \n");
 		
 		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
 		Zeile_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 		Spalte_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 	}
 	
-	printf(" The position of choice of the Quidditch-player ?\n");
-	printf(" neue Zeile: \n neue Spalte: \n");
-	
-	letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-	Zeile_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
-	Spalte_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
-	
-	for (unsigned int p=fly_distance; p>=1; p--) {
-		for (unsigned int i=0; i<=2; i++) {
-			for (unsigned int j=0; j<=2; j++) {
-				if ((Zeile_alt + p*(i-1) <= m-2)&&(Spalte_alt + p*(i-1) <= n-2)) {	//Stackoverflow solves the bottom-border
-					if ((Field[0][Zeile_alt + p*(i-1)][Spalte_alt + p*(j-1)] == geben)&&(Zeile_alt + p*(i-1) == Zeile_neu)&&(Spalte_alt + p*(j-1) == Spalte_neu)) {
-						b = evet;
-						unutma_i = i;
-						unutma_j = j;
-						break;	//The new position is valid and found.
+	if ((Spalte_alt == 0)&&(Zeile_alt == 0)) {
+		printf("	Sweet escape...\n");
+	} else {
+		printf("	The position of choice of the Quidditch-player ?\n");
+		printf("	neue Zeile: \n	neue Spalte: \n");
+		
+		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+		Zeile_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+		Spalte_neu = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
+		
+		for (unsigned int p=fly_distance; p>=1; p--) {
+			for (unsigned int i=0; i<=2; i++) {
+				for (unsigned int j=0; j<=2; j++) {
+					if ((Zeile_alt + p*i-p*1 <= m-2)&&(Spalte_alt + p*j-p*1 <= n-2)) {	//Stackoverflow solves the bottom-border
+						if ((Field[0][Zeile_alt + p*i-p*1][Spalte_alt + p*j-p] == geben)&&(Zeile_alt + p*i-p == Zeile_neu)&&(Spalte_alt + p*j-p == Spalte_neu)) {
+							b = evet;
+							unutma_i = i;
+							unutma_j = j;
+							break;	//The new position is valid and found.
+						}
 					}
+				}
+				if (b == evet) {	//shortcut
+					break;
 				}
 			}
 			if (b == evet) {	//shortcut
 				break;
 			}
 		}
-		if (b == evet) {	//shortcut
+		
+		if (b == hayir) {	//The wanted new position wasn't valid.
+			
+			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Points);	//try again at the very beginning.
+		} else {
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu, Team_member);
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_alt, Spalte_alt, geben);	//Changing of the positions
+			
+			b = 0;	//new usage of b
+			while ((Zeile_alt + b*(unutma_i-1) != Zeile_neu)||(Spalte_alt + b*(unutma_j-1) != Spalte_neu)) {	//"||(b <= fly_distance)" deleted, Schnatz/Quaffel-Regelungen beim Durchqueren/Mitnehmen.
+				if ((Team_member == Sucher_1)||(Team_member == Sucher_2)) {
+					if ((Zeile_alt + b*(unutma_i-1) == Moc_Schnatz->i)&&(Spalte_alt + b*(unutma_j-1) == Moc_Schnatz->j)) {
+						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Schnatz->i, Moc_Schnatz->j, 0);
+						Moc_Schnatz->i = 0;
+						Moc_Schnatz->j = 0;
+						*g = 0;
+						if (Team_member == Sucher_1) {	// Catch of the Schnatz.
+							Points[1] += 150;
+						} else if (Team_member == Sucher_2) {
+							Points[2] += 150;
+						}
+					}
+				} else if ((Team_member == Jaeger_1)||(Team_member == Hueter_1)||(Team_member == Jaeger_2)||(Team_member == Hueter_2)) {	//All Quaffel-carrying people.
+					for (unsigned int i=0; i<=2; i++) {
+						for (unsigned int j=0; j<=2; j++) {
+							if ((Zeile_alt-1+i + b*(unutma_i-1) == Moc_Quaffel->i)&&(Spalte_alt-1+j + b*(unutma_j-1) == Moc_Quaffel->j)&&((j%2 == 1)||(i%2 == 1))) {
+								//Near-by controlling is following:
+								if ((Field[0][Zeile_neu-1][Spalte_neu] == 0)||(Field[0][Zeile_neu-1][Spalte_neu] == geben)) {
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu-1, Spalte_neu, Quaffel);
+									Moc_Quaffel->i = Zeile_neu-1;
+									Moc_Quaffel->j = Spalte_neu;
+								} else if ((Field[0][Zeile_neu+1][Spalte_neu] == 0)||(Field[0][Zeile_neu+1][Spalte_neu] == geben)) {
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu+1, Spalte_neu, Quaffel);
+									Moc_Quaffel->i = Zeile_neu+1;
+									Moc_Quaffel->j = Spalte_neu;
+								} else if ((Field[0][Zeile_neu][Spalte_neu-1] == 0)||(Field[0][Zeile_neu][Spalte_neu-1] == geben)) {
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu-1, Quaffel);
+									Moc_Quaffel->i = Zeile_neu;
+									Moc_Quaffel->j = Spalte_neu-1;
+								} else if ((Field[0][Zeile_neu][Spalte_neu+1] == 0)||(Field[0][Zeile_neu][Spalte_neu+1] == geben)) {
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu+1, Quaffel);
+									Moc_Quaffel->i = Zeile_neu;
+									Moc_Quaffel->j = Spalte_neu+1;
+								}	//If no near-by-field is free (zero or in your possession with a normal square), you can't pick up the Quaffel.
+							}
+						}
+					}
+				}
+				b+=1;
+			}
+		}
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Move_of_a_Quidditch_player-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_Klatscher_movements (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Klatscher, Quidditch_setup* Qs) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_movements-beginning.ok \n");	//test
+	#endif
+	
+	for (unsigned int p=0; p<=1; p++) {
+		
+		#ifdef Quidditch_mistake_search
+		printf("	Klatscher[%u]: [%u][%u] \n", p, Moc_Klatscher[p].i, Moc_Klatscher[p].j);	//test
+		#endif
+	
+		Quidditch_Klatscher_target_search (Field, m, n, Moc_Klatscher, p);	//fill in wanted
+		
+		Moc_Klatscher[p].remaining_squares_to_move = Qs->Qoa->Klatscher_fly_distance;
+		
+		Quidditch_move_of_Klatscher (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, Qs);
+		
+		Moc_Klatscher[p].wanted_i = 0;
+		Moc_Klatscher[p].wanted_j = 0;
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_movements-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_move_of_Klatscher (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Klatscher, unsigned int p, Quidditch_setup* Qs) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_move_of_Klatscher-beginning.ok \n");	//test
+	#endif
+	
+	int i_difference, j_difference;
+	
+	i_difference = 0;
+	j_difference = 0;
+	
+	i_difference = Moc_Klatscher[p].wanted_i - Moc_Klatscher[p].i;
+	j_difference = Moc_Klatscher[p].wanted_j - Moc_Klatscher[p].j;
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Klatscher[%u]: [%u][%u] \n", p, Moc_Klatscher[p].i, Moc_Klatscher[p].j);	//test
+	#endif
+	
+	Quidditch_Klatscher_steps (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, i_difference, j_difference, Qs);
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_move_of_Klatscher-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Klatscher, unsigned int p, int i_difference, int j_difference, Quidditch_setup* Qs) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_steps-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int unutma_i, unutma_j;
+	
+	unutma_i = Moc_Klatscher[p].i;
+	unutma_j = Moc_Klatscher[p].j;
+	
+	//812
+	//703
+	//654
+	//this is the directed-table
+	
+	while (Moc_Klatscher[p].remaining_squares_to_move != 0) {	//the way of the Klatscher
+		
+		#ifdef Quidditch_mistake_search
+		printf("	Moc_Klatscher[%u].remaining_squares_to_move = %u \n", p, Moc_Klatscher[p].remaining_squares_to_move);	//test
+		#endif
+		
+		if (Moc_Klatscher[p].directed == 0) {
+			if (i_difference > 0) {
+				if (j_difference > 0) {
+					Moc_Klatscher[p].directed = 4;
+				} else if (j_difference < 0) {
+					Moc_Klatscher[p].directed = 6;
+				} else if (j_difference == 0) {
+					Moc_Klatscher[p].directed = 5;
+				}
+				Moc_Klatscher[p].remaining_squares_to_move -= 1;
+				
+			} else if (i_difference < 0) {
+				if (j_difference > 0) {
+					Moc_Klatscher[p].directed = 2;
+				} else if (j_difference < 0) {
+					Moc_Klatscher[p].directed = 8;
+				} else if (j_difference == 0) {
+					Moc_Klatscher[p].directed = 1;
+				}
+				Moc_Klatscher[p].remaining_squares_to_move -= 1;
+				
+			} else if (i_difference == 0) {
+				if (j_difference > 0) {
+					Moc_Klatscher[p].directed = 3;
+				} else if (j_difference < 0) {
+					Moc_Klatscher[p].directed = 7;
+				}
+				Moc_Klatscher[p].remaining_squares_to_move -= 1;
+				
+			}
+		}
+		
+		if (i_difference > 0) {
+			if (j_difference > 0) {
+				if (Moc_Klatscher[p].directed == 4) {
+					Moc_Klatscher[p].i += 1;
+					Moc_Klatscher[p].j += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 3)&&(j_difference > i_difference)) {
+					Moc_Klatscher[p].j += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 5)&&(i_difference > j_difference)) {
+					Moc_Klatscher[p].i += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 8)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 4;
+				}
+			} else if (j_difference < 0) {
+				if (Moc_Klatscher[p].directed == 6) {
+					Moc_Klatscher[p].i += 1;
+					Moc_Klatscher[p].j -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 7)&&(abs(j_difference) > i_difference)) {
+					Moc_Klatscher[p].j -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 5)&&(i_difference > abs(j_difference))) {
+					Moc_Klatscher[p].i += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 2)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 6;
+				}
+			} else if (j_difference == 0) {
+				if (Moc_Klatscher[p].directed == 5) {
+					Moc_Klatscher[p].i += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 1)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 5;
+				}
+			}
+		} else if (i_difference < 0) {
+			if (j_difference > 0) {
+				if (Moc_Klatscher[p].directed == 2) {
+					Moc_Klatscher[p].i -= 1;
+					Moc_Klatscher[p].j += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 3)&&(abs(j_difference) > abs(i_difference))) {
+					Moc_Klatscher[p].j += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 1)&&(abs(i_difference) > abs(j_difference))) {
+					Moc_Klatscher[p].i -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 6)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 2;
+				}
+			} else if (j_difference < 0) {
+				if (Moc_Klatscher[p].directed == 8) {
+					Moc_Klatscher[p].i -= 1;
+					Moc_Klatscher[p].j -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 7)&&(abs(j_difference) > abs(i_difference))) {
+					Moc_Klatscher[p].j -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else if ((Moc_Klatscher[p].directed == 1)&&(abs(i_difference) > abs(j_difference))) {
+					Moc_Klatscher[p].i -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 4)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 8;
+				}
+			} else if (j_difference == 0) {
+				if (Moc_Klatscher[p].directed == 1) {
+					Moc_Klatscher[p].i -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 5)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 1;
+				}
+			}
+		} else if (i_difference == 0) {
+			if (j_difference > 0) {
+				if (Moc_Klatscher[p].directed == 3) {
+					Moc_Klatscher[p].j += 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 7)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 3;
+				}
+			} else if (j_difference < 0) {
+				if (Moc_Klatscher[p].directed == 7) {
+					Moc_Klatscher[p].j -= 1;
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					
+				} else {
+					Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					if ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&(Moc_Klatscher[p].directed == 3)) {
+						Moc_Klatscher[p].remaining_squares_to_move -= 1;
+					}
+					Moc_Klatscher[p].directed = 7;
+				}
+			}
+		}
+	}
+	if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_1)&&(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_2)&&(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Klatscher)) {
+		if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Hueter_1)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Sucher_1)) {
+			Klatscher_hits_target (2, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n,  Moc_Klatscher, p, Qs);
+		} else if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Hueter_2)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Sucher_2)) {
+			Klatscher_hits_target (1, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n,  Moc_Klatscher, p, Qs);
+		} else if (Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Treiber_1) {
+			Treiber_hits_Klatscher (1, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, Qs);
+		} else if (Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Treiber_2) {
+			Treiber_hits_Klatscher (2, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, Qs);
+		}
+		if ((Field[0][unutma_i][unutma_j] == Treiber_1)||(Field[0][unutma_i][unutma_j] == Treiber_2)) {
+			while (Field[0][unutma_i][unutma_j] > number_of_players) {
+				unutma_i = Zufall (1, m-2);
+				unutma_j = Zufall (1, n-2);
+			}
+		}
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, unutma_i, unutma_j, Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j]);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Klatscher[p].i, Moc_Klatscher[p].j, Klatscher);
+		
+	} else { //you can't push Torringe and Klatscher away.
+		if ((Field[0][unutma_i][unutma_j] == Treiber_1)||(Field[0][unutma_i][unutma_j] == Treiber_2)) {
+			while (Field[0][unutma_i][unutma_j] > number_of_players) {
+				unutma_i = Zufall (1, m-2);
+				unutma_j = Zufall (1, n-2);
+			}
+		}
+		Moc_Klatscher[p].i = unutma_i;
+		Moc_Klatscher[p].j = unutma_j;
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_steps-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Klatscher_hits_target (unsigned int whose_turn, Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Klatscher, unsigned int p, Quidditch_setup* Qs) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Klatscher_hits_target-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int direction_choice;
+	
+	unsigned int ** allowed_directions;
+	allowed_directions = unsigned_int_2dim_Vektor_Create (9, 3);
+	
+	direction_choice = 100;	//higher than 8
+	for (unsigned int q=0; q<=8; q++) {
+		allowed_directions[q][0] = hayir;
+	}
+	
+	printf("	Player %u, a Klatscher hits the enemy at [%u][%u]. \n", whose_turn, Moc_Klatscher[p].i, Moc_Klatscher[p].j);
+	printf("	In which direction do you want to push the enemy? \n");
+	Klatscher_hit_allowed_directions (whose_turn, Field, m, n, Moc_Klatscher, p, allowed_directions);
+	if (allowed_directions[0][0] == evet) {
+		printf("	0: Change of positions \n");
+	}
+	if (allowed_directions[1][0] == evet) {
+		printf("	1: Top \n");
+	}
+	if (allowed_directions[2][0] == evet) {
+		printf("	2: Top & Right \n");
+	}
+	if (allowed_directions[3][0] == evet) {
+		printf("	3: Right \n");
+	}
+	if (allowed_directions[4][0] == evet) {
+		printf("	4: Bottom & Right \n");
+	}
+	if (allowed_directions[5][0] == evet) {
+		printf("	5: Bottom \n");
+	}
+	if (allowed_directions[6][0] == evet) {
+		printf("	6: Bottom & Left \n");
+	}
+	if (allowed_directions[7][0] == evet) {
+		printf("	7: Left \n");
+	}
+	if (allowed_directions[8][0] == evet) {
+		printf("	8: Top & Left \n");
+	}
+	
+	while ((direction_choice > 8) || (allowed_directions[direction_choice][0] != evet)) {
+		direction_choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+	}
+	if ((allowed_directions[direction_choice][1] != 0)&&(allowed_directions[direction_choice][2] != 0)) {
+		
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, allowed_directions[direction_choice][1], allowed_directions[direction_choice][2], Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j]);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Klatscher[p].i, Moc_Klatscher[p].j, 0);
+	}
+	
+	Qs->Points[0] += 1;
+	
+	unsigned_int_2dim_Vektor_Destroy (allowed_directions, 9);
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Klatscher_hits_target-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Treiber_hits_Klatscher (unsigned int whose_turn, Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Klatscher, unsigned int p, Quidditch_setup* Qs) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Treiber_hits_Klatscher-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int allowed_directions[9], direction_choice, hit_length;
+	int i_difference, j_difference;
+	
+	i_difference = 0;
+	j_difference = 0;
+	
+	hit_length = 0;
+	direction_choice = 0;
+	for (unsigned int q=0; q<=8; q++) {
+		allowed_directions[q] = evet;
+	}
+	
+	printf("	Player %u, a Klatscher hits your Treiber at [%u][%u]. \n", whose_turn, Moc_Klatscher[p].i, Moc_Klatscher[p].j);
+	printf("	In which direction do you want to hit the Klatscher? \n");
+	
+	if (Moc_Klatscher[p].i == 1) {
+		allowed_directions[8] = hayir;
+		allowed_directions[1] = hayir;
+		allowed_directions[2] = hayir;
+	} else if (Moc_Klatscher[p].i == m-2) {
+		allowed_directions[4] = hayir;
+		allowed_directions[5] = hayir;
+		allowed_directions[6] = hayir;
+	}
+	if (Moc_Klatscher[p].j == 1) {
+		allowed_directions[6] = hayir;
+		allowed_directions[7] = hayir;
+		allowed_directions[8] = hayir;
+	} else if (Moc_Klatscher[p].j == n-2) {
+		allowed_directions[2] = hayir;
+		allowed_directions[3] = hayir;
+		allowed_directions[4] = hayir;
+	}
+	
+	
+	while ((direction_choice == 0) || (direction_choice > 8) || (allowed_directions[direction_choice] != evet)) {
+		
+		if (allowed_directions[1] == evet) {
+			printf("	1: Top \n");
+		}
+		if (allowed_directions[2] == evet) {
+			printf("	2: Top & Right \n");
+		}
+		if (allowed_directions[3] == evet) {
+			printf("	3: Right \n");
+		}
+		if (allowed_directions[4] == evet) {
+			printf("	4: Bottom & Right \n");
+		}
+		if (allowed_directions[5] == evet) {
+			printf("	5: Bottom \n");
+		}
+		if (allowed_directions[6] == evet) {
+			printf("	6: Bottom & Left \n");
+		}
+		if (allowed_directions[7] == evet) {
+			printf("	7: Left \n");
+		}
+		if (allowed_directions[8] == evet) {
+			printf("	8: Top & Left \n");
+		}
+		direction_choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+	}
+	while ((hit_length == 0)||(hit_length > Qs->Qta[whose_turn].Treiber_hit_distance)) {
+		printf("	How many squares should been taken? 	(1 - %u)\n", Qs->Qta[whose_turn].Treiber_hit_distance);
+		hit_length = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+	}
+	
+	Moc_Klatscher[p].directed = direction_choice;
+	Moc_Klatscher[p].remaining_squares_to_move = hit_length;
+	for (unsigned int q=1; q<=hit_length; q++) {
+		if (direction_choice % 8 <= 2) {
+			i_difference -= 1;
+		} else if ((direction_choice >= 4)&&(direction_choice <= 6)) {
+			i_difference += 1;
+		}
+		if (direction_choice % 9 >= 6) {
+			j_difference -= 1;
+		} else if ((direction_choice >= 2)&&(direction_choice <= 4)) {
+			j_difference += 1;
+		}
+	}
+	
+	Quidditch_Klatscher_steps (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, i_difference, j_difference, Qs);
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Treiber_hits_Klatscher-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Klatscher_hit_allowed_directions (unsigned int whose_turn, Spielfeld Field, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Klatscher, unsigned int p, unsigned int** allowed_directions) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Klatscher_hit_allowed_directions-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int h, k;
+	
+	h = 0;
+	k = 0;
+	allowed_directions[0][0] = evet;
+	allowed_directions[0][1] = 0;
+	allowed_directions[0][2] = 0;
+	
+	for (unsigned int q=1; q<=8; q++) {
+		h = Moc_Klatscher[p].i;
+		k = Moc_Klatscher[p].j;
+		while ((h != 0)&&(k != 0)&&(h <= m-2)&&(k <= n-2)) {
+			if (Field[0][h][k] == (whose_turn%2)+1) {	//search for owner-square
+				allowed_directions[q][0] = evet;
+				allowed_directions[q][1] = h;
+				allowed_directions[q][2] = k;
+				break;
+			}
+			
+			if (q % 8 <= 2) {
+				h -= 1;
+			} else if ((q >= 4)&&(q <= 6)) {
+				h += 1;
+			}
+			if (q % 9 >= 6) {
+				k -= 1;
+			} else if ((q >= 2)&&(q <= 4)) {
+				k += 1;
+			}
+		}
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Klatscher_hit_allowed_directions-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Klatscher, unsigned int p) {	//fix it, go on
+
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_target_search-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int break_up, q, unutma_direction;
+	
+	break_up = hayir;
+	q = 1;
+	unutma_direction = hayir;
+	
+	if (Moc_Klatscher[p].directed == 0) {
+		Moc_Klatscher[p].directed = Zufall (1, 8);
+		unutma_direction = evet;
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Klatscher[%u]: [%u][%u] \n", p, Moc_Klatscher[p].i, Moc_Klatscher[p].j);	//test
+	printf("	Klatscher[%u].directed: %u \n", p, Moc_Klatscher[p].directed);	//test
+	#endif
+	
+	while ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Jaeger_1)&&(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Jaeger_2)&&(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Hueter_1)&&(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Hueter_2)&&(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Treiber_1)&&(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Treiber_2)&&(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Sucher_1)&&(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] != Sucher_2)) {
+		
+		if (Moc_Klatscher[p].directed == 1) {
+			for (unsigned int h=0; h<=2*q; h++) {
+				for (unsigned int k=2*q+1; k>0; k--) {
+					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		} else if (Moc_Klatscher[p].directed == 2) {
+			for (unsigned int k=2*q+1; k>0; k--) {
+				for (unsigned int h=0; h<=2*q; h++) {
+					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		} else if (Moc_Klatscher[p].directed == 3) {
+			for (unsigned int k=2*q+1; k>0; k--) {
+				for (unsigned int h=2*q+1; h>0; h--) {
+					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		} else if (Moc_Klatscher[p].directed == 4) {
+			for (unsigned int h=2*q+1; h>0; h--) {
+				for (unsigned int k=2*q+1; k>0; k--) {
+					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		} else if (Moc_Klatscher[p].directed == 5) {
+			for (unsigned int h=2*q+1; h>0; h--) {
+				for (unsigned int k=0; k<=2*q; k++) {
+					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		} else if (Moc_Klatscher[p].directed == 6) {
+			for (unsigned int k=0; k<=2*q; k++) {
+				for (unsigned int h=2*q+1; h>0; h--) {
+					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		} else if (Moc_Klatscher[p].directed == 7) {
+			for (unsigned int k=0; k<=2*q; k++) {
+				for (unsigned int h=0; h<=2*q; h++) {
+					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		} else if (Moc_Klatscher[p].directed == 8) {
+			for (unsigned int h=0; h<=2*q; h++) {
+				for (unsigned int k=0; k<=2*q; k++) {
+					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
+							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
+								break_up = evet;
+								break;
+							}
+					}
+				}
+				if (break_up == evet) {
+					break;
+				}
+			}
+		}
+		
+		q += 1;
+	}
+	
+	if (unutma_direction == evet) {
+		Moc_Klatscher[p].directed = 0;
+	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Klatscher-Target: [%u][%u] \n", Moc_Klatscher[p].wanted_i, Moc_Klatscher[p].wanted_j);	//test
+	#endif
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Klatscher_target_search-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_Schnatz_movements (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Schnatz, Quidditch_setup* Qs, unsigned int use_number) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Schnatz_movements-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int a_random_number, short_cut;
+	
+	a_random_number = undefined;
+	short_cut = hayir;
+	
+	if (Moc_Schnatz->directed == hayir) {	//not on the field.
+		a_random_number = Zufall (1, (Qs->Qoa->Schnatz_appearence_factor)%10);
+		if (a_random_number <= (Qs->Qoa->Schnatz_appearence_factor)/10) {	//Appearence
+			if (use_number%2 == 0) {
+				for (unsigned int h=1; h<=m-2; h++) {
+					for (unsigned int k=1; k<=n-2; k++) {
+						if (Field[0][h][k] == Klatscher) {
+							Moc_Schnatz->i = h;
+							Moc_Schnatz->j = k;	//The Klatscher's position is imitating a Schnatz-position.
+							Moc_Schnatz->remaining_squares_to_move = 2* Qs->Qoa->Schnatz_fly_distance;
+							Quidditch_move_of_Schnatz (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz);
+						}
+						short_cut = evet;
+						break;
+					}
+					if (short_cut == evet) {
+						break;
+					}
+				}
+			} else if (use_number%2 == 1) {
+				for (unsigned int h=m-2; h>0; h--) {
+					for (unsigned int k=n-2; k>0; k--) {
+						if (Field[0][h][k] == Klatscher) {
+							Moc_Schnatz->i = h;
+							Moc_Schnatz->j = k;	//The Klatscher's position is imitating a Schnatz-position.
+							Moc_Schnatz->remaining_squares_to_move = 2* Qs->Qoa->Schnatz_fly_distance;
+							Quidditch_move_of_Schnatz (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz);
+						}
+						short_cut = evet;
+						break;
+					}
+					if (short_cut == evet) {
+						break;
+					}
+				}
+			}
+			Moc_Schnatz->directed = evet;
+		}
+	} else if (Moc_Schnatz->directed == evet) {	//on the field.
+		a_random_number = Zufall (1, (Qs->Qoa->Schnatz_disappearence_factor)%10);
+		if (a_random_number <= (Qs->Qoa->Schnatz_disappearence_factor)/10) {	//Dis-Appearence
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Schnatz->i, Moc_Schnatz->j, 0);
+			Moc_Schnatz->directed = hayir;
+			Moc_Schnatz->i = 0;
+			Moc_Schnatz->j = 0;
+		} else {
+			Moc_Schnatz->remaining_squares_to_move = Qs->Qoa->Schnatz_fly_distance;
+			Quidditch_move_of_Schnatz (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz);
+		}
+	}
+
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_Schnatz_movements-ending.ok \n");	//test
+	#endif
+	
+}
+
+void Quidditch_move_of_Schnatz (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, Moveable_objects_condition* Moc_Schnatz) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_move_of_Schnatz-beginning.ok \n");	//test
+	#endif
+	
+	unsigned int direction_choice, exit_counter, remember_steps_amount, unutma_i, unutma_j;
+	
+	unutma_i = Moc_Schnatz->i;
+	unutma_j = Moc_Schnatz->j;
+	direction_choice = undefined;
+	exit_counter = 0;
+	remember_steps_amount = Moc_Schnatz->remaining_squares_to_move;
+	
+	while (Moc_Schnatz->remaining_squares_to_move != 0) {
+		direction_choice = Zufall (0, 9);
+		dokuz_direction_interpretation_single_step (Moc_Schnatz, direction_choice);
+		Moc_Schnatz->remaining_squares_to_move -= 1;
+		if ((Moc_Schnatz->remaining_squares_to_move == 0)&&((Moc_Schnatz->i > m-2)||(Moc_Schnatz->i == 0)||(Moc_Schnatz->j > n-2)||(Moc_Schnatz->j == 0)||(Field[0][Moc_Schnatz->i][Moc_Schnatz->j] > number_of_players))) {
+			Moc_Schnatz->remaining_squares_to_move = remember_steps_amount;
+			Moc_Schnatz->i = unutma_i;
+			Moc_Schnatz->j = unutma_j;
+		}
+		exit_counter += 1;
+		if (exit_counter >= 1000) {
 			break;
 		}
 	}
 	
-	if (b == hayir) {	//The wanted new position wasn't valid.
-		Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Points);	//try again at the very beginning.
-	} else {
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu, Team_member);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_alt, Spalte_alt, geben);	//Changing of the positions
-		
-		b = 0;	//new usage of b
-		while ((Zeile_alt + b*(unutma_i-1) != Zeile_neu)||(Spalte_alt + b*(unutma_j-1) != Spalte_neu)) {	//"||(b <= fly_distance)" deleted, Schnatz/Quaffel-Regelungen beim Durchqueren/Mitnehmen
-			if ((Team_member == Sucher_1)||(Team_member == Sucher_2)) {
-				if ((Zeile_alt + b*(unutma_i-1) == Moc_Schnatz->i)&&(Spalte_alt + b*(unutma_j-1) == Moc_Schnatz->j)) {
-					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Schnatz->i, Moc_Schnatz->j, 0);
-					Moc_Schnatz->i = 0;
-					Moc_Schnatz->j = 0;
-					*g = 0;
-					if (Team_member == Sucher_1) {	// Catch of the Schnatz
-						Points[1] += 150;
-					} else if (Team_member == Sucher_2) {
-						Points[2] += 150;
-					}
-				}
-			} else if ((Team_member == Jaeger_1)||(Team_member == Hueter_1)||(Team_member == Jaeger_2)||(Team_member == Hueter_2)) {	//All Quaffel-carrying people
-				for (unsigned int i=0; i<=2; i++) {
-					for (unsigned int j=0; j<=2; j++) {
-						if ((Zeile_alt-1+i + b*(unutma_i-1) == Moc_Quaffel->i)&&(Spalte_alt-1+j + b*(unutma_j-1) == Moc_Quaffel->j)&&((j%2 == 1)||(i%2 == 1))) {
-							//Near-by controlling is following:
-							if ((Field[0][Zeile_neu-1][Spalte_neu] == 0)||(Field[0][Zeile_neu-1][Spalte_neu] == geben)) {
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu-1, Spalte_neu, Quaffel);
-								Moc_Quaffel->i = Zeile_neu-1;
-								Moc_Quaffel->j = Spalte_neu;
-							} else if ((Field[0][Zeile_neu+1][Spalte_neu] == 0)||(Field[0][Zeile_neu+1][Spalte_neu] == geben)) {
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu+1, Spalte_neu, Quaffel);
-								Moc_Quaffel->i = Zeile_neu+1;
-								Moc_Quaffel->j = Spalte_neu;
-							} else if ((Field[0][Zeile_neu][Spalte_neu-1] == 0)||(Field[0][Zeile_neu][Spalte_neu-1] == geben)) {
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu-1, Quaffel);
-								Moc_Quaffel->i = Zeile_neu;
-								Moc_Quaffel->j = Spalte_neu-1;
-							} else if ((Field[0][Zeile_neu][Spalte_neu+1] == 0)||(Field[0][Zeile_neu][Spalte_neu+1] == geben)) {
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu+1, Quaffel);
-								Moc_Quaffel->i = Zeile_neu;
-								Moc_Quaffel->j = Spalte_neu+1;
-							}	//If no near-by-field is free (zero or in your possesion with a normal square), you can't pick up the Quaffel.
-						}
-					}
-				}
-			}
-			b+=1;
+	set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, unutma_i, unutma_j, 0);	//The order of "set_.." is important for the cause, that the Schnatz' position stays the same
+	set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Schnatz->i, Moc_Schnatz->j, Schnatz);
+	
+	#ifdef Quidditch_mistake_search
+	printf("	Quidditch_move_of_Schnatz-ending.ok \n");	//test
+	#endif
+	
+}
+
+void dokuz_direction_interpretation_single_step (Moveable_objects_condition* Moc, unsigned int direction_choice) {
+	
+	#ifdef Quidditch_mistake_search
+	printf("	dokuz_direction_interpretation_single_step-beginning.ok \n");	//test
+	#endif
+	
+	if (direction_choice != 0) {
+		if (direction_choice % 8 <= 2) {
+			Moc->i -= 1;
+		} else if ((direction_choice >= 4)&&(direction_choice <= 6)) {
+			Moc->i += 1;
+		}
+		if (direction_choice % 9 >= 6) {
+			Moc->j -= 1;
+		} else if ((direction_choice >= 2)&&(direction_choice <= 4)) {
+			Moc->j += 1;
 		}
 	}
+	
+	#ifdef Quidditch_mistake_search
+	printf("	dokuz_direction_interpretation_single_step-ending.ok \n");	//test
+	#endif
 	
 }
 
 //Dynamic (gamemode_played)	, done		(just notes following)
-//Geschwindigkeit (vertikal, horizontal)
-//Beschleunigung (vertikal, horizontal)
+//Geschwindigkeit (Vertikal, Horizontal)
+//Beschleunigung (Vertikal, Horizontal)
 //range (distance:0-5 in Manhatten-Norm)	--> distance+1 = difference, normal:2
 //impact y=f(x), x distance, in beschleunigung(linear[f(x)=a*(range-x+1); a=1,2,3; x<=range], semi-square[f(x)=a*(range-x)^2 +1; a=1,2,3; x<=range], square[f(x)=a*(range-x+1)^2; a=1,2,3; x<=range]) normal:semi-square, a=1
 //Erdanziehung g linear auf Beschleunigung (-g = 0-5)		normal:1
-//crash mit Hindernis: Geschwindigkeit, Beschleunigung, Weg entgegengesetzt +1, mit der Bewegung Hindernis um 1 verschieben, Richtung des wegen zwischen vertikal-horizontal ändern
+//crash mit Hindernis: Geschwindigkeit, Beschleunigung, Weg entgegengesetzt +1, mit der Bewegung Hindernis um 1 verschieben, Richtung des wegen zwischen Vertikal-Horizontal ändern
 //crash mit solider Formation: (-1)* sofort auf 1.Beschleunigung(oder 2.Geschwindigkeit) statt Berechnung, -(restliche Wegstrecke+2) falls sgn ändert
 //Übertragung Beschleunigung-Geschwindigkeit?
-//Grundbetrag: vertikal: s=sgn(a)*a^2+v, v+=a, a+=g+y.		horizontal: s=sgn(a)*a^2+v, v+=a, a+=y.
+//Grundbetrag: Vertikal: s=sgn(a)*a^2+v, v+=a, a+=g+y.		Horizontal: s=sgn(a)*a^2+v, v+=a, a+=y.
 //Feintuning: Betrag von s reduzieren über: 1 Schritt gehen und von |s| abziehen, wenn sgn(v)!=sgn(y-g)!=sgn(a), dann |v|-1 bzw. |a|-1 am Ende, und |y|>|a|: |s|-|y-a| , wenn |s| null erreicht immer aufhören
 //Schrittweite = 1, s_ges = Abstand zur Grundlinie; Wenn a oder v =0 --> |a| = |v|, wenn beide null vorzeichenlos
 //s=10: 10	10	9	4	6	9	10	10														s=10:	10	10	9	4	8	4	3	3	3	2	3	7	3
@@ -15354,7 +16782,7 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 // local/global, only global
 
 // projections (option), done
-// after (number_of_players+1) turns, look at lines (vertikal/horizontal) and project parallel lines to it.
+// after (number_of_players+1) turns, look at lines (Vertikal/Horizontal) and project parallel lines to it.
 // Loss of intesity per line in percent, requested minimum? 0<L<1 given in per cent.
 
 // labyrinth (gamemode), frozen
@@ -15392,7 +16820,7 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 // cannot see anything of the enemies
 
 // roses (option), go on
-// if there are too many in the surrounding and a square dies, a rose is born an will rise up every time a square is dying in its surrounding the same way (difference)
+// if there are too many in the surrounding and a square dies, a rose is born an will rise up every time a square is dying in its surrounding the same way (according to the difference to the maximum)
 
 // Ptunoi (gamemode), go on
 // Possible to understand nothing of it.
@@ -15422,7 +16850,7 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 // every square gets a number, if you get a new square, it has to have another number then all near-by squares at this time.
 
 // Supernova (gamemode), go on
-// avoid the blackholes flying accross the field caused by gravity and pulling your squares and so on. Mass of square: 1. Mass of blackholes: 5. Fusion with blackhole(): Mass-Addition. timestep t = 1. Destroy on blackholes: reduce the mass with 1. Count all impacts and use it for new accelaration, add this value to the speed (t=1). After every round a timestep. Sort (binary) the speed according to length (sqrt(x*x+y*y)), most speed at first. Collosion: half of speed-difference plus and minus, after thet next square with highest speed.
+// avoid the blackholes flying accross the field caused by gravity and pulling your squares and so on. Mass of square: 1. Mass of blackholes: 5. Fusion with blackhole(): Mass-Addition. timestep t = 1. Destroy on blackholes: reduce the mass with 1. Count all impacts and use it for new accelaration, add this value to the speed (t=1). After every round a timestep. Sort (binary) the speed according to length (sqrt(x*x+y*y)), most speed at first. Collosion: half of speed-difference plus and minus, after that next square with highest speed.
 
 
 #endif
