@@ -1,13 +1,13 @@
 1.Gamemodes:
 	a) Add in enum (Invalid += 1)														-->Quidditch
 	b) Add in selection																	-->Quidditch
-	c) new structs/variables needed?													-->Qui
+	c) new structs/variables needed?													-->Quidditch
 	d) Create the Initialisierung														-->Quidditch
-	e) Create a start_normal															-->Qui
+	e) Create a start_normal															-->Quidditch
 	f) Complete show_field																-->Quidditch
 	g) Controll the actions (Plus, Minus, ...)											-->
 	h) Influence on evolution?															-->Quidditch
 	i) Go through realize_modifications (watch out for real==evet)						-->
 	j) reset_ges/who_is_out																-->
 	k) maybe special changes (certain colors, number_of_players, cards/tatics/random)	-->Quidditch
-	l) Add new functions																-->
+	l) Add new functions																-->Quiddi
