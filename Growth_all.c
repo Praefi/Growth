@@ -69,10 +69,6 @@ int main (void) {
 
 	unsigned int beginningmenu, gamemode_played;
 	
-	Quidditch_setup Qs;
-	Quidditch_team_abilities* Qta;
-	Quidditch_object_abilities* Qoa;
-	
 	//gamemode_played == Hunt, geben == 1: information_code: [0]=0, [1]=1, [2]=1, [3]=0
 
 	//Benutzbar, aber benutzt:	unsigned int:	number_[AOP]
@@ -93,23 +89,28 @@ int main (void) {
 
 	same = unsigned_int_Vektor_Create (NOSV);
 
-	Qta = Quidditch_team_abilities_Vektor_Create (7);	//Normal, Player 1, Player 2, Gryffindor, Hufflepuff, Ravenclaw, Slytherin
-	Qoa = Quidditch_object_abilities_Vektor_Create (1);
-	
-	Initialisierung_Qs (Qs, Qta, Qoa);
-	
 	//scanf("%u", &pause); //test
 	//printf("%u \n", same[0]);	//test
 	//printf ("	ok 3 \n");	//test
 
-	while (playtime != 0){		// Außenschleife für mehrere Spiele hintereinander
+	while (playtime != 0) {		// Außenschleife für mehrere Spiele hintereinander
 
 		unsigned int* level;	//für KI
 		unsigned int* position;		// "*" bezieht sich auf "position", nicht auf "unsigned int" !!!!
 	
+		Quidditch_setup* Qs;
+		Quidditch_team_abilities* Qta;
+		Quidditch_object_abilities* Qoa;
+	
 		//scanf("%u", &pause); //test
 		//printf ("	ok 3.1 \n");	//test
 
+		Qta = Quidditch_team_abilities_Vektor_Create (7);	//Normal, default_1, default_2, Gryffindor, Hufflepuff, Ravenclaw, Slytherin
+		Qoa = Quidditch_object_abilities_Vektor_Create (1);
+		Qs = Quidditch_setup_Vektor_Create (1);
+		
+		Initialisierung_Qoa (Qoa);
+		
 		level =  unsigned_int_Vektor_Create (AOP+1);
 
 		position = unsigned_int_Vektor_Create (2);
@@ -313,6 +314,9 @@ int main (void) {
 						printf("	%u. Gravity\n", oBack+1);
 						printf("	%u. Speed\n", oBack+2);
 						printf("	%u. Period\n", oBack+3);
+					} else if (gamemode_played == Quidditch) {
+						printf("	%u. Quidditch-object-abilities\n", oBack+1);
+						printf("	%u. Quidditch-team-abilities\n", oBack+2);	//go on
 					}
 
 					printf("\n");
@@ -327,10 +331,9 @@ int main (void) {
 						if (gamemode_played == Quidditch) {
 							printf("	Quidditch-Fields have static lengths.\n");
 						} else {
-							if ((gamemode_played == Hunt)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
-								printf("	This only works if the number of players is correct! \n");
-							}
-
+							
+							printf("	This only works if the number of players is correct! \n");
+							
 							m = get_m (gamemode_played, number_of_players);
 							n = get_n (gamemode_played, number_of_players);
 						}
@@ -509,7 +512,7 @@ int main (void) {
 												printf("	%u = Player 8, (HH) \n", y);
 											} else if (gamemode_played == Arena) {
 												printf("	%u = Player 8. \n", y);
-											} else if ((gamemode_played == Ulcer)||(gamemode_played == Dynamic)||(gamemode_played == Survive)) {
+											} else {
 												printf("	%u = Player 8, (88) \n", y);
 											}
 										} else if (Row[y] == 8){
@@ -528,7 +531,7 @@ int main (void) {
 						}
 					}
 
-					if (beginningmenu == oLimits){
+					if (beginningmenu == oLimits){	//checklist
 						if ((gamemode_played == Classic)||(gamemode_played == Collect)) {
 							printf("	Change limits.new: 1 \n	Change limits.at_all: 2 \n	Change both: 3 \n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -728,7 +731,7 @@ int main (void) {
 						}
 					}
 
-					if (beginningmenu == oTime) {
+					if (beginningmenu == oTime) {	//checklist
 						if (ttt != 0) {
 							ttt = 0;
 							warning_system = 0;
@@ -1187,7 +1190,52 @@ int main (void) {
 						}
 
 					}
-
+					
+					if ((beginningmenu == oBack+1)&&(gamemode_played == Quidditch)) {
+						printf("	Klatscher-fly-distance:		(normal: 3) \n");
+						Qoa->Klatscher_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+						
+						printf("	Schnatz-fly-distance:		(normal: 3) \n");
+						Qoa->Schnatz_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+						
+						while ((Qoa->Schnatz_appearence_factor%10 < Qoa->Schnatz_appearence_factor/10)||(Qoa->Schnatz_appearence_factor == 0)) {
+							printf("	Schnatz-appearence-factor:		(normal: 13 [read as 1/3]) \n");
+							Qoa->Schnatz_appearence_factor = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+						}
+						
+						while ((Qoa->Schnatz_disappearence_factor%10 < Qoa->Schnatz_disappearence_factor/10)||(Qoa->Schnatz_disappearence_factor == 0)) {
+							printf("	Schnatz-disappearence-factor:		(normal: 23 [read as 2/3]) \n");
+							Qoa->Schnatz_disappearence_factor = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+						}
+					}
+					
+					if ((beginningmenu == oBack+2)&&(gamemode_played == Quidditch)) {
+						for (unsigned int p=1; p<=number_of_players; p++) {
+							printf("	Player %u, please create a selection of Team-abilities, everyone wil be able to take it. \n", p);
+							
+							printf("	Jaeger-fly-distance:		(normal: 3) \n");
+							Qta[p].Jaeger_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+							
+							printf("	Jaeger-throw-distance:		(normal: 3) \n");
+							Qta[p].Jaeger_throw_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+							
+							printf("	Hueter-fly-distance:		(normal: 2) \n");
+							Qta[p].Hueter_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+							
+							printf("	Hueter-throw-distance:		(normal: 3) \n");
+							Qta[p].Hueter_throw_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+							
+							printf("	Treiber-fly-distance:		(normal: 3) \n");
+							Qta[p].Treiber_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+							
+							printf("	Treiber-hit-distance:		(normal: 3) \n");
+							Qta[p].Treiber_hit_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+							
+							printf("	Sucher-fly-distance:		(normal: 3) \n");
+							Qta[p].Sucher_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+						}
+					}
+					
 					if (beginningmenu == KI) {
 						anything = 0;
 						while (anything == 0) {
@@ -1943,10 +1991,14 @@ int main (void) {
 
 		}
 		
-		if ((gamemode_played == Quidditch)&&(Growth_players[0].color == 0)) {
+		if ((same[5] == Quidditch)&&(Growth_players[0].color == 0)) {	//we need house-colors
 			same[49] = 1;
 			same[51] = cLIGHT_MAGENTA; //lightmagenta
 			same[52] = cYELLOW; //yellow
+		}
+		
+		if (same[5] == Quidditch) {
+			Initialisierung_Qs (Qs, Qta, Qoa, Growth_players);
 		}
 		
 		// for (unsigned int p=0; p<=NOSV-1; p++) {
@@ -1957,7 +2009,11 @@ int main (void) {
 
 		//	same, Field, position, AOP,   real (evet or hayir) for while{}
 		playing_a_game (same, position, AOP, time3, &playtime, NOSV, Qs);
-
+		
+		Quidditch_team_abilities_Vektor_Destroy (Qta);
+		Quidditch_object_abilities_Vektor_Destroy (Qoa);
+		Quidditch_setup_Vektor_Destroy (Qs);	//Problem with Qoa_Destroying?
+		
 	}
 
 	unsigned_int_Vektor_Destroy (same);
