@@ -17,11 +17,15 @@ unsigned int letters_2;
 unsigned int Liz_max;
 unsigned int anything; //Die Variable für alles Mögliche
 
+time_t time_of_the_start;
+
 int Vektor_counter;
 int Spielfeld_counter;
 
 int main (void) {
 
+	time_of_the_start = time(NULL);
+	
 	//printf ("	ok 1 \n");	//test
 	//Spielfeld test_;	//test
 	//printf ("	ok 1.1 \n");	//test
@@ -1299,7 +1303,7 @@ int main (void) {
 									number_of_players = get_unsigned_numeric_input_with_not_more_than_1_letter ();	//watch out, if AOP gets >= 10
 								}
 							}
-							if (gamemode_played == Classic) {
+							if (gamemode_played == Classic) {	//checklist
 								if (number_of_players == 2) {
 									m = Initialisierung_m (gamemode_played);
 									n = Initialisierung_n (gamemode_played);
@@ -1707,6 +1711,10 @@ int main (void) {
 						printf("	Period: %u \n", information_code[3]);
 					} else if (gamemode_played == Quidditch) {
 						printf(" Quidditch \n ");
+						printf("	Klatscher-fly-distance:	%u \n", Qoa->Klatscher_fly_distance);
+						printf("	Schnatz-fly-distance:	%u \n", Qoa->Schnatz_fly_distance);
+						printf("	Schnatz-appearence-factor:	%u \n", Qoa->Schnatz_appearence_factor);
+						printf("	Schnatz-disappearence-factor:	%u \n", Qoa->Schnatz_disappearence_factor);
 					}
 					printf("	Number of players: %u \n", number_of_players);
 					printf(" \n ");
