@@ -14,13 +14,15 @@
 
 // #define VERBOSE
 // #define Contact_mistake_search
-#define Quidditch_mistake_search
+// #define Quidditch_mistake_search
 
 extern unsigned int letters_4;
 extern unsigned int letters_2;
 
 extern unsigned int Liz_max;
 extern unsigned int anything; //Die Variable für alles Mögliche
+
+time_t time_of_the_start;
 
 extern int Vektor_counter;
 extern int Spielfeld_counter;
@@ -2668,7 +2670,7 @@ void show_field (unsigned int number_of_players, unsigned int* level, Spielfeld 
 void Plus (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int limits_at_all, unsigned int gamemode_played, unsigned int* information_code, unsigned int number_of_players, Growth_Player* Growth_players, Special_Fields Opague_o, Special_Fields Allocation_o){
 	unsigned int a, b;
 	unsigned int Zeile, Spalte;
-
+	
 	a = 0;
 	b = 0;
 	Zeile = 0;
@@ -3048,7 +3050,7 @@ void Move (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsig
 	}
 }
 
-void Change (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode_played, unsigned int* information_code, Growth_Player* Growth_players, Special_Fields Opague_o, unsigned int* position, Special_Fields Allocation_o, unsigned int number_of_players){
+void Change (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode_played, unsigned int* information_code, Growth_Player* Growth_players, Special_Fields Opague_o, unsigned int* position, Special_Fields Allocation_o, unsigned int number_of_players){	//checklist
 	unsigned int geben_change, a, b;
 	unsigned int eigene_Zeile, fremde_Zeile, eigene_Spalte, fremde_Spalte, heart_Zeile, heart_Spalte, normal_Zeile, normal_Spalte;
 
@@ -3299,6 +3301,29 @@ void Change (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, uns
 						for (unsigned int o=k-1; o<=k+1; o++){
 							if ((u+o)%2 == (h+k+1)%2) {
 								if ((Field[0][u][o] != 0)&&(Field[0][u][o] != geben)&&(Field[0][u][o] != Wall)&&(Field[0][u][o] != Wall_at_the_end)){
+									b+=1;
+								}
+							}
+						}
+					}
+
+					if (b >= 2) {
+						break;
+					}
+				}
+			}
+			if (b >= 2) {
+				break;
+			}
+		}
+	} else if (gamemode_played == Quidditch) {
+		for (unsigned int h=1; h<=(m-2); h+=1){
+			for (unsigned int k=1; k<=(n-2); k+=1){
+				if (Field[0][h][k] == geben){
+					for (unsigned int u=h-1; u<=h+1; u++){
+						for (unsigned int o=k-1; o<=k+1; o++){
+							if ((u+o)%2 == (h+k+1)%2) {
+								if ((Field[0][u][o] != 0)&&(Field[0][u][o] != geben)&&(Field[0][u][o] != Torring_1)&&(Field[0][u][o] != Torring_2)){
 									b+=1;
 								}
 							}
@@ -3575,7 +3600,8 @@ void Change (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, uns
 	}
 }
 
-void Destroy (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode_played, unsigned int* information_code, Growth_Player* Growth_players, Special_Fields Opague_o, Special_Fields Allocation_o, unsigned int number_of_players){
+void Destroy (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int gamemode_played, unsigned int* information_code, Growth_Player* Growth_players, Special_Fields Opague_o, Special_Fields Allocation_o, unsigned int number_of_players){	//checklist
+	
 	unsigned int geben_destroy, a, b;
 	unsigned int fremde_Zeile, fremde_Spalte;
 
@@ -3710,6 +3736,22 @@ void Destroy (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, un
 							for (unsigned int o=(k-1); o<=(k+1); o+=1){
 								if ((u+o)%2 == (h+k+1)%2) {
 									if ((Field[0][u][o] != geben)&&(Field[0][u][o] != 0)&&(Field[0][u][o] != Dynamic_ball)){
+										b+=1;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} else if (gamemode_played == Quidditch) {
+			for (unsigned int h=1; h<=(m-2); h+=1){
+				for (unsigned int k=1; k<=(n-2); k+=1){
+					if (Field[0][h][k] == geben){
+						for (unsigned int u=(h-1); u<=(h+1); u+=1){
+							for (unsigned int o=(k-1); o<=(k+1); o+=1){
+								if ((u+o)%2 == (h+k+1)%2) {
+									if (Field[0][u][o] == geben%2 +1){
 										b+=1;
 									}
 								}
@@ -3890,6 +3932,27 @@ void Destroy (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, un
 								for (unsigned int o=(k-1); o<=(k+1); o+=1){
 									if ((u+o)%2 == (h+k+1)%2) {
 										if ((Field[0][u][o] != geben)&&(Field[0][u][o] != 0)&&(Field[0][u][o] != Dynamic_ball)){
+											b = 1;
+											set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, u, o, 0);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}
+					if (b == 1){
+						break;
+					}
+				}
+			} else if (gamemode_played == Quidditch) {
+				for (unsigned int h=1; h<=(m-2); h+=1){
+					for (unsigned int k=1; k<=(n-2); k+=1){
+						if (Field[0][h][k] == geben){
+							for (unsigned int u=(h-1); u<=(h+1); u+=1){
+								for (unsigned int o=(k-1); o<=(k+1); o+=1){
+									if ((u+o)%2 == (h+k+1)%2) {
+										if (Field[0][u][o] == geben%2 +1){
 											b = 1;
 											set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, u, o, 0);
 											break;
@@ -4113,7 +4176,7 @@ void Boost (Spielfeld Spiel, unsigned int geben, Spielfeld Field, unsigned int m
 
 }
 
-void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Evolution evolution, Limits limits, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position, unsigned int gamemode_played, unsigned int number_of_players, unsigned int rain, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int* level, unsigned int real){
+void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int count_new, unsigned int m, unsigned int n, Evolution evolution, Limits limits, unsigned int zeitgewinner, Spielfeld Field, unsigned int w, unsigned int d, unsigned int e, unsigned int geben, unsigned int* position, unsigned int gamemode_played, unsigned int number_of_players, unsigned int rain, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int* level, unsigned int real){	//checklist
 	unsigned int Having_too_much_Wert, a, b, c, f, ind, ober, heart_i, heart_j, keep, daha_kisa;
 	Spielfeld Having_too_much_Feld;
 
@@ -4930,10 +4993,27 @@ unsigned int random_number (Num_num num, unsigned int rmv_use_number, unsigned i
 }
 
 unsigned int Zufall (unsigned int start, unsigned int amount) {
-	unsigned int number;
-	number = 0;
+	unsigned int number, counter, scout;
+	time_t time_of_calling_Zufall;
+	double time_difference;
 	
-	number = (rand()%amount)+start;
+	number = 0;
+	counter = 0;
+	scout = 1;
+	time_of_calling_Zufall = time(NULL);
+	time_difference = difftime(time_of_calling_Zufall, time_of_the_start);
+	
+	while (time_difference >= 1.0) {
+		if (time_difference >= 1.0*scout) {
+			time_difference -= 1.0*scout;
+			counter += scout;
+			scout *= 10;
+		} else {
+			scout = scout/10;
+		}
+	}
+	
+	number = ((counter + rand())%amount)+start;
 	
 	return number;
 }
@@ -5941,7 +6021,7 @@ void Initialisierung_Qs (Quidditch_setup* Qs, Quidditch_team_abilities* Qta, Qui
 	}
 	
 	for (unsigned int q=0; q<=2; q++) {	//the right modification of the abilities, reducing from 1+2+4 to 1+2 ("1+" because of the standard-setting, "2+" because of the defaults).
-		Qs->Qta[q] = Qta[color_translation[p]];	//that means: no copy.
+		Qs->Qta[q] = Qta[color_translation[q]];	//that means: no copy.
 		Qs->Points[q] = 0;
 	}
 	Qs->Qoa = Qoa;
@@ -9452,7 +9532,7 @@ void turn_of_KI_random (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Qua
 	#endif
 }
 
-void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
+void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {	//checklist
 
 	unsigned int w, d, e, how_many_ways_of_keeping;
 	Spielfeld Plus_rememory;
@@ -9473,7 +9553,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 		how_many_ways_of_keeping = 2;
 	} else if ((gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Fall)||(gamemode_played == Collect)||(gamemode_played == Classic)) {
 		how_many_ways_of_keeping = 3;
-	} else if (gamemode_played == Contact) {
+	} else if ((gamemode_played == Contact)||(gamemode_played == Quidditch)) {
 		how_many_ways_of_keeping = 5;
 	}
 
@@ -9747,7 +9827,7 @@ void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Mo
 			how_many_ways_of_keeping = 2;
 		} else if ((gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Fall)||(gamemode_played == Collect)||(gamemode_played == Classic)) {
 			how_many_ways_of_keeping = 3;
-		} else if (gamemode_played == Contact) {
+		} else if ((gamemode_played == Contact)||(gamemode_played == Quidditch)) {
 			how_many_ways_of_keeping = 5;
 		}
 
@@ -10803,7 +10883,7 @@ void decision_max_maker (unsigned int gamemode_played, unsigned int geben, unsig
 		*decision_max = 2;
 	} else if ((gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Fall)||(gamemode_played == Collect)) {
 		*decision_max = 3;
-	} else if (gamemode_played == Contact) {
+	} else if ((gamemode_played == Contact)||(gamemode_played == Quidditch)) {
 		*decision_max = 5;
 	} else if (gamemode_played == Classic) {
 		*decision_max = 3;
@@ -15002,8 +15082,8 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 	// printf("	realize_modifications ok.15\n ");	//test
 	if (real == evet) {
-		reset_of_ges (ges, number_of_players);
-		if (gamemode_played == Rain) {	//checklist
+		reset_of_ges (ges, number_of_players);	//checklist
+		if (gamemode_played == Rain) {
 			ges_counter (Field, m, n, ges, number_of_players);
 
 			for (unsigned int p=1; p<=number_of_players; p++) {
@@ -15302,7 +15382,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 	
 	// /*
 	if (gamemode_played == Quidditch) {	//Selected actions/movements by teammembers
-		Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
+		Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry. (Field before Moc)
 		
 		Quidditch_Klatscher_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
 		
@@ -16000,12 +16080,15 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 	unutma_i = Moc_Klatscher[p].i;
 	unutma_j = Moc_Klatscher[p].j;
 	
+	if (Field[0][unutma_i][unutma_j] == Klatscher) {
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, unutma_i, unutma_j, 0);
+	}
 	//812
 	//703
 	//654
 	//this is the directed-table
 	
-	while (Moc_Klatscher[p].remaining_squares_to_move != 0) {	//the way of the Klatscher
+	while ((Moc_Klatscher[p].remaining_squares_to_move != 0)&&((Moc_Klatscher[p].i != Moc_Klatscher[p].wanted_i)||(Moc_Klatscher[p].j != Moc_Klatscher[p].wanted_j))) {	//the way of the Klatscher
 		
 		#ifdef Quidditch_mistake_search
 		printf("	Moc_Klatscher[%u].remaining_squares_to_move = %u \n", p, Moc_Klatscher[p].remaining_squares_to_move);	//test
@@ -16047,15 +16130,19 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			if (j_difference > 0) {
 				if (Moc_Klatscher[p].directed == 4) {
 					Moc_Klatscher[p].i += 1;
+					i_difference -= 1;
 					Moc_Klatscher[p].j += 1;
+					j_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 3)&&(j_difference > i_difference)) {
 					Moc_Klatscher[p].j += 1;
+					j_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 5)&&(i_difference > j_difference)) {
 					Moc_Klatscher[p].i += 1;
+					i_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16068,15 +16155,19 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			} else if (j_difference < 0) {
 				if (Moc_Klatscher[p].directed == 6) {
 					Moc_Klatscher[p].i += 1;
+					i_difference -= 1;
 					Moc_Klatscher[p].j -= 1;
+					j_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 7)&&(abs(j_difference) > i_difference)) {
 					Moc_Klatscher[p].j -= 1;
+					j_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 5)&&(i_difference > abs(j_difference))) {
 					Moc_Klatscher[p].i += 1;
+					i_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16089,6 +16180,7 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			} else if (j_difference == 0) {
 				if (Moc_Klatscher[p].directed == 5) {
 					Moc_Klatscher[p].i += 1;
+					i_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16103,15 +16195,19 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			if (j_difference > 0) {
 				if (Moc_Klatscher[p].directed == 2) {
 					Moc_Klatscher[p].i -= 1;
+					i_difference += 1;
 					Moc_Klatscher[p].j += 1;
+					j_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 3)&&(abs(j_difference) > abs(i_difference))) {
 					Moc_Klatscher[p].j += 1;
+					j_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 1)&&(abs(i_difference) > abs(j_difference))) {
 					Moc_Klatscher[p].i -= 1;
+					i_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16124,15 +16220,19 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			} else if (j_difference < 0) {
 				if (Moc_Klatscher[p].directed == 8) {
 					Moc_Klatscher[p].i -= 1;
+					i_difference += 1;
 					Moc_Klatscher[p].j -= 1;
+					j_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 7)&&(abs(j_difference) > abs(i_difference))) {
 					Moc_Klatscher[p].j -= 1;
+					j_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else if ((Moc_Klatscher[p].directed == 1)&&(abs(i_difference) > abs(j_difference))) {
 					Moc_Klatscher[p].i -= 1;
+					i_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16145,6 +16245,7 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			} else if (j_difference == 0) {
 				if (Moc_Klatscher[p].directed == 1) {
 					Moc_Klatscher[p].i -= 1;
+					i_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16159,6 +16260,7 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			if (j_difference > 0) {
 				if (Moc_Klatscher[p].directed == 3) {
 					Moc_Klatscher[p].j += 1;
+					j_difference -= 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16171,6 +16273,7 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			} else if (j_difference < 0) {
 				if (Moc_Klatscher[p].directed == 7) {
 					Moc_Klatscher[p].j -= 1;
+					j_difference += 1;
 					Moc_Klatscher[p].remaining_squares_to_move -= 1;
 					
 				} else {
@@ -16183,7 +16286,10 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			}
 		}
 	}
-	if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_1)&&(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_2)&&(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Klatscher)) {
+	
+	Moc_Klatscher[p].remaining_squares_to_move = 0;	//his work is done.
+	
+	if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_1)&&(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_2)) {
 		if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Hueter_1)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Sucher_1)) {
 			Klatscher_hits_target (2, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n,  Moc_Klatscher, p, Qs);
 		} else if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Hueter_2)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Sucher_2)) {
@@ -16192,17 +16298,18 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 			Treiber_hits_Klatscher (1, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, Qs);
 		} else if (Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Treiber_2) {
 			Treiber_hits_Klatscher (2, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, Qs);
-		}
-		if ((Field[0][unutma_i][unutma_j] == Treiber_1)||(Field[0][unutma_i][unutma_j] == Treiber_2)) {
-			while (Field[0][unutma_i][unutma_j] > number_of_players) {
-				unutma_i = Zufall (1, m-2);
-				unutma_j = Zufall (1, n-2);
+		} else {
+			if ((unutma_i != Moc_Klatscher[p].i)||(unutma_j != Moc_Klatscher[p].j)) {
+				while ((Field[0][unutma_i][unutma_j] > number_of_players)||((unutma_i == Moc_Klatscher[p].i)&&(unutma_j == Moc_Klatscher[p].j))) {
+					unutma_i = Zufall (1, m-2);
+					unutma_j = Zufall (1, n-2);
+				}
+				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, unutma_i, unutma_j, Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j]);
 			}
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Klatscher[p].i, Moc_Klatscher[p].j, Klatscher);
 		}
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, unutma_i, unutma_j, Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j]);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Klatscher[p].i, Moc_Klatscher[p].j, Klatscher);
 		
-	} else { //you can't push Torringe and Klatscher away.
+	} else { //you can't push Torringe away.
 		if ((Field[0][unutma_i][unutma_j] == Treiber_1)||(Field[0][unutma_i][unutma_j] == Treiber_2)) {
 			while (Field[0][unutma_i][unutma_j] > number_of_players) {
 				unutma_i = Zufall (1, m-2);
@@ -16211,6 +16318,7 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 		}
 		Moc_Klatscher[p].i = unutma_i;
 		Moc_Klatscher[p].j = unutma_j;
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Klatscher[p].i, Moc_Klatscher[p].j, Klatscher);
 	}
 	
 	#ifdef Quidditch_mistake_search
@@ -16238,9 +16346,7 @@ void Klatscher_hits_target (unsigned int whose_turn, Spielfeld Field, unsigned i
 	printf("	Player %u, a Klatscher hits the enemy at [%u][%u]. \n", whose_turn, Moc_Klatscher[p].i, Moc_Klatscher[p].j);
 	printf("	In which direction do you want to push the enemy? \n");
 	Klatscher_hit_allowed_directions (whose_turn, Field, m, n, Moc_Klatscher, p, allowed_directions);
-	if (allowed_directions[0][0] == evet) {
-		printf("	0: Change of positions \n");
-	}
+	
 	if (allowed_directions[1][0] == evet) {
 		printf("	1: Top \n");
 	}
@@ -16266,14 +16372,20 @@ void Klatscher_hits_target (unsigned int whose_turn, Spielfeld Field, unsigned i
 		printf("	8: Top & Left \n");
 	}
 	
-	while ((direction_choice > 8) || (allowed_directions[direction_choice][0] != evet)) {
-		direction_choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-	}
-	if ((allowed_directions[direction_choice][1] != 0)&&(allowed_directions[direction_choice][2] != 0)) {
-		
+	if (allowed_directions[0][0] == evet) {
 		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, allowed_directions[direction_choice][1], allowed_directions[direction_choice][2], Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j]);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Klatscher[p].i, Moc_Klatscher[p].j, 0);
+	} else {
+		while ((direction_choice > 8) || (allowed_directions[direction_choice][0] != evet)) {
+			direction_choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+		}
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, allowed_directions[direction_choice][1], allowed_directions[direction_choice][2], Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j]);
 	}
+	set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Klatscher[p].i, Moc_Klatscher[p].j, Klatscher);
+	
+	Moc_Klatscher[p].directed = 0;
+	
+	Moc_Klatscher[p].wanted_i = 0;
+	Moc_Klatscher[p].wanted_j = 0;
 	
 	Qs->Points[0] += 1;
 	
@@ -16374,6 +16486,9 @@ void Treiber_hits_Klatscher (unsigned int whose_turn, Spielfeld Field, unsigned 
 		}
 	}
 	
+	Moc_Klatscher[p].wanted_i = 0;	// otherwise it causes trouble with Klatscher_steps
+	Moc_Klatscher[p].wanted_j = 0;
+	
 	Quidditch_Klatscher_steps (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, p, i_difference, j_difference, Qs);
 	
 	#ifdef Quidditch_mistake_search
@@ -16393,14 +16508,19 @@ void Klatscher_hit_allowed_directions (unsigned int whose_turn, Spielfeld Field,
 	h = 0;
 	k = 0;
 	allowed_directions[0][0] = evet;
-	allowed_directions[0][1] = 0;
-	allowed_directions[0][2] = 0;
+	allowed_directions[0][1] = Zufall (1, m-2);
+	allowed_directions[0][2] = Zufall (1, n-2);
+	while (Field[0][allowed_directions[0][1]][allowed_directions[0][2]] > 2) {
+		allowed_directions[0][1] = Zufall (1, m-2);
+		allowed_directions[0][2] = Zufall (1, n-2);
+	}
 	
 	for (unsigned int q=1; q<=8; q++) {
 		h = Moc_Klatscher[p].i;
 		k = Moc_Klatscher[p].j;
 		while ((h != 0)&&(k != 0)&&(h <= m-2)&&(k <= n-2)) {
 			if (Field[0][h][k] == (whose_turn%2)+1) {	//search for owner-square
+				allowed_directions[0][0] = hayir;	//[0][0] is only possible if nothing else is possible
 				allowed_directions[q][0] = evet;
 				allowed_directions[q][1] = h;
 				allowed_directions[q][2] = k;
@@ -16455,7 +16575,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int k=2*q+1; k>0; k--) {
 					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q-1;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
@@ -16471,7 +16591,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int h=0; h<=2*q; h++) {
 					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q-1;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
@@ -16487,7 +16607,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int h=2*q+1; h>0; h--) {
 					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q-1;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
@@ -16503,7 +16623,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int k=2*q+1; k>0; k--) {
 					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q-1 != 0)&&(Moc_Klatscher[p].j +k -q-1 <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q-1;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q-1;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
@@ -16519,7 +16639,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int k=0; k<=2*q; k++) {
 					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
@@ -16535,7 +16655,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int h=2*q+1; h>0; h--) {
 					if ((Moc_Klatscher[p].i +h -q-1 != 0)&&(Moc_Klatscher[p].i +h -q-1 <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q-1;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
@@ -16551,7 +16671,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int h=0; h<=2*q; h++) {
 					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
@@ -16567,7 +16687,7 @@ void Quidditch_Klatscher_target_search (Spielfeld Field, unsigned int m, unsigne
 				for (unsigned int k=0; k<=2*q; k++) {
 					if ((Moc_Klatscher[p].i +h -q != 0)&&(Moc_Klatscher[p].i +h -q <= m-2)&&(Moc_Klatscher[p].j +k -q != 0)&&(Moc_Klatscher[p].j +k -q <= n-2)) {
 							Moc_Klatscher[p].wanted_i = Moc_Klatscher[p].i +h -q;
-							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].i +k -q;
+							Moc_Klatscher[p].wanted_j = Moc_Klatscher[p].j +k -q;
 							if ((Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Jaeger_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Hueter_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Treiber_2)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_1)||(Field[0][Moc_Klatscher[p].wanted_i][Moc_Klatscher[p].wanted_j] == Sucher_2)) {
 								break_up = evet;
 								break;
