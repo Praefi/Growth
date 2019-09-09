@@ -712,19 +712,19 @@ int main (void) {
 
 							if (lim == 1){
 
-								printf("	limits.new:      (normal: 20) \n");
+								printf("	limits.new:      (normal: 30) \n");
 								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 
 							}
 							if (lim == 2){
 
-								printf("	limits.at_all:       (normal: 40) \n");
+								printf("	limits.at_all:       (normal: 60) \n");
 								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 
 							}
 							if (lim == 3){
 
-								printf("	limits.new:				(normal: 20) \n	limits.at_all:				(normal: 40) \n");
+								printf("	limits.new:				(normal: 30) \n	limits.at_all:				(normal: 60) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
