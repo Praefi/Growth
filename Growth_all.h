@@ -15750,13 +15750,14 @@ void Quidditch_Quaffel_Throw (Spielfeld Field, unsigned int geben, Spielfeld Opa
 			Moc_Quaffel->wanted_i = Zeile_neu;
 			Moc_Quaffel->wanted_j = Spalte_neu;
 			
-			while ((Moc_Quaffel->i != Moc_Quaffel->wanted_i)||(Moc_Quaffel->j != Moc_Quaffel->wanted_j)) {
+			while ((Moc_Quaffel->i != Moc_Quaffel->wanted_i)||(Moc_Quaffel->j != Moc_Quaffel->wanted_j)||((Field[0][Moc_Quaffel->i][Moc_Quaffel->j] > 2)&&(Field[0][Moc_Quaffel->i][Moc_Quaffel->j] != Torring))) {
 				Realize_Moc_Quaffel_Throw_step (Field, geben,  Moc_Quaffel, Torring);
 			}
 			
-			if (Field[0][Moc_Quaffel->wanted_i][Moc_Quaffel->wanted_j] == Torring) {
-				Qs->Points[geben] += 10;
+			if (Field[0][Moc_Quaffel->i][Moc_Quaffel->j] == Torring) {
+				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_alt, Spalte_alt, 0);
 				Quidditch_a_goal_has_been_scored (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Quaffel);
+				Qs->Points[geben] += 10;
 			} else {
 				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu, Quaffel);
 				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_alt, Spalte_alt, 0);
@@ -15780,10 +15781,10 @@ void Quidditch_a_goal_has_been_scored (Spielfeld Field, unsigned int geben, Spie
 	
 	only_need_one_square = hayir;
 	
-	for (unsigned int i=(m+1)/2; i<=m-2; i++) {
+	for (unsigned int i=m/2; i<=m-2; i++) {
 		for (unsigned int j=1; j<=n-2; j++) {
 			if (Field[0][i][j] == Jaeger_1) {
-				for (unsigned int h=1; h<=(m-3)/2; h++) {
+				for (unsigned int h=1; h<=(m-2)/2; h++) {
 					for (unsigned int k=1; k<=n-2; k++) {
 						if (Field[0][h][k] == 1) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 1);
@@ -15800,14 +15801,14 @@ void Quidditch_a_goal_has_been_scored (Spielfeld Field, unsigned int geben, Spie
 			}
 		}
 	}
-	for (unsigned int i=1; i<=(m-3)/2; i++) {
+	for (unsigned int i=1; i<=(m-2)/2; i++) {
 		for (unsigned int j=1; j<=n-2; j++) {
 			if (Field[0][i][j] == Jaeger_2) {
-				for (unsigned int h=m-2; h>=(m+1)/2; h--) {
+				for (unsigned int h=m-2; h>=m/2; h--) {
 					for (unsigned int k=1; k<=n-2; k++) {
 						if (Field[0][h][k] == 2) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 2);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Jaeger_1);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Jaeger_2);
 							only_need_one_square = evet;
 							break;
 						}
@@ -15823,8 +15824,8 @@ void Quidditch_a_goal_has_been_scored (Spielfeld Field, unsigned int geben, Spie
 	
 	only_need_one_square = hayir;
 	if (geben == 1) {	//where to put the Quaffel (look at the h-loop).
-		for (unsigned int h=m-1; h<=m-2; h++) {
-			for (unsigned int k=2; k<=n-1; k++) {	//don't want it at the wall.
+		for (unsigned int h=m-3; h<=m-2; h++) {
+			for (unsigned int k=2; k<=n-3; k++) {	//don't want it at the wall.
 				if (Field[0][h][k] <= 2) {
 					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Quaffel);
 					Moc_Quaffel->i = h;
@@ -15839,7 +15840,7 @@ void Quidditch_a_goal_has_been_scored (Spielfeld Field, unsigned int geben, Spie
 		}
 	} else if (geben == 2) {
 		for (unsigned int h=2; h>=1; h--) {
-			for (unsigned int k=2; k<=n-1; k++) {
+			for (unsigned int k=2; k<=n-3; k++) {
 				if (Field[0][h][k] <= 2) {
 					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, h, k, Quaffel);
 					Moc_Quaffel->i = h;
@@ -15900,7 +15901,7 @@ void Realize_Moc_Quaffel_Throw_step (Spielfeld Field, unsigned int geben, Moveab
 	} else if (abs(i_difference) == abs(j_difference)) {
 		direction_choice = Changing;
 	} else {
-		while (((direction_choice != Horizontal)||(abs(j_difference) <= abs(i_difference)))&&((direction_choice != Vertikal)||(abs(i_difference) <= abs(j_difference)))&&((direction_choice != Changing)||((i_difference == 0)||(j_difference == 0)))) {
+		while ((((direction_choice != Horizontal)||(abs(j_difference) <= abs(i_difference)))&&((direction_choice != Vertikal)||(abs(i_difference) <= abs(j_difference)))&&((direction_choice != Changing)||((i_difference == 0)||(j_difference == 0))))&&(direction_choice != 9)) {
 				printf("	How do you want to throw? 	(target: [%u][%u]) \n", Moc_Quaffel->wanted_i, Moc_Quaffel->wanted_j);
 				if (abs(i_difference) < abs(j_difference)) {
 					printf("	%u: Horizontal \n", Horizontal);
@@ -15951,6 +15952,11 @@ void Realize_Moc_Quaffel_Throw_step (Spielfeld Field, unsigned int geben, Moveab
 				}
 			}
 		}
+	}
+	
+	if (direction_choice == 9) {	//escaping
+			Moc_Quaffel->wanted_i = Moc_Quaffel->i;
+			Moc_Quaffel->wanted_j = Moc_Quaffel->j;
 	}
 	
 	#ifdef Quidditch_mistake_search
@@ -16007,7 +16013,7 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 		for (unsigned int p=fly_distance; p>=1; p--) {
 			for (unsigned int i=0; i<=2; i++) {
 				for (unsigned int j=0; j<=2; j++) {
-					if ((Zeile_alt + p*i-p*1 <= m-2)&&(Spalte_alt + p*j-p*1 <= n-2)) {	//Stackoverflow solves the bottom-border
+					if ((Zeile_alt + p*i-p <= m-2)&&(Spalte_alt + p*j-p <= n-2)) {	//Stackoverflow solves the bottom-border
 						if ((Field[0][Zeile_alt + p*i-p*1][Spalte_alt + p*j-p] == geben)&&(Zeile_alt + p*i-p == Zeile_neu)&&(Spalte_alt + p*j-p == Spalte_neu)) {
 							b = evet;
 							unutma_i = i;
@@ -16033,48 +16039,122 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_alt, Spalte_alt, geben);	//Changing of the positions
 			
 			b = 0;	//new usage of b
-			while ((Zeile_alt + b*(unutma_i-1) != Zeile_neu)||(Spalte_alt + b*(unutma_j-1) != Spalte_neu)) {	//"||(b <= fly_distance)" deleted, Schnatz/Quaffel-Regelungen beim Durchqueren/Mitnehmen.
+			while ((Zeile_alt + b*unutma_i-b != Zeile_neu)||(Spalte_alt + b*unutma_j-b != Spalte_neu)) {	//"||(b <= fly_distance)" deleted, Schnatz/Quaffel-Regelungen beim Durchqueren/Mitnehmen.
 				if ((Team_member == Sucher_1)||(Team_member == Sucher_2)) {
-					if ((Zeile_alt + b*(unutma_i-1) == Moc_Schnatz->i)&&(Spalte_alt + b*(unutma_j-1) == Moc_Schnatz->j)) {
+					if ((Zeile_alt + b*unutma_i-b == Moc_Schnatz->i)&&(Spalte_alt + b*unutma_j-b == Moc_Schnatz->j)) {
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Schnatz->i, Moc_Schnatz->j, 0);
 						Moc_Schnatz->i = 0;
 						Moc_Schnatz->j = 0;
-						*g = 0;
 						if (Team_member == Sucher_1) {	// Catch of the Schnatz.
 							Points[1] += 150;
 						} else if (Team_member == Sucher_2) {
 							Points[2] += 150;
 						}
+						*g = 0;
 					}
 				} else if ((Team_member == Jaeger_1)||(Team_member == Hueter_1)||(Team_member == Jaeger_2)||(Team_member == Hueter_2)) {	//All Quaffel-carrying people.
 					for (unsigned int i=0; i<=2; i++) {
 						for (unsigned int j=0; j<=2; j++) {
-							if ((Zeile_alt-1+i + b*(unutma_i-1) == Moc_Quaffel->i)&&(Spalte_alt-1+j + b*(unutma_j-1) == Moc_Quaffel->j)&&((j%2 == 1)||(i%2 == 1))) {
+							if ((Zeile_alt-1+i + b*unutma_i-b == Moc_Quaffel->i)&&(Spalte_alt-1+j + b*unutma_j-b == Moc_Quaffel->j)&&((j%2 == 1)||(i%2 == 1))) {
 								//Near-by controlling is following:
-								if ((Field[0][Zeile_neu-1][Spalte_neu] == 0)||(Field[0][Zeile_neu-1][Spalte_neu] == geben)) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu-1, Spalte_neu, Quaffel);
-									Moc_Quaffel->i = Zeile_neu-1;
-									Moc_Quaffel->j = Spalte_neu;
-								} else if ((Field[0][Zeile_neu+1][Spalte_neu] == 0)||(Field[0][Zeile_neu+1][Spalte_neu] == geben)) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu+1, Spalte_neu, Quaffel);
-									Moc_Quaffel->i = Zeile_neu+1;
-									Moc_Quaffel->j = Spalte_neu;
-								} else if ((Field[0][Zeile_neu][Spalte_neu-1] == 0)||(Field[0][Zeile_neu][Spalte_neu-1] == geben)) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu-1, Quaffel);
-									Moc_Quaffel->i = Zeile_neu;
-									Moc_Quaffel->j = Spalte_neu-1;
-								} else if ((Field[0][Zeile_neu][Spalte_neu+1] == 0)||(Field[0][Zeile_neu][Spalte_neu+1] == geben)) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu+1, Quaffel);
-									Moc_Quaffel->i = Zeile_neu;
-									Moc_Quaffel->j = Spalte_neu+1;
-								}	//If no near-by-field is free (zero or in your possession with a normal square), you can't pick up the Quaffel.
+								if (geben == 2) {
+									if (Field[0][Zeile_neu-1][Spalte_neu] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu-1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu-1;
+										Moc_Quaffel->j = Spalte_neu;
+									} else if (Field[0][Zeile_neu][Spalte_neu-1] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu-1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu-1;
+									} else if (Field[0][Zeile_neu][Spalte_neu+1] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu+1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu+1;
+									} else if (Field[0][Zeile_neu+1][Spalte_neu] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu+1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu+1;
+										Moc_Quaffel->j = Spalte_neu;
+									} else if (Field[0][Zeile_neu-1][Spalte_neu] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu-1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu-1;
+										Moc_Quaffel->j = Spalte_neu;
+									} else if (Field[0][Zeile_neu][Spalte_neu-1] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu-1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu-1;
+									} else if (Field[0][Zeile_neu][Spalte_neu+1] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu+1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu+1;
+									} else if (Field[0][Zeile_neu+1][Spalte_neu] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu+1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu+1;
+										Moc_Quaffel->j = Spalte_neu;
+									}	//If no near-by-field is free (zero or in your possession with a normal square), you can't pick up the Quaffel.
+									
+								} else if (geben == 1) {
+									if (Field[0][Zeile_neu+1][Spalte_neu] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu+1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu+1;
+										Moc_Quaffel->j = Spalte_neu;
+									} else if (Field[0][Zeile_neu][Spalte_neu-1] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu-1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu-1;
+									} else if (Field[0][Zeile_neu][Spalte_neu+1] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu+1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu+1;
+									} else if (Field[0][Zeile_neu-1][Spalte_neu] == 0) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, 0);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu-1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu-1;
+										Moc_Quaffel->j = Spalte_neu;
+									} else if (Field[0][Zeile_neu+1][Spalte_neu] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu+1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu+1;
+										Moc_Quaffel->j = Spalte_neu;
+									} else if (Field[0][Zeile_neu][Spalte_neu-1] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu-1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu-1;
+									} else if (Field[0][Zeile_neu][Spalte_neu+1] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu+1, Quaffel);
+										Moc_Quaffel->i = Zeile_neu;
+										Moc_Quaffel->j = Spalte_neu+1;
+									} else if (Field[0][Zeile_neu-1][Spalte_neu] == geben) {
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Quaffel->i, Moc_Quaffel->j, geben);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu-1, Spalte_neu, Quaffel);
+										Moc_Quaffel->i = Zeile_neu-1;
+										Moc_Quaffel->j = Spalte_neu;
+									}	//If no near-by-field is free (zero or in your possession with a normal square), you can't pick up the Quaffel.
+								}
+								
+								b += (fly_distance +1);
+								break;
 							}
 						}
+						if (b >= fly_distance +1) {
+							break;
+						}
 					}
+				}
+				if (b >= fly_distance +1) {
+					break;
 				}
 				b+=1;
 			}
