@@ -6220,7 +6220,7 @@ unsigned int Initialisierung_n (unsigned int gamemode_played) {	//real+2
 	} else if ((gamemode_played == Arena)||(gamemode_played == Sand)) {
 		Ausgabe = 9;
 	} else if (gamemode_played == Quidditch) {
-		Ausgabe = 21;
+		Ausgabe = 19;
 	} else {
 		Ausgabe = 0;
 	}
@@ -6244,7 +6244,7 @@ unsigned int Initialisierung_m (unsigned int gamemode_played) {	//real+2
 	} else if (gamemode_played == Survive) {
 		Ausgabe = 13;
 	} else if (gamemode_played == Quidditch) {
-		Ausgabe = 22;
+		Ausgabe = 20;
 	} else {
 		Ausgabe = 0;
 	}
