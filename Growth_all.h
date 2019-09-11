@@ -14,7 +14,7 @@
 
 // #define VERBOSE
 // #define Contact_mistake_search
-#define Quidditch_mistake_search
+// #define Quidditch_mistake_search
 
 extern unsigned int letters_4;
 extern unsigned int letters_2;
@@ -1633,23 +1633,27 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 		
 		set_triangle_unten_rechts (single_option_representives_inverted, Field, 1, 1+2, (n-1)/2 +2);	//Squares player 1
 		set_triangle_unten_links (single_option_representives_inverted, Field, 1, 1+2, (n-1)/2 -2);
-		set_triangle_oben_links (single_option_representives_inverted, Field, 1, 1, 1);
-		set_triangle_oben_rechts (single_option_representives_inverted, Field, 1, 1, n-2);
+		set_gleiter_rechts_unten (single_option_representives_inverted, Field, 1, 2, 2);
+		set_gleiter_links_unten (single_option_representives_inverted, Field, 1, 2, n-3);
 		set_triangle_oben_rechts (single_option_representives_inverted, Field, 1, (m-2)/2 -1, (n-1)/2 +2);
 		set_triangle_unten_links (single_option_representives_inverted, Field, 1, (m-2)/2 +2, (n-1)/2 -2);
-		set_triangle_oben_links (single_option_representives_inverted, Field, 1, (m-2)/2 -3, (n-1)/2 -1);
-		set_gleiter_links_unten (single_option_representives_inverted, Field, 1, (m-2)/2 -1, (n-1)/2 +5);
-		set_gleiter_rechts_unten (single_option_representives_inverted, Field, 1, (m-2)/2 -1, (n-1)/2 -5);	//Squares player 1
+		set_mountain_unten (single_option_representives_inverted, Field, 1, (m-2)/2 -4, (n-1)/2);
+		set_net_basic_two_four (single_option_representives_inverted, Field, 1, (m-2)/2 -2, n-5);
+		set_edge_oben_links (single_option_representives_inverted, Field, 1, (m-2)/2 -3, 4);
+		set_triangle_oben_rechts (single_option_representives_inverted, Field, 1, (m-2)/2 -1, 2);	//Squares player 1
 		
 		set_triangle_oben_rechts (single_option_representives_inverted, Field, 2, (m-2) -2, (n-1)/2 +2);	//Squares player 2
 		set_triangle_oben_links (single_option_representives_inverted, Field, 2, (m-2) -2, (n-1)/2 -2);
-		set_triangle_unten_links (single_option_representives_inverted, Field, 2, m-2, 1);
-		set_triangle_unten_rechts (single_option_representives_inverted, Field, 2, m-2, n-2);
+		set_gleiter_rechts_oben (single_option_representives_inverted, Field, 2, m-3, 2);
+		set_gleiter_links_oben (single_option_representives_inverted, Field, 2, m-3, n-3);
 		set_triangle_unten_rechts (single_option_representives_inverted, Field, 2, (m-2)/2 +2, (n-1)/2 +2);
 		set_triangle_oben_links (single_option_representives_inverted, Field, 2, (m-2)/2 -1, (n-1)/2 -2);
-		set_triangle_unten_links (single_option_representives_inverted, Field, 2, (m-2)/2 +4, (n-1)/2 -1);
-		set_gleiter_rechts_oben (single_option_representives_inverted, Field, 2, (m-2)/2 +2, (n-1)/2 -5);
-		set_gleiter_links_oben (single_option_representives_inverted, Field, 2, (m-2)/2 +2, (n-1)/2 +5);	//Squares player 2
+		set_mountain_oben (single_option_representives_inverted, Field, 2, (m-2)/2 +5, (n-1)/2);
+		set_edge_unten_rechts (single_option_representives_inverted, Field, 2, (m-2)/2 +4, n-5);
+		set_triangle_unten_links (single_option_representives_inverted, Field, 2, (m-2)/2 +2, n-3);
+		
+		set_net_basic_two_four (single_option_representives_inverted, Field, 2, (m-2)/2 +2, 3);	//Squares player 2
+		
 		
 		set_gleiter_links_unten (single_option_representives_inverted, Field, 1, (m-2) -3, (n-1)/2 +5);	//Squares player 1
 		set_gleiter_rechts_unten (single_option_representives_inverted, Field, 1, (m-2) -3, (n-1)/2 -5);	//Squares player 1
@@ -6088,32 +6092,32 @@ void Initialisierung_Qs (Quidditch_setup* Qs, Quidditch_team_abilities* Qta, Qui
 	
 }
 void Initialisierung_Qoa (Quidditch_object_abilities* Qoa) {
-	Qoa[0].Klatscher_fly_distance = 3;
-	Qoa[0].Schnatz_fly_distance = 3;
+	Qoa[0].Klatscher_fly_distance = 4;
+	Qoa[0].Schnatz_fly_distance = 4;
 	Qoa[0].Schnatz_appearence_factor = 13;	//to read as 1/3
 	Qoa[0].Schnatz_disappearence_factor = 23;	//to read as 2/3
 }
 void Initialisierung_Qta (Quidditch_team_abilities* Qta) {
 	for (unsigned int p=0; p<=HSlytherin; p++) {
-		Qta[p].Jaeger_fly_distance = 3;
-		Qta[p].Jaeger_throw_distance = 3;
-		Qta[p].Hueter_fly_distance = 2;
-		Qta[p].Hueter_throw_distance = 3;
-		Qta[p].Treiber_fly_distance = 3;
-		Qta[p].Treiber_hit_distance = 3;
-		Qta[p].Sucher_fly_distance = 3;
+		Qta[p].Jaeger_fly_distance = 4;
+		Qta[p].Jaeger_throw_distance = 4;
+		Qta[p].Hueter_fly_distance = 3;
+		Qta[p].Hueter_throw_distance = 4;
+		Qta[p].Treiber_fly_distance = 4;
+		Qta[p].Treiber_hit_distance = 4;
+		Qta[p].Sucher_fly_distance = 4;
 		
 		if (p == HGryffindor) {
-			Qta[p].Sucher_fly_distance = 4;
+			Qta[p].Sucher_fly_distance = 5;
 		} else if (p == HHufflepuff) {
-			Qta[p].Hueter_fly_distance = 4;
-			Qta[p].Hueter_throw_distance = 4;
+			Qta[p].Hueter_fly_distance = 5;
+			Qta[p].Hueter_throw_distance = 5;
 		} else if (p == HRavenclaw) {
-			Qta[p].Jaeger_fly_distance = 4;
-			Qta[p].Jaeger_throw_distance = 4;
+			Qta[p].Jaeger_fly_distance = 5;
+			Qta[p].Jaeger_throw_distance = 5;
 		} else if (p == HSlytherin) {
-			Qta[p].Treiber_fly_distance = 4;
-			Qta[p].Treiber_hit_distance = 4;
+			Qta[p].Treiber_fly_distance = 5;
+			Qta[p].Treiber_hit_distance = 5;
 		}
 	}
 }
@@ -6166,7 +6170,7 @@ unsigned int Initialisierung_limits_new (unsigned int gamemode_played) {	//check
 	} else if (gamemode_played == Arena) {
 		Ausgabe = 8;
 	} else if (gamemode_played == Quidditch) {
-		Ausgabe = 30;
+		Ausgabe = 40;
 	} else {
 		Ausgabe = 0;
 	}
@@ -6189,7 +6193,7 @@ unsigned int Initialisierung_limits_at_all (unsigned int gamemode_played) {	//ch
 	} else if (gamemode_played == Arena) {
 		Ausgabe = 16;
 	} else if (gamemode_played == Quidditch) {
-		Ausgabe = 60;
+		Ausgabe = 80;
 	} else {
 		Ausgabe = 0;
 	}
@@ -6216,7 +6220,7 @@ unsigned int Initialisierung_n (unsigned int gamemode_played) {	//real+2
 	} else if ((gamemode_played == Arena)||(gamemode_played == Sand)) {
 		Ausgabe = 9;
 	} else if (gamemode_played == Quidditch) {
-		Ausgabe = 17;
+		Ausgabe = 21;
 	} else {
 		Ausgabe = 0;
 	}
@@ -6240,7 +6244,7 @@ unsigned int Initialisierung_m (unsigned int gamemode_played) {	//real+2
 	} else if (gamemode_played == Survive) {
 		Ausgabe = 13;
 	} else if (gamemode_played == Quidditch) {
-		Ausgabe = 18;
+		Ausgabe = 22;
 	} else {
 		Ausgabe = 0;
 	}
@@ -16437,7 +16441,7 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 				}
 			}
 		}
-	}
+	}	//no effects on not-target objects on the way (-> Klatscher-hit)
 	
 	Moc_Klatscher[p].remaining_squares_to_move = 0;	//his work is done.
 	
