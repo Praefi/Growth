@@ -1713,8 +1713,8 @@ int main (void) {
 						printf(" Quidditch \n ");
 						printf("	Klatscher-fly-distance:	%u \n", Qoa->Klatscher_fly_distance);
 						printf("	Schnatz-fly-distance:	%u \n", Qoa->Schnatz_fly_distance);
-						printf("	Schnatz-appearence-factor:	%u \n", Qoa->Schnatz_appearence_factor);
-						printf("	Schnatz-disappearence-factor:	%u \n", Qoa->Schnatz_disappearence_factor);
+						printf("	Schnatz-appearence-factor:	%u	to read as %u/%u \n", Qoa->Schnatz_appearence_factor, Qoa->Schnatz_appearence_factor/10, Qoa->Schnatz_appearence_factor%10);
+						printf("	Schnatz-disappearence-factor:	%u	to read as %u/%u \n", Qoa->Schnatz_disappearence_factor, Qoa->Schnatz_disappearence_factor/10, Qoa->Schnatz_disappearence_factor%10);
 					}
 					printf("	Number of players: %u \n", number_of_players);
 					printf(" \n ");
