@@ -570,7 +570,7 @@ void Quidditch_move_of_Schnatz (Spielfeld, unsigned int, Spielfeld, unsigned int
 
 void dokuz_direction_interpretation_single_step (Moveable_objects_condition*, unsigned int);
 
-void Move_of_a_Quidditch_player (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int*);
+void Move_of_a_Quidditch_player (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*);
 
 void Localization_of_Moc (Spielfeld, unsigned int, unsigned int, Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*);
 
@@ -8131,7 +8131,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 				if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)) {
 
 					if (Growth_players[0].color == 1) {
-				Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
+						Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
 					}
 					printf("	Time for a Seed \n\n");
 
@@ -8162,7 +8162,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 
 					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
 						if (Growth_players[0].color == 1) {
-				Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
+							Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
 						}
 						printf("	Time for Grass \n\n");
 
@@ -9019,15 +9019,15 @@ void assassin_maker (unsigned int* level, Spielfeld Sf_permutations, Spielfeld F
 					}
 
 					if (a != 0) {
-								if (Growth_players[0].color == 1) {
-					Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i][j]);
+						if (Growth_players[0].color == 1) {
+						Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i][j]);
 								}
 						printf("\n");
 						printf("	An Assassin \n");
 						printf("\n");
-								if (Growth_players[0].color == 1) {
-					set_terminal_color (cNORMAL);
-				}
+						if (Growth_players[0].color == 1) {
+							set_terminal_color (cNORMAL);
+						}
 					}
 					a = 0;
 					b = 0;
@@ -15458,7 +15458,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		printf("	Quidditch_team_actions.ok \n");	//test
 		#endif
 		
-		// Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int Team_member, unsigned int fly_distance, unsigned int m, unsigned int n, unsigned int g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, unsigned int* Points)
+		// Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int Team_member, unsigned int fly_distance, unsigned int m, unsigned int n, unsigned int g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs)
 		if (geben == number_of_players) {
 			
 			Quidditch_Schnatz_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz, Qs, rmv->use_number);
@@ -15523,12 +15523,14 @@ void Quidditch_Klatscher_players_actions (Spielfeld Field, unsigned int geben, S
 	
 	turns = 2;
 	while (turns >= 2) {	//Only 0 or 1 possible
+		Square_color_interpretation (Growth_players, geben, number_of_players, geben);
 		printf("	Do you want to move one of your Treiber ? \n	0 : no\n	1 : yes\n");
+		set_terminal_color (cNORMAL);
 		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 	}
 	
 	for (unsigned int p=1; p<=turns; p++) {
-		Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Treiber, Qs->Qta[geben].Treiber_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+		Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Treiber, Qs->Qta[geben].Treiber_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs);
 	}
 	
 	#ifdef Quidditch_mistake_search
@@ -15555,8 +15557,9 @@ void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spi
 	
 	turns = 3;
 	while (turns >= 3) {	//Only 0 or 1 or 2 possible
-	
+		Square_color_interpretation (Growth_players, geben, number_of_players, geben);
 		printf("	How many actions do you want to make according to the Quaffel ?		(max.: 2)\n");
+		set_terminal_color (cNORMAL);
 		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 	}
 	
@@ -15587,7 +15590,7 @@ void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spi
 				Team_member = Jaeger_2;
 			}
 			
-			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, Qs->Qta[geben].Jaeger_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, Qs->Qta[geben].Jaeger_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs);
 			
 		} else if (action_choice == 2) {
 			
@@ -15597,7 +15600,7 @@ void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spi
 				Team_member = Hueter_2;
 			}
 			
-			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, Qs->Qta[geben].Hueter_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, Qs->Qta[geben].Hueter_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs);
 		}
 	}
 	
@@ -15631,14 +15634,15 @@ void Quidditch_Schnatz_player_actions (Spielfeld Field, unsigned int geben, Spie
 	}
 	
 	turns = 2;
-	while (turns >= 2) {	//Only 0 or 1 possible
+	while (turns > 1) {	//Only 0 or 1 possible
+		Square_color_interpretation (Growth_players, geben, number_of_players, geben);
 		printf("	Do you want to move your Sucher ? \n	0 : no\n	1 : yes\n");
+		set_terminal_color (cNORMAL);
 		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 	}
 	
 	for (unsigned int p=1; p<=turns; p++) {
-		
-		Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Sucher, Qs->Qta[geben].Sucher_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs->Points);
+		Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Sucher, Qs->Qta[geben].Sucher_fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs);
 	}
 	
 	#ifdef Quidditch_mistake_search
@@ -15976,38 +15980,75 @@ void Realize_Moc_Quaffel_Throw_step (Spielfeld Field, unsigned int geben, Moveab
 	
 }
 
-void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int Team_member, unsigned int fly_distance, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, unsigned int* Points) {
+void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int Team_member, unsigned int fly_distance, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs) {
 	
 	#ifdef Quidditch_mistake_search
 	printf("	Move_of_a_Quidditch_player-beginning.ok \n");	//test
 	#endif
 	
 	unsigned int Zeile_alt, Spalte_alt, Zeile_neu, Spalte_neu;
-	unsigned int b, unutma_i, unutma_j;
+	unsigned int direction_indicator, unutma_i, unutma_j, short_cut, range, Sucher;
 	
 	//Team_member = Hueter, Sucher, Treiber, Jaeger
 	
-	b = hayir;
+	direction_indicator = hayir;
+	short_cut = hayir;
+	range = 0;
+	Sucher = undefined;
+	
+	if (geben == 1) {
+		Sucher = Sucher_1;
+	} else if (geben == 2) {
+		Sucher = Sucher_2;
+	}
 	
 	Zeile_alt = m;	//to get out of range, because zero would lead to "Sweet..."
 	Spalte_alt = n;
 
 	Zeile_neu = 0;
 	Spalte_neu = 0;
-
-	while (((Zeile_alt > m-2)||(Spalte_alt > n-2)||(Field[0][Zeile_alt][Spalte_alt] != Team_member))&&((Spalte_alt != 0)||(Zeile_alt != 0))) {
-		printf("	The position of the Quidditch-player ?\n");
-		printf("	alte Zeile: \n	alte Spalte: \n");
-		
-		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-		Zeile_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
-		Spalte_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
+	
+	if (Team_member == Sucher) {
+		range = Qs->Qta[geben].Sucher_fly_distance;
+	} else if ((Team_member == Jaeger_1)||(Team_member == Jaeger_2)) {
+		range = Qs->Qta[geben].Jaeger_fly_distance;
+	} else if ((Team_member == Hueter_1)||(Team_member == Hueter_2)) {
+		range = Qs->Qta[geben].Hueter_fly_distance;
+	} else if ((Team_member == Treiber_1)||(Team_member == Treiber_2)) {
+		range = Qs->Qta[geben].Treiber_fly_distance;
 	}
+	
+	if (Team_member != Sucher) {
+		while (((Zeile_alt > m-2)||(Spalte_alt > n-2)||(Field[0][Zeile_alt][Spalte_alt] != Team_member))&&((Spalte_alt != 0)||(Zeile_alt != 0))) {
+			printf("	The position of the Quidditch-player ?\n");
+			printf("	alte Zeile: \n	alte Spalte: \n");
+			
+			letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
+			Zeile_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+			Spalte_alt = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
+		}
+	} else {
+		for (unsigned int i=1; i<=m-2; i++) {
+			for (unsigned int j=1; j<=n-2; j++) {
+				if (Field[0][i][j] == Sucher) {
+					Zeile_alt = i;
+					Spalte_alt = j;
+					short_cut = evet;
+					break;
+				}
+			}
+			if (short_cut == evet) {
+				short_cut = hayir;
+				break;
+			}
+		}
+	}
+	
 	
 	if ((Spalte_alt == 0)&&(Zeile_alt == 0)) {
 		printf("	Sweet escape...\n");
 	} else {
-		printf("	The position of choice of the Quidditch-player ?\n");
+		printf("	The position of choice of the Quidditch-player	(range: %u) ?\n", range);
 		printf("	neue Zeile: \n	neue Spalte: \n");
 		
 		letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
@@ -16019,47 +16060,49 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 				for (unsigned int j=0; j<=2; j++) {
 					if ((Zeile_alt + p*i-p <= m-2)&&(Spalte_alt + p*j-p <= n-2)) {	//Stackoverflow solves the bottom-border
 						if ((Field[0][Zeile_alt + p*i-p*1][Spalte_alt + p*j-p] == geben)&&(Zeile_alt + p*i-p == Zeile_neu)&&(Spalte_alt + p*j-p == Spalte_neu)) {
-							b = evet;
+							short_cut = evet;
 							unutma_i = i;
 							unutma_j = j;
 							break;	//The new position is valid and found.
 						}
 					}
 				}
-				if (b == evet) {	//shortcut
+				if (short_cut == evet) {
 					break;
 				}
 			}
-			if (b == evet) {	//shortcut
+			if (short_cut == evet) {
 				break;
 			}
 		}
 		
-		if (b == hayir) {	//The wanted new position wasn't valid.
+		if (short_cut == hayir) {	//The wanted new position wasn't valid.
 			
-			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Points);	//try again at the very beginning.
-		} else {
+			Move_of_a_Quidditch_player (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Team_member, fly_distance, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs);	//try again at the very beginning.
+		} else if (short_cut == evet) {
+			short_cut = hayir;
+			
 			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_neu, Spalte_neu, Team_member);
 			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Zeile_alt, Spalte_alt, geben);	//Changing of the positions
 			
-			b = 0;	//new usage of b
-			while ((Zeile_alt + b*unutma_i-b != Zeile_neu)||(Spalte_alt + b*unutma_j-b != Spalte_neu)) {	//"||(b <= fly_distance)" deleted, Schnatz/Quaffel-Regelungen beim Durchqueren/Mitnehmen.
+			direction_indicator = 0;
+			while ((Zeile_alt + direction_indicator*unutma_i-direction_indicator != Zeile_neu)||(Spalte_alt + direction_indicator*unutma_j-direction_indicator != Spalte_neu)) {	//"||(direction_indicator <= fly_distance)" deleted, Schnatz/Quaffel-Regelungen beim Durchqueren/Mitnehmen.
 				if ((Team_member == Sucher_1)||(Team_member == Sucher_2)) {
-					if ((Zeile_alt + b*unutma_i-b == Moc_Schnatz->i)&&(Spalte_alt + b*unutma_j-b == Moc_Schnatz->j)) {
+					if ((Zeile_alt + direction_indicator*unutma_i-direction_indicator == Moc_Schnatz->i)&&(Spalte_alt + direction_indicator*unutma_j-direction_indicator == Moc_Schnatz->j)) {
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, Moc_Schnatz->i, Moc_Schnatz->j, 0);
 						Moc_Schnatz->i = 0;
 						Moc_Schnatz->j = 0;
 						if (Team_member == Sucher_1) {	// Catch of the Schnatz.
-							Points[1] += 150;
+							Qs->Points[1] += 150;
 						} else if (Team_member == Sucher_2) {
-							Points[2] += 150;
+							Qs->Points[2] += 150;
 						}
 						*g = 0;
 					}
 				} else if ((Team_member == Jaeger_1)||(Team_member == Hueter_1)||(Team_member == Jaeger_2)||(Team_member == Hueter_2)) {	//All Quaffel-carrying people.
 					for (unsigned int i=0; i<=2; i++) {
 						for (unsigned int j=0; j<=2; j++) {
-							if ((Zeile_alt-1+i + b*unutma_i-b == Moc_Quaffel->i)&&(Spalte_alt-1+j + b*unutma_j-b == Moc_Quaffel->j)&&((j%2 == 1)||(i%2 == 1))) {
+							if ((Zeile_alt-1+i + direction_indicator*unutma_i-direction_indicator == Moc_Quaffel->i)&&(Spalte_alt-1+j + direction_indicator*unutma_j-direction_indicator == Moc_Quaffel->j)&&((j%2 == 1)||(i%2 == 1))) {
 								//Near-by controlling is following:
 								if (geben == 2) {
 									if (Field[0][Zeile_neu-1][Spalte_neu] == 0) {
@@ -16148,19 +16191,19 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 									}	//If no near-by-field is free (zero or in your possession with a normal square), you can't pick up the Quaffel.
 								}
 								
-								b += (fly_distance +1);
+								direction_indicator += (fly_distance +1);
 								break;
 							}
 						}
-						if (b >= fly_distance +1) {
+						if (direction_indicator >= fly_distance +1) {
 							break;
 						}
 					}
 				}
-				if (b >= fly_distance +1) {
+				if (direction_indicator >= fly_distance +1) {
 					break;
 				}
-				b+=1;
+				direction_indicator+=1;
 			}
 		}
 	}
@@ -16884,8 +16927,14 @@ void Quidditch_Schnatz_movements (Spielfeld Field, unsigned int geben, Spielfeld
 	a_random_number = undefined;
 	short_cut = hayir;
 	
+	#ifdef Quidditch_mistake_search
+	printf("	Moc_Schnatz->directed:  %u \n", Moc_Schnatz->directed);	//test
+	printf("	use_number:  %u \n", use_number);	//test
+	#endif
+	
 	if (Moc_Schnatz->directed == hayir) {	//not on the field.
 		a_random_number = Zufall (1, (Qs->Qoa->Schnatz_appearence_factor)%10);
+		a_random_number = 1;	//test, reverse
 		if (a_random_number <= (Qs->Qoa->Schnatz_appearence_factor)/10) {	//Appearence
 			if (use_number%2 == 0) {
 				for (unsigned int h=1; h<=m-2; h++) {
@@ -16895,9 +16944,9 @@ void Quidditch_Schnatz_movements (Spielfeld Field, unsigned int geben, Spielfeld
 							Moc_Schnatz->j = k;	//The Klatscher's position is imitating a Schnatz-position.
 							Moc_Schnatz->remaining_squares_to_move = 2*(Qs->Qoa->Schnatz_fly_distance);
 							Quidditch_move_of_Schnatz (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz);
+							short_cut = evet;
+							break;
 						}
-						short_cut = evet;
-						break;
 					}
 					if (short_cut == evet) {
 						break;
@@ -16911,9 +16960,9 @@ void Quidditch_Schnatz_movements (Spielfeld Field, unsigned int geben, Spielfeld
 							Moc_Schnatz->j = k;	//The Klatscher's position is imitating a Schnatz-position.
 							Moc_Schnatz->remaining_squares_to_move = 2*(Qs->Qoa->Schnatz_fly_distance);
 							Quidditch_move_of_Schnatz (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz);
+							short_cut = evet;
+							break;
 						}
-						short_cut = evet;
-						break;
 					}
 					if (short_cut == evet) {
 						break;
@@ -16955,6 +17004,13 @@ void Quidditch_move_of_Schnatz (Spielfeld Field, unsigned int geben, Spielfeld O
 	remember_steps_amount = Moc_Schnatz->remaining_squares_to_move;
 	
 	while (Moc_Schnatz->remaining_squares_to_move != 0) {
+		
+		#ifdef Quidditch_mistake_search
+		printf("	Moc_Schnatz->remaining_squares_to_move: %u \n", Moc_Schnatz->remaining_squares_to_move);	//test
+		printf("	Moc_Schnatz->i: %u \n", Moc_Schnatz->i);	//test
+		printf("	Moc_Schnatz->j: %u \n", Moc_Schnatz->j);	//test
+		#endif
+		
 		direction_choice = Zufall (0, 9);
 		dokuz_direction_interpretation_single_step (Moc_Schnatz, direction_choice);
 		Moc_Schnatz->remaining_squares_to_move -= 1;
