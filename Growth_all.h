@@ -201,15 +201,15 @@ enum gamemode {
 
 enum moveable_objects_directions {	//Quidditch: Klatscher, Quaffel
 
-	standing = 0,	//no movement
-	nh = 1,			//north
-	nh_et = 2,		//north-east
-	et = 3,			//east
-	et_sh = 4,		//east-south
-	sh = 5,			//south
-	sh_wt = 6,		//south-west
-	wt = 7,			//west
-	wt_nh = 8,		//west-north
+	standing = 0,		//no movement
+	top = 1,			//top
+	top_right = 2,		//top&right
+	right = 3,			//right
+	right_bottom = 4,	//right&bottom
+	bottom = 5,			//bottom
+	bottom_left = 6,	//bottom&left
+	left = 7,			//left
+	left_top = 8,		//left&top
 	
 };
 
@@ -579,52 +579,55 @@ void Realize_Moc_Quaffel_Throw_step (Spielfeld, unsigned int, Moveable_objects_c
 void Quidditch_a_goal_has_been_scored (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*);
 
 void Square_color_interpretation (Growth_Player* Growth_players, unsigned int geben, unsigned int number_of_players, unsigned int square_number) {
-	if (square_number != 0) {
-		if (square_number <= number_of_players) {
-			for (unsigned int p=1; p<=number_of_players; p++) {
-				if (Growth_players[p].id == square_number) {
-					set_terminal_color (Growth_players[p].color);
+	
+	if (Growth_players[0].color == 1) {
+		if (square_number != 0) {
+			if (square_number <= number_of_players) {
+				for (unsigned int p=1; p<=number_of_players; p++) {
+					if (Growth_players[p].id == square_number) {
+						set_terminal_color (Growth_players[p].color);
+					}
 				}
-			}
-		} else {
-			if (square_number == 11) {
-				set_terminal_color (Growth_players[1].color);
-			} else if (square_number == oeluem) {
-				set_terminal_color (Growth_players[geben].color);
-			} else if (square_number == dogum) {
-				set_terminal_color (Growth_players[geben].color);
-			} else if (square_number == bir_sey) {
-				set_terminal_color (cNORMAL);
-			} else if (square_number == Quaffel) {
-				set_terminal_color (cRED);
-			} else if (square_number == Klatscher) {
-				set_terminal_color (cGRAY);
-			} else if (square_number == Schnatz) {
-				set_terminal_color (cWHITE);
-			} else if ((square_number == Treiber_1)||(square_number == Jaeger_1)||(square_number == Sucher_1)||(square_number == Hueter_1)) {
-				if (Growth_players[1].color == cLIGHT_MAGENTA) {
-					set_terminal_color (cLIGHT_RED);
-				} else if (Growth_players[1].color == cLIGHT_CYAN) {
-					set_terminal_color (cLIGHT_BLUE);
-				} else if (Growth_players[1].color == cYELLOW) {
-					set_terminal_color (cBROWN);
-				} else if (Growth_players[1].color == cLIGHT_GREEN) {
-					set_terminal_color (cGREEN);
-				}
-			} else if ((square_number == Treiber_2)||(square_number == Jaeger_2)||(square_number == Sucher_2)||(square_number == Hueter_2)) {
-				if (Growth_players[2].color == cLIGHT_MAGENTA) {
-					set_terminal_color (cLIGHT_RED);
-				} else if (Growth_players[2].color == cLIGHT_CYAN) {
-					set_terminal_color (cLIGHT_BLUE);
-				} else if (Growth_players[2].color == cYELLOW) {
-					set_terminal_color (cBROWN);
-				} else if (Growth_players[2].color == cLIGHT_GREEN) {
-					set_terminal_color (cGREEN);
-				}
-			} else if ((square_number == Torring_1)||(square_number == Torring_2)) {
-				set_terminal_color (cLIGHT_GRAY);
 			} else {
-				set_terminal_color (cBROWN);
+				if (square_number == 11) {
+					set_terminal_color (Growth_players[1].color);
+				} else if (square_number == oeluem) {
+					set_terminal_color (Growth_players[geben].color);
+				} else if (square_number == dogum) {
+					set_terminal_color (Growth_players[geben].color);
+				} else if (square_number == bir_sey) {
+					set_terminal_color (cNORMAL);
+				} else if (square_number == Quaffel) {
+					set_terminal_color (cRED);
+				} else if (square_number == Klatscher) {
+					set_terminal_color (cGRAY);
+				} else if (square_number == Schnatz) {
+					set_terminal_color (cWHITE);
+				} else if ((square_number == Treiber_1)||(square_number == Jaeger_1)||(square_number == Sucher_1)||(square_number == Hueter_1)) {
+					if (Growth_players[1].color == cLIGHT_MAGENTA) {
+						set_terminal_color (cLIGHT_RED);
+					} else if (Growth_players[1].color == cLIGHT_CYAN) {
+						set_terminal_color (cLIGHT_BLUE);
+					} else if (Growth_players[1].color == cYELLOW) {
+						set_terminal_color (cBROWN);
+					} else if (Growth_players[1].color == cLIGHT_GREEN) {
+						set_terminal_color (cGREEN);
+					}
+				} else if ((square_number == Treiber_2)||(square_number == Jaeger_2)||(square_number == Sucher_2)||(square_number == Hueter_2)) {
+					if (Growth_players[2].color == cLIGHT_MAGENTA) {
+						set_terminal_color (cLIGHT_RED);
+					} else if (Growth_players[2].color == cLIGHT_CYAN) {
+						set_terminal_color (cLIGHT_BLUE);
+					} else if (Growth_players[2].color == cYELLOW) {
+						set_terminal_color (cBROWN);
+					} else if (Growth_players[2].color == cLIGHT_GREEN) {
+						set_terminal_color (cGREEN);
+					}
+				} else if ((square_number == Torring_1)||(square_number == Torring_2)) {
+					set_terminal_color (cLIGHT_GRAY);
+				} else {
+					set_terminal_color (cBROWN);
+				}
 			}
 		}
 	}
@@ -2381,9 +2384,7 @@ void show_field (unsigned int number_of_players, unsigned int* level, Spielfeld 
 				}
 				for (unsigned int j=1; j<n-1; j+=1){	//Haupzeilen
 					
-					if (Growth_players[0].color == 1) {
-						Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
-					}
+					Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
 					
 					if (Spiel[auswerter][i][j] == 0){
 						printf("  ");
@@ -2562,9 +2563,7 @@ void show_field (unsigned int number_of_players, unsigned int* level, Spielfeld 
 					
 					for (unsigned int j=1; j<n-1; j+=1){
 						
-						if (Growth_players[0].color == 1) {
-							Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
-						}
+						Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
 						
 						if ((Allocation_o.field[allocation_choice][i][j] < 10)&&(Allocation_o.field[allocation_choice][i][j] != 0)) {
 							printf("0%u", Allocation_o.field[allocation_choice][i][j]);
@@ -5686,10 +5685,9 @@ void impact_y_semi_square (unsigned int m, unsigned int n, unsigned int* positio
 }
 
 void show_whose_turn (unsigned int gamemode_played, unsigned int geben, unsigned int* ability, Growth_Player* Growth_players, unsigned int* level, unsigned int number_of_players) {
-	if (Growth_players[0].color == 1) {
-		Square_color_interpretation (Growth_players, geben, number_of_players, geben);
-	}
-
+	
+	Square_color_interpretation (Growth_players, geben, number_of_players, geben);
+	
 	if (gamemode_played == Hunt) {
 		if (geben == 1) {
 			printf("	Am Zug: Spieler %u (##)	", geben);
@@ -5757,9 +5755,7 @@ void show_whose_turn (unsigned int gamemode_played, unsigned int geben, unsigned
 		printf("\n");
 	}
 	
-	if (Growth_players[0].color == 1) {
-		set_terminal_color (cNORMAL);
-	}
+	set_terminal_color (cNORMAL);
 	printf("\n");
 
 }
@@ -6065,7 +6061,10 @@ void Initialisierung_Qs (Quidditch_setup* Qs, Quidditch_team_abilities* Qta, Qui
 		choice = types + 1;
 		
 		while (choice > types) {
-			printf("	Which Quidditch-team-abilities do you want to take, player %u ? \n	0 : basic\n	1 : default_1 \n	2 : default_2 \n	%u : classic \n", p, types);
+			Square_color_interpretation (Growth_players, 0, 2, p);
+			printf("	Which Quidditch-team-abilities do you want to take, player %u ? \n", p);
+			set_terminal_color (cNORMAL);
+			printf("	0 : basic\n	1 : default_1 \n	2 : default_2 \n	%u : classic \n", types);
 			choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		}
 		
@@ -6110,7 +6109,7 @@ void Initialisierung_Qta (Quidditch_team_abilities* Qta) {
 		if (p == HGryffindor) {
 			Qta[p].Sucher_fly_distance = 5;
 		} else if (p == HHufflepuff) {
-			Qta[p].Hueter_fly_distance = 5;
+			Qta[p].Hueter_fly_distance = 6;
 			Qta[p].Hueter_throw_distance = 5;
 		} else if (p == HRavenclaw) {
 			Qta[p].Jaeger_fly_distance = 5;
@@ -7615,13 +7614,10 @@ void choose_your_ability (unsigned int number_of_players, unsigned int* ability,
 		printf(" \n");
 		printf(" \n");
 		while ((input == 0)||(input > 9)||((ability[input] != 0)&&(ability[input] != p))) {
-			if (Growth_players[0].color == 1) {
-				Square_color_interpretation (Growth_players, geben, number_of_players, p);
-			}
+			Square_color_interpretation (Growth_players, geben, number_of_players, p);
 			printf("	Spieler %u, please choose your ability:	\n", p);
-			if (Growth_players[0].color == 1) {
-				set_terminal_color (cNORMAL);
-			}
+			set_terminal_color (cNORMAL);
+			
 			printf(" \n");
 			if (ability[1] == 0) {
 				printf("	Ultra light: 1 \n");
@@ -8130,9 +8126,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 
 				if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)) {
 
-					if (Growth_players[0].color == 1) {
-						Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
-					}
+					Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
 					printf("	Time for a Seed \n\n");
 
 					for (unsigned int t=0; t<=2; t++) {
@@ -8161,9 +8155,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 					figure_check_counter = 0;
 
 					if ((Field[0][i+1][j+1] != 0)&&(Field[0][i+1][j+1] <= number_of_players)&&(Field[0][i+2][j+1] == Field[0][i+1][j+1])) {
-						if (Growth_players[0].color == 1) {
-							Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
-						}
+						Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
 						printf("	Time for Grass \n\n");
 
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j+1, Field[0][i+1][j+1]);
@@ -8198,10 +8190,8 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 							}
 							if (figure_check_counter == 8) {	//Windmill#2
 								figure_check_counter = 0;
-
-								if (Growth_players[0].color == 1) {
-					Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
-								}
+								
+								Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
 								printf("	Time for a Windmill \n\n");
 
 								for (unsigned int t=2; t>=1; t--) {
@@ -8215,10 +8205,8 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 								}
 							} else if (figure_check_counter == 20) {	//Popcorn
 								figure_check_counter = 0;
-
-								if (Growth_players[0].color == 1) {
-					Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
-								}
+								
+								Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
 								printf("	Time for Popcorn \n\n");
 
 								for (unsigned int t=1; t<=2; t++) {
@@ -8239,10 +8227,8 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 						} else if (Field[0][i+1][j+1] == 0) {	//Windmill#1
 
 							if ((Field[0][i+1][j+2] != 0)&&(Field[0][i+1][j+2] <= number_of_players)&&(Field[0][i+2][j+1] == Field[0][i+1][j+2])&&(Field[0][i+2][j+2] == 0)) {
-
-								if (Growth_players[0].color == 1) {
-					Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+2]);
-								}
+								
+								Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+2]);
 								printf("	Time for a Windmill \n\n");
 
 								for (unsigned int t=2; t>=1; t--) {
@@ -8284,10 +8270,8 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 									}
 								}
 								if (figure_check_counter == 6) {	//Shield
-
-					if (Growth_players[0].color == 1) {
-						Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+2]);
-					}
+									
+									Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+2]);
 									printf("	Time for a Shield \n\n");
 
 									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i+2, j, Field[0][i+1][j+2]);
@@ -8326,9 +8310,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 									if (figure_check_counter == 9) {	//Flower
 										figure_check_counter = 0;
 
-						if (Growth_players[0].color == 1) {
-							Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+2]);
-						}
+										Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+2]);
 										printf("	Time for a Flower \n\n");
 
 										set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i+2, j, Field[0][i+1][j+2]);
@@ -8338,9 +8320,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 
 									} else if (figure_check_counter == 49) {	//Black hole
 
-						if (Growth_players[0].color == 1) {
-							Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
-						}
+										Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i+1][j+1]);
 										printf("	Time for a Black hole \n\n");
 
 										for (unsigned int t=1; t<=3; t++) {
@@ -8360,11 +8340,7 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 
 		}
 	}
-	
-	if (Growth_players[0].color == 1) {
-		set_terminal_color (cNORMAL);
-	}
-
+	set_terminal_color (cNORMAL);
 }
 
 void set_Spielfeld_Eintrag (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, Spielfeld Spiel, unsigned int first, unsigned int i, unsigned int j, unsigned int Eintrag) {
@@ -9019,15 +8995,12 @@ void assassin_maker (unsigned int* level, Spielfeld Sf_permutations, Spielfeld F
 					}
 
 					if (a != 0) {
-						if (Growth_players[0].color == 1) {
+						
 						Square_color_interpretation (Growth_players, geben, number_of_players, Field[0][i][j]);
-								}
 						printf("\n");
 						printf("	An Assassin \n");
 						printf("\n");
-						if (Growth_players[0].color == 1) {
-							set_terminal_color (cNORMAL);
-						}
+						set_terminal_color (cNORMAL);
 					}
 					a = 0;
 					b = 0;
@@ -12926,7 +12899,9 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		if (rmv->var_[geben] == 1010*geben) {
 			rmv->use_number = cons[geben];
 			if (opt == 5) {
+				Square_color_interpretation (Growth_players, geben, number_of_players, geben);
 				printf("	Player %u ,do you want to keep your number (%u) or do you want to get the next one? \n", geben, cons[geben]);
+				set_terminal_color (cNORMAL);
 				printf("	Keep the number:  1 \n");
 				printf("	Get the next one:	2 \n");
 				anything = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -12938,7 +12913,9 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 				}
 				anything = 0;
 			} else if (cards != 0) {
+				Square_color_interpretation (Growth_players, geben, number_of_players, geben);
 				printf("	Player %u ,do you want to keep your Card (%u) or do you want to get the next one? \n", geben, cons[geben]);
+				set_terminal_color (cNORMAL);
 				printf("	Keep the number:  1 \n");
 				printf("	Get the next one:	2 \n");
 				anything = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -15524,8 +15501,9 @@ void Quidditch_Klatscher_players_actions (Spielfeld Field, unsigned int geben, S
 	turns = 2;
 	while (turns >= 2) {	//Only 0 or 1 possible
 		Square_color_interpretation (Growth_players, geben, number_of_players, geben);
-		printf("	Do you want to move one of your Treiber ? \n	0 : no\n	1 : yes\n");
+		printf("	Do you want to move one of your Treiber ? \n");
 		set_terminal_color (cNORMAL);
+		printf("	0 : no\n	1 : yes\n");
 		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 	}
 	
@@ -15571,11 +15549,12 @@ void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spi
 		
 		action_choice = 3;
 		while (action_choice >= 3) {	//Only 0 or 1 or 2 possible
-	
-			printf("	What do you want to do ? \n	0: Throw Quaffel \n");
+			Square_color_interpretation (Growth_players, geben, number_of_players, geben);
+			printf("	What do you want to do ? \n");
+			set_terminal_color (cNORMAL);
+			printf("	0: Throw Quaffel \n");
 			printf("	1: Move Jaeger \n");	//Why there was a limit of moving Jaeger/Hueter ?
 			printf("	2: Move Hueter \n");
-			
 			
 			action_choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		}
@@ -15636,8 +15615,9 @@ void Quidditch_Schnatz_player_actions (Spielfeld Field, unsigned int geben, Spie
 	turns = 2;
 	while (turns > 1) {	//Only 0 or 1 possible
 		Square_color_interpretation (Growth_players, geben, number_of_players, geben);
-		printf("	Do you want to move your Sucher ? \n	0 : no\n	1 : yes\n");
+		printf("	Do you want to move your Sucher ? \n");
 		set_terminal_color (cNORMAL);
+		printf("	0 : no\n	1 : yes\n");
 		turns = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 	}
 	
@@ -15910,7 +15890,8 @@ void Realize_Moc_Quaffel_Throw_step (Spielfeld Field, unsigned int geben, Moveab
 		direction_choice = Changing;
 	} else {
 		while ((((direction_choice != Horizontal)||(abs(j_difference) <= abs(i_difference)))&&((direction_choice != Vertikal)||(abs(i_difference) <= abs(j_difference)))&&((direction_choice != Changing)||((i_difference == 0)||(j_difference == 0))))&&(direction_choice != 9)) {
-				printf("	How do you want to throw? 	(target: [%u][%u]) \n", Moc_Quaffel->wanted_i, Moc_Quaffel->wanted_j);
+				printf("	How do you want to throw?");
+				printf(" 	(target: [%u][%u]) \n", Moc_Quaffel->wanted_i, Moc_Quaffel->wanted_j);
 				if (abs(i_difference) < abs(j_difference)) {
 					printf("	%u: Horizontal \n", Horizontal);
 				}
@@ -15987,7 +15968,7 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 	#endif
 	
 	unsigned int Zeile_alt, Spalte_alt, Zeile_neu, Spalte_neu;
-	unsigned int direction_indicator, unutma_i, unutma_j, short_cut, range, Sucher;
+	unsigned int direction_indicator, unutma_i, unutma_j, short_cut, range, Sucher, Hueter;
 	
 	//Team_member = Hueter, Sucher, Treiber, Jaeger
 	
@@ -15998,8 +15979,10 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 	
 	if (geben == 1) {
 		Sucher = Sucher_1;
+		Hueter = Hueter_1;
 	} else if (geben == 2) {
 		Sucher = Sucher_2;
+		Hueter = Hueter_2;
 	}
 	
 	Zeile_alt = m;	//to get out of range, because zero would lead to "Sweet..."
@@ -16018,7 +16001,7 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 		range = Qs->Qta[geben].Treiber_fly_distance;
 	}
 	
-	if (Team_member != Sucher) {
+	if ((Team_member != Sucher)&&(Team_member != Hueter)) {
 		while (((Zeile_alt > m-2)||(Spalte_alt > n-2)||(Field[0][Zeile_alt][Spalte_alt] != Team_member))&&((Spalte_alt != 0)||(Zeile_alt != 0))) {
 			printf("	The position of the Quidditch-player ?\n");
 			printf("	alte Zeile: \n	alte Spalte: \n");
@@ -16030,12 +16013,22 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 	} else {
 		for (unsigned int i=1; i<=m-2; i++) {
 			for (unsigned int j=1; j<=n-2; j++) {
-				if (Field[0][i][j] == Sucher) {
-					Zeile_alt = i;
-					Spalte_alt = j;
-					short_cut = evet;
-					break;
+				if (Team_member == Sucher) {
+					if (Field[0][i][j] == Sucher) {
+						Zeile_alt = i;
+						Spalte_alt = j;
+						short_cut = evet;
+						break;
+					}
+				} else if (Team_member == Hueter) {
+					if (Field[0][i][j] == Hueter) {
+						Zeile_alt = i;
+						Spalte_alt = j;
+						short_cut = evet;
+						break;
+					}
 				}
+				
 			}
 			if (short_cut == evet) {
 				short_cut = hayir;
@@ -16486,7 +16479,7 @@ void Quidditch_Klatscher_steps (Spielfeld Field, unsigned int geben, Spielfeld O
 		}
 	}	//no effects on not-target objects on the way (-> Klatscher-hit)
 	
-	Moc_Klatscher[p].remaining_squares_to_move = 0;	//his work is done.
+	Moc_Klatscher[p].remaining_squares_to_move = 0;	//its work is done.
 	
 	if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_1)&&(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] != Torring_2)) {
 		if ((Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Jaeger_1)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Hueter_1)||(Field[0][Moc_Klatscher[p].i][Moc_Klatscher[p].j] == Sucher_1)) {
@@ -16541,8 +16534,8 @@ void Klatscher_hits_target (unsigned int whose_turn, Spielfeld Field, unsigned i
 	for (unsigned int q=0; q<=8; q++) {
 		allowed_directions[q][0] = hayir;
 	}
-	
-	printf("	Player %u, a Klatscher hits the enemy at [%u][%u]. \n", whose_turn, Moc_Klatscher[p].i, Moc_Klatscher[p].j);
+	printf("	Player %u", whose_turn);
+	printf(", a Klatscher hits the enemy at [%u][%u]. \n", Moc_Klatscher[p].i, Moc_Klatscher[p].j);
 	printf("	In which direction do you want to push the enemy? \n");
 	Klatscher_hit_allowed_directions (whose_turn, Field, m, n, Moc_Klatscher, p, allowed_directions);
 	
@@ -16613,8 +16606,8 @@ void Treiber_hits_Klatscher (unsigned int whose_turn, Spielfeld Field, unsigned 
 	for (unsigned int q=0; q<=8; q++) {
 		allowed_directions[q] = evet;
 	}
-	
-	printf("	Player %u, a Klatscher hits your Treiber at [%u][%u]. \n", whose_turn, Moc_Klatscher[p].i, Moc_Klatscher[p].j);
+	printf("	Player %u", whose_turn);
+	printf(", a Klatscher hits your Treiber at [%u][%u]. \n", Moc_Klatscher[p].i, Moc_Klatscher[p].j);
 	printf("	In which direction do you want to hit the Klatscher? \n");
 	
 	if (Moc_Klatscher[p].i == 1) {
@@ -16640,7 +16633,7 @@ void Treiber_hits_Klatscher (unsigned int whose_turn, Spielfeld Field, unsigned 
 	while ((direction_choice == 0) || (direction_choice > 8) || (allowed_directions[direction_choice] != evet)) {
 		
 		if (allowed_directions[1] == evet) {
-			printf("	1: Top \n");
+			printf("	%u: Top \n", top);
 		}
 		if (allowed_directions[2] == evet) {
 			printf("	2: Top & Right \n");
@@ -16934,7 +16927,7 @@ void Quidditch_Schnatz_movements (Spielfeld Field, unsigned int geben, Spielfeld
 	
 	if (Moc_Schnatz->directed == hayir) {	//not on the field.
 		a_random_number = Zufall (1, (Qs->Qoa->Schnatz_appearence_factor)%10);
-		a_random_number = 1;	//test, reverse
+		// a_random_number = 1;	//test, reverse
 		if (a_random_number <= (Qs->Qoa->Schnatz_appearence_factor)/10) {	//Appearence
 			if (use_number%2 == 0) {
 				for (unsigned int h=1; h<=m-2; h++) {
