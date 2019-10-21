@@ -26,6 +26,8 @@ int main (void) {
 
 	time_of_the_start = time(NULL);
 	
+	printf("time_of_the_start = %lu \n", time_of_the_start);	//test
+	
 	//printf ("	ok 1 \n");	//test
 	//Spielfeld test_;	//test
 	//printf ("	ok 1.1 \n");	//test
@@ -381,10 +383,10 @@ int main (void) {
 						} else {
 							printf("	Do not activate Tactics or Cards, it will replace the Random-Mode! \n");
 							printf("	This only works if the number of players is correct! \n");
-
-							printf("	Random activated \n");
+							printf("	Random activated \n\n");
+							
 							printf("	Please get all a number from 0 to %u, not the same, it will have no effect further on. \n", number_of_players-1);
-							printf("	Give me three random numbers from 1 to 60 \n");
+							printf("	Give me three random numbers from 1 to 60: \n");
 							number_[1] = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							number_[2] = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							number_[3] = get_unsigned_numeric_input_with_not_more_than_2_letters ();
@@ -536,6 +538,8 @@ int main (void) {
 					}
 
 					if (beginningmenu == oLimits){	//checklist
+							printf("	This only works if the number of players is correct! \n");
+
 						if ((gamemode_played == Classic)||(gamemode_played == Collect)) {
 							printf("	Change limits.new: 1 \n	Change limits.at_all: 2 \n	Change both: 3 \n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -594,7 +598,7 @@ int main (void) {
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
-						} else if (gamemode_played == Fight) {
+						} else if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -654,8 +658,6 @@ int main (void) {
 							printf("	Ulcer is unlimited.\n");
 
 						} else if (gamemode_played == Dynamic) {
-							printf("	This only works if the number of players is correct! \n");
-
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -682,8 +684,6 @@ int main (void) {
 							printf("	Survive is unlimited.\n");
 
 						} else if (gamemode_played == Sand) {
-							printf("	This only works if the number of players is correct! \n");
-
 							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
@@ -712,19 +712,19 @@ int main (void) {
 
 							if (lim == 1){
 
-								printf("	limits.new:      (normal: 40) \n");
+								printf("	limits.new:      (normal: 45) \n");
 								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 
 							}
 							if (lim == 2){
 
-								printf("	limits.at_all:       (normal: 80) \n");
+								printf("	limits.at_all:       (normal: 90) \n");
 								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 
 							}
 							if (lim == 3){
 
-								printf("	limits.new:				(normal: 40) \n	limits.at_all:				(normal: 80) \n");
+								printf("	limits.new:				(normal: 45) \n	limits.at_all:				(normal: 90) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
 								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
@@ -745,103 +745,48 @@ int main (void) {
 							printf("	Limit the time of each turn to make the game faster. \n");
 							printf("	You should add a bonus of 10sec if you want to play in the tactics-mode. \n");
 							printf("\n");
+							
+							unsigned int ttt_normal;
+							ttt_normal = 0;
+							
 							if ((gamemode_played == Classic)||(gamemode_played == Collect)) {
-								printf("	Choose the limit of time:         (normal: 20sec) \n");
-								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters ();
-								if (ttt == 0) {
-									printf("	That's impossible! You'll take 20sec. \n");
-									ttt = 20;
-								}
-								printf("\n");
-								printf("\n");
-
-								printf("	Choose the penalty:     relaxed: 1,   normal: 2,  serious: 3,   strict: 4,  hard: 5,  elite: 6,   no mercy: 7 \n");
-								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-								if ((warning_system == 0)||(warning_system > 7)) {
-									printf("	Let's say normal. \n");
-									warning_system = 2;
-								}
-								printf("\n");
-								printf("\n");
-
+								ttt_normal = 20;
 							} else if ((gamemode_played == Contact)||(gamemode_played == Arena)||(gamemode_played == Dynamic)||(gamemode_played == Quidditch)) {
-								printf("	Choose the limit of time:         (normal: 30sec) \n");
-								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters ();
-								if (ttt == 0) {
-									printf("	That's impossible! You'll take 30sec. \n");
-									ttt = 30;
-								}
-								printf("\n");
-								printf("\n");
-
-								printf("	Choose the penalty:     relaxed: 1,   normal: 2,  serious: 3,   strict: 4,  hard: 5,  elite: 6,   no mercy: 7 \n");
-								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-								if ((warning_system == 0)||(warning_system > 7)) {
-									printf("	Let's say normal. \n");
-									warning_system = 2;
-								}
-								printf("\n");
-								printf("\n");
-
+								ttt_normal = 30;
 							} else if ((gamemode_played == Fall)||(gamemode_played == Race)||(gamemode_played == Rain)||(gamemode_played == Ulcer)||(gamemode_played == Survive)) {
-								printf("	Choose the limit of time:         (normal: 25sec) \n");
-								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters ();
-								if (ttt == 0) {
-									printf("	That's impossible! You'll take 25sec. \n");
-									ttt = 25;
-								}
-								printf("\n");
-								printf("\n");
-
-								printf("	Choose the penalty:     relaxed: 1,   normal: 2,  serious: 3,   strict: 4,  hard: 5,  elite: 6,   no mercy: 7 \n");
-								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-								if ((warning_system == 0)||(warning_system > 7)) {
-									printf("	Let's say normal. \n");
-									warning_system = 2;
-								}
-								printf("\n");
-								printf("\n");
+								ttt_normal = 25;
 							} else if (gamemode_played == Fight) {
-								printf("	Choose the limit of time:         (normal: 15sec) \n");
-								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters ();
-								if (ttt == 0) {
-									printf("	That's impossible! You'll take 15sec. \n");
-									ttt = 15;
-								}
-								printf("\n");
-								printf("\n");
-
-								printf("	Choose the penalty:     relaxed: 1,   normal: 2,  serious: 3,   strict: 4,  hard: 5,  elite: 6,   no mercy: 7 \n");
-								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-								if ((warning_system == 0)||(warning_system > 7)) {
-									printf("	Let's say normal. \n");
-									warning_system = 2;
-								}
-								printf("\n");
-								printf("\n");
-
-							} else if (gamemode_played == Hunt) {
+								ttt_normal = 15;
+							} else if ((gamemode_played == Hunt)||(gamemode_played == Duell)) {
+								ttt_normal = 35;
+							}
+							
+							if (gamemode_played == Hunt) {
 								printf("	The hunted one will get a 10sec bonus. \n");
 								printf("	The time for choosing his heart is unlimited. \n");
 								printf("	\n");
-								printf("	Choose the limit of time:         (normal: 35sec) \n");
-								ttt = get_unsigned_numeric_input_with_not_more_than_2_letters ();
-								if (ttt == 0) {
-									printf("	That's impossible! You'll take 35sec. \n");
-									ttt = 35;
-								}
-								printf("\n");
-								printf("\n");
-
-								printf("	Choose the penalty:     relaxed: 1,   normal: 2,  serious: 3,   strict: 4,  hard: 5,  elite: 6,   no mercy: 7 \n");
-								warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-								if ((warning_system == 0)||(warning_system > 7)) {
-									printf("	Let's say normal. \n");
-									warning_system = 2;
-								}
-								printf("\n");
-								printf("\n");
 							}
+							
+							printf("	Choose the limit of time:         (normal: %usec) \n", ttt_normal);
+							ttt = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+							if (ttt == 0) {
+								printf("	That's impossible! You'll take %usec. \n", ttt_normal);
+								ttt = ttt_normal;
+							}
+						
+							
+							printf("\n");
+							printf("\n");
+
+							printf("	Choose the penalty:     relaxed: 1,   normal: 2,  serious: 3,   strict: 4,  hard: 5,  elite: 6,   no mercy: 7 \n");
+							warning_system = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+							if ((warning_system == 0)||(warning_system > 7)) {
+								printf("	Let's say normal. \n");
+								warning_system = 2;
+							}
+							printf("\n");
+							printf("\n");
+
 						}
 
 					}
@@ -1195,47 +1140,49 @@ int main (void) {
 
 					}
 					
-					if ((beginningmenu == oBack+1)&&(gamemode_played == Quidditch)) {
-						printf("	Klatscher-fly-distance:		(normal: 3) \n");
+					if ((beginningmenu == oBack+1)&&(gamemode_played == Quidditch)) {	//always synchronisate with (Initialisierung: ... in .h)
+						printf("	Klatscher-fly-distance:		(normal: 4) \n");
 						Qoa->Klatscher_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 						
-						printf("	Schnatz-fly-distance:		(normal: 3) \n");
+						printf("	Schnatz-fly-distance:		(normal: 5) \n");
 						Qoa->Schnatz_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 						
 						while ((Qoa->Schnatz_appearence_factor%10 < Qoa->Schnatz_appearence_factor/10)||(Qoa->Schnatz_appearence_factor == 0)) {
-							printf("	Schnatz-appearence-factor:		(normal: 13 [read as 1/3]) \n");
+							printf("	Schnatz-appearence-factor:		(normal: 25 [read as 2/5]) \n");
 							Qoa->Schnatz_appearence_factor = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 						}
 						
 						while ((Qoa->Schnatz_disappearence_factor%10 < Qoa->Schnatz_disappearence_factor/10)||(Qoa->Schnatz_disappearence_factor == 0)) {
-							printf("	Schnatz-disappearence-factor:		(normal: 23 [read as 2/3]) \n");
+							printf("	Schnatz-disappearence-factor:		(normal: 13 [read as 1/3]) \n");
 							Qoa->Schnatz_disappearence_factor = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 						}
 					}
 					
-					if ((beginningmenu == oBack+2)&&(gamemode_played == Quidditch)) {
+					if ((beginningmenu == oBack+2)&&(gamemode_played == Quidditch)) {	//always synchronisate with (Initialisierung: ... in .h)
 						for (unsigned int p=1; p<=number_of_players; p++) {
 							printf("	Player %u, please create a selection of Team-abilities, everyone wil be able to take it. \n", p);
+							unsigned int normal_value;
+							normal_value = 5;
 							
-							printf("	Jaeger-fly-distance:		(normal: 3) \n");
+							printf("	Jaeger-fly-distance:		(normal: %u) \n", normal_value);
 							Qta[p].Jaeger_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							
-							printf("	Jaeger-throw-distance:		(normal: 3) \n");
+							printf("	Jaeger-throw-distance:		(normal: %u) \n", normal_value);
 							Qta[p].Jaeger_throw_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							
-							printf("	Hueter-fly-distance:		(normal: 2) \n");
+							printf("	Hueter-fly-distance:		(normal: %u) \n", normal_value-1);
 							Qta[p].Hueter_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							
-							printf("	Hueter-throw-distance:		(normal: 3) \n");
+							printf("	Hueter-throw-distance:		(normal: %u) \n", normal_value);
 							Qta[p].Hueter_throw_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							
-							printf("	Treiber-fly-distance:		(normal: 3) \n");
+							printf("	Treiber-fly-distance:		(normal: %u) \n", normal_value);
 							Qta[p].Treiber_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							
-							printf("	Treiber-hit-distance:		(normal: 3) \n");
+							printf("	Treiber-hit-distance:		(normal: %u) \n", normal_value);
 							Qta[p].Treiber_hit_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							
-							printf("	Sucher-fly-distance:		(normal: 3) \n");
+							printf("	Sucher-fly-distance:		(normal: %u) \n", normal_value);
 							Qta[p].Sucher_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 						}
 					}
@@ -1335,7 +1282,7 @@ int main (void) {
 									m = 6+2*(((number_of_players+1)/2)-1) +2;
 									n = 5*2*((number_of_players+1)/2)+1 +2;
 								}
-							} else if (gamemode_played == Fight) {
+							} else if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
 								if (number_of_players == 2) {
 									m = Initialisierung_m (gamemode_played);
 									n = Initialisierung_n (gamemode_played);
