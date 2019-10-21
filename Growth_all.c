@@ -1144,7 +1144,7 @@ int main (void) {
 						printf("	Klatscher-fly-distance:		(normal: 4) \n");
 						Qoa->Klatscher_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 						
-						printf("	Schnatz-fly-distance:		(normal: 5) \n");
+						printf("	Schnatz-fly-distance:		(normal: 6) \n");
 						Qoa->Schnatz_fly_distance = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 						
 						while ((Qoa->Schnatz_appearence_factor%10 < Qoa->Schnatz_appearence_factor/10)||(Qoa->Schnatz_appearence_factor == 0)) {
@@ -1153,7 +1153,7 @@ int main (void) {
 						}
 						
 						while ((Qoa->Schnatz_disappearence_factor%10 < Qoa->Schnatz_disappearence_factor/10)||(Qoa->Schnatz_disappearence_factor == 0)) {
-							printf("	Schnatz-disappearence-factor:		(normal: 13 [read as 1/3]) \n");
+							printf("	Schnatz-disappearence-factor:		(normal: 12 [read as 1/2]) \n");
 							Qoa->Schnatz_disappearence_factor = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 						}
 					}
