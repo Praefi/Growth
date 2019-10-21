@@ -272,20 +272,20 @@ typedef struct player_t {	//player
 } Growth_Player;
 
 typedef struct Quidditch_team_abilities_t {	//Qta
-	unsigned int Jaeger_fly_distance;		//normal: 3
-	unsigned int Jaeger_throw_distance;		//normal: 3
-	unsigned int Hueter_fly_distance;		//normal: 2
-	unsigned int Hueter_throw_distance;		//normal: 3
-	unsigned int Treiber_fly_distance;		//normal: 3
-	unsigned int Treiber_hit_distance;		//normal: 3
-	unsigned int Sucher_fly_distance;		//normal: 3
+	unsigned int Jaeger_fly_distance;		//normal: 5
+	unsigned int Jaeger_throw_distance;		//normal: 5
+	unsigned int Hueter_fly_distance;		//normal: 4
+	unsigned int Hueter_throw_distance;		//normal: 5
+	unsigned int Treiber_fly_distance;		//normal: 5
+	unsigned int Treiber_hit_distance;		//normal: 5
+	unsigned int Sucher_fly_distance;		//normal: 5
 } Quidditch_team_abilities;
 
 typedef struct Quidditch_object_abilities_t {	//Qoa
-	unsigned int Klatscher_fly_distance;		//normal: 3
-	unsigned int Schnatz_fly_distance;			//normal: 3
-	unsigned int Schnatz_appearence_factor;		//normal: 13	(to read as 1/3, necessary to get 2 letters)
-	unsigned int Schnatz_disappearence_factor;	//normal: 23	(to read as 2/3, necessary to get 2 letters)	(except a Sucher is in its surrounding, frozen);
+	unsigned int Klatscher_fly_distance;		//normal: 4
+	unsigned int Schnatz_fly_distance;			//normal: 6
+	unsigned int Schnatz_appearence_factor;		//normal: 25	(to read as 2/5, necessary to get 2 letters)
+	unsigned int Schnatz_disappearence_factor;	//normal: 12	(to read as 1/2, necessary to get 2 letters)	(except a Sucher is in its surrounding, frozen);
 } Quidditch_object_abilities;
 
 typedef struct Quidditch_setup_t {	//Quidditch-modifications
@@ -3655,6 +3655,14 @@ void Change (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, uns
 								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, eigene_Zeile, eigene_Spalte, Field[0][fremde_Zeile][fremde_Spalte]);
 								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, fremde_Zeile, fremde_Spalte, geben);
 							}
+						} else if (gamemode_played == Quidditch) {
+							if ((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(Field[0][fremde_Zeile][fremde_Spalte] == Torring_1)||(Field[0][fremde_Zeile][fremde_Spalte] == Torring_2)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
+								printf("	you made a mistake, try again: \n");
+								Change (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, position, Allocation_o, number_of_players);
+							} else {
+								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, eigene_Zeile, eigene_Spalte, Field[0][fremde_Zeile][fremde_Spalte]);
+								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, fremde_Zeile, fremde_Spalte, geben);
+							}
 						} else {
 							if ((Field[0][fremde_Zeile][fremde_Spalte] > number_of_players)||(Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(abs(fremde_Spalte-eigene_Spalte)+abs(fremde_Zeile-eigene_Zeile)!= 1)){
 								printf("	you made a mistake, try again: \n");
@@ -5896,36 +5904,36 @@ void About_the_game (unsigned int gamemode_played, unsigned int geben, Limits li
 		printf("	Contact-battles?  All near-by squares in a row with the Contact-square build a chain, beat your opponents in the length.\n");
 	} else if (gamemode_played == Fall) {
 		printf("	How to win?   Get more points than your opponents.\n");
-		printf("	Note:	Touch the #-square in the near-by to move it to the opposite side. \n");
+		printf("	Note:	Touch the #-square in the near-by to move it to the opposite side of touch. \n");
 	} else if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
 		printf("	How to win?   Force your opponents to lose all his/her squares.\n");
 	} else if (gamemode_played == Hunt) {
 		if (geben == 1) {
-			printf("	How to win?   Protect your heart-block so no enemy can touch it.\n");
+			printf("	How to win?   Protect your heart-block in a way that no enemy can touch it.\n");
 		} else {
-			printf("	How to win?   Catch the heart-block of the hunted one before it disappears.\n");
+			printf("	How to win?   Touch the heart-block of the hunted one before it disappears.\n");
 		}
 	} else if (gamemode_played == Race) {
 		printf("	How to win?   Reach the end of the field or force your opponents to lose all his/her ones.\n");
-		printf("	Note:	Every %u turns in total the #-line will go ahead and destroys everything in it's way.\n Also you are not allowed to cross the mid-line. \n", freq);
+		printf("	Note:	Every %u turn(s) in total the #-line will go ahead and destroys everything in it's way.\n Also you are not allowed to cross the mid-line. \n", freq);
 	} else if (gamemode_played == Rain) {
 		printf("	How to win?   Reach [1][7]");
 		for (unsigned int p=2; p<=number_of_players; p++) {
 			printf(" or [1][%u]", (p-1)*7);
 		}
 		printf(" of the field or force your opponents to lose all his/her squares.\n");
-		printf("	Note:	Falling down the #-squares will push, destroy, explode, or teleport, transform into yours by Contact. \n");
+		printf("	Note:	Falling down the #-squares will push, destroy, explode, or teleport, transform into yours by contact. \n");
 	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)) {	//10
-		printf("	How to win?   Force your opponents to lose all his/her squares while keeping yours alive.\n");
+		printf("	How to win?   Force your opponents to lose all his/her squares while keeping yours alive by using your special abilities.\n");
 	} else if (gamemode_played == Dynamic) {
-		printf("	How to win?   Push the ball against your opponent's side.\n");
+		printf("	How to win?   Push the ball towards your opponent's side.\n");
 	} else if (gamemode_played == Survive) {
-		printf("	How to win?   Stay alive.\n");
+		printf("	How to win?   Stay alive by avoiding traps, waves and bombs.\n");
 	} else if (gamemode_played == Sand) {
-		printf("	How to win?   Reach the top.\n");
+		printf("	How to win?   Reach the topline, your squares keep falling.\n");
 	} else if (gamemode_played == Quidditch) {
-		printf("	How to win?   Get more points as your opponent. Every goal with a Quaffel worths 10 points, catching the Schnatz gives you 150 points.\n");
-		printf("	Note:	Teammembers can move through changing position with one of your squares in its reach. In the Near-by of the balls, no living square is going to die. \n");
+		printf("	How to win?   Get more points as your opponent. Every goal with a Quaffel worths 10 points, catching the Schnatz gives you 150 points and ends the game.\n");
+		printf("	Note:	Teammembers can move through changing position with one of your squares in its reach.\n	In the Near-by of objects, no living square is going to die.\n	In the Near-by of a Jaeger/Hueter the Quaffel is possessed and follows the movements of it's owner or can be thrown.\n	Passing this area the Quaffel stops during it's throw.\n \n If a Sucher flys through the Schnatz, it is caught.\n \n	If a Klatscher hits a target, the position of the target will change.\n ");
 	}
 	printf("	Surrounding:	The 8 squares around another, at the edge 5, in the corners 3, are called #surrounding. \n");
 	printf("	near-by:	The 4 squares around another, at the edge 3, in the corners 2, are called #near-by. \n");
@@ -6126,9 +6134,9 @@ void Initialisierung_Qs (Quidditch_setup* Qs, Quidditch_team_abilities* Qta, Qui
 }
 void Initialisierung_Qoa (Quidditch_object_abilities* Qoa) {	//always synchronisate with (normal: ... in .c)
 	Qoa[0].Klatscher_fly_distance = 4;
-	Qoa[0].Schnatz_fly_distance = 5;
+	Qoa[0].Schnatz_fly_distance = 6;
 	Qoa[0].Schnatz_appearence_factor = 25;	//to read as 2/5
-	Qoa[0].Schnatz_disappearence_factor = 13;	//to read as 1/3
+	Qoa[0].Schnatz_disappearence_factor = 12;	//to read as 1/2
 }
 void Initialisierung_Qta (Quidditch_team_abilities* Qta) {	//always synchronisate with (normal: ... in .c)
 	unsigned int normal_value;
@@ -6280,7 +6288,7 @@ unsigned int Initialisierung_m (unsigned int gamemode_played) {	//real+2
 	} else if (gamemode_played == Survive) {
 		Ausgabe = 13;
 	} else if (gamemode_played == Quidditch) {
-		Ausgabe = 22;
+		Ausgabe = 20;
 	} else {
 		Ausgabe = 0;
 	}
@@ -15478,33 +15486,37 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 	
 	// /*
 	if (gamemode_played == Quidditch) {	//Selected actions/movements by teammembers
-		Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry. (Field before Moc)
-		
-		Quidditch_Klatscher_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
-		
-		Quidditch_Quaffel_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players, ges, limits.at_all);	//2-times
-		
-		Quidditch_Schnatz_player_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
-		
-		#ifdef Quidditch_mistake_search
-		printf("	Quidditch_team_actions.ok \n");	//test
-		#endif
-		
-		if (geben == number_of_players) {
+		if (real == evet) {
+			Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry. (Field before Moc)
 			
-			Quidditch_Schnatz_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz, Qs, rmv->use_number);
+			Quidditch_Klatscher_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
 			
-			Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
+			Quidditch_Quaffel_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players, ges, limits.at_all);	//2-times
 			
-			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-			
-			Quidditch_Klatscher_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, Qs);
-			
-			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+			Quidditch_Schnatz_player_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
 			
 			#ifdef Quidditch_mistake_search
-			printf("	Quidditch_S/K_actions.ok \n");	//test
+			printf("	Quidditch_team_actions.ok \n");	//test
 			#endif
+			
+			if ((geben == number_of_players)&&(*g != 0)) {
+				
+				Quidditch_Schnatz_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz, Qs, rmv->use_number);
+				
+				Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
+				
+				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				
+				Quidditch_Klatscher_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, Qs);
+				
+				Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
+				
+				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				
+				#ifdef Quidditch_mistake_search
+				printf("	Quidditch_S/K_actions.ok \n");	//test
+				#endif
+			}
 		}
 		
 		Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
@@ -15798,7 +15810,7 @@ void Quidditch_Quaffel_Throw (Spielfeld Field, unsigned int geben, Spielfeld Opa
 		
 		while ((Zeile_neu > m-2)||(Spalte_neu > n-2)||((Zeile_neu == 0)&&(Spalte_neu != 0))||((Spalte_neu == 0)&&(Zeile_neu != 0))||(abs(Moc_Quaffel->i - Zeile_neu) > abs(throw_distance - 0))||(abs(Moc_Quaffel->j - Spalte_neu) > abs(throw_distance - 0))||((Field[0][Zeile_neu][Spalte_neu] != 0)&&(Field[0][Zeile_neu][Spalte_neu] != geben)&&(Field[0][Zeile_neu][Spalte_neu] != Torring))) {
 			
-			printf("	The position of choice of the Quaffel ?		(Range: %u)\n", throw_distance);
+			printf("	The position of choice of the Quaffel (now: [%u][%u]) ?		(Range: %u)\n", Moc_Quaffel->i, Moc_Quaffel->j, throw_distance);
 			printf("	neue Zeile: \n	neue Spalte: \n");
 			
 			letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
@@ -17052,7 +17064,7 @@ void Quidditch_Schnatz_movements (Spielfeld Field, unsigned int geben, Spielfeld
 						if (Field[0][h][k] == Klatscher) {
 							Moc_Schnatz->i = h;
 							Moc_Schnatz->j = k;	//The Klatscher's position is imitating a Schnatz-position.
-							Moc_Schnatz->remaining_squares_to_move = 2*(Qs->Qoa->Schnatz_fly_distance);
+							Moc_Schnatz->remaining_squares_to_move = 3*(Qs->Qoa->Schnatz_fly_distance);
 							Quidditch_move_of_Schnatz (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz);
 							short_cut = evet;
 							break;
@@ -17068,7 +17080,7 @@ void Quidditch_Schnatz_movements (Spielfeld Field, unsigned int geben, Spielfeld
 						if (Field[0][h][k] == Klatscher) {
 							Moc_Schnatz->i = h;
 							Moc_Schnatz->j = k;	//The Klatscher's position is imitating a Schnatz-position.
-							Moc_Schnatz->remaining_squares_to_move = 2*(Qs->Qoa->Schnatz_fly_distance);
+							Moc_Schnatz->remaining_squares_to_move = 3*(Qs->Qoa->Schnatz_fly_distance);
 							Quidditch_move_of_Schnatz (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Schnatz);
 							short_cut = evet;
 							break;
