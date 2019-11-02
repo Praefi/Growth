@@ -1,13 +1,18 @@
 1.Gamemodes:
-	a) Add in enum (Invalid += 1)														-->Quidditch
-	b) Add in selection																	-->Quidditch
-	c) new structs/variables needed?													-->Quidditch
-	d) Create the Initialisierung														-->Quidditch
-	e) Create a start_normal															-->Quidditch
-	f) Complete show_field																-->Quidditch
-	g) Controll the actions (Plus, Minus, ...)											-->Quidditch
-	h) Influence on evolution?															-->Quidditch
-	i) Go through realize_modifications (watch out for real==evet)						-->Quidditch
-	j) reset_ges/who_is_out																-->Quidditch
-	k) maybe special changes (certain colors, number_of_players, cards/tatics/random)	-->Quidditch
-	l) Add new functions																-->Quidditch
+	a) Add in enum (Invalid += 1)
+	b) Add in selection
+	c) new structs/variables needed?
+	d) Create the Initialisierung --> 1.1
+	e) Create a start_normal	--> 1.1
+	f) Complete show_field	--> 1.2
+	g) Controll the actions (Plus, Minus, ...)	--> 1.1, 1.2
+	h) Influence on evolution?	--> 1.2
+	i) Go through realize_modifications (watch out for real==evet)
+	j) reset_ges/who_is_out	--> 1.1
+	k) maybe special changes (certain colors, number_of_players, cards/tatics/random)
+	l) Add new functions
+	
+1.1 List of FUNCTIONS to complete: decision_max_maker, Having_too_much, get_how_many_ways_of_keeping, Initialisierung_limits_at_all, Initialisierung_limits_new, Initialisierung_m, Initialisierung_n, show_statistics, Plus, Minus, Move, Change, Destroy, reset_ges, who_is_out, opague_builder
+
+
+1.2 List of FUNCTIONS maybe needing an update: show_field, old_dying, new_life, Revive, Boost
