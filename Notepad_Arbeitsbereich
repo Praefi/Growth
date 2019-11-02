@@ -3,6 +3,7 @@
         <Folder name="Sonstige Dateien">
             <File name="Checklist.txt" />
             <File name="Growth_all.mak" />
+            <File name="README.md" />
         </Folder>
         <Folder name="C-Dateien">
             <File name="Growth_all.c" />
