@@ -1,4 +1,4 @@
-# Growth
+﻿# Growth
 An advanced game
 
 I created this repository to work with some of my friends on the Game "Growth" which i wrote with sixteen days of Programming-Experience. I am a mathematic student with no focus on informatic and thats the reason why my code is just exploding and annoying for professionals, but it's the result of using almost all what i learned yet (in 16 days). Hoping to evolve this game to an app one day, i will try my best. What a pity that programming is a brand new world for me.
@@ -64,9 +64,9 @@ Boost: If a opponents square is in the surrounding of one of your squares, it wi
 
 Now it's time to reveal why the games titel has the part „contact“ in it:
 Every time a square of yours is touching a square of your opponent, the number of squares owned by a player which are connected to the touching one (which counts too) using same edges of his/her squares are count for each player.
-Then the player with the higher count gets the squares of the opponent, in the situation of 	equal counts nothing happens, except the number of squares is 1. In that case the active player, means the player which made the last turn, will win this battle.
+Then the player with the higher count gets the squares of the opponent, in the situation of equal counts nothing happens, except the number of squares is 1. In that case the active player, means the player which made the last turn, will win this battle.
 
-Understanding the algorithim of development, playing this game will causes no troubles after a period of time.
+Understanding the algorithim of development, playing this game will cause no troubles after a period of time.
 If there are still questions, you are free to ask me.
 
 ***********************************************************************************************
