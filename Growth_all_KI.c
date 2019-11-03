@@ -610,7 +610,36 @@ void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Mo
 	printf("set_KI_table_of_choice ok.3.8 \n");	//test
 	#endif
 	
-	if (gamemode_played == Collect) {
+	if (gamemode_played == Classic) {
+		unsigned int team_indicator;
+		team_indicator = geben%2;
+		
+		for (unsigned int i=1; i<=m-2; i++) {
+			for (unsigned int j=1; j<=n-2; j++) {
+				if (team_indicator == 1) {
+					if (Field_copy[0][i][j] == geben) {
+						worth_of_turn += 2*i;
+						if (i == (m-2)) {
+							worth_of_turn += 4*i*i;
+						}
+					}
+					if ((Field_copy[0][i][j])%2 != (team_indicator+1)%2) {
+						worth_of_turn += (m-2+1)-i;
+					}
+				} else if (team_indicator == 0) {
+					if (Field_copy[0][i][j] == geben) {
+						worth_of_turn += 2*(m-2-i);
+						if (i == 1) {
+							worth_of_turn += 4*(m-2)*(m-2);
+						}
+					}
+					if ((Field_copy[0][i][j])%2 != (team_indicator+1)%2) {
+						worth_of_turn += i;
+					}
+				}
+			}
+		}
+	} else if (gamemode_played == Collect) {
 		for (unsigned int q=1; q<=number_of_players-1; q++) {
 			if ((Field[0][(m-1)/2][2+q+q*(n-2-4-(number_of_players-1))/number_of_players] == To_collect)&&(Field_copy[0][(m-1)/2][2+q+q*(n-2-4-(number_of_players-1))/number_of_players] == geben)) {
 				worth_of_turn += 10000;
