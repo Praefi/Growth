@@ -11,6 +11,13 @@
 
 
 #include "Growth_all_Def.h"
+#include "Growth_all_Vektor.h"
+#include "Growth_all_actions.h"
+#include "Growth_all_set.h"
+#include "Growth_all_get.h"
+#include "Growth_all_show.h"
+#include "Growth_all_gamemode_specials.h"
+#include "Growth_all_options_specials.h"
 #include "Growth_all_Development.h"
 
 
@@ -284,7 +291,7 @@ void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsign
 		ent = (ent + (number_of_players-3));
 	}
 
-	if ((count_new > limits.new)&&(single_option_representives.inverted == 0)&&(single_option_representives.addition == 0)&&(single_option_representives.intensity_loss_per_line_multiplication == 0)){		//Abfrage auf max. limits.new neue Steine,
+	if ((count_new > limits.new)&&(single_option_representives.inverted == 0)&&(single_option_representives.addition == 0)&&(single_option_representives.intensity_loss_per_line_multiplication == 0)&&(single_option_representives.spreading == 0)){		//Abfrage auf max. limits.new neue Steine,
 		if ((gamemode_played != Ulcer)&&(gamemode_played != Survive)) {
 			Having_too_much (KI_decision, ent, count_new, m, n, evolution, limits, zeitgewinner, Spiel, w, d, e, geben, position, gamemode_played, number_of_players, rain, Opague_o_field, Allocation_o, level, real);
 		} else {
@@ -316,7 +323,7 @@ void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsign
 		ent = (ent + 2* (number_of_players-3));
 	}
 
-	if ((count_new > ent)&&(single_option_representives.inverted == 0)&&(single_option_representives.addition == 0)&&(single_option_representives.intensity_loss_per_line_multiplication == 0)){		//Abfrage auf insgesamt max. limits.at_all Steine
+	if ((count_new > ent)&&(single_option_representives.inverted == 0)&&(single_option_representives.addition == 0)&&(single_option_representives.intensity_loss_per_line_multiplication == 0)&&(single_option_representives.spreading == 0)){		//Abfrage auf insgesamt max. limits.at_all Steine
 		if ((gamemode_played != Contact)&&(gamemode_played != Ulcer)&&(gamemode_played != Survive)) {
 			Having_too_much (KI_decision, ent, count_new, m, n, evolution, limits, zeitgewinner, Spiel, w, d, e, geben, position, gamemode_played, number_of_players, rain, Opague_o_field, Allocation_o, level, real);
 		} else {
@@ -329,7 +336,7 @@ void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsign
 	ent = 0;
 
 	if (gamemode_played == Fall) {
-		touch (Spiel, m, n, geben, evolution.nl, Allocation_o, Opague_o_field, number_of_players, gamemode_played);
+		touch (Spiel, Field, m, n, geben, evolution.nl, Allocation_o, Opague_o_field, number_of_players, gamemode_played);
 	}
 
 	// printf("basic_development ok.3\n");	//test
