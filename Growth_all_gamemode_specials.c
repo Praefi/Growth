@@ -11,6 +11,11 @@
 
 
 #include "Growth_all_Def.h"
+#include "Growth_all_Vektor.h"
+#include "Growth_all_get.h"
+#include "Growth_all_set.h"
+#include "Growth_all_show.h"
+#include "Growth_all_actions.h"
 #include "Growth_all_gamemode_specials.h"
 
 void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* information_code, unsigned int* position, Growth_Player* Growth_players) {
@@ -1243,7 +1248,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 }
 
-void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int gamemode_played){
+void battle (Spielfeld Spiel, unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int gamemode_played){
 	Spielfeld chain, chain_temp;
 	unsigned int chain_total[number_of_players+1], a;
 
@@ -1259,14 +1264,14 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (Field[0][i][j] == geben){
+			if (Spiel[0][i][j] == geben){
 
 				// printf("battle ok.2 \n"); //test
 
 				for (unsigned int u=i-1; u<=i+1; u++){
 					for (unsigned int o=j-1; o<=j+1; o++){
 						if ((u+o)%2 == (i+j+1)%2) {
-							if ((Field[0][u][o] != geben)&&(Field[0][u][o] <= number_of_players)&&(Field[0][u][o] != 0)) {
+							if ((Spiel[0][u][o] != geben)&&(Spiel[0][u][o] <= number_of_players)&&(Spiel[0][u][o] != 0)) {
 
 								// printf("battle ok.2.1 \n"); //test
 
@@ -1282,39 +1287,39 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 
 								// printf("battle ok.2.1.2 \n"); //test
 
-								chain_count (i, j, Field, chain_temp, geben, chain_total, geben, Opague_o_field, Allocation_o, number_of_players, gamemode_played);
+								chain_count (Spiel, i, j, Field, chain_temp, geben, chain_total, geben, Opague_o_field, Allocation_o, number_of_players, gamemode_played);
 
 								// printf("battle ok.2.1.3 \n"); //test
 
-								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, chain_temp, 0, u, o, Field[0][u][o]);
+								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, chain_temp, 0, u, o, Spiel[0][u][o]);
 
 								// printf("battle ok.2.1.4 \n"); //test
 
-								chain_total[Field[0][u][o]] = 1;
+								chain_total[Spiel[0][u][o]] = 1;
 
 								// printf("battle ok.2.1.5 \n"); //test
 
-								chain_count (u, o, Field, chain_temp, Field[0][u][o], chain_total, geben, Opague_o_field, Allocation_o, number_of_players, gamemode_played);
+								chain_count (Spiel, u, o, Field, chain_temp, Spiel[0][u][o], chain_total, geben, Opague_o_field, Allocation_o, number_of_players, gamemode_played);
 
 								// printf("battle ok.2.2 \n"); //test
 
-								if (chain_total[geben] > chain_total[Field[0][u][o]]){
+								if (chain_total[geben] > chain_total[Spiel[0][u][o]]){
 									for (unsigned int h=1; h<m-1; h+=1){
 										for (unsigned int k=1; k<n-1; k+=1){
-											if ((chain_temp[0][h][k] == Field[0][u][o])&&(chain[geben][h][k] < chain_total[geben])){
+											if ((chain_temp[0][h][k] == Spiel[0][u][o])&&(chain[geben][h][k] < chain_total[geben])){
 												set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, chain, geben, h, k, chain_total[geben]);
 											}
 										}
 									}
-								} else if (chain_total[Field[0][u][o]] > chain_total[geben]){
+								} else if (chain_total[Spiel[0][u][o]] > chain_total[geben]){
 									for (unsigned int h=1; h<m-1; h+=1){
 										for (unsigned int k=1; k<n-1; k+=1){
-											if ((chain_temp[0][h][k] == geben)&&(chain[Field[0][u][o]][h][k] < chain_total[Field[0][u][o]])){
-												set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, chain, Field[0][u][o], h, k, chain_total[Field[0][u][o]]);
+											if ((chain_temp[0][h][k] == geben)&&(chain[Spiel[0][u][o]][h][k] < chain_total[Spiel[0][u][o]])){
+												set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, chain, Spiel[0][u][o], h, k, chain_total[Spiel[0][u][o]]);
 											}
 										}
 									}
-								} else if ((chain_total[geben] == chain_total[Field[0][u][o]])&&(chain_total[geben] == 1)&&(chain[geben][u][o] < chain_total[geben])){
+								} else if ((chain_total[geben] == chain_total[Spiel[0][u][o]])&&(chain_total[geben] == 1)&&(chain[geben][u][o] < chain_total[geben])){
 									set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, chain, geben, u, o, chain_total[geben]);
 								}
 
@@ -1334,7 +1339,7 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (Field[0][i][j] != 0) {
+			if (Spiel[0][i][j] != 0) {
 				for (unsigned int p=1; p<=number_of_players; p++) {
 					a = 0;
 					for (unsigned int q=1; q<=number_of_players; q++) {
@@ -1346,13 +1351,13 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 					}
 
 					if (a > 1) {	//this square will change
-						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
+						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
 
 						// printf("battle ok.3.2 \n"); //test
 					}
 
 					if (a == number_of_players-1) {	//highest values
-						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, p);
+						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, p);
 
 						// printf("battle ok.3.3 \n"); //test
 					}
@@ -1372,57 +1377,57 @@ void battle (unsigned int m, unsigned int n, Spielfeld Field, unsigned int geben
 	
 }	//possible to modify for >2 player, done
 
-void chain_count (unsigned int i, unsigned int j, Spielfeld Field, Spielfeld chain_temp, unsigned int player, unsigned int* chain_total, unsigned int geben, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int gamemode_played){	//player=geben
+void chain_count (Spielfeld Spiel, unsigned int i, unsigned int j, Spielfeld Field, Spielfeld chain_temp, unsigned int player, unsigned int* chain_total, unsigned int geben, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int gamemode_played){	//player=geben
 
 	for (unsigned int u=i-1; u<=i+1; u++){
 		for (unsigned int o=j-1; o<=j+1; o++){
 			if ((u+o)%2 == (i+j+1)%2) {
-				if ((Field[0][u][o] == player)&&(chain_temp[0][u][o] != player)){
+				if ((Spiel[0][u][o] == player)&&(chain_temp[0][u][o] != player)){
 					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, chain_temp, 0, u, o, player);
 					chain_total[player] += 1;
-					chain_count (u, o, Field, chain_temp, player, chain_total, geben, Opague_o_field, Allocation_o, number_of_players, gamemode_played);
+					chain_count (Spiel, u, o, Field, chain_temp, player, chain_total, geben, Opague_o_field, Allocation_o, number_of_players, gamemode_played);
 				}
 			}
 		}
 	}
 }
 
-void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld evolution_nl, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int number_of_players, unsigned int gamemode_played){
+void touch (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld evolution_nl, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int number_of_players, unsigned int gamemode_played){
 	unsigned int value_found;
 	value_found = hayir;
 
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
-			if (Field[0][i][j] == Fall_ball){
+			if (Spiel[0][i][j] == Fall_ball){
 				//test printf("	#-Block alt:	i=%u ,	j=%u \n ", i, j);
 				for (unsigned int p=1; p<=number_of_players; p++) {
 					if (geben%2 == 1){
-						if (((evolution_nl[geben][i][j-1] == geben) || (Field[0][i][j-1] == geben))&&(j != (n-2))){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j+1, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
-						} else if (((evolution_nl[geben][i+1][j] == geben) || (Field[0][i+1][j] == geben))&&(i != 1)){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i-1, j, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
-						} else if (((evolution_nl[geben][i-1][j] == geben) || (Field[0][i-1][j] == geben))&&(i != (m-2))){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i+1, j, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
-						} else if (((evolution_nl[geben][i][j+1] == geben) || (Field[0][i][j+1] == geben))&&(j != 1)){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j-1, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
+						if (((evolution_nl[geben][i][j-1] == geben) || (Spiel[0][i][j-1] == geben))&&(j != (n-2))){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j+1, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+						} else if (((evolution_nl[geben][i+1][j] == geben) || (Spiel[0][i+1][j] == geben))&&(i != 1)){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i-1, j, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+						} else if (((evolution_nl[geben][i-1][j] == geben) || (Spiel[0][i-1][j] == geben))&&(i != (m-2))){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i+1, j, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+						} else if (((evolution_nl[geben][i][j+1] == geben) || (Spiel[0][i][j+1] == geben))&&(j != 1)){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j-1, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
 						}
 					} else if (geben%2 == 0){
-						if (((evolution_nl[geben][i][j+1] == geben) || (Field[0][i][j+1] == geben))&&(j != 1)){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j-1, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
-						} else if (((evolution_nl[geben][i+1][j] == geben) || (Field[0][i+1][j] == geben))&&(i != 1)){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i-1, j, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
-						} else if (((evolution_nl[geben][i-1][j] == geben) || (Field[0][i-1][j] == geben))&&(i != (m-2))){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i+1, j, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
-						} else if (((evolution_nl[geben][i][j-1] == geben) || (Field[0][i][j-1] == geben))&&(j != (n-2))){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j+1, Fall_ball);
-							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
+						if (((evolution_nl[geben][i][j+1] == geben) || (Spiel[0][i][j+1] == geben))&&(j != 1)){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j-1, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+						} else if (((evolution_nl[geben][i+1][j] == geben) || (Spiel[0][i+1][j] == geben))&&(i != 1)){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i-1, j, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+						} else if (((evolution_nl[geben][i-1][j] == geben) || (Spiel[0][i-1][j] == geben))&&(i != (m-2))){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i+1, j, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+						} else if (((evolution_nl[geben][i][j-1] == geben) || (Spiel[0][i][j-1] == geben))&&(j != (n-2))){
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j+1, Fall_ball);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
 						}
 					}
 					value_found = evet;
@@ -1437,15 +1442,15 @@ void touch (Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben,
 	}
 }
 
-void ahead (Spielfeld Field, unsigned int m, unsigned int count_freq, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int number_of_players, unsigned int geben, unsigned int gamemode_played){
+void ahead (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int count_freq, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int number_of_players, unsigned int geben, unsigned int gamemode_played){
 	
 	// printf("	ahead ok.1"); //test 
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<count_freq; j+=1){
-			if (Field[0][i][j] == Wall){
-				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
-				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j+1, Wall);
+			if (Spiel[0][i][j] == Wall){
+				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j+1, Wall);
 			}
 		}
 	}
