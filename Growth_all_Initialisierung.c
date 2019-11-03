@@ -11,6 +11,9 @@
 
 
 #include "Growth_all_Def.h"
+#include "Growth_all_set.h"
+#include "Growth_all_get.h"
+#include "Growth_all_options_specials.h"
 #include "Growth_all_Initialisierung.h"
 
 // #define VERBOSE
