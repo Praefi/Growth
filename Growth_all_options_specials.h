@@ -24,8 +24,9 @@ void find_edges_of_organism_2dim (unsigned int*, Spielfeld, unsigned int, unsign
 
 void addition_maker (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int*);
 void projection_maker (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
-void assassin_maker (unsigned int*, Spielfeld, Spielfeld, unsigned int, Special_Fields, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Growth_Player*);
-void Avalanche_maker (Spielfeld, Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void assassin_maker (unsigned int, Spielfeld, unsigned int*, Spielfeld, Spielfeld, unsigned int, Special_Fields, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Growth_Player*);
+void Avalanche_maker (Spielfeld, Spielfeld, Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+void Spreading_maker (Spielfeld, Spielfeld, Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void Permutations_permutate_maker (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int**, unsigned int, unsigned int, Spielfeld, unsigned int, Special_Fields);
 
 void translate_permutations_amounts_to_permutations_areas (Spielfeld, unsigned int, unsigned int, Collector);
@@ -37,8 +38,9 @@ unsigned int random_number (Num_num, unsigned int, unsigned int, unsigned int*, 
 void Square_color_interpretation (Growth_Player*, unsigned int, unsigned int, unsigned int);
 
 
-void opague_builder (Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, Special_Fields, unsigned int, unsigned int);	//checklist
+void opague_builder (Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, Special_Fields, unsigned int, unsigned int);
 
+unsigned int list_of_possible_Field_values_from_one_to_ninethousand(unsigned int, unsigned int);	//checklist
 
 void ges0_reset_and_counter (unsigned int*, unsigned int);
 
