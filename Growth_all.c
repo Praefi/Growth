@@ -10,11 +10,9 @@
 #include <windows.h>
 #endif
 
-
 #include "Growth_all_Def.h"
 #include "Growth_all.h"
 #include "Growth_all_Vektor.h"
-#include "Growth_all_KI.h"
 #include "Growth_all_Initialisierung.h"
 #include "Growth_all_show.h"
 #include "Growth_all_set.h"
@@ -23,6 +21,7 @@
 #include "Growth_all_actions.h"
 #include "Growth_all_gamemode_specials.h"
 #include "Growth_all_options_specials.h"
+#include "Growth_all_KI.h"
 
 // anscheinend kehren die gestorbenen zurück in das Standartspiel bei gamemode_played 6 (aktuell ?)
 
@@ -57,7 +56,7 @@ int main (void) {
 	unsigned int rain, rain_drops, rain_obj, rain_speed;	//Gamemode = Rain
 	unsigned int playtime;	//Navigationsparameter
 	unsigned int opt, use_number, num_temp, tac, cards;	//How to get the numbers, and to controll them
-	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition, assassin, avalanche;	//options, selected with beginningmenu
+	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition, assassin, avalanche, spreading;	//options, selected with beginningmenu
 	unsigned int rtc, spf, scwhp, hboa;	// Gamemode: Hunt
 	unsigned int NOSV, AOP;		//number of saved variables; amount of players
 	unsigned int range, strength;		//Gamemode = Dynamic
@@ -105,9 +104,9 @@ int main (void) {
 	Spielfeld_counter = 0;	//global
 	pause = 0;	//global
 	
-	playtime = 1;	//playing a game after a game after...
+	playtime = 1;	//playing a game, after a game, after...
 
-	NOSV = 91;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
+	NOSV = 92;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
 	//same_counter = 0;     //for variable length of same
 
 	same = unsigned_int_Vektor_Create (NOSV);
@@ -171,6 +170,7 @@ int main (void) {
 		addition = 0;
 		assassin = 0;
 		avalanche = 0;
+		spreading = 0;
 
 		fall_controll = 0;	//Fall
 		points_for_win = 3;
@@ -309,7 +309,7 @@ int main (void) {
 
 				while (beginningmenu != oStart){
 
-					printf("	%u. Start game\n \n	%u. Game size\n	%u. Journey\n	%u. Tactics\n	%u. Random\n	%u. Limits\n	%u. Time\n	%u. Color\n	%u. Opague\n	%u. undead\n	%u. Figures\n	%u. Allocation\n	%u. Cards\n	%u. Inverted\n	%u. Addition\n	%u. Projection\n	%u. Assassin\n	%u. Permutations\n	%u. Avalanche\n	%u. KI\n	%u. Number of players\n  \n	%u. Back\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
+					printf("	%u. Start game\n \n	%u. Game size\n	%u. Journey\n	%u. Tactics\n	%u. Random\n	%u. Limits\n	%u. Time\n	%u. Color\n	%u. Opague\n	%u. undead\n	%u. Figures\n	%u. Allocation\n	%u. Cards\n	%u. Inverted\n	%u. Addition\n	%u. Projection\n	%u. Assassin\n	%u. Permutations\n	%u. Avalanche\n	%u. Spreading\n	%u. KI\n	%u. Number of players\n  \n	%u. Back\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oSpreading, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	%u. Points for win\n", oBack+1);
 						printf("	%u. Turns per drop\n", oBack+2);
@@ -1033,7 +1033,19 @@ int main (void) {
 						}
 						printf("\n");
 					}
-
+					
+					if (beginningmenu == oSpreading){
+						if (spreading != 0){
+							spreading = 0;
+							printf("	Spreading deactivated \n");
+						} else if (spreading == 0){
+							spreading = 1;
+							printf("	Spreading overrides the limits of development! \n");
+							printf("	Spreading activated \n");
+						}
+						printf("\n");
+					}
+					
 					if ((beginningmenu == oBack+1)&&(gamemode_played == Fall)){
 						printf("	Points for win: (0<...<10)			(normal: 3) \n");
 						points_for_win = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -1790,7 +1802,14 @@ int main (void) {
 						printf("	Avalanche   activated \n");
 					}
 					printf("\n");
-
+					
+					if (spreading == 0) {
+						printf("	Spreading deactivated \n");
+					} else if (spreading != 0) {
+						printf("	Spreading   activated \n");
+					}
+					printf("\n");
+					
 					if (opt == 5) {
 						printf("	Random    activated \n");
 					} else if (opt == 0) {
@@ -1960,6 +1979,7 @@ int main (void) {
 			same[88] = level[7];
 			same[89] = level[8];
 			same[90] = level[9];
+			same[91] = spreading;
 
 		}
 		
@@ -2185,7 +2205,8 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	level[7] = same[88];
 	level[8] = same[89];
 	level[9] = same[90];
-
+	single_option_representives.spreading = same[91];
+	
 	for (unsigned int p=1; p<=number_of_players; p++) {
 		Growth_players[p].id = p;
 	}
@@ -3913,3 +3934,140 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// scanf("%u", &pause);	//test
 
 }
+
+void get_hints (unsigned int* level, Spielfeld Sf_permutations, unsigned int gamemode_played, Spielfeld Field, unsigned int geben, unsigned int w, unsigned int d, unsigned int e, unsigned int m, unsigned int n, unsigned int* information_code, Special_Fields Opague_o, Growth_Player* Growth_players, unsigned int AOP, Special_Fields Allocation_o, unsigned int number_of_players) {
+
+	Spielfeld hint;
+	unsigned int b, a, menuoperator;
+	hint = Spielfeld_Create (m, n, 0);
+
+	b = 0;
+	a = 0;
+	menuoperator = 0;
+
+	for (unsigned int i=1; i<(m-1); i+=1){
+		for (unsigned int j=1; j<(n-1); j+=1){
+			if (Field[0][i][j] == geben){
+				set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, geben);
+			} else if (Field[0][i][j] != 0){
+				set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, bir_sey);
+			}
+		}
+	}
+
+	printf("	New: 1 \n	Dying: 2 \n	Both: 3 \n");
+	menuoperator = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+
+	if ((menuoperator == 2)||(menuoperator == 3)){
+		for (unsigned int i=1; i<(m-1); i+=1){
+			for (unsigned int j=1; j<(n-1); j+=1){
+				if (Field[0][i][j] == geben){
+					a = 0;
+					for (unsigned int h=(i-1); h<=(i+1); h+=1){
+						for (unsigned int k=(j-1); k<=(j+1); k+=1){
+							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
+								if (Field[0][h][k] == geben){
+									a += 1;
+								}
+							}
+						}
+					}
+					if ((a > e+1) || (a <= d)){
+						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, oeluem);
+					}
+				}
+			}
+		}
+	}
+
+	if ((menuoperator == 1)||(menuoperator == 3)){
+		for (unsigned int i=1; i<(m-1); i+=1){
+			for (unsigned int j=1; j<(n-1); j+=1){
+				if (Field[0][i][j] == 0){
+					b = 0;
+					for (unsigned int h=(i-1); h<=(i+1); h+=1){
+						for (unsigned int k=(j-1); k<=(j+1); k+=1){
+							if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
+								if (Field[0][h][k] == geben){
+									b += 1;
+								}
+							}
+						}
+					}
+					if (b == w){
+						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, dogum);
+					}
+				}
+			}
+		}
+	}
+
+	if (Opague_o.characterization >= 1) {
+		opague_builder (hint, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	} else {
+		show_field (number_of_players, level, Sf_permutations, Opague_o.field, hint, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	}
+
+	Spielfeld_Destroy (hint, m, 0);
+
+}
+
+void About_the_game (unsigned int gamemode_played, unsigned int geben, Limits limits, unsigned int number_of_players, unsigned int freq, unsigned int w, unsigned int d, unsigned int e) {	//checklist
+
+	if (gamemode_played == Classic) {
+		printf("	How to win?   Own a square on your last line or force your opponents to lose all his/her ones.\n");
+	} else if (gamemode_played == Collect) {
+		printf("	How to win?   Be at 2 of the 3 targets with three of your squares near-by.\n");
+	} else if (gamemode_played == Contact) {
+		printf("	How to win?   Take over all your opponents' squares by winning Contact-battles.\n");
+		printf("	Contact-battles?  All near-by squares in a row with the Contact-square build a chain, beat your opponents in the length.\n");
+	} else if (gamemode_played == Fall) {
+		printf("	How to win?   Get more points than your opponents.\n");
+		printf("	Note:	Touch the #-square in the near-by to move it to the opposite side of touch. \n");
+	} else if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
+		printf("	How to win?   Force your opponents to lose all his/her squares.\n");
+	} else if (gamemode_played == Hunt) {
+		if (geben == 1) {
+			printf("	How to win?   Protect your heart-block in a way that no enemy can touch it.\n");
+		} else {
+			printf("	How to win?   Touch the heart-block of the hunted one before it disappears.\n");
+		}
+	} else if (gamemode_played == Race) {
+		printf("	How to win?   Reach the end of the field or force your opponents to lose all his/her ones.\n");
+		printf("	Note:	Every %u turn(s) in total the #-line will go ahead and destroys everything in it's way.\n Also you are not allowed to cross the mid-line. \n", freq);
+	} else if (gamemode_played == Rain) {
+		printf("	How to win?   Reach [1][7]");
+		for (unsigned int p=2; p<=number_of_players; p++) {
+			printf(" or [1][%u]", (p-1)*7);
+		}
+		printf(" of the field or force your opponents to lose all his/her squares.\n");
+		printf("	Note:	Falling down the #-squares will push, destroy, explode, or teleport, transform into yours by contact. \n");
+	} else if ((gamemode_played == Arena)||(gamemode_played == Ulcer)) {	//10
+		printf("	How to win?   Force your opponents to lose all his/her squares while keeping yours alive by using your special abilities.\n");
+	} else if (gamemode_played == Dynamic) {
+		printf("	How to win?   Push the ball towards your opponent's side.\n");
+	} else if (gamemode_played == Survive) {
+		printf("	How to win?   Stay alive by avoiding traps, waves and bombs.\n");
+	} else if (gamemode_played == Sand) {
+		printf("	How to win?   Reach the topline, your squares keep falling.\n");
+	} else if (gamemode_played == Quidditch) {
+		printf("	How to win?   Get more points as your opponent. Every goal with a Quaffel worths 10 points, catching the Schnatz gives you 150 points and ends the game.\n");
+		printf("	Note:	Teammembers can move through changing position with one of your squares in its reach.\n	In the Near-by of objects, no living square is going to die.\n	In the Near-by of a Jaeger/Hueter the Quaffel is possessed and follows the movements of it's owner or can be thrown.\n	Passing this area the Quaffel stops during it's throw.\n \n If a Sucher flys through the Schnatz, it is caught.\n \n	If a Klatscher hits a target, the position of the target will change.\n ");
+	}
+	printf("	Surrounding:	The 8 squares around another, at the edge 5, in the corners 3, are called #surrounding. \n");
+	printf("	near-by:	The 4 squares around another, at the edge 3, in the corners 2, are called #near-by. \n");
+	printf("	Standard actions:	(After your choice of number and not influencing each other) \n	-Development:	If it is your turn and a free square has exactly %u of yours surrounding it, you will own it.\n", w);
+	printf("	-Losses:  If it is your turn and a square of yours is surrounded by less than %u or more than %u of yours,\n			it will be set free.\n", d, e);	//10
+	if ((gamemode_played == Hunt)&&(geben == 1)) {	//If geben == 1
+		printf("	Limits:   Your development is limited by %u per round, your units in total by %u per round. \n", (limits.new+(number_of_players-3)), (limits.at_all+(2*(number_of_players-3))));
+	} else if ((gamemode_played == Ulcer)||(gamemode_played == Survive)) {
+		printf("	Limits:   This gamemode is unlimited. \n");
+	} else if (gamemode_played == Contact) {
+		printf("	Limits:   Your development is limited by %u per round. \n", limits.new);
+	} else {
+		printf("	Limits:   Your development is limited by %u per round, your units in total by %u per round. \n", limits.new, limits.at_all);
+	}
+
+}
+
