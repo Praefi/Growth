@@ -24,14 +24,14 @@ void impact_y_semi_square (unsigned int, unsigned int, unsigned int*, Earth_impa
 void Dynamic_ball_movement (Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, Special_Fields, unsigned int, unsigned int*, Spielfeld, unsigned int*, Growth_Player*, unsigned int, int*, unsigned int, unsigned int*, unsigned int, unsigned int*, Earth_impact, Realize_modifications_variables*);
 
 
-void battle (unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, Special_Fields, unsigned int, unsigned int);
-void chain_count (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int*, unsigned int, Spielfeld, Special_Fields, unsigned int, unsigned int);
+void battle (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, Special_Fields, unsigned int, unsigned int);
+void chain_count (Spielfeld, unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned int, unsigned int*, unsigned int, Spielfeld, Special_Fields, unsigned int, unsigned int);
 
 
-void touch (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, Spielfeld, unsigned int, unsigned int);
+void touch (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, Spielfeld, unsigned int, unsigned int);
 
 
-void ahead (Spielfeld, unsigned int, unsigned int, Special_Fields, Spielfeld, unsigned int, unsigned int, unsigned int);
+void ahead (Spielfeld, Spielfeld, unsigned int, unsigned int, Special_Fields, Spielfeld, unsigned int, unsigned int, unsigned int);
 
 
 void choose_heart (Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, unsigned int, unsigned int);
