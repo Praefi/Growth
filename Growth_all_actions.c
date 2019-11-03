@@ -11,6 +11,9 @@
 
 
 #include "Growth_all_Def.h"
+#include "Growth_all_set.h"
+#include "Growth_all_get.h"
+#include "Growth_all_show.h"
 #include "Growth_all_actions.h"
 
 void Plus (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Field, unsigned int limits_at_all, unsigned int gamemode_played, unsigned int* information_code, unsigned int number_of_players, Growth_Player* Growth_players, Special_Fields Opague_o, Special_Fields Allocation_o){	//checklist
