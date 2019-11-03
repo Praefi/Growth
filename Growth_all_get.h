@@ -13,9 +13,6 @@
 #endif
 
 
-void get_hints (unsigned int*, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Special_Fields, Growth_Player*, unsigned int, Special_Fields, unsigned int);
-
-
 unsigned int get_m (unsigned int, unsigned int);
 unsigned int get_n (unsigned int, unsigned int);
 
