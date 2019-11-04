@@ -29,13 +29,4 @@ unsigned int get_unsigned_numeric_input_with_not_more_than_letters_2_for_splitti
 int get_signed_numeric_input_with_not_more_than_1_letter ();
 
 
-void get_colors (Growth_Player*, unsigned int, unsigned int, unsigned int);
-
-
-void get_two_amounts_for_permutations (unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int);
-
-
-void get_sigmas_for_permutation_number (unsigned int**, unsigned int);
-
-
 #endif
