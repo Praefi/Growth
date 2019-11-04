@@ -31,11 +31,6 @@ void Initialisierung_Arrays_1 (unsigned int, unsigned int*, unsigned int*, unsig
 void Initialisierung_Arrays_2 (unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*);
 
 
-void Initialisierung_Qs (Quidditch_setup*, Quidditch_team_abilities*, Quidditch_object_abilities*, Growth_Player*);
-void Initialisierung_Qoa (Quidditch_object_abilities*);
-void Initialisierung_Qta (Quidditch_team_abilities*);
-void Initialisierung_Moc (Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int, unsigned int);
-
 
 void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, unsigned int);	//checklist
 
