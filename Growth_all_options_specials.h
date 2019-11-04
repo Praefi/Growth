@@ -35,14 +35,13 @@ void translate_permutations_amounts_to_permutations_areas (Spielfeld, unsigned i
 unsigned int random_number (Num_num, unsigned int, unsigned int, unsigned int*, unsigned int*);
 
 
-void Square_color_interpretation (Growth_Player*, unsigned int, unsigned int, unsigned int);
-
-
-void opague_builder (Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, Special_Fields, unsigned int, unsigned int);
-
-unsigned int list_of_possible_Field_values_from_one_to_ninethousand(unsigned int, unsigned int);	//checklist
-
 void ges0_reset_and_counter (unsigned int*, unsigned int);
+
+
+void get_two_amounts_for_permutations (unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int);
+
+
+void get_sigmas_for_permutation_number (unsigned int**, unsigned int);
 
 
 #endif
