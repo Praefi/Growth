@@ -12,6 +12,8 @@
 #include "Growth_all_Def.h"
 #include "Growth_all_Vektor.h"
 #include "Growth_all_set.h"
+#include "Growth_all_show.h"
+#include "Growth_all_visual.h"
 #include "Growth_all_options_specials.h"
 #include "Growth_all_Development.h"
 #include "Growth_all_KI.h"
