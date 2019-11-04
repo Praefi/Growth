@@ -12,9 +12,6 @@
 #include <windows.h>
 #endif
 
-void Time_for_a_Tutorial (unsigned int, unsigned int*, unsigned int*, unsigned int*, Growth_Player*);
-void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
-
 
 void dynamic_take_out (unsigned int*, unsigned int, Spielfeld, unsigned int*, Realize_modifications_variables*, unsigned int, unsigned int, Spielfeld, Special_Fields, unsigned int, unsigned int);
 void out_in_dynamic_take_out (unsigned int*, Realize_modifications_variables*, unsigned int);	//repair! go on
@@ -70,5 +67,10 @@ void Localization_of_Moc (Spielfeld, unsigned int, unsigned int, Moveable_object
 void Quidditch_Quaffel_Throw (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, Quidditch_setup*, unsigned int*, unsigned int, unsigned int*);
 void Realize_Moc_Quaffel_Throw_step (Spielfeld, unsigned int, Moveable_objects_condition*, unsigned int);
 void Quidditch_a_goal_has_been_scored (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int*, unsigned int);
+
+void Initialisierung_Qs (Quidditch_setup*, Quidditch_team_abilities*, Quidditch_object_abilities*, Growth_Player*);
+void Initialisierung_Qoa (Quidditch_object_abilities*);
+void Initialisierung_Qta (Quidditch_team_abilities*);
+void Initialisierung_Moc (Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int, unsigned int);
 
 #endif
