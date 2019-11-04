@@ -12,8 +12,7 @@
 
 #include "Growth_all_Def.h"
 #include "Growth_all_set.h"
-#include "Growth_all_get.h"
-#include "Growth_all_options_specials.h"
+#include "Growth_all_show.h"
 #include "Growth_all_Initialisierung.h"
 
 // #define VERBOSE
@@ -30,97 +29,6 @@ void int_array_null_initialisierung (int* array, unsigned int bueyuekluek) {
 	for (unsigned int p=0; p<=bueyuekluek; p++) {
 		array[p] = 0;
 	}
-}
-
-void Initialisierung_Qs (Quidditch_setup* Qs, Quidditch_team_abilities* Qta, Quidditch_object_abilities* Qoa, Growth_Player* Growth_players) {
-	unsigned int color_translation[3], numberofplayers;
-	numberofplayers = 2;
-	
-	color_translation[0] = 0;
-	
-	for (unsigned int p=1; p<=numberofplayers; p++) {
-		unsigned int choice, types;
-		types = 3;
-		choice = types + 1;
-		
-		while (choice > types) {
-			Square_color_interpretation (Growth_players, 0, 2, p);
-			printf("	Which Quidditch-team-abilities do you want to take, player %u ? \n", p);
-			set_terminal_color (cNORMAL);
-			printf("	0 : basic\n	1 : default_1 \n	2 : default_2 \n	%u : classic \n", types);
-			choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		}
-		
-		if (choice <= 2) {
-			color_translation[p] = choice;	//thats 0,1,2
-		} else if (choice == types) {
-			if (Growth_players[p].color == cLIGHT_MAGENTA) {
-				color_translation[p] = HGryffindor;
-			} else if (Growth_players[p].color == cLIGHT_CYAN) {
-				color_translation[p] = HRavenclaw;
-			} else if (Growth_players[p].color == cYELLOW) {
-				color_translation[p] = HHufflepuff;
-			} else if (Growth_players[p].color == cLIGHT_GREEN) {
-				color_translation[p] = HSlytherin;
-			}
-		}
-	}
-	
-	for (unsigned int q=0; q<=2; q++) {	//the right modification of the abilities, reducing from 1+2+4 to 1+2 ("1+" because of the standard-setting, "2+" because of the defaults).
-		Qs->Qta[q] = Qta[color_translation[q]];	//that means: no copy.
-		Qs->Points[q] = 0;
-	}
-	Qs->Qoa = Qoa;
-	
-}
-void Initialisierung_Qoa (Quidditch_object_abilities* Qoa) {	//always synchronisate with (normal: ... in .c)
-	Qoa[0].Klatscher_fly_distance = 4;
-	Qoa[0].Schnatz_fly_distance = 6;
-	Qoa[0].Schnatz_appearence_factor = 25;	//to read as 2/5
-	Qoa[0].Schnatz_disappearence_factor = 12;	//to read as 1/2
-}
-void Initialisierung_Qta (Quidditch_team_abilities* Qta) {	//always synchronisate with (normal: ... in .c)
-	unsigned int normal_value;
-	normal_value = 5;
-	
-	for (unsigned int p=0; p<=HSlytherin; p++) {
-		Qta[p].Jaeger_fly_distance = normal_value;
-		Qta[p].Jaeger_throw_distance = normal_value;
-		Qta[p].Hueter_fly_distance = normal_value-1;
-		Qta[p].Hueter_throw_distance = normal_value;
-		Qta[p].Treiber_fly_distance = normal_value;
-		Qta[p].Treiber_hit_distance = normal_value;
-		Qta[p].Sucher_fly_distance = normal_value;
-		
-		if (p == HGryffindor) {
-			Qta[p].Sucher_fly_distance = normal_value+1;
-		} else if (p == HHufflepuff) {
-			Qta[p].Hueter_fly_distance = normal_value+2;
-			Qta[p].Hueter_throw_distance = normal_value+1;
-		} else if (p == HRavenclaw) {
-			Qta[p].Jaeger_fly_distance = normal_value+1;
-			Qta[p].Jaeger_throw_distance = normal_value+1;
-		} else if (p == HSlytherin) {
-			Qta[p].Treiber_fly_distance = normal_value+1;
-			Qta[p].Treiber_hit_distance = normal_value+1;
-		}
-	}
-}
-
-void Initialisierung_Moc (Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int m, unsigned int n) {
-	
-	Moc_Quaffel->i = (m-2)/2;
-	Moc_Quaffel->j = (n-1)/2;
-	
-	Moc_Schnatz->i = (m-2)/2 +1;
-	Moc_Schnatz->j = (n-1)/2;
-	Moc_Schnatz->directed = evet;
-	
-	Moc_Klatscher[0].i = (m-2)/2 -1;
-	Moc_Klatscher[0].j = (n-1)/2;
-	Moc_Klatscher[1].i = (m-2)/2 +2;
-	Moc_Klatscher[1].j = (n-1)/2;
-	
 }
 
 void Initialisierung (unsigned int gamemode_played, unsigned int* information_code) {
