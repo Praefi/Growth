@@ -15,289 +15,10 @@
 #include "Growth_all_get.h"
 #include "Growth_all_set.h"
 #include "Growth_all_show.h"
+#include "Growth_all_visual.h"
 #include "Growth_all_actions.h"
+#include "Growth_all_Initialisierung.h"
 #include "Growth_all_gamemode_specials.h"
-
-void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* information_code, unsigned int* position, Growth_Player* Growth_players) {
-
-	unsigned int m, n, w, d, e, geben, number_of_players, input, gamemode_played, rain, g;
-	Limits limits;	//just a copy
-	unsigned int ges[AOP+1];
-	unsigned int* KI_decision;
-	Spielfeld Test_field;
-	Special_Fields Test_special_fields;
-	Single_option_representives test_single_options;
-	Evolution evolution;
-	Num_num num;
-
-	w = 3;
-	d = 2;
-	e = 3;
-	m = 10;
-	n = 10;
-	geben = 1;
-	number_of_players = 2;
-	input = 0;
-	gamemode_played = Tutorial;
-	limits.at_all = 100;
-	limits.new = 100;
-	rain = 0;
-	num.bir = 0;
-	num.iki = 0;
-	num.uec = 0;
-	g = 0;
-	Test_special_fields.characterization = 0;
-	test_single_options.undead_duration = 0;
-	test_single_options.inverted = 0;
-	test_single_options.addition = 0;
-	test_single_options.intensity_loss_per_line_multiplication = 0;
-	
-	KI_decision = unsigned_int_Vektor_Create (1);
-	Test_field = Spielfeld_Create (m, n, 1);
-	evolution.nl = Spielfeld_Create (m, n, number_of_players);
-	evolution.od = Spielfeld_Create (m, n, number_of_players);
-	Test_special_fields.field = Spielfeld_Create (m, n, number_of_players+2);;
-	
-	for (unsigned int p=0; p<=AOP; p++) {
-		ges[p] = 1;
-	}
-
-	start_normal (Test_field, m, n, gamemode_played, number_of_players, geben, Test_field, Test_special_fields, 0);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		printf("	At first you need to type a zero (0) and click 'Enter' to get to the next step of the Tutorial. The signal for doing this is '?0?' at the end of the text.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-
-	input = 1;
-	while (input != 0) {
-		printf("	The game is played in rounds on a field of squares. A square can be owned by a player or be dead. At the beginning of each game you get a couple of squares you own.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-
-	input = 1;
-	while (input != 0) {
-		printf("	If it is your turn, you can improve the situation of your squares by using actions. \n	Normally you can choose between two options, but in this Tutorial we only learn what these options can do.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-
-	input = 1;
-	while (input != 0) {
-		printf("	After making a decision, your organism of squares will evolve in the following way: Every dead squares with exactly 3 of your squares in its surrounding of 8 squares will be owned by you. \n	Every square of yours having less than 2 or more than 3 own squares in its surrounding will turn into a dead square. \n	There are no effects between the single steps of evolving. \n	Let's have a look on the field we are working with...	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-
-	show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-
-	input = 1;
-	while (input != 0) {
-		printf("	If you get asked for the position of a square you are interacting with, you write at first the line (yy) and than the other component of its position (xx). \n	If a part of the position is just a single letter, than you write a zero before the letter. \n	After that you click 'Enter'. \n	For example the squares of player 2 would be called 0401, 0402, 0501, 0502.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-
-	input = 1;
-	while (input != 0) {
-		printf("	Well, now you are prepared for a match. The word before every new comment is the name of the action you will use.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Plus: Set a square on 0405.\n");
-
-		Plus (level, Test_field, m, n, geben, Test_field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Test_special_fields, Test_special_fields);
-
-		if (Test_field[0][4][5] != geben) {
-			input = 1;
-			synchronisation_Test_field (Test_field, m, n, 0, 1);
-		} else {
-			input = 0;
-		}
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Plus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Minus: Delete your square on 0605.\n");
-
-		Minus (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
-
-		if (Test_field[0][6][5] != 0) {
-			input = 1;
-			synchronisation_Test_field (Test_field, m, n, 0, 1);
-		} else {
-			input = 0;
-		}
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Minus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Move: Move your square on 0605 to 0604.\n");
-
-		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
-
-		if ((Test_field[0][6][5] != 0)||(Test_field[0][6][4] != geben)) {
-			input = 1;
-			synchronisation_Test_field (Test_field, m, n, 0, 1);
-		} else {
-			input = 0;
-		}
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Change: Change your square on 0503 with the square of the enemy on 0502.\n");
-
-		Change (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players,Test_special_fields, position, Test_special_fields, number_of_players);
-
-		if ((Test_field[0][5][2] != geben)||(Test_field[0][5][3] != 2)) {
-			input = 1;
-			synchronisation_Test_field (Test_field, m, n, 0, 1);
-		} else {
-			input = 0;
-		}
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Change_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Destroy: Destroy the square of the enemy on 0503.\n");
-
-		Destroy (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
-
-		if (Test_field[0][5][3] != 0) {
-			input = 1;
-			synchronisation_Test_field (Test_field, m, n, 0, 1);
-		} else {
-			input = 0;
-		}
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Destroy_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Boost: The next action of you will be a Boost, \n	that means the squares of the enemy which are touching you with at least one full side will count as your own squares according to the development, not for the decision which squares of yours have to die.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Boost_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Move: Move your square on 0703 to 0603.\n");
-
-		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
-
-		if ((Test_field[0][7][3] != 0)||(Test_field[0][6][3] != geben)) {
-			input = 1;
-			synchronisation_Test_field (Test_field, m, n, 0, 1);
-		} else {
-			input = 0;
-		}
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	2-new: The next action of you will be a 2-new, means you are getting dead squares which have 2 instead of 3 squares of yours in its surrounding.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-	w = 2;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-	w = 3;
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	Revive: The next action of you will be a Revive, means the squares of yours that died and have no squares in its surrounding, which were owned by you before and are still living, will be yours again.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Revive_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	4/5-new: The next action of you will be a 4/5-new, means you are getting dead squares which have 4 or 5 instead of 3 squares of yours in its surrounding.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-	w = 4;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_4_5, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-	w = 3;
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	4-max: The next action of you will be a 4-max, means squares of yours can have up to 4 instead of 3 squares of yours in its surrounding and will still survive.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-	e = 4;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, max_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-	e = 3;
-
-	input = 1;
-	while (input != 0) {
-		show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-		printf("	1-min: The next action of you will be a 1-min, means squares of yours can have down to 1 instead of 2 squares of yours in its surrounding and will still survive.	?0?\n");
-		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		printf(" \n");
-	}
-	d = 1;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, min_1, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
-	synchronisation_Test_field (Test_field, m, n, 1, 0);
-	d = 2;
-
-	show_field (number_of_players, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
-	printf(" \n");
-
-	Spielfeld_Destroy (evolution.nl, m, number_of_players);
-	Spielfeld_Destroy (evolution.od, m, number_of_players);
-	Spielfeld_Destroy (Test_field, m, 1);
-}
-
-void synchronisation_Test_field (Spielfeld Test_field, unsigned int m, unsigned int n, unsigned int to, unsigned int from) {
-
-	// printf("synchronisation_Test_field ok.1\n");	//test
-
-	for (unsigned int i=1; i<=m-2; i++) {
-		for (unsigned int j=1; j<=n-2; j++) {
-			Test_field[to][i][j] = Test_field[from][i][j];
-		}
-	}
-}
-
 
 void dynamic_take_out (unsigned int* position, unsigned int number_of_players, Spielfeld Field, unsigned int* ges, Realize_modifications_variables* rmv, unsigned int m, unsigned int n, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int geben, unsigned int gamemode_played) {
 
@@ -3327,3 +3048,95 @@ void Quidditch_a_goal_has_been_scored (Spielfeld Field, unsigned int geben, Spie
 	#endif
 	
 }
+
+void Initialisierung_Qs (Quidditch_setup* Qs, Quidditch_team_abilities* Qta, Quidditch_object_abilities* Qoa, Growth_Player* Growth_players) {
+	unsigned int color_translation[3], numberofplayers;
+	numberofplayers = 2;
+	
+	color_translation[0] = 0;
+	
+	for (unsigned int p=1; p<=numberofplayers; p++) {
+		unsigned int choice, types;
+		types = 3;
+		choice = types + 1;
+		
+		while (choice > types) {
+			Square_color_interpretation (Growth_players, 0, 2, p);
+			printf("	Which Quidditch-team-abilities do you want to take, player %u ? \n", p);
+			set_terminal_color (cNORMAL);
+			printf("	0 : basic\n	1 : default_1 \n	2 : default_2 \n	%u : classic \n", types);
+			choice = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+		}
+		
+		if (choice <= 2) {
+			color_translation[p] = choice;	//thats 0,1,2
+		} else if (choice == types) {
+			if (Growth_players[p].color == cLIGHT_MAGENTA) {
+				color_translation[p] = HGryffindor;
+			} else if (Growth_players[p].color == cLIGHT_CYAN) {
+				color_translation[p] = HRavenclaw;
+			} else if (Growth_players[p].color == cYELLOW) {
+				color_translation[p] = HHufflepuff;
+			} else if (Growth_players[p].color == cLIGHT_GREEN) {
+				color_translation[p] = HSlytherin;
+			}
+		}
+	}
+	
+	for (unsigned int q=0; q<=2; q++) {	//the right modification of the abilities, reducing from 1+2+4 to 1+2 ("1+" because of the standard-setting, "2+" because of the defaults).
+		Qs->Qta[q] = Qta[color_translation[q]];	//that means: no copy.
+		Qs->Points[q] = 0;
+	}
+	Qs->Qoa = Qoa;
+	
+}
+void Initialisierung_Qoa (Quidditch_object_abilities* Qoa) {	//always synchronisate with (normal: ... in .c)
+	Qoa[0].Klatscher_fly_distance = 4;
+	Qoa[0].Schnatz_fly_distance = 6;
+	Qoa[0].Schnatz_appearence_factor = 25;	//to read as 2/5
+	Qoa[0].Schnatz_disappearence_factor = 12;	//to read as 1/2
+}
+void Initialisierung_Qta (Quidditch_team_abilities* Qta) {	//always synchronisate with (normal: ... in .c)
+	unsigned int normal_value;
+	normal_value = 5;
+	
+	for (unsigned int p=0; p<=HSlytherin; p++) {
+		Qta[p].Jaeger_fly_distance = normal_value;
+		Qta[p].Jaeger_throw_distance = normal_value;
+		Qta[p].Hueter_fly_distance = normal_value-1;
+		Qta[p].Hueter_throw_distance = normal_value;
+		Qta[p].Treiber_fly_distance = normal_value;
+		Qta[p].Treiber_hit_distance = normal_value;
+		Qta[p].Sucher_fly_distance = normal_value;
+		
+		if (p == HGryffindor) {
+			Qta[p].Sucher_fly_distance = normal_value+1;
+		} else if (p == HHufflepuff) {
+			Qta[p].Hueter_fly_distance = normal_value+2;
+			Qta[p].Hueter_throw_distance = normal_value+1;
+		} else if (p == HRavenclaw) {
+			Qta[p].Jaeger_fly_distance = normal_value+1;
+			Qta[p].Jaeger_throw_distance = normal_value+1;
+		} else if (p == HSlytherin) {
+			Qta[p].Treiber_fly_distance = normal_value+1;
+			Qta[p].Treiber_hit_distance = normal_value+1;
+		}
+	}
+}
+
+void Initialisierung_Moc (Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int m, unsigned int n) {
+	
+	Moc_Quaffel->i = (m-2)/2;
+	Moc_Quaffel->j = (n-1)/2;
+	
+	Moc_Schnatz->i = (m-2)/2 +1;
+	Moc_Schnatz->j = (n-1)/2;
+	Moc_Schnatz->directed = evet;
+	
+	Moc_Klatscher[0].i = (m-2)/2 -1;
+	Moc_Klatscher[0].j = (n-1)/2;
+	Moc_Klatscher[1].i = (m-2)/2 +2;
+	Moc_Klatscher[1].j = (n-1)/2;
+	
+}
+
