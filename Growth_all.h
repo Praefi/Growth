@@ -24,6 +24,10 @@ void get_hints (unsigned int*, Spielfeld, unsigned int, Spielfeld, unsigned int,
 
 void About_the_game (unsigned int, unsigned int, Limits, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);	//menu
 
+
+void Time_for_a_Tutorial (unsigned int, unsigned int*, unsigned int*, unsigned int*, Growth_Player*);
+void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
+
 //Dynamic (gamemode_played)	, done		(just notes following)
 //Geschwindigkeit (Vertikal, Horizontal)
 //Beschleunigung (Vertikal, Horizontal)
