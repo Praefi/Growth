@@ -44,9 +44,4 @@ void set_edge_unten_rechts (unsigned int, Spielfeld, unsigned int, unsigned int,
 void set_edge_unten_links (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int);
 
 
-
-void set_terminal_color (Color);
-void set_player_color (Growth_Player*, unsigned int, Color);
-
-
 #endif
