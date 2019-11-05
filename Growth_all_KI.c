@@ -487,7 +487,7 @@ void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Mo
 							// battle (m, n, Field_copy, geben, Opague_o.field, Allocation_o, number_of_players, gamemode_played);	// Copy from realize_modifications
 
 							// printf("After the basic_development of person %u.\n", person);	//test
-							// show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field_copy, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
+							// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field_copy, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
 
 							reset_of_ges (ges_copy, number_of_players);
 							ges_counter (Field_copy, m, n, ges_copy, number_of_players);
