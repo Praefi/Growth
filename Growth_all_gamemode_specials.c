@@ -273,7 +273,7 @@ void impact_y_semi_square (unsigned int m, unsigned int n, unsigned int* positio
 
 }
 
-void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players, unsigned int gamemode_played, int* dynamic_pointer, unsigned int erd, unsigned int* position, unsigned int g, unsigned int* ges, Earth_impact impact_tuple, Realize_modifications_variables* rmv) {
+void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players, unsigned int gamemode_played, int* dynamic_pointer, unsigned int erd, unsigned int* position, unsigned int g, unsigned int* ges, Earth_impact impact_tuple, Realize_modifications_variables* rmv, Single_option_representives single_option_representives) {
 
 	unsigned int controll, indikator1, indikator2, indikator3, space_i, space_j;
 
@@ -305,9 +305,9 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 
 		if (Opague_o.characterization >= 1) {
 			opague_builder (Field, Opague_o, m, n, geben, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+			show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 		} else {
-			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+			show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 		}
 
 		dynamic_pointer[6] = 0;		//impact y_Horizontal
@@ -327,7 +327,7 @@ void Dynamic_ball_movement (Spielfeld Field, Special_Fields Opague_o, unsigned i
 		while (abs(dynamic_pointer[Vertikal])+abs(dynamic_pointer[Horizontal]) != 0){
 
 			// printf("	Test-print \n");
-			// show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);		//test
+			// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);		//test
 			// printf("	Test-print \n");
 			// printf("	\n");
 			// printf("	indikator1: %u \n", indikator1);
@@ -1304,7 +1304,7 @@ void choose_your_ability (unsigned int number_of_players, unsigned int* ability,
 	}
 }
 
-void survive_obstacles_generator (unsigned int gamemode_played, unsigned int rmv_round_counter, unsigned int round_counter_before, unsigned int* information_code, Spielfeld Field, unsigned int geben, Special_Fields Allocation_o, unsigned int number_of_players, Special_Fields Opague_o, Spielfeld Sf_permutations, unsigned int AOP, unsigned int* level, Growth_Player* Growth_players, unsigned int m, unsigned int n, unsigned int survive_different, unsigned int* ges, unsigned int* rmv_var_, unsigned int g, unsigned int rmv_use_number, unsigned int tac, unsigned int time_matters_ttt) {
+void survive_obstacles_generator (unsigned int gamemode_played, unsigned int rmv_round_counter, unsigned int round_counter_before, unsigned int* information_code, Spielfeld Field, unsigned int geben, Special_Fields Allocation_o, unsigned int number_of_players, Special_Fields Opague_o, Spielfeld Sf_permutations, unsigned int AOP, unsigned int* level, Growth_Player* Growth_players, unsigned int m, unsigned int n, unsigned int survive_different, unsigned int* ges, unsigned int* rmv_var_, unsigned int g, unsigned int rmv_use_number, unsigned int tac, unsigned int time_matters_ttt, Single_option_representives single_option_representives) {
 
 	if ((gamemode_played == Survive)&&(rmv_round_counter == round_counter_before+1)) {
 
@@ -1322,9 +1322,9 @@ void survive_obstacles_generator (unsigned int gamemode_played, unsigned int rmv
 
 		if (Opague_o.characterization >= 1) {
 			opague_builder (Field, Opague_o, m, n, geben%number_of_players, AOP, Allocation_o, number_of_players, gamemode_played);
-			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+			show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 		} else {
-			show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+			show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 		}
 
 		for (unsigned int i=1; i<m-1; i+=1){
@@ -1412,7 +1412,7 @@ void survive_obstacles_generator (unsigned int gamemode_played, unsigned int rmv
 
 
 
-void Quidditch_Klatscher_players_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players) {
+void Quidditch_Klatscher_players_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players, Single_option_representives single_option_representives) {
 	
 	#ifdef Quidditch_mistake_search
 	printf("	Quidditch_Klatscher_players_actions-beginning.ok \n");	//test
@@ -1427,9 +1427,9 @@ void Quidditch_Klatscher_players_actions (Spielfeld Field, unsigned int geben, S
 	}
 	
 	if (Opague_o.characterization >= 1) {
-		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 	} else {
-		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 	}
 	
 	if (geben == 1) {
@@ -1457,7 +1457,7 @@ void Quidditch_Klatscher_players_actions (Spielfeld Field, unsigned int geben, S
 	
 }
 
-void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players, unsigned int* ges, unsigned int limits_at_all) {
+void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players, unsigned int* ges, unsigned int limits_at_all, Single_option_representives single_option_representives) {
 	
 	#ifdef Quidditch_mistake_search
 	printf("	Quidditch_Quaffel_players_actions-beginning.ok \n");	//test
@@ -1471,9 +1471,9 @@ void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spi
 	}
 	
 	if (Opague_o.characterization >= 1) {
-		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 	} else {
-		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 	}
 	
 	turns = 3;
@@ -1542,7 +1542,7 @@ void Quidditch_Quaffel_players_actions (Spielfeld Field, unsigned int geben, Spi
 	
 }
 
-void Quidditch_Schnatz_player_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players) {
+void Quidditch_Schnatz_player_actions (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* g, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Quaffel, Quidditch_setup* Qs, Special_Fields Opague_o, unsigned int* level, Spielfeld Sf_permutations, unsigned int* information_code, Growth_Player* Growth_players, Single_option_representives single_option_representives) {
 	
 	#ifdef Quidditch_mistake_search
 	printf("	Quidditch_Schnatz_player_actions-beginning.ok \n");	//test
@@ -1557,9 +1557,9 @@ void Quidditch_Schnatz_player_actions (Spielfeld Field, unsigned int geben, Spie
 	}
 	
 	if (Opague_o.characterization >= 1) {
-		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 	} else {
-		show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 	}
 	
 	if (geben == 1) {
