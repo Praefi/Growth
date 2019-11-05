@@ -11,13 +11,14 @@
 
 
 #include "Growth_all_Def.h"
+#include "Growth_all_visual.h"
 #include "Growth_all_show.h"
 
 // #define VERBOSE
 // #define Contact_mistake_search
 // #define Quidditch_mistake_search
 
-void show_field (unsigned int number_of_players, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Opague_o_field, Spielfeld Spiel, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Growth_Player* Growth_players, unsigned int auswerter, Special_Fields Allocation_o){	//checklist
+void show_field (unsigned int number_of_players, unsigned int invisible, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Opague_o_field, Spielfeld Spiel, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Growth_Player* Growth_players, unsigned int auswerter, Special_Fields Allocation_o){	//checklist
 	unsigned int allocation_choice;
 	allocation_choice = 0;
 
@@ -112,7 +113,7 @@ void show_field (unsigned int number_of_players, unsigned int* level, Spielfeld 
 					
 					Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
 					
-					if (Spiel[auswerter][i][j] == 0){
+					if ((Spiel[auswerter][i][j] == 0)||((invisible == 1)&&(Spiel[auswerter][i][j] != geben))){
 						printf("  ");
 					} else if (Spiel[auswerter][i][j] == dogum){
 						printf("NN");
@@ -123,148 +124,151 @@ void show_field (unsigned int number_of_players, unsigned int* level, Spielfeld 
 					} else if (Spiel[auswerter][i][j] >= 10000){
 						printf("??");
 					}
-
-					if (gamemode_played == Hunt) {
-						if (Spiel[auswerter][i][j] == 1) {
-							if ((geben == 1)||((information_code[3] == 1)&&((Spiel[auswerter][i+1][j] == geben)||(Spiel[auswerter][i-1][j] == geben)||(Spiel[auswerter][i][j+1] == geben)||(Spiel[auswerter][i][j-1] == geben)))||((information_code[1] == 1)&&(information_code[2] == 1))){
-								printf("##");
-							} else {
-								printf("  ");
-							}
-						} else if (Spiel[auswerter][i][j] == 2){
-							printf("AA");
-						} else if (Spiel[auswerter][i][j] == 3){
-							printf("BB");
-						} else if (Spiel[auswerter][i][j] == 4){
-							printf("CC");
-						} else if (Spiel[auswerter][i][j] == 5){
-							printf("DD");
-						} else if (Spiel[auswerter][i][j] == 6){
-							printf("EE");
-						} else if (Spiel[auswerter][i][j] == 7){
-							printf("GG");
-						} else if (Spiel[auswerter][i][j] == 8){
-							printf("HH");
-						} else if (Spiel[auswerter][i][j] == 9){
-							printf("II");
-						} else if (Spiel[auswerter][i][j] == 11){
-							if ((geben == 1)||(((information_code[2] == 2)||(information_code[2] == 1))&&(information_code[1] == 1))){
-								printf("~~");
-							} else {
-								printf("  ");
-							}
-						}
-					} else if (gamemode_played == Arena) {
-						if (Spiel[auswerter][i][j] == geben) {
-							if (information_code[0] == 1) {
-								printf("UU");
-							} else if (information_code[0] == 2) {
-								printf("LL");
-							} else if (information_code[0] == 3) {
+					
+					if ((invisible == 0)||(Spiel[auswerter][i][j] == geben)) {
+						if (gamemode_played == Hunt) {
+							if (Spiel[auswerter][i][j] == 1) {
+								if ((geben == 1)||((information_code[3] == 1)&&((Spiel[auswerter][i+1][j] == geben)||(Spiel[auswerter][i-1][j] == geben)||(Spiel[auswerter][i][j+1] == geben)||(Spiel[auswerter][i][j-1] == geben)))||((information_code[1] == 1)&&(information_code[2] == 1))){
+									printf("##");
+								} else {
+									printf("  ");
+								}
+							} else if (Spiel[auswerter][i][j] == 2){
 								printf("AA");
-							} else if (information_code[0] == 4) {
+							} else if (Spiel[auswerter][i][j] == 3){
+								printf("BB");
+							} else if (Spiel[auswerter][i][j] == 4){
 								printf("CC");
-							} else if (information_code[0] == 5) {
-								printf("II");
-							} else if (information_code[0] == 6) {
-								printf("SS");
-							} else if (information_code[0] == 7) {
-								printf("PP");
-							} else if (information_code[0] == 8) {
+							} else if (Spiel[auswerter][i][j] == 5){
+								printf("DD");
+							} else if (Spiel[auswerter][i][j] == 6){
+								printf("EE");
+							} else if (Spiel[auswerter][i][j] == 7){
+								printf("GG");
+							} else if (Spiel[auswerter][i][j] == 8){
 								printf("HH");
-							} else if (information_code[0] == 9) {
+							} else if (Spiel[auswerter][i][j] == 9){
+								printf("II");
+							} else if (Spiel[auswerter][i][j] == 11){
+								if ((geben == 1)||(((information_code[2] == 2)||(information_code[2] == 1))&&(information_code[1] == 1))){
+									printf("~~");
+								} else {
+									printf("  ");
+								}
+							}
+						} else if (gamemode_played == Arena) {
+							if (Spiel[auswerter][i][j] == geben) {
+								if (information_code[0] == 1) {
+									printf("UU");
+								} else if (information_code[0] == 2) {
+									printf("LL");
+								} else if (information_code[0] == 3) {
+									printf("AA");
+								} else if (information_code[0] == 4) {
+									printf("CC");
+								} else if (information_code[0] == 5) {
+									printf("II");
+								} else if (information_code[0] == 6) {
+									printf("SS");
+								} else if (information_code[0] == 7) {
+									printf("PP");
+								} else if (information_code[0] == 8) {
+									printf("HH");
+								} else if (information_code[0] == 9) {
+									printf("EE");
+								}
+							} else if ((information_code[1] != 0)&&(information_code[1] != 100)&&(Spiel[auswerter][i][j] == information_code[1])) {
+								printf("II");
+							} else if ((information_code[2] != 0)&&(information_code[2] != 100)&&(Spiel[auswerter][i][j] == information_code[2])) {
+								printf("PP");
+							} else if ((information_code[3] != 0)&&(information_code[3] != 100)&&(Spiel[auswerter][i][j] == information_code[3])) {
+								printf("HH");
+							} else if ((Spiel[auswerter][1][0] != 0)&&(Spiel[auswerter][1][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][1][0]/10)) {
+								printf("UU");
+							} else if ((Spiel[auswerter][0][0] != 0)&&(Spiel[auswerter][0][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][0]/10)) {
+								printf("LL");
+							} else if ((Spiel[auswerter][0][1] != 0)&&(Spiel[auswerter][0][1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][1]/10)) {
+								printf("AA");
+							} else if ((Spiel[auswerter][0][n-1] != 0)&&(Spiel[auswerter][0][n-1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][n-1]/10)) {
+								printf("CC");
+							} else if ((Spiel[auswerter][m-1][n-1] != 0)&&(Spiel[auswerter][m-1][n-1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][m-1][n-1]/10)) {
+								printf("SS");
+							} else if ((Spiel[auswerter][m-1][0] != 0)&&(Spiel[auswerter][m-1][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][m-1][0]/10)) {
 								printf("EE");
 							}
-						} else if ((information_code[1] != 0)&&(information_code[1] != 100)&&(Spiel[auswerter][i][j] == information_code[1])) {
-							printf("II");
-						} else if ((information_code[2] != 0)&&(information_code[2] != 100)&&(Spiel[auswerter][i][j] == information_code[2])) {
-							printf("PP");
-						} else if ((information_code[3] != 0)&&(information_code[3] != 100)&&(Spiel[auswerter][i][j] == information_code[3])) {
-							printf("HH");
-						} else if ((Spiel[auswerter][1][0] != 0)&&(Spiel[auswerter][1][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][1][0]/10)) {
-							printf("UU");
-						} else if ((Spiel[auswerter][0][0] != 0)&&(Spiel[auswerter][0][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][0]/10)) {
-							printf("LL");
-						} else if ((Spiel[auswerter][0][1] != 0)&&(Spiel[auswerter][0][1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][1]/10)) {
-							printf("AA");
-						} else if ((Spiel[auswerter][0][n-1] != 0)&&(Spiel[auswerter][0][n-1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][0][n-1]/10)) {
-							printf("CC");
-						} else if ((Spiel[auswerter][m-1][n-1] != 0)&&(Spiel[auswerter][m-1][n-1] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][m-1][n-1]/10)) {
-							printf("SS");
-						} else if ((Spiel[auswerter][m-1][0] != 0)&&(Spiel[auswerter][m-1][0] != 1000)&&(Spiel[auswerter][i][j] == Spiel[auswerter][m-1][0]/10)) {
-							printf("EE");
-						}
-					} else {
-						for (unsigned int p=1; p<=number_of_players; p++) {	//information_code[0] == number_of_players, changed
-							if (Spiel[auswerter][i][j] == p) {
-								printf("%u%u", p, p);
-								break;
+						} else {
+							for (unsigned int p=1; p<=number_of_players; p++) {	//information_code[0] == number_of_players, changed
+								if (Spiel[auswerter][i][j] == p) {
+									printf("%u%u", p, p);
+									break;
+								}
 							}
-						}
-						if (gamemode_played == Collect) {
-							if (Spiel[auswerter][i][j] == To_collect) {
-								printf("##");
-							}
-						} else if (gamemode_played == Fall) {
-							if (Spiel[auswerter][i][j] == Fall_ball) {
-								printf("##");
-							}
-						} else if (gamemode_played == Race) {
-							if (Spiel[auswerter][i][j] == Wall) {
-								printf("##");
-							} else if (Spiel[auswerter][i][j] == Wall_at_the_end) {
-								printf("((");
-							}
-						} else if (gamemode_played == Rain) {
-							if (Spiel[auswerter][i][j] == Raindrop) {
-								printf("##");
-							}
-						} else if (gamemode_played == Dynamic) {
-							if (Spiel[auswerter][i][j] == Dynamic_ball) {
-								printf("##");
-							}
-						} else if (gamemode_played == Survive) {
-							if (Spiel[auswerter][i][j] == Traps) {	//Trap
-								printf("TT");
-							} else if (Spiel[auswerter][i][j] == Bomb_4) {	//Bomb
-								printf("B4");
-							} else if (Spiel[auswerter][i][j] == Bomb_3) {	//Bomb
-								printf("B3");
-							} else if (Spiel[auswerter][i][j] == Bomb_2) {	//Bomb
-								printf("B2");
-							} else if (Spiel[auswerter][i][j] == Bomb_1) {	//Bomb
-								printf("B1");
-							} else if (Spiel[auswerter][i][j] == Waves) {	//Wave
-								printf("WW");
-							}
-						} else if (gamemode_played == Quidditch) {
-							if (Spiel[auswerter][i][j] == Quaffel) {	//Quaffel
-								printf("Qu");
-							} else if (Spiel[auswerter][i][j] == Klatscher) {	//Klatscher
-								printf("Kl");
-							} else if (Spiel[auswerter][i][j] == Schnatz) {		//Schnatz
-								printf("Sz");
-							} else if (Spiel[auswerter][i][j] == Jaeger_1) {	//Jaeger_1
-								printf("Ja");
-							} else if (Spiel[auswerter][i][j] == Jaeger_2) {	//Jaeger_2
-								printf("Ja");
-							} else if (Spiel[auswerter][i][j] == Hueter_1) {	//Hueter_1
-								printf("Hu");
-							} else if (Spiel[auswerter][i][j] == Hueter_2) {	//Hueter_2
-								printf("Hu");
-							} else if (Spiel[auswerter][i][j] == Treiber_1) {	//Treiber_1
-								printf("Tr");
-							} else if (Spiel[auswerter][i][j] == Treiber_2) {	//Treiber_2
-								printf("Tr");
-							} else if (Spiel[auswerter][i][j] == Sucher_1) {	//Sucher_1
-								printf("Su");
-							} else if (Spiel[auswerter][i][j] == Sucher_2) {	//Sucher_2
-								printf("Su");
-							} else if ((Spiel[auswerter][i][j] == Torring_1)||(Spiel[auswerter][i][j] == Torring_2)) {	//Torringe
-								printf("()");
+							if (gamemode_played == Collect) {
+								if (Spiel[auswerter][i][j] == To_collect) {
+									printf("##");
+								}
+							} else if (gamemode_played == Fall) {
+								if (Spiel[auswerter][i][j] == Fall_ball) {
+									printf("##");
+								}
+							} else if (gamemode_played == Race) {
+								if (Spiel[auswerter][i][j] == Wall) {
+									printf("##");
+								} else if (Spiel[auswerter][i][j] == Wall_at_the_end) {
+									printf("((");
+								}
+							} else if (gamemode_played == Rain) {
+								if (Spiel[auswerter][i][j] == Raindrop) {
+									printf("##");
+								}
+							} else if (gamemode_played == Dynamic) {
+								if (Spiel[auswerter][i][j] == Dynamic_ball) {
+									printf("##");
+								}
+							} else if (gamemode_played == Survive) {
+								if (Spiel[auswerter][i][j] == Traps) {	//Trap
+									printf("TT");
+								} else if (Spiel[auswerter][i][j] == Bomb_4) {	//Bomb
+									printf("B4");
+								} else if (Spiel[auswerter][i][j] == Bomb_3) {	//Bomb
+									printf("B3");
+								} else if (Spiel[auswerter][i][j] == Bomb_2) {	//Bomb
+									printf("B2");
+								} else if (Spiel[auswerter][i][j] == Bomb_1) {	//Bomb
+									printf("B1");
+								} else if (Spiel[auswerter][i][j] == Waves) {	//Wave
+									printf("WW");
+								}
+							} else if (gamemode_played == Quidditch) {
+								if (Spiel[auswerter][i][j] == Quaffel) {	//Quaffel
+									printf("Qu");
+								} else if (Spiel[auswerter][i][j] == Klatscher) {	//Klatscher
+									printf("Kl");
+								} else if (Spiel[auswerter][i][j] == Schnatz) {		//Schnatz
+									printf("Sz");
+								} else if (Spiel[auswerter][i][j] == Jaeger_1) {	//Jaeger_1
+									printf("Ja");
+								} else if (Spiel[auswerter][i][j] == Jaeger_2) {	//Jaeger_2
+									printf("Ja");
+								} else if (Spiel[auswerter][i][j] == Hueter_1) {	//Hueter_1
+									printf("Hu");
+								} else if (Spiel[auswerter][i][j] == Hueter_2) {	//Hueter_2
+									printf("Hu");
+								} else if (Spiel[auswerter][i][j] == Treiber_1) {	//Treiber_1
+									printf("Tr");
+								} else if (Spiel[auswerter][i][j] == Treiber_2) {	//Treiber_2
+									printf("Tr");
+								} else if (Spiel[auswerter][i][j] == Sucher_1) {	//Sucher_1
+									printf("Su");
+								} else if (Spiel[auswerter][i][j] == Sucher_2) {	//Sucher_2
+									printf("Su");
+								} else if ((Spiel[auswerter][i][j] == Torring_1)||(Spiel[auswerter][i][j] == Torring_2)) {	//Torringe
+									printf("()");
+								}
 							}
 						}
 					}
+					
 					set_terminal_color (cNORMAL);
 					printf("|");
 				}
