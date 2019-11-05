@@ -233,8 +233,9 @@ enum options {
 	oPermutations = 18,
 	oAvalanche = 19,
 	oSpreading = 20,
+	oInvisible = 21,
 
-	oBack = 23,		//synchronisiere mit oBack, tivialerweise!
+	oBack = 24,		//synchronisiere mit oBack, tivialerweise! Last value +3
 
 	Numberofplayers = oBack-1,	//Numberofplayers immer (fast) zuletzt
 	KI = oBack-2,	//Numberofplayers immer (fast) zuvorletzt
@@ -339,20 +340,21 @@ typedef struct Collector_t {	//Option: Permutations
 	unsigned int amount_of_permutation_number_c;
 } Collector;
 
-typedef struct Single_option_representives_t {	//square-limits
+typedef struct Single_option_representives_t {
 	unsigned int undead_duration;
 	unsigned int inverted;
 	unsigned int addition;
 	unsigned int intensity_loss_per_line_multiplication;
 	unsigned int spreading;
+	unsigned int invisible;
 } Single_option_representives;
 
-typedef struct Time_matters_t {	//square-limits
+typedef struct Time_matters_t {
 	unsigned int ttt;
 	unsigned int warning_system;
 } Time_matters;
 
-typedef struct Realize_modifications_variables_t {	//square-limits
+typedef struct Realize_modifications_variables_t {	//all variables used for normal options
 	unsigned int* win_condition;
 	Spielfeld numbers_of_;
 	unsigned int* same;
