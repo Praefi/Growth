@@ -104,10 +104,10 @@ void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned
 // avalanche (gamemode), frozen
 // the squares change positions like in a change until the active player cannot get nearer to the center.
 
-// spreading (option), go on
+// spreading (option), done
 // touching the wall causes a line of owned squares along the wall until there is an other living square or the end.
 
-// Imitation (option), go on
+// Imitation (option), frozen
 // Every square of the enemies is shown as own square, except until the distance x from the edge.
 
 // Laser-competition (gamemode), go on
