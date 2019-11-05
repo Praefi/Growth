@@ -18,13 +18,13 @@ void realize_modifications (Quidditch_setup*, Moveable_objects_condition*, Movea
 void figure_check (Spielfeld, unsigned int, unsigned int, unsigned int, Growth_Player*, Special_Fields, Spielfeld, unsigned int, unsigned int);
 
 
-void inverted_organism (Spielfeld, unsigned int*, Spielfeld, Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Growth_Player*);
+void inverted_organism (Spielfeld, unsigned int*, Spielfeld, Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Growth_Player*, Single_option_representives);
 void find_edges_of_organism_2dim (unsigned int*, Spielfeld, unsigned int, unsigned int, unsigned int);
 
 
 void addition_maker (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int*);
 void projection_maker (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
-void assassin_maker (unsigned int, Spielfeld, unsigned int*, Spielfeld, Spielfeld, unsigned int, Special_Fields, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Growth_Player*);
+void assassin_maker (unsigned int, Spielfeld, unsigned int*, Spielfeld, Spielfeld, unsigned int, Special_Fields, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Growth_Player*, Single_option_representives);
 void Avalanche_maker (Spielfeld, Spielfeld, Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void Spreading_maker (Spielfeld, Spielfeld, Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 void Permutations_permutate_maker (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int**, unsigned int, unsigned int, Spielfeld, unsigned int, Special_Fields);
