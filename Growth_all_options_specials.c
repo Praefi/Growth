@@ -85,9 +85,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		if (real == evet) {
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Spiel, Opague_o, m, n, geben, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Spiel, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Spiel, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 		}
 
@@ -102,9 +102,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Spiel, Opague_o, m, n, geben, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Spiel, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Spiel, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 
 			printf("\n");
@@ -194,7 +194,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 				printf("\n");
 				printf("	Sieg: Spieler %u \n", geben);
 				printf("\n");
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Spiel, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Spiel, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 		// printf("g=0 line: 12941");	//test
 			}
@@ -217,9 +217,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Field, Opague_o, m, n, geben, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 
 			printf("	\n");
@@ -261,9 +261,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 			
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Field, Opague_o, m, n, geben, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 
 			for (unsigned int s = 1; s <= 20; s+=1) {	//Abstandhalter
@@ -275,7 +275,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 	// printf("	realize_modifications ok.6\n ");	//test
 
 	if (assassin != 0) {
-		assassin_maker (real, Spiel, level, Sf_permutations, Field, geben, Opague_o, gamemode_played, Allocation_o, number_of_players, m, n, rmv->AOP, information_code, Growth_players);
+		assassin_maker (real, Spiel, level, Sf_permutations, Field, geben, Opague_o, gamemode_played, Allocation_o, number_of_players, m, n, rmv->AOP, information_code, Growth_players, single_option_representives);
 	}
 
 	#ifdef Contact_mistake_search
@@ -294,9 +294,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		if (real == evet) {
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Field, Opague_o, m, n, geben, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 		}
 		
@@ -325,9 +325,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 			if ((anything - ((*g-rmv->all_turns_correction-1)%anything)) == 1) {
 				if (Opague_o.characterization >= 1) {
 					opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				} else {
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				}
 
 				printf (" \n");
@@ -356,9 +356,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 			if ((anything - ((*g-rmv->all_turns_correction-1)%anything)) == 1) {
 				if (Opague_o.characterization >= 1) {
 					opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				} else {
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				}
 
 				printf (" \n");
@@ -380,9 +380,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 			if ((anything - ((*g-rmv->all_turns_correction-1)%anything)) == 1) {
 				if (Opague_o.characterization >= 1) {
 					opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				} else {
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				}
 
 				printf (" \n");
@@ -390,7 +390,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 				printf ("	It is time for a permutation... \n");
 				printf (" \n");
 
-				// show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
+				// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
 
 				Permutations_permutate_maker (rmv->Collector_of_permutation.areas_c, Field, number_of_players, rmv->Collector_of_permutation.permutation_number_c, rmv->Collector_of_permutation.sigmas_c, rmv->Collector_of_permutation.amount_of_permutation_number_c, geben, Opague_o.field, gamemode_played, Allocation_o);
 
@@ -411,9 +411,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		if (real == evet) {
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 
 			printf("\n");
@@ -449,9 +449,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 				printf("	Falling slowly...\n");
 				printf("	\n");
 				if (Opague_o.characterization >= 1) {
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//already build
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//already build
 				} else {
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				}
 			}
 		} else {
@@ -804,9 +804,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 						level[0] = 2;
 					}
 					if (Opague_o.characterization >= 1) {
-						show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+						show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 					} else {
-						show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+						show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 					}
 					if (level[0] == 2) {
 						level[0] = 5;
@@ -886,7 +886,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 			if (real == evet) {
 				if (count_freq == n-4){
 					printf("	All lost! \n");
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 					*g = 0;
 					// printf("g=0 line: 13608");	//test
 				}
@@ -902,9 +902,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 			if (real == evet) {
 				if (Opague_o.characterization >= 1) {
 					opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				} else {
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				}
 			}
 			
@@ -974,9 +974,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 						if (Opague_o.characterization >= 1) {
 							opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-							show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+							show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 						} else {
-							show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+							show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 						}
 
 						if (j == (n-1)/2){
@@ -1045,9 +1045,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 							if (Opague_o.characterization >= 1) {
 								opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-								show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+								show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 							} else {
-								show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+								show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 							}
 
 							break;	//the only ball i can find
@@ -1145,7 +1145,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 				}
 			}
 			if (a > 0) {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 				// printf("g=0 line: 13864");	//test
 			}
@@ -1174,9 +1174,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 				if (Opague_o.characterization >= 1) {
 					opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				} else {
-					show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				}
 
 				if (information_code[1] == 1) {
@@ -1218,9 +1218,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		if (real == evet) {
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 		}
 
@@ -1233,9 +1233,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		if (real == evet) {
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 		}
 		Avalanche_maker (Spiel, Field, Opague_o.field, Allocation_o, geben, gamemode_played, number_of_players, m, n);
@@ -1245,9 +1245,9 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		if (real == evet) {
 			if (Opague_o.characterization >= 1) {
 				opague_builder (Field, Opague_o, m, n, (geben%number_of_players)+1, rmv->AOP, Allocation_o, number_of_players, gamemode_played);
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			} else {
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 			}
 		}
 		Spreading_maker (Spiel, Field, Opague_o.field, Allocation_o, geben, gamemode_played, number_of_players, m, n);
@@ -1435,12 +1435,12 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 			if (rmv->player_counter == (number_of_players - 1)) {
 				printf("		Game over, you can see the master of Ulcer. \n");
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 			}
 			if (rmv->player_counter == number_of_players) {
 				printf("		Game over, everybody died. \n");
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 			}
 			if ((geben == number_of_players)&&(rmv->rtp == rmv->round_counter)) {
@@ -1460,12 +1460,12 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 			if (rmv->player_counter == (number_of_players - 1)) {
 				printf("		Game over, you can see the master of the Arena. \n");
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 			}
 			if (rmv->player_counter == number_of_players) {
 				printf("		Game over, everybody died. \n");
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 			}
 
@@ -1505,7 +1505,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 					}
 					break;
 				}
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 				// printf("g=0 line: 14212");	//test
 			}
@@ -1522,7 +1522,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 
 			if (rmv->player_counter == (number_of_players - 1)) {
 				printf("		Game over. \n		Sieg: Spieler 1. \n");
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 			}
 
@@ -1537,7 +1537,7 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 						break;
 					}
 				}
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 			}
 			if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
@@ -1558,11 +1558,11 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 		if (real == evet) {
 			Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry. (Field before Moc)
 			
-			Quidditch_Klatscher_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
+			Quidditch_Klatscher_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players, single_option_representives);	//1-time
 			
-			Quidditch_Quaffel_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players, ges, limits.at_all);	//2-times
+			Quidditch_Quaffel_players_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players, ges, limits.at_all, single_option_representives);	//2-times
 			
-			Quidditch_Schnatz_player_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players);	//1-time
+			Quidditch_Schnatz_player_actions (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, g, Moc_Schnatz, Moc_Quaffel, Qs, Opague_o, level, Sf_permutations, information_code, Growth_players, single_option_representives);	//1-time
 			
 			#ifdef Quidditch_mistake_search
 			printf("	Quidditch_team_actions.ok \n");	//test
@@ -1574,13 +1574,13 @@ void realize_modifications (Quidditch_setup* Qs, Moveable_objects_condition* Moc
 				
 				Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
 				
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				
 				Quidditch_Klatscher_movements (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, m, n, Moc_Klatscher, Qs);
 				
 				Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry.
 				
-				show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				
 				#ifdef Quidditch_mistake_search
 				printf("	Quidditch_S/K_actions.ok \n");	//test
@@ -1852,10 +1852,10 @@ void figure_check (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 }
 
 
-void inverted_organism (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* information_code, Growth_Player* Growth_players) {
+void inverted_organism (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int* information_code, Growth_Player* Growth_players, Single_option_representives single_option_representives) {
 	unsigned int edges_of_organism[4];	//0=oben, 1=rechts, 2=unten, 3=links
 
-	show_field (number_of_players, level, Sf_permutations, Opague_o_field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o_field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 
 	find_edges_of_organism_2dim (edges_of_organism, Spiel, geben, m, n);
 
@@ -2041,7 +2041,7 @@ void projection_maker (Spielfeld Field, unsigned int number_of_players, unsigned
 	}
 }
 
-void assassin_maker (unsigned int real, Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Field, unsigned int geben, Special_Fields Opague_o, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int AOP, unsigned int* information_code, Growth_Player* Growth_players) {
+void assassin_maker (unsigned int real, Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Field, unsigned int geben, Special_Fields Opague_o, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, unsigned int m, unsigned int n, unsigned int AOP, unsigned int* information_code, Growth_Player* Growth_players, Single_option_representives single_option_representives) {
 	unsigned int assassin_counter, a, b;
 	assassin_counter = 0;
 	a = 0;
@@ -2068,9 +2068,9 @@ void assassin_maker (unsigned int real, Spielfeld Spiel, unsigned int* level, Sp
 									if (real == evet) {
 										if (Opague_o.characterization >= 1) {
 											opague_builder (Field, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
-											show_field (number_of_players, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+											show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 										} else {
-											show_field (number_of_players, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+											show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 										}
 									}
 								}
