@@ -131,7 +131,7 @@ void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsign
 						}
 					}
 				}
-				show_field (number_of_players, level, Sf_permutations, Opague_o_field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+				show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o_field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
 				*g = 0;
 			}
 		}
@@ -189,7 +189,7 @@ void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsign
 				for (unsigned int j=1; j<n-1; j+=1){
 					if ((evolution.od[geben][i][j] == 101*geben) && (Journey_o.field[0][i][j] == 0) && (journey_max >= limits.at_all)){
 
-						// show_field (number_of_players, level, Sf_permutations, Opague_o_field, Journey_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
+						// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o_field, Journey_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
 
 						for (unsigned int p=0; p<=1; p++) {
 							for (unsigned int q=0; q<=(((minimum(m, n)-2)-1)/2)*2; q++) {
@@ -909,7 +909,7 @@ void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Sp
 	}
 
 	if (single_option_representives.inverted != 0) {
-		inverted_organism (Spiel, level, Sf_permutations, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, information_code, Growth_players);
+		inverted_organism (Spiel, level, Sf_permutations, Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, m, n, information_code, Growth_players, single_option_representives);
 	}
 
 	// printf("change:	101*geben=%u, geben=%u \n", 101*geben, geben); //test
