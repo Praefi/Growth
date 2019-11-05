@@ -18,7 +18,7 @@ void out_in_dynamic_take_out (unsigned int*, Realize_modifications_variables*, u
 int sgn (int);
 void Reflection (int*, unsigned int, int);
 void impact_y_semi_square (unsigned int, unsigned int, unsigned int*, Earth_impact impact_tuple, int*, Spielfeld);	// unsigned int*** wird zu Spielfeld
-void Dynamic_ball_movement (Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, Special_Fields, unsigned int, unsigned int*, Spielfeld, unsigned int*, Growth_Player*, unsigned int, int*, unsigned int, unsigned int*, unsigned int, unsigned int*, Earth_impact, Realize_modifications_variables*);
+void Dynamic_ball_movement (Spielfeld, Special_Fields, unsigned int, unsigned int, unsigned int, Special_Fields, unsigned int, unsigned int*, Spielfeld, unsigned int*, Growth_Player*, unsigned int, int*, unsigned int, unsigned int*, unsigned int, unsigned int*, Earth_impact, Realize_modifications_variables*, Single_option_representives);
 
 
 void battle (Spielfeld, unsigned int, unsigned int, Spielfeld, unsigned int, Spielfeld, Special_Fields, unsigned int, unsigned int);
@@ -38,14 +38,14 @@ void heart_ground (unsigned int, unsigned int, Spielfeld, Spielfeld, unsigned in
 void choose_your_ability (unsigned int, unsigned int*, Growth_Player*, unsigned int);
 
 
-void survive_obstacles_generator (unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, Special_Fields, unsigned int, Special_Fields, Spielfeld, unsigned int, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int);
+void survive_obstacles_generator (unsigned int, unsigned int, unsigned int, unsigned int*, Spielfeld, unsigned int, Special_Fields, unsigned int, Special_Fields, Spielfeld, unsigned int, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, Single_option_representives);
 
 
 
 
-void Quidditch_Klatscher_players_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*);
-void Quidditch_Quaffel_players_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*, unsigned int*, unsigned int);
-void Quidditch_Schnatz_player_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*);
+void Quidditch_Klatscher_players_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*, Single_option_representives);
+void Quidditch_Quaffel_players_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*, unsigned int*, unsigned int, Single_option_representives);
+void Quidditch_Schnatz_player_actions (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, unsigned int*, Moveable_objects_condition*, Moveable_objects_condition*, Quidditch_setup*, Special_Fields, unsigned int*, Spielfeld, unsigned int*, Growth_Player*, Single_option_representives);
 
 void Quidditch_Klatscher_movements (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, unsigned int, unsigned int, Moveable_objects_condition*, Quidditch_setup*);
 void Quidditch_Klatscher_target_search (Spielfeld, unsigned int, unsigned int, Moveable_objects_condition*, unsigned int);
