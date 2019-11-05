@@ -12,7 +12,7 @@
 #include <windows.h>
 #endif
 
-void show_field (unsigned int, unsigned int*, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Growth_Player*, unsigned int, Special_Fields);	//checklist
+void show_field (unsigned int, unsigned int, unsigned int*, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Growth_Player*, unsigned int, Special_Fields);	//checklist
 
 
 void show_whose_turn (unsigned int, unsigned int, unsigned int*, Growth_Player*, unsigned int*, unsigned int);
