@@ -57,7 +57,7 @@ int main (void) {
 	unsigned int rain, rain_drops, rain_obj, rain_speed;	//Gamemode = Rain
 	unsigned int playtime;	//Navigationsparameter
 	unsigned int opt, use_number, num_temp, tac, cards;	//How to get the numbers, and to controll them
-	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition, assassin, avalanche, spreading, invisible;	//options, selected with beginningmenu
+	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition, assassin, avalanche, spreading, invisible, roses;	//options, selected with beginningmenu
 	unsigned int rtc, spf, scwhp, hboa;	// Gamemode: Hunt
 	unsigned int NOSV, AOP;		//number of saved variables; amount of players
 	unsigned int range, strength;		//Gamemode = Dynamic
@@ -173,6 +173,7 @@ int main (void) {
 		avalanche = 0;
 		spreading = 0;
 		invisible = 0;
+		roses = 0;
 
 		fall_controll = 0;	//Fall
 		points_for_win = 3;
@@ -311,7 +312,7 @@ int main (void) {
 
 				while (beginningmenu != oStart){
 
-					printf("	%u. Start game\n \n	%u. Game size\n	%u. Journey\n	%u. Tactics\n	%u. Random\n	%u. Limits\n	%u. Time\n	%u. Color\n	%u. Opague\n	%u. undead\n	%u. Figures\n	%u. Allocation\n	%u. Cards\n	%u. Inverted\n	%u. Addition\n	%u. Projection\n	%u. Assassin\n	%u. Permutations\n	%u. Avalanche\n	%u. Spreading\n	%u. Invisible\n	%u. KI\n	%u. Number of players\n  \n	%u. Back\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oSpreading, oInvisible, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
+					printf("	%u. Start game\n \n	%u. Game size\n	%u. Journey\n	%u. Tactics\n	%u. Random\n	%u. Limits\n	%u. Time\n	%u. Color\n	%u. Opague\n	%u. undead\n	%u. Figures\n	%u. Allocation\n	%u. Cards\n	%u. Inverted\n	%u. Addition\n	%u. Projection\n	%u. Assassin\n	%u. Permutations\n	%u. Avalanche\n	%u. Spreading\n	%u. Invisible\n	%u. Roses\n	%u. KI\n	%u. Number of players\n  \n	%u. Back\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oSpreading, oInvisible, oRoses, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	%u. Points for win\n", oBack+1);
 						printf("	%u. Turns per drop\n", oBack+2);
@@ -1055,6 +1056,18 @@ int main (void) {
 						} else if (invisible == 0){
 							invisible = 1;
 							printf("	Invisible activated \n");
+						}
+						printf("\n");
+					}
+					
+					if (beginningmenu == oRoses){
+						if (roses != 0){
+							roses = 0;
+							printf("	Roses deactivated \n");
+						} else if (roses == 0){
+							roses = 1;
+							printf("	Played together with undead duration roses will have no effect! \n");
+							printf("	Roses activated \n");
 						}
 						printf("\n");
 					}
@@ -1830,6 +1843,13 @@ int main (void) {
 					}
 					printf("\n");
 					
+					if (roses == 0) {
+						printf("	Roses deactivated \n");
+					} else if (roses != 0) {
+						printf("	Roses   activated \n");
+					}
+					printf("\n");
+					
 					if (opt == 5) {
 						printf("	Random    activated \n");
 					} else if (opt == 0) {
@@ -1926,7 +1946,7 @@ int main (void) {
 			same[25] = rtc;
 			same[26] = spf;
 			same[27] = ulcer_lifes[0];
-			same[28] = 0; // same[28] = hboa;
+			same[28] = roses; // same[28] = hboa;
 			same[29] = ttt;
 			same[30] = ulcer_lifes[3];
 			same[31] = warning_system;
@@ -2091,7 +2111,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	unsigned int number_[AOP+1];	//numbers to confuse the random and for the statistics
 	int erd; // Gamemode: Dynamic
 	
-	Special_Fields Allocation_o, Opague_o, Journey_o;
+	Special_Fields Allocation_o, Opague_o, Journey_o, Roses_o;
 	Growth_Player Growth_players[AOP+1];	//id and color
 	Limits limits;	//the limits
 	Num_num num;	//remix the random
@@ -2162,7 +2182,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	rtc = same[25];
 	spf = same[26];
 	ulcer_lifes[0] = same[27];
-	// hboa = same[28];
+	Roses_o.characterization = same[28];	// hboa = same[28];
 	time_matters.ttt = same[29];
 	ulcer_lifes[3] = same[30];
 	time_matters.warning_system = same[31];
@@ -2256,13 +2276,15 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	if (Collector_of_permutation.permutation_number_c == 0) {
 		Collector_of_permutation.permutation_number_b = 0;
 	}
-
+	
 	Journey_o.field = Spielfeld_Create (m, n, number_of_players);	//gamemode_played 11 journey, done
-
+	
 	Opague_o.field = Spielfeld_Create (m, n, 0);
-
+	
 	Allocation_o.field = Spielfeld_Create (m, n, number_of_players+2);
-
+	
+	Roses_o.field = Spielfeld_Create (m, n, 0);
+	
 	// scanf("%u", &pause);	//test
 	// printf("	#line 2k, after Allocation_o.field \n");	//test
 
@@ -2884,8 +2906,8 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 				pere[geben] = 0;
 				continue;
 			} else if ((pere[geben] != 0)&&(time_matters.warning_system != 0)&&(((time_matters.warning_system <= 5)&&((pere[geben]+time_matters.warning_system) == 8))||((time_matters.warning_system == 6)&&(pere[geben] == 1)))) {
-				old_dying (Field, Field, m, n, d, e, gamemode_played, information_code, geben, evolution.od, w, Allocation_o, Opague_o.field, number_of_players);
-				change (Field, level, Sf_permutations, Field, evolution, m, n, gamemode_played, number_of_players, ges, geben, Allocation_o, Opague_o.field, information_code, Growth_players, single_option_representives);  //Change befreit
+				old_dying (Field, Field, m, n, d, e, gamemode_played, information_code, geben, evolution.od, w, Allocation_o, Opague_o.field, number_of_players, Roses_o);
+				change (Field, level, Sf_permutations, Field, evolution, m, n, gamemode_played, number_of_players, ges, geben, Allocation_o, Opague_o.field, information_code, Growth_players, single_option_representives, Roses_o);  //Change befreit
 				g += 1;
 				printf(" \n ");
 				printf("	You got a penalty. \n ");
@@ -3044,7 +3066,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 			} else {
 				// rmv->use_number = 5;	//KI testing... warning
 
-				turn_of_KI_random (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, &KI_decision, Field, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, limits, single_option_representives, rain, rmv);
+				turn_of_KI_random (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, &KI_decision, Field, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, limits, single_option_representives, rain, rmv, Roses_o);
 
 				// rmv->var_[geben] = 51;	//KI testing... warning
 
@@ -3359,32 +3381,32 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 					if (rmv->var_[geben] == Plus_){
 						rmv->numbers_of_[geben][1][0] += 1;
 						if (level[geben] == human) {
-							Plus (level, Sf_permutations, m, n, geben, Field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Opague_o, Allocation_o);
+							Plus (level, Sf_permutations, m, n, geben, Field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Opague_o, Allocation_o, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Minus_) {
 						rmv->numbers_of_[geben][1][0] += 1;
 						if (level[geben] == human) {
-							Minus (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players);
+							Minus (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Move_2) {
 						rmv->numbers_of_[geben][2][0] += 1;
 						if (level[geben] == human) {
-							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players);
+							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Move_4) {
 						rmv->numbers_of_[geben][4][0] += 1;
 						if (level[geben] == human) {
-							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players);
+							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Change_) {
 						rmv->numbers_of_[geben][2][0] += 1;
 						if (level[geben] == human) {
-							Change (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, position, Allocation_o, number_of_players);
+							Change (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, position, Allocation_o, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Destroy_) {
 						rmv->numbers_of_[geben][3][0] += 1;
 						if (level[geben] == human) {
-							Destroy (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players);
+							Destroy (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Boost_) {
 						rmv->numbers_of_[geben][4][0] += 1;
@@ -3501,7 +3523,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	
 				// printf("Checkpoint: development_start \n");	//test
 		
-				basic_development (Field, Field, m, n, geben, Opague_o.field, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, rmv->var_[geben], evolution, &num, &g, Journey_o, limits, single_option_representives, position, &KI_decision, rain, evet);
+				basic_development (Field, Field, m, n, geben, Opague_o.field, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, rmv->var_[geben], evolution, &num, &g, Journey_o, limits, single_option_representives, Roses_o, position, &KI_decision, rain, evet);
 
 				// printf("Checkpoint: development_end \n");	//test
 		
@@ -4189,7 +4211,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
 		printf("	Plus: Set a square on 0405.\n");
 
-		Plus (level, Test_field, m, n, geben, Test_field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Test_special_fields, Test_special_fields);
+		Plus (level, Test_field, m, n, geben, Test_field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Test_special_fields, Test_special_fields, test_single_options);
 
 		if (Test_field[0][4][5] != geben) {
 			input = 1;
@@ -4198,7 +4220,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Plus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Plus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4206,7 +4228,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
 		printf("	Minus: Delete your square on 0605.\n");
 
-		Minus (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
+		Minus (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
 
 		if (Test_field[0][6][5] != 0) {
 			input = 1;
@@ -4215,7 +4237,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Minus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Minus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4223,7 +4245,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
 		printf("	Move: Move your square on 0605 to 0604.\n");
 
-		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
+		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
 
 		if ((Test_field[0][6][5] != 0)||(Test_field[0][6][4] != geben)) {
 			input = 1;
@@ -4232,7 +4254,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4240,7 +4262,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
 		printf("	Change: Change your square on 0503 with the square of the enemy on 0502.\n");
 
-		Change (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players,Test_special_fields, position, Test_special_fields, number_of_players);
+		Change (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players,Test_special_fields, position, Test_special_fields, number_of_players, test_single_options);
 
 		if ((Test_field[0][5][2] != geben)||(Test_field[0][5][3] != 2)) {
 			input = 1;
@@ -4249,7 +4271,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Change_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Change_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4257,7 +4279,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
 		printf("	Destroy: Destroy the square of the enemy on 0503.\n");
 
-		Destroy (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
+		Destroy (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
 
 		if (Test_field[0][5][3] != 0) {
 			input = 1;
@@ -4266,7 +4288,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Destroy_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Destroy_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4276,7 +4298,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Boost_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Boost_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4284,7 +4306,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
 		printf("	Move: Move your square on 0703 to 0603.\n");
 
-		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players);
+		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
 
 		if ((Test_field[0][7][3] != 0)||(Test_field[0][6][3] != geben)) {
 			input = 1;
@@ -4293,7 +4315,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4304,7 +4326,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		printf(" \n");
 	}
 	w = 2;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	w = 3;
 
@@ -4315,7 +4337,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Revive_, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Revive_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4326,7 +4348,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		printf(" \n");
 	}
 	w = 4;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_4_5, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_4_5, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	w = 3;
 
@@ -4338,7 +4360,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		printf(" \n");
 	}
 	e = 4;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, max_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, max_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	e = 3;
 
@@ -4350,7 +4372,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		printf(" \n");
 	}
 	d = 1;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, min_1, evolution, &num, &g, Test_special_fields, limits, test_single_options, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, min_1, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	d = 2;
 
