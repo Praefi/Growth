@@ -116,11 +116,11 @@ void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned
 // Goliath (and David) (gamemode), go on
 // it is like throwing stones on pumping stations
 
-// invisible (option), go on
+// invisible (option), done
 // cannot see anything of the enemies
 
-// roses (option), go on
-// if there are too many in the surrounding and a square dies, a rose is born an will rise up every time a square is dying in its surrounding the same way (according to the difference to the maximum)
+// roses (option), done
+// if there are too many in the surrounding and a square dies, a rose is born an can get cleared away trough having the same count of equal squares in its surrounding again.
 
 // Ptunoi (gamemode), frozen
 // Possible to understand nothing of it.
