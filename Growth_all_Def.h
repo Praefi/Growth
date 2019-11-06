@@ -118,7 +118,7 @@ enum where_to_go {	//Permutations
 
 enum objects {
 	//	?? == n*10.000 (n = 1, 2, ..., 99, ?? are the last objects >= 10.000)
-	// used field numbers: 1,2,3,4,5,6,7,8,9,10,11,15,16,17,20,30,40,50,60,70,71,74,75,77,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,101,102,103,104,105,106,202,303,404,505,606,707,808,909
+	// used field numbers: 1,2,3,4,5,6,7,8,9,10,11,15,16,17,20,30,40,50,60,70,71,74,75,77,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,101,102,103,104,105,106,110,111,112,113,114,115,116,202,303,404,505,606,707,808,909
 
 	Waves		= 75,	//Survive
 	Waves_new	= 74,
@@ -152,6 +152,16 @@ enum objects {
 	Hueter_2 = 104,
 	Treiber_2 = 105,
 	Sucher_2 = 106,
+	
+	Roses_0 = 110,
+	Roses_1 = 111,
+	Roses_2 = 112,
+	Roses_3 = 113,
+	Roses_4 = 114,
+	Roses_5 = 115,
+	Roses_6 = 116,
+	
+	//undead = n*10000,
 	
 };
 
@@ -234,8 +244,9 @@ enum options {
 	oAvalanche = 19,
 	oSpreading = 20,
 	oInvisible = 21,
+	oRoses = 22,
 
-	oBack = 24,		//synchronisiere mit oBack, tivialerweise! Last value +3
+	oBack = 25,		//synchronisiere mit oBack, tivialerweise! Last value +3
 
 	Numberofplayers = oBack-1,	//Numberofplayers immer (fast) zuletzt
 	KI = oBack-2,	//Numberofplayers immer (fast) zuvorletzt
