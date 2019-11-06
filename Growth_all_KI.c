@@ -81,7 +81,7 @@ void ges_others_counter (unsigned int* ges_copy, unsigned int* ges_others, unsig
 }
 
 
-void turn_of_KI_random (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
+void turn_of_KI_random (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv, Special_Fields Roses_o) {
 	Spielfeld Field_copy;
 	unsigned int* KI_table_of_choice;		// number/own_square or 0/enemy_square or 0/more (1) or less (2) squares in possession/difference of squares
 	unsigned int* ges_copy;
@@ -108,7 +108,7 @@ void turn_of_KI_random (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Qua
 	synchronisation_Field_copy (Field, Field_copy, m, n, number_of_players, geben, Opague_o.field, gamemode_played, Allocation_o);
 
 	while (KI_table_of_choice[0] == 0) {
-		fill_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, ges, limits, single_option_representives, rain, rmv);
+		fill_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, ges, limits, single_option_representives, rain, rmv, Roses_o);
 	}
 
 	synchronisation_Field_copy (Field, Field_copy, m, n, number_of_players, geben, Opague_o.field, gamemode_played, Allocation_o);
@@ -140,7 +140,7 @@ void turn_of_KI_random (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Qua
 }
 
 
-void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
+void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv, Special_Fields Roses_o) {
 
 	unsigned int w, d, e, how_many_ways_of_keeping;
 	Spielfeld Plus_rememory;
@@ -170,7 +170,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Plus_rememory, 0, h, k, geben);
 									*KI_decision = p;
-									set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Plus_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+									set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Plus_, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 								}
 							}
 						}
@@ -180,7 +180,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 						for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 							*KI_decision = p;
-							set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Minus_, 0, 0, i, j, ges, limits, single_option_representives, rain, rmv);
+							set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Minus_, 0, 0, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 						}
 					}
 				}
@@ -198,14 +198,14 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, geben);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 11);
 										*KI_decision = p;
-										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 									}
 								} else if ((Field_copy[0][h][k] == 0)&&(h<=m-2)&&(h>0)&&(k<=n-2)&&(k>0)&&((h+k)%2 == (i+j+1)%2)) {
 									for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 11);
 										*KI_decision = p;
-										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 									}
 								}
 							}
@@ -218,14 +218,14 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 11);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 									}
 								} else if ((Field_copy[0][h][k] == 0)&&(h<=m-2)&&(h>0)&&(k<=n-2)&&(k>0)&&((h+k)%2 == (i+j+1)%2)) {	//Move
 									for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 									}
 								}
 							}
@@ -240,14 +240,14 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, Field_copy[0][h][k]);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Change_, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 									}
 								} else if ((Field_copy[0][h][k] == 0)&&(h<=m-2)&&(h>0)&&(k<=n-2)&&(k>0)&&((h+k)%2 == (i+j+1)%2)) {	//Move
 									for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 										*KI_decision = p;
-										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+										set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_2, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 									}
 								}
 							}
@@ -259,7 +259,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 	} else if (rmv->use_number == 3) {
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Revive_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//Revive_
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Revive_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv, Roses_o);	//Revive_
 		}
 		if (gamemode_played == Rain) {	//Destroy_
 			for (unsigned int h=1; h<=(m-4); h+=1){
@@ -268,7 +268,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 						for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 0);
 							*KI_decision = p;
-							set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, 0, 0, ges, limits, single_option_representives, rain, rmv);
+							set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, 0, 0, ges, limits, single_option_representives, rain, rmv, Roses_o);
 						}
 					}
 				}
@@ -283,7 +283,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 										for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 											set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, 0);
 											*KI_decision = p;
-											set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+											set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Destroy_, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 										}
 									}
 								}
@@ -296,7 +296,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 	} else if (rmv->use_number == 4) {
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Boost_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//Boost_
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Boost_, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv, Roses_o);	//Boost_
 		}
 		for (unsigned int i=1; i<=m-2; i++) {	//Move
 			for (unsigned int j=1; j<=n-2; j++) {
@@ -308,7 +308,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, i, j, 0);
 									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field_copy, 0, h, k, geben);
 									*KI_decision = p;
-									set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_4, h, k, i, j, ges, limits, single_option_representives, rain, rmv);
+									set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, Move_4, h, k, i, j, ges, limits, single_option_representives, rain, rmv, Roses_o);
 								}
 							}
 						}
@@ -322,7 +322,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 		e = 3;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_2, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//2-new
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_2, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv, Roses_o);	//2-new
 		}
 
 		w = 4;
@@ -330,7 +330,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 		e = 3;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_4_5, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//4/5-new
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, new_4_5, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv, Roses_o);	//4/5-new
 		}
 	} else if (rmv->use_number == 6) {
 		w = 3;
@@ -338,7 +338,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 		e = 3;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, min_1, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//1-min
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, min_1, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv, Roses_o);	//1-min
 		}
 
 		w = 3;
@@ -346,7 +346,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 		e = 4;
 		for (unsigned int p=1; p<=how_many_ways_of_keeping; p++) {
 			*KI_decision = p;
-			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, max_4, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv);	//4-max
+			set_KI_table_of_choice (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, KI_decision, Field, Field_copy, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, KI_table_of_choice, w, d, e, max_4, 0, 0, 0, 0, ges, limits, single_option_representives, rain, rmv, Roses_o);	//4-max
 		}
 	}
 
@@ -358,7 +358,7 @@ void fill_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* M
 
 }
 
-void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int w, unsigned int d, unsigned int e, unsigned int exactly_number, unsigned int h, unsigned int k, unsigned int i, unsigned int j, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv) {
+void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Moc_Quaffel, Moveable_objects_condition* Moc_Schnatz, Moveable_objects_condition* Moc_Klatscher, unsigned int* KI_decision, Spielfeld Field, Spielfeld Field_copy, unsigned int m, unsigned int n, unsigned int geben, Special_Fields Opague_o, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int* KI_table_of_choice, unsigned int w, unsigned int d, unsigned int e, unsigned int exactly_number, unsigned int h, unsigned int k, unsigned int i, unsigned int j, unsigned int* ges, Limits limits, Single_option_representives single_option_representives, unsigned int rain, Realize_modifications_variables* rmv, Special_Fields Roses_o) {
 	unsigned int ges_others, ges_difference, Feinstrukturkonstante_1, Feinstrukturkonstante_2, compact, g, how_many_ways_of_keeping, worth_of_turn;
 	unsigned int* ges_average;
 	unsigned int* position;
@@ -389,7 +389,7 @@ void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Mo
 	printf("set_KI_table_of_choice ok.1\n");	//test
 	#endif
 	
-	basic_development (Field, Field_copy, m, n, geben, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, exactly_number, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, position, KI_decision, rain, hayir);
+	basic_development (Field, Field_copy, m, n, geben, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, exactly_number, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, Roses_o, position, KI_decision, rain, hayir);
 
 	if (level[geben] != Hera) {	//gamemode-specials
 		realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, limits, hayir);
@@ -443,7 +443,7 @@ void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Mo
 						d = 2;
 						e = 3;
 
-						basic_development (Field, Field_copy, m, n, person, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, q, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, position, &t, rain, hayir);
+						basic_development (Field, Field_copy, m, n, person, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, q, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, Roses_o, position, &t, rain, hayir);
 		
 						realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, limits, hayir);
 
@@ -480,7 +480,7 @@ void set_KI_table_of_choice (Quidditch_setup* Qs, Moveable_objects_condition* Mo
 								d = 1;
 							}
 
-							basic_development (Field, Field_copy, m, n, person, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, q+l, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, position, &t, rain, hayir);
+							basic_development (Field, Field_copy, m, n, person, Opague_o.field, Allocation_o, Sf_permutations, ges_copy, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, q+l, evolution_copy, &num, &g, Journey_o, limits, single_option_representives, Roses_o, position, &t, rain, hayir);
 
 							realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field_copy, Opague_o, Allocation_o, Sf_permutations, ges_copy, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, limits, hayir);
 
