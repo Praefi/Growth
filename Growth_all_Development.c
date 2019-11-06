@@ -22,7 +22,7 @@
 #include "Growth_all_Development.h"
 
 
-void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Opague_o_field, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int w, unsigned int d, unsigned int e, unsigned int exactly_number, Evolution evolution, Num_num* num, unsigned int* g, Special_Fields Journey_o, Limits limits, Single_option_representives single_option_representives, unsigned int* position, unsigned int* KI_decision, unsigned int rain, unsigned int real) {
+void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsigned int n, unsigned int geben, Spielfeld Opague_o_field, Special_Fields Allocation_o, Spielfeld Sf_permutations, unsigned int* ges_copy, Growth_Player* Growth_players, unsigned int number_of_players, unsigned int gamemode_played, unsigned int* information_code, unsigned int* level, unsigned int w, unsigned int d, unsigned int e, unsigned int exactly_number, Evolution evolution, Num_num* num, unsigned int* g, Special_Fields Journey_o, Limits limits, Single_option_representives single_option_representives, Special_Fields Roses_o, unsigned int* position, unsigned int* KI_decision, unsigned int rain, unsigned int real) {
 	Spielfeld temp;
 	unsigned int boost_hunt_activator, precounter;	//Hunt
 	unsigned int ent, count_new;	// imitates limits, counts the squares
@@ -143,7 +143,7 @@ void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsign
 
 	// printf("basic_development ok.2\n");	//test
 
-	old_dying (Spiel, Field, m, n, d, e, gamemode_played, information_code, geben, evolution.od, w, Allocation_o, Opague_o_field, number_of_players);
+	old_dying (Spiel, Field, m, n, d, e, gamemode_played, information_code, geben, evolution.od, w, Allocation_o, Opague_o_field, number_of_players, Roses_o);
 
 	if ((boost_hunt_activator == 1)&&(gamemode_played == Hunt)&&(geben == 1)) {
 		for (unsigned int i=1; i<m-1; i+=1){
@@ -342,7 +342,7 @@ void basic_development (Spielfeld Field, Spielfeld Spiel, unsigned int m, unsign
 
 	// printf("basic_development ok.3\n");	//test
 
-	change (Spiel, level, Sf_permutations, Field, evolution, m, n, gamemode_played, number_of_players, ges_copy, geben, Allocation_o, Opague_o_field, information_code, Growth_players, single_option_representives);
+	change (Spiel, level, Sf_permutations, Field, evolution, m, n, gamemode_played, number_of_players, ges_copy, geben, Allocation_o, Opague_o_field, information_code, Growth_players, single_option_representives, Roses_o);
 
 	#ifdef VERBOSE
 	printf("basic_development ok.4\n");	//test
@@ -580,7 +580,7 @@ void new_life (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n,
 
 }
 
-void old_dying (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Spielfeld evolution_od, unsigned int w, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int number_of_players){	//checklist
+void old_dying (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n, unsigned int d, unsigned int e, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Spielfeld evolution_od, unsigned int w, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int number_of_players, Special_Fields Roses_o){	//checklist
 	Spielfeld temp_old_dying;
 	unsigned int a, e_down, d_up;
 
@@ -636,6 +636,9 @@ void old_dying (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n
 				if ((gamemode_played != Arena)&&(gamemode_played != Ulcer)) {
 					if ((a < d+1) || (a > e+1)){		//d=2, d=1, e=3, e=4, +1 wegen des Steines selbst, da er mitgezählt wird
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, temp_old_dying, 0, i, j, 101*geben);		//Code für das Eleminieren
+						if (Roses_o.characterization != 0) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Roses_o.field, 0, i, j, Roses_0+(a-1));	//saves the Roses_(a-1)
+						}
 					}
 
 					if (Allocation_o.characterization != 0) {
@@ -664,6 +667,9 @@ void old_dying (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n
 				} else if (gamemode_played == Ulcer) {
 					if ((a < d+1) || (a > e+1)){		//d=2, d=1, e=3, e=4, +1 wegen des Steines selbst, da er mitgezählt wird
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, temp_old_dying, 0, i, j, 101*geben);		//Code für das Eleminieren
+						if (Roses_o.characterization != 0) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Roses_o.field, 0, i, j, Roses_0+(a-1));	//saves the Roses_(a-1)
+						}
 					}
 
 					if (Allocation_o.characterization != 0) {
@@ -705,6 +711,9 @@ void old_dying (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n
 
 					if ((a < d+1) || (a > e+1)){
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, temp_old_dying, 0, i, j, 101*geben);
+						if (Roses_o.characterization != 0) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Roses_o.field, 0, i, j, Roses_0+(a-1));	//saves the Roses_(a-1)
+						}
 					}
 					if (Allocation_o.characterization != 0) {
 
@@ -822,15 +831,35 @@ void old_dying (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n
 
 }
 
-void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Field, Evolution evolution, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int* ges, unsigned int geben, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int* information_code, Growth_Player* Growth_players, Single_option_representives single_option_representives){
+void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Field, Evolution evolution, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int* ges, unsigned int geben, Special_Fields Allocation_o, Spielfeld Opague_o_field, unsigned int* information_code, Growth_Player* Growth_players, Single_option_representives single_option_representives, Special_Fields Roses_o){
 
-	unsigned int a;
+	unsigned int a, b;
 	a = 0;
+	b = 0;
 
 	#ifdef VERBOSE
 	printf("change ok.1 \n"); //test
 	#endif
-
+	
+	for (unsigned int i=1; i<=m-2; i++) {
+		for (unsigned int j=1; j<=n-2; j++) {
+			if ((Spiel[0][i][j] >= Roses_0)&&(Spiel[0][i][j] <= Roses_6)) {
+				for (unsigned int h=0; h<=2; h++) {
+					for (unsigned int k=0; k<=2; k++) {
+						if (Spiel[0][i-1+h][j-1+k] == geben) {
+							b += 1;
+						}
+					}
+				}
+				if (b == Spiel[0][i][j]-Roses_0) {	//Look at the Definition of Roses_0 until Roses_6
+					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+				}
+				b = 0;
+			}
+		}
+	}
+	b = 0;
+	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
 			if (Spiel[0][i][j] == geben){
@@ -850,7 +879,10 @@ void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Sp
 						}
 						if (Allocation_o.field[0][i][j] == 0) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
-
+							
+							if (Roses_o.characterization != 0) {
+								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, Roses_o.field[0][i][j]);	//saves the Roses_(a-1)
+							}
 							if ((gamemode_played == Ulcer)&&(ges[Nachfolger(geben, number_of_players)] != 1010*geben)) {
 								set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, Nachfolger(geben, number_of_players));
 							}
@@ -861,6 +893,10 @@ void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Sp
 
 					} else {
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, 0);
+						
+						if (Roses_o.characterization != 0) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, Roses_o.field[0][i][j]);	//saves the Roses_(a-1)
+						}
 						if ((gamemode_played == Ulcer)&&(ges[Nachfolger(geben, number_of_players)] != 1010*geben)) {
 							set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Spiel, 0, i, j, Nachfolger(geben, number_of_players));
 						}
