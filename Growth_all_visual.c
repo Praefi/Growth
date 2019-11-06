@@ -36,6 +36,8 @@ void Square_color_interpretation (Growth_Player* Growth_players, unsigned int ge
 					set_terminal_color (Growth_players[geben].color);
 				} else if (square_number == bir_sey) {
 					set_terminal_color (cNORMAL);
+				} else if ((square_number >= Roses_0)&&(square_number <= Roses_6)) {
+					set_terminal_color (cNORMAL);
 				} else if (square_number == Quaffel) {
 					set_terminal_color (cRED);
 				} else if (square_number == Klatscher) {
