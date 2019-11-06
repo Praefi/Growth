@@ -123,6 +123,8 @@ void show_field (unsigned int number_of_players, unsigned int invisible, unsigne
 						printf("::");
 					} else if (Spiel[auswerter][i][j] >= 10000){
 						printf("??");
+					} else if ((Spiel[auswerter][i][j] >= Roses_0)&&(Spiel[auswerter][i][j] <= Roses_6)) {
+						printf("R%u", Spiel[auswerter][i][j]-Roses_0);	//Look at the definition
 					}
 					
 					if ((invisible == 0)||(Spiel[auswerter][i][j] == geben)) {
