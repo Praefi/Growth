@@ -12,8 +12,12 @@
 #include <windows.h>
 #endif
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
 
-void set_Spielfeld_Eintrag (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
+
+void set_Spielfeld_Eintrag (Spielfeld, unsigned int, Spielfeld, unsigned int, Special_Fields_Collector*, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int);
 
 
 void set_gleiter_oben_links (unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int);
