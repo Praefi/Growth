@@ -10,12 +10,17 @@
 #include <windows.h>
 #endif
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
 #include "Growth_all_Def.h"
 #include "Growth_all_Vektor.h"
 #include "Growth_all_Initialisierung.h"
 #include "Growth_all_show.h"
 #include "Growth_all_set.h"
 #include "Growth_all_visual.h"
+#include "Growth_all_opague.h"
 #include "Growth_all_get.h"
 #include "Growth_all_Development.h"
 #include "Growth_all_actions.h"
@@ -31,6 +36,8 @@
 unsigned int letters_4;
 unsigned int letters_2;
 
+unsigned int AOP;
+
 unsigned int Liz_max;
 unsigned int anything; //Die Variable für alles Mögliche
 
@@ -42,7 +49,6 @@ int Spielfeld_counter;
 int main (void) {
 
 	time_of_the_start = time(NULL);
-	
 	// printf("time_of_the_start = %lu \n", time_of_the_start);	//test
 	
 	//printf ("	ok 1 \n");	//test
@@ -57,9 +63,9 @@ int main (void) {
 	unsigned int rain, rain_drops, rain_obj, rain_speed;	//Gamemode = Rain
 	unsigned int playtime;	//Navigationsparameter
 	unsigned int opt, use_number, num_temp, tac, cards;	//How to get the numbers, and to controll them
-	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition, assassin, avalanche, spreading, invisible, roses;	//options, selected with beginningmenu
+	unsigned int figures, allocation, iteration, journey, undead_duration, opague, inverted, addition, assassin, avalanche, spreading, invisible, roses, partition;	//options, selected with beginningmenu
 	unsigned int rtc, spf, scwhp, hboa;	// Gamemode: Hunt
-	unsigned int NOSV, AOP;		//number of saved variables; amount of players
+	unsigned int NOSV;		//number of saved variables; amount of players
 	unsigned int range, strength;		//Gamemode = Dynamic
 
 	//sort the variables, done
@@ -107,7 +113,7 @@ int main (void) {
 	
 	playtime = 1;	//playing a game, after a game, after...
 
-	NOSV = 93;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
+	NOSV = 94;	//Number_of_saved_variables, drücke abhängig von AOP aus, go on
 	//same_counter = 0;     //for variable length of same
 
 	same = unsigned_int_Vektor_Create (NOSV);
@@ -174,6 +180,7 @@ int main (void) {
 		spreading = 0;
 		invisible = 0;
 		roses = 0;
+		partition = 0;
 
 		fall_controll = 0;	//Fall
 		points_for_win = 3;
@@ -206,7 +213,7 @@ int main (void) {
 		journey = 0;
 
 		num_temp = 0;
-		limits.new = 0;		//if
+		limits.yeni = 0;		//if
 		limits.at_all = 0;		//if
 
 		use_number = 1;
@@ -306,13 +313,13 @@ int main (void) {
 
 				Initialisierung (gamemode_played, information_code);
 				limits.at_all = Initialisierung_limits_at_all (gamemode_played);
-				limits.new = Initialisierung_limits_new (gamemode_played);
+				limits.yeni = Initialisierung_limits_yeni (gamemode_played);
 				m = Initialisierung_m (gamemode_played);
 				n = Initialisierung_n (gamemode_played);
 
 				while (beginningmenu != oStart){
 
-					printf("	%u. Start game\n \n	%u. Game size\n	%u. Journey\n	%u. Tactics\n	%u. Random\n	%u. Limits\n	%u. Time\n	%u. Color\n	%u. Opague\n	%u. undead\n	%u. Figures\n	%u. Allocation\n	%u. Cards\n	%u. Inverted\n	%u. Addition\n	%u. Projection\n	%u. Assassin\n	%u. Permutations\n	%u. Avalanche\n	%u. Spreading\n	%u. Invisible\n	%u. Roses\n	%u. KI\n	%u. Number of players\n  \n	%u. Back\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oSpreading, oInvisible, oRoses, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
+					printf("	%u. Start game\n \n	%u. Game size\n	%u. Journey\n	%u. Tactics\n	%u. Random\n	%u. Limits\n	%u. Time\n	%u. Color\n	%u. Opague\n	%u. undead\n	%u. Figures\n	%u. Allocation\n	%u. Cards\n	%u. Inverted\n	%u. Addition\n	%u. Projection\n	%u. Assassin\n	%u. Permutations\n	%u. Avalanche\n	%u. Spreading\n	%u. Invisible\n	%u. Roses\n	%u. Partition\n	%u. KI\n	%u. Number of players\n  \n	%u. Back\n \n", oStart, oSize, oJourney, oTactics, oRandom, oLimits, oTime, oColor, oOpague, oUndead, oFigures, oAllocation, oCards, oInverted, oAddition, oProjection, oAssassin, oPermutations, oAvalanche, oSpreading, oInvisible, oRoses, oPartition, oBack-2, oBack-1, oBack);	//synchronisiere stets oBack mit beginningmenu
 					if (gamemode_played == Fall) {
 						printf("	%u. Points for win\n", oBack+1);
 						printf("	%u. Turns per drop\n", oBack+2);
@@ -561,13 +568,13 @@ int main (void) {
 							printf("	This only works if the number of players is correct! \n");
 
 						if ((gamemode_played == Classic)||(gamemode_played == Collect)) {
-							printf("	Change limits.new: 1 \n	Change limits.at_all: 2 \n	Change both: 3 \n");
+							printf("	Change limits.yeni: 1 \n	Change limits.at_all: 2 \n	Change both: 3 \n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 							printf("\n");
 
 							if (lim == 1){
-								printf("	limits.new:		(normal: 10) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:		(normal: 10) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 								printf("\n");
 							}
 							if (lim == 2){
@@ -576,115 +583,115 @@ int main (void) {
 								printf("\n");
 							}
 							if (lim == 3){
-								printf("	limits.new:				(normal: 10) \n	limits.at_all:				(normal: 20) \n");
+								printf("	limits.yeni:				(normal: 10) \n	limits.at_all:				(normal: 20) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 								printf("\n");
 							}
 						} else if (gamemode_played == Contact) {
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
-								printf("	limits.new:      (normal: 15) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 15) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 2){
 								printf("	limits.at_all:       (normal: 30) \n");
 								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 3){
-								printf("	limits.new:				(normal: 15) \n	limits.at_all:				(normal: 30) \n");
+								printf("	limits.yeni:				(normal: 15) \n	limits.at_all:				(normal: 30) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if ((gamemode_played == Fall)||(gamemode_played == Race)||(gamemode_played == Rain)) {
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
-								printf("	limits.new:      (normal: 7) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 7) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 2){
 								printf("	limits.at_all:       (normal: 14) \n");
 								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 3){
-								printf("	limits.new:				(normal: 7) \n	limits.at_all:				(normal: 14) \n");
+								printf("	limits.yeni:				(normal: 7) \n	limits.at_all:				(normal: 14) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
-								printf("	limits.new:      (normal: 5) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 5) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 2){
 								printf("	limits.at_all:       (normal: 10) \n");
 								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 3){
-								printf("	limits.new:				(normal: 5) \n	limits.at_all:				(normal: 10) \n");
+								printf("	limits.yeni:				(normal: 5) \n	limits.at_all:				(normal: 10) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if (gamemode_played == Hunt) {
 							printf("	The limits of the hunted one will be calculated seperatly.\n");
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
-								printf("	limits.new:      (normal: 6) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 6) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 2){
 								printf("	limits.at_all:       (normal: 12) \n");
 								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 3){
-								printf("	limits.new:				(normal: 6) \n	limits.at_all:				(normal: 12) \n");
+								printf("	limits.yeni:				(normal: 6) \n	limits.at_all:				(normal: 12) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if (gamemode_played == Arena) {
-							printf("	limits.new can change with your ability.\n");
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni can change with your ability.\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
-								printf("	limits.new:      (normal: 8) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 8) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 2){
 								printf("	limits.at_all:       (normal: 16) \n");
 								limits.at_all = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 							}
 							if (lim == 3){
-								printf("	limits.new:				(normal: 8) \n	limits.at_all:				(normal: 16) \n");
+								printf("	limits.yeni:				(normal: 8) \n	limits.at_all:				(normal: 16) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if (gamemode_played == Ulcer) {
 							printf("	Ulcer is unlimited.\n");
 
 						} else if (gamemode_played == Dynamic) {
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
 
-								printf("	limits.new:      (normal: 10) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 10) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 
 							}
 							if (lim == 2){
@@ -695,22 +702,22 @@ int main (void) {
 							}
 							if (lim == 3){
 
-								printf("	limits.new:				(normal: 10) \n	limits.at_all:				(normal: 20) \n");
+								printf("	limits.yeni:				(normal: 10) \n	limits.at_all:				(normal: 20) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if (gamemode_played == Survive) {
 							printf("	Survive is unlimited.\n");
 
 						} else if (gamemode_played == Sand) {
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
 
-								printf("	limits.new:      (normal: 7) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 7) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 
 							}
 							if (lim == 2){
@@ -721,19 +728,19 @@ int main (void) {
 							}
 							if (lim == 3){
 
-								printf("	limits.new:				(normal: 7) \n	limits.at_all:				(normal: 14) \n");
+								printf("	limits.yeni:				(normal: 7) \n	limits.at_all:				(normal: 14) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						} else if (gamemode_played == Quidditch) {
-							printf("	limits.new: 1		limits.at_all: 2		both: 3\n");
+							printf("	limits.yeni: 1		limits.at_all: 2		both: 3\n");
 							lim = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 
 							if (lim == 1){
 
-								printf("	limits.new:      (normal: 45) \n");
-								limits.new = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+								printf("	limits.yeni:      (normal: 45) \n");
+								limits.yeni = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 
 							}
 							if (lim == 2){
@@ -744,14 +751,14 @@ int main (void) {
 							}
 							if (lim == 3){
 
-								printf("	limits.new:				(normal: 45) \n	limits.at_all:				(normal: 90) \n");
+								printf("	limits.yeni:				(normal: 45) \n	limits.at_all:				(normal: 90) \n");
 								letters_4 = get_unsigned_numeric_input_with_not_more_than_letters_4_for_splitting();
-								limits.new = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
+								limits.yeni = split_unsigned_numeric_input_with_letters_4 (letters_4, 0);
 								limits.at_all = split_unsigned_numeric_input_with_letters_4 (letters_4, 1);
 							}
 						}
-						if (limits.new > limits.at_all) {
-							limits.new = limits.at_all;
+						if (limits.yeni > limits.at_all) {
+							limits.yeni = limits.at_all;
 						}
 					}
 
@@ -876,7 +883,7 @@ int main (void) {
 
 					if (beginningmenu == oAllocation) {
 
-						printf("	Every movement of a square owned by a player caused by gamemode-special actions will reduce its allocation to 1 \n");
+						printf("	Every movement of a square owned by a player caused by gamemode-special actions will reduce its allocation to 1. \n");
 
 						if (allocation != 0) {
 							printf("	Allocation-mode reseted! \n");
@@ -1072,6 +1079,26 @@ int main (void) {
 						printf("\n");
 					}
 					
+					if (beginningmenu == oPartition) {
+
+						printf("	Every movement of a square owned by a player is counted as if the square has been produced during the development. \n");
+
+						if (partition != 0) {
+							printf("	Partition-mode reseted! \n");
+							printf(" \n");
+							partition = 0;
+						} else {
+							printf("	Going here again will reset the Partition-mode! \n");
+							printf("	Maximum of partition-number (<100) or unlimited partition-number (1) ? \n");
+
+							partition = get_unsigned_numeric_input_with_not_more_than_2_letters ();
+
+							if (partition == 0) {
+								printf("	That's not possible !!! \n");
+							}
+						}
+					}
+
 					if ((beginningmenu == oBack+1)&&(gamemode_played == Fall)){
 						printf("	Points for win: (0<...<10)			(normal: 3) \n");
 						points_for_win = get_unsigned_numeric_input_with_not_more_than_1_letter ();
@@ -1850,6 +1877,13 @@ int main (void) {
 					}
 					printf("\n");
 					
+					if (partition == 0) {
+						printf("	Partition deactivated \n");
+					} else if (partition != 0) {
+						printf("	Partition   activated \n");
+					}
+					printf("\n");
+					
 					if (opt == 5) {
 						printf("	Random    activated \n");
 					} else if (opt == 0) {
@@ -1882,7 +1916,7 @@ int main (void) {
 					}
 					level[0] = 0;
 					printf(" \n");
-					printf("	limits.new:    %u \n	limits.at_all: %u \n", limits.new, limits.at_all);
+					printf("	limits.yeni:    %u \n	limits.at_all: %u \n", limits.yeni, limits.at_all);
 					printf("	(sometimes only for the journey!) \n");
 					printf("\n");
 
@@ -1936,7 +1970,7 @@ int main (void) {
 			same[15] = opt;
 			same[16] = range;
 			same[17] = strength;
-			same[18] = limits.new;
+			same[18] = limits.yeni;
 			same[19] = limits.at_all;
 			same[20] = ulcer_lifes[2];
 			same[21] = points_for_win;
@@ -2021,6 +2055,7 @@ int main (void) {
 			same[90] = level[9];
 			same[91] = spreading;
 			same[92] = invisible;
+			same[93] = partition;
 
 		}
 		
@@ -2067,7 +2102,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	Realize_modifications_variables* rmv;	//realize_modifications_variables (rmv), contains both copied and new variables
 
 	Spielfeld Field;	//cons_field in Field, cons_journey in Journey_o.field, Field[0]==Das Spielfeld, Journey_o.field[0]==Das Journeyfeld
-	Spielfeld Sf_permutations;	//Permutations-Spielfeld, Opague-Spielfeld, Allocations-Spielfeld
+	Spielfeld Sf_permutations;	//Permutations-Spielfeld
 	Spielfeld numbers_of_, stack_of_;	//ruck muss raus, done, numbers_of_==statistics, numbers_of_[geben][0]==Matchballs etc., stack_of_==stack of tac
 
 	unsigned int g, survive_different;	//it is time to play, and to play different
@@ -2111,17 +2146,17 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	unsigned int number_[AOP+1];	//numbers to confuse the random and for the statistics
 	int erd; // Gamemode: Dynamic
 	
-	Special_Fields Allocation_o, Opague_o, Journey_o, Roses_o;
+	Special_Fields Partition_o, Allocation_o, Opague_o, Journey_o, Roses_o;	// add in set_Spielfeld_Eintrag and show_field, save for each player, go back?
+	Special_Fields_Collector* sfc;
 	Growth_Player Growth_players[AOP+1];	//id and color
 	Limits limits;	//the limits
 	Num_num num;	//remix the random
-		Evolution evolution;	//Fields for born/dying squares
-	Collector Collector_of_permutation;	//Permutations
+	Evolution evolution;	//Fields for born/dying squares
 	Earth_impact impact_tuple;
 	Single_option_representives single_option_representives;	// Modifications, Projection matters
 	Time_matters time_matters;	// Time-limits and the penalties
 	
-	Moveable_objects_condition* Moc_Klatscher;
+	Moveable_objects_condition* Moc_Klatscher;	//Quidditch balls
 	Moveable_objects_condition* Moc_Quaffel;
 	Moveable_objects_condition* Moc_Schnatz;
 	
@@ -2173,7 +2208,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	opt = same[15];
 	impact_tuple.range = same[16];
 	impact_tuple.strength = same[17];
-	limits.new = same[18];
+	limits.yeni = same[18];
 	limits.at_all = same[19];
 	ulcer_lifes[2] = same[20];
 	freq = same[22];
@@ -2233,10 +2268,10 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	single_option_representives.addition = same[73];
 	single_option_representives.intensity_loss_per_line_multiplication = same[75];
 	direction = same[76];
-	Collector_of_permutation.permutation_number_c = same[78];
-	Collector_of_permutation.permutation_number_b = same[79];
-	Collector_of_permutation.amount_of_permutation_number_c = same[80];
-	Collector_of_permutation.amount_of_permutation_number_b = same[81];
+	rmv->Collector_of_permutation.permutation_number_c = same[78];
+	rmv->Collector_of_permutation.permutation_number_b = same[79];
+	rmv->Collector_of_permutation.amount_of_permutation_number_c = same[80];
+	rmv->Collector_of_permutation.amount_of_permutation_number_b = same[81];
 	level[1] = same[82];
 	level[2] = same[83];
 	level[3] = same[84];
@@ -2248,6 +2283,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	level[9] = same[90];
 	single_option_representives.spreading = same[91];
 	single_option_representives.invisible = same[92];
+	Partition_o.characterization = same[93];
 	
 	for (unsigned int p=1; p<=number_of_players; p++) {
 		Growth_players[p].id = p;
@@ -2261,20 +2297,20 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	dynamic_pointer = int_Vektor_Create (8);
 	dynamic_pointer_save = int_2dim_Vektor_Create (number_of_players+1, 4);
 
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.permutation_number_c = 1;
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.permutation_number_c = 1;
 	}
-	Collector_of_permutation.sigmas_c = unsigned_int_2dim_Vektor_Create (Fakultaet(Collector_of_permutation.permutation_number_c - 1), Collector_of_permutation.permutation_number_c);
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.permutation_number_c = 0;
+	rmv->Collector_of_permutation.sigmas_c = unsigned_int_2dim_Vektor_Create (Fakultaet(rmv->Collector_of_permutation.permutation_number_c - 1), rmv->Collector_of_permutation.permutation_number_c);
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.permutation_number_c = 0;
 	}
 
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.permutation_number_b = 1;
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		rmv->Collector_of_permutation.permutation_number_b = 1;
 	}
-	Collector_of_permutation.sigmas_b = unsigned_int_2dim_Vektor_Create (Fakultaet(Collector_of_permutation.permutation_number_b - 1), Collector_of_permutation.permutation_number_b);
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.permutation_number_b = 0;
+	rmv->Collector_of_permutation.sigmas_b = unsigned_int_2dim_Vektor_Create (Fakultaet(rmv->Collector_of_permutation.permutation_number_b - 1), rmv->Collector_of_permutation.permutation_number_b);
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		rmv->Collector_of_permutation.permutation_number_b = 0;
 	}
 	
 	Journey_o.field = Spielfeld_Create (m, n, number_of_players);	//gamemode_played 11 journey, done
@@ -2282,8 +2318,13 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	Opague_o.field = Spielfeld_Create (m, n, 0);
 	
 	Allocation_o.field = Spielfeld_Create (m, n, number_of_players+2);
+	Partition_o.field = Spielfeld_Create (m, n, number_of_players+2);
 	
 	Roses_o.field = Spielfeld_Create (m, n, 0);
+	
+	sfc = Special_Fields_Collector_Vektor_Create (1);
+	sfc->Allocation_o = Allocation_o;
+	sfc->Partition_o = Partition_o;
 	
 	// scanf("%u", &pause);	//test
 	// printf("	#line 2k, after Allocation_o.field \n");	//test
@@ -2293,27 +2334,27 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// scanf("%u", &pause);	//test
 	// printf("	#line 2k, after Sf_permutations \n");	//test
 
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.amount_of_permutation_number_c = 1;
-	Collector_of_permutation.permutation_number_c = 1;
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_c = 1;
+		rmv->Collector_of_permutation.permutation_number_c = 1;
 	}
-	Collector_of_permutation.areas_c = Spielfeld_Create (Collector_of_permutation.permutation_number_c, 2, Collector_of_permutation.amount_of_permutation_number_c-1);
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.amount_of_permutation_number_c = 0;
-	Collector_of_permutation.permutation_number_c = 0;
+	rmv->Collector_of_permutation.areas_c = Spielfeld_Create (rmv->Collector_of_permutation.permutation_number_c, 2, rmv->Collector_of_permutation.amount_of_permutation_number_c-1);
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_c = 0;
+		rmv->Collector_of_permutation.permutation_number_c = 0;
 	}
 
 	// scanf("%u", &pause);	//test
 	// printf("	#line 2k, between the Collectors \n");	//test
 
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.amount_of_permutation_number_b = 1;
-	Collector_of_permutation.permutation_number_b = 1;
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_b = 1;
+		rmv->Collector_of_permutation.permutation_number_b = 1;
 	}
-	Collector_of_permutation.areas_b = Spielfeld_Create (Collector_of_permutation.permutation_number_b, 2, Collector_of_permutation.amount_of_permutation_number_b-1);
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.amount_of_permutation_number_b = 0;
-	Collector_of_permutation.permutation_number_b = 0;
+	rmv->Collector_of_permutation.areas_b = Spielfeld_Create (rmv->Collector_of_permutation.permutation_number_b, 2, rmv->Collector_of_permutation.amount_of_permutation_number_b-1);
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_b = 0;
+		rmv->Collector_of_permutation.permutation_number_b = 0;
 	}
 
 	// scanf("%u", &pause);	//test
@@ -2324,9 +2365,9 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// scanf("%u", &pause);	//test
 	// printf("	#line 2k, before start_normal \n");	//test
 
-	start_normal (Field, m, n, gamemode_played, number_of_players, 0, Opague_o.field, Allocation_o, single_option_representives.inverted);
+	start_normal (Field, m, n, gamemode_played, number_of_players, 0, Opague_o.field, sfc, single_option_representives.inverted);
 
-	// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, 0, Growth_players, 0, Allocation_o);	//test, geben durch 0 ersetzt
+	// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, 0, Growth_players, 0, sfc);	//test, geben durch 0 ersetzt
 
 	// scanf("%u", &pause);	//test
 	// printf("	#line 2022, before numbers_of_ \n");	//test
@@ -2368,42 +2409,6 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	rmv->ulcer_lifes = unsigned_int_Vektor_Create(AOP+1);
 	rmv->out_counter = unsigned_int_Vektor_Create(AOP+1);
 
-	if (Collector_of_permutation.permutation_number_b == 0) {	// areas_c
-		Collector_of_permutation.amount_of_permutation_number_c = 1;
-		Collector_of_permutation.permutation_number_c = 1;
-	}
-	rmv->Collector_of_permutation.areas_c = Spielfeld_Create (Collector_of_permutation.permutation_number_c, 2, Collector_of_permutation.amount_of_permutation_number_c-1);
-	if (Collector_of_permutation.permutation_number_b == 0) {	// areas_c
-		Collector_of_permutation.amount_of_permutation_number_c = 0;
-		Collector_of_permutation.permutation_number_c = 0;
-	}
-
-	if (Collector_of_permutation.permutation_number_c == 0) {	// areas_b
-		Collector_of_permutation.amount_of_permutation_number_b = 1;
-	Collector_of_permutation.permutation_number_b = 1;
-	}
-	rmv->Collector_of_permutation.areas_b = Spielfeld_Create (Collector_of_permutation.permutation_number_b, 2, Collector_of_permutation.amount_of_permutation_number_b-1);
-	if (Collector_of_permutation.permutation_number_c == 0) {	// areas_b
-		Collector_of_permutation.amount_of_permutation_number_b = 0;
-	Collector_of_permutation.permutation_number_b = 0;
-	}
-	
-	if (Collector_of_permutation.permutation_number_b == 0) {	// sigmas_c
-		Collector_of_permutation.permutation_number_c = 1;
-	}
-	rmv->Collector_of_permutation.sigmas_c = unsigned_int_2dim_Vektor_Create (Fakultaet(Collector_of_permutation.permutation_number_c - 1), Collector_of_permutation.permutation_number_c);
-	if (Collector_of_permutation.permutation_number_b == 0) {	// sigmas_c
-		Collector_of_permutation.permutation_number_c = 0;
-	}
-
-	if (Collector_of_permutation.permutation_number_c == 0) {	// sigmas_b
-		Collector_of_permutation.permutation_number_b = 1;
-	}
-	rmv->Collector_of_permutation.sigmas_b = unsigned_int_2dim_Vektor_Create (Fakultaet(Collector_of_permutation.permutation_number_b - 1), Collector_of_permutation.permutation_number_b);
-	if (Collector_of_permutation.permutation_number_c == 0) {	// sigmas_b
-		Collector_of_permutation.permutation_number_b = 0;
-	}
-	
 	// setting rmv
 	for (unsigned int p=0; p<=NOSV-1; p++) {
 		rmv->same[p] = same[p];	//static during the game
@@ -2444,11 +2449,20 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	
 	Localization_of_Moc (Field, m, n, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher);	//better save than sorry. (Field before Moc)
 	
-	if (Allocation_o.characterization != 0) {
+	if (sfc->Allocation_o.characterization != 0) {	//in functions (Initialisierung), go on
 		for (unsigned int i=1; i<=m-2; i++) {
 			for (unsigned int j=1; j<=n-2; j++) {
 				if ((Field[0][i][j] != 0)&&(Field[0][i][j] <= number_of_players)) {
-					set_Spielfeld_Eintrag (Field, 0, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Allocation_o.field, 0, i, j, 1);	//geben durch 0 ersetzt
+					set_Spielfeld_Eintrag (Field, 0, Opague_o.field, gamemode_played, sfc, number_of_players, sfc->Allocation_o.field, 0, i, j, 1);	//geben durch 0 ersetzt
+				}
+			}
+		}
+	}
+	if (sfc->Partition_o.characterization != 0) {
+		for (unsigned int i=1; i<=m-2; i++) {
+			for (unsigned int j=1; j<=n-2; j++) {
+				if ((Field[0][i][j] != 0)&&(Field[0][i][j] <= number_of_players)) {
+					set_Spielfeld_Eintrag (Field, 0, Opague_o.field, gamemode_played, sfc, number_of_players, sfc->Partition_o.field, 0, i, j, 1);	//geben durch 0 ersetzt
 				}
 			}
 		}
@@ -2554,20 +2568,20 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		}
 	}
 
-	if ((Collector_of_permutation.amount_of_permutation_number_b != 0)||(Collector_of_permutation.amount_of_permutation_number_c != 0)) {
-		translate_permutations_amounts_to_permutations_areas (Sf_permutations, m, n, Collector_of_permutation);
+	if ((rmv->Collector_of_permutation.amount_of_permutation_number_b != 0)||(rmv->Collector_of_permutation.amount_of_permutation_number_c != 0)) {
+		translate_permutations_amounts_to_permutations_areas (Sf_permutations, m, n, rmv->Collector_of_permutation);
 
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2k, after translate_permutations_amounts_to_permutations_areas \n");	//test
 
-		// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Sf_permutations, m, n, gamemode_played, information_code, 0, Growth_players, 0, Allocation_o);	//test
+		// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Sf_permutations, m, n, gamemode_played, information_code, 0, Growth_players, 0, sfc);	//test
 
-		get_sigmas_for_permutation_number (Collector_of_permutation.sigmas_c, Collector_of_permutation.permutation_number_c);
+		get_sigmas_for_permutation_number (rmv->Collector_of_permutation.sigmas_c, rmv->Collector_of_permutation.permutation_number_c);
 
 		// scanf("%u", &pause);	//test
 		// printf("	#line 2k, after get_sigmas_for_permutation_number (c) \n");	//test
 
-		get_sigmas_for_permutation_number (Collector_of_permutation.sigmas_b, Collector_of_permutation.permutation_number_b);
+		get_sigmas_for_permutation_number (rmv->Collector_of_permutation.sigmas_b, rmv->Collector_of_permutation.permutation_number_b);
 	}
 
 	if (gamemode_played == Arena) {	//abilities in information_code
@@ -2606,7 +2620,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	}
 
 	if (gamemode_played == Rain) {
-		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, 0, Growth_players, 0, Allocation_o);	// geben mit 0 ersetzt
+		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, 0, Growth_players, 0, sfc);	// geben mit 0 ersetzt
 	}
 
 	// printf("gamemode_played = %u \n", gamemode_played);	//test
@@ -2631,7 +2645,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		// printf("	#line 2k, after geben-def \n");	//test
 
 		// printf("	test \n");
-		// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
+		// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, sfc);	//test
 		// printf("	test \n");
 
 		round_counter_before = rmv->round_counter;
@@ -2639,10 +2653,18 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		for (unsigned int p=1; p<=g; p+=number_of_players) {
 			rmv->round_counter += 1;
 		}
+		
+		// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, sfc);	//test
+		
+		for (unsigned int i=1; i<=m-2; i++) {	//update of scf->Partition_o.field[1] 
+			for (unsigned int j=1; j<=n-2; j++) {
+				set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Partition_o.field, 1, i, j, sfc->Partition_o.field[0][i][j]);
+			}
+		}
+		
+		survive_obstacles_generator (gamemode_played, rmv->round_counter, round_counter_before, information_code, Field, geben, sfc, number_of_players, Opague_o, Sf_permutations, AOP, level, Growth_players, m, n, survive_different, ges, rmv->var_, g, rmv->use_number, tac, time_matters.ttt, single_option_representives);
 
-		survive_obstacles_generator (gamemode_played, rmv->round_counter, round_counter_before, information_code, Field, geben, Allocation_o, number_of_players, Opague_o, Sf_permutations, AOP, level, Growth_players, m, n, survive_different, ges, rmv->var_, g, rmv->use_number, tac, time_matters.ttt, single_option_representives);
-
-		Dynamic_ball_movement (Field, Opague_o, m, n, geben, Allocation_o, number_of_players, level, Sf_permutations, information_code, Growth_players, gamemode_played, dynamic_pointer, erd, position, g, ges, impact_tuple, rmv, single_option_representives);
+		Dynamic_ball_movement (Field, Opague_o, m, n, geben, sfc, number_of_players, level, Sf_permutations, information_code, Growth_players, gamemode_played, dynamic_pointer, erd, position, g, ges, impact_tuple, rmv, single_option_representives);
 		// these two modifications do not belong to realize_modifications
 
 		if (gamemode_played == Hunt) {	//Hunt-Formalitäten
@@ -2681,7 +2703,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		//previous if(geben == 1){}
 
 		if (Opague_o.characterization >= 1) {
-			opague_builder (Field, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
+			opague_builder (Field, Opague_o, m, n, geben, AOP, sfc, number_of_players, gamemode_played);
 		}
 
 		if ((time_matters.ttt != 0)&&(pere[geben] == 100)) {
@@ -2699,18 +2721,18 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 
 					for (unsigned int p=0; p<=number_of_players; p+=1) {	//missed to include the 0, that caused not-wanted-revives.
 						if (Field[p][i][j] == geben) {
-							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, p, i, j, 0);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, p, i, j, 0);
 						}
 						if (Journey_o.characterization != 0){
 							if (Journey_o.field[p][i][j] == geben) {
-								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Journey_o.field, p, i, j, 0);
+								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Journey_o.field, p, i, j, 0);
 							}
 						}
 					}
 					if (Journey_o.characterization != 0) {
-						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Journey_o.field, geben, i, j, Journey_o.field[Vorganger(geben, number_of_players)][i][j]);
+						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Journey_o.field, geben, i, j, Journey_o.field[Vorganger(geben, number_of_players)][i][j]);
 					}
-					set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, geben, i, j, Field[Vorganger(geben, number_of_players)][i][j]);
+					set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, geben, i, j, Field[Vorganger(geben, number_of_players)][i][j]);
 				}
 			}
 			cons[geben] = cons[Vorganger(geben, number_of_players)];
@@ -2767,11 +2789,17 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		// if (rmv->round_counter >= 66) {	//test
 			// level[0] = 0;	//test
 			// printf("Have a look\n");	//test
-			// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);	//test
+			// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, sfc);	//test
 			// scanf("%u", &pause);	//test
 			// level[0] = 3;	//test
 		// }	//test
-
+		
+		if (sfc->Partition_o.characterization != 0) {
+			printf("	Partition-number: %u \n", sfc->Partition_o.characterization);
+		}
+		if (sfc->Allocation_o.characterization != 0) {
+			printf("	Allocation-number: %u \n", sfc->Allocation_o.characterization);
+		}
 		if (Journey_o.characterization != 0) {
 			if (gamemode_played == Race) {	//journey-frequence
 				anything = 2*freq;
@@ -2780,7 +2808,6 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 			}
 
 			printf("	All turns until the journey starts: %u \n", (anything - ((g-rmv->all_turns_correction-1)%anything)));
-			printf("\n");
 
 			anything = 0;
 		}
@@ -2792,11 +2819,10 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 			}
 
 			printf("	All turns until the projection starts: %u \n", (anything - ((g-rmv->all_turns_correction-1)%anything)));
-			printf("\n");
 
 			anything = 0;
 		}
-		if ((Collector_of_permutation.amount_of_permutation_number_b != 0)||(Collector_of_permutation.amount_of_permutation_number_c != 0)) {
+		if ((rmv->Collector_of_permutation.amount_of_permutation_number_b != 0)||(rmv->Collector_of_permutation.amount_of_permutation_number_c != 0)) {
 			if (gamemode_played == Race) {	//journey-frequence
 				anything = 2*freq-3;
 			} else {
@@ -2804,17 +2830,14 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 			}
 
 			printf("	All turns until the permutation starts: %u \n", (anything - ((g-rmv->all_turns_correction-1)%anything)));
-			printf("\n");
 
 			anything = 0;
 		}
 
 		if (gamemode_played == Race) {
 			printf("	All turns until the wall moves forward: %u \n", (freq - ((g-1)%freq)));
-			printf("\n");
 		} else if (gamemode_played == Sand) {
 			printf("	All turns until the squares will fall down: %u \n", (number_of_players - rmv->player_counter)*information_code[3] - ((g-rmv->all_turns_correction-1)%((number_of_players - rmv->player_counter)*information_code[3])));
-			printf("\n");
 		}
 
 		w = 3;
@@ -2841,38 +2864,34 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 				d = 1;
 				e = 4;	//abweichende e-definition
 			} else if (ability[AOP] == geben) {
-				if (Opague_o.characterization >= 1) {
-					opague_builder (Field, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-				} else {
-					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-				}
-
+				
+				Opague_show_controll (level, Field, Opague_o, m, n, geben, AOP, sfc, number_of_players, gamemode_played, single_option_representives.invisible, Sf_permutations, information_code, Growth_players);
+				
 				for (unsigned int i=1; i<m-1; i+=1){	//push of electric
 					for (unsigned int j=1; j<n-1; j+=1){
 						if (Field[0][i][j] == geben) {
 							if ((Field[0][i+1][j] != 0)&&(Field[0][i+1][j] != geben)&&((i+2) <= (m-2))) {
 								if (Field[0][i+2][j] == 0) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i+2, j, Field[0][i+1][j]);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i+1, j, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i+2, j, Field[0][i+1][j]);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i+1, j, 0);
 								}
 							}
 							if ((Field[0][i-1][j] != 0)&&(Field[0][i-1][j] != geben)&&((i-2) >= 1)) {
 								if (Field[0][i-2][j] == 0) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i-2, j, Field[0][i-1][j]);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i-1, j, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i-2, j, Field[0][i-1][j]);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i-1, j, 0);
 								}
 							}
 							if ((Field[0][i][j-1] != 0)&&(Field[0][i][j-1] != geben)&&((j-2) >= 1)) {
 								if (Field[0][i][j-2] == 0) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j-2, Field[0][i][j-1]);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j-1, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j-2, Field[0][i][j-1]);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j-1, 0);
 								}
 							}
 							if ((Field[0][i][j+1] != 0)&&(Field[0][i][j+1] != geben)&&((j+2) <= (n-2))) {
 								if (Field[0][i][j+2] == 0) {
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j+2, Field[0][i][j+1]);
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j+1, 0);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j+2, Field[0][i][j+1]);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j+1, 0);
 								}
 							}
 						}
@@ -2906,8 +2925,8 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 				pere[geben] = 0;
 				continue;
 			} else if ((pere[geben] != 0)&&(time_matters.warning_system != 0)&&(((time_matters.warning_system <= 5)&&((pere[geben]+time_matters.warning_system) == 8))||((time_matters.warning_system == 6)&&(pere[geben] == 1)))) {
-				old_dying (Field, Field, m, n, d, e, gamemode_played, information_code, geben, evolution.od, w, Allocation_o, Opague_o.field, number_of_players, Roses_o);
-				change (Field, level, Sf_permutations, Field, evolution, m, n, gamemode_played, number_of_players, ges, geben, Allocation_o, Opague_o.field, information_code, Growth_players, single_option_representives, Roses_o);  //Change befreit
+				old_dying (Field, Field, m, n, d, e, gamemode_played, information_code, geben, evolution.od, w, sfc, Opague_o.field, number_of_players, Roses_o);
+				change (Field, level, Sf_permutations, Field, evolution, m, n, gamemode_played, number_of_players, ges, geben, sfc, Opague_o.field, information_code, Growth_players, single_option_representives, Roses_o);  //Change befreit
 				g += 1;
 				printf(" \n ");
 				printf("	You got a penalty. \n ");
@@ -2919,7 +2938,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
 						if (Field[0][i][j] == geben) {
-							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j, 0);
 						}
 					}
 				}
@@ -3000,12 +3019,9 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 				level[0] = 2;
 			}
 			if (gamemode_played != Rain) {
-				if (Opague_o.characterization >= 1) {
-					opague_builder (Field, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-				} else {
-					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-				}
+				
+				Opague_show_controll (level, Field, Opague_o, m, n, geben, AOP, sfc, number_of_players, gamemode_played, single_option_representives.invisible, Sf_permutations, information_code, Growth_players);
+				
 			}
 			if (level[0] == 2) {
 				level[0] = 5;
@@ -3066,7 +3082,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 			} else {
 				// rmv->use_number = 5;	//KI testing... warning
 
-				turn_of_KI_random (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, &KI_decision, Field, m, n, geben, Opague_o, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, limits, single_option_representives, rain, rmv, Roses_o);
+				turn_of_KI_random (Qs, Moc_Quaffel, Moc_Schnatz, Moc_Klatscher, &KI_decision, Field, m, n, geben, Opague_o, sfc, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, limits, single_option_representives, rain, rmv, Roses_o);
 
 				// rmv->var_[geben] = 51;	//KI testing... warning
 
@@ -3098,26 +3114,26 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 
 					} else if (menuoperator == 4){
 						if ((gamemode_played != Ulcer)&&(gamemode_played != Survive)) {
-							printf("	Limit of development:	%u \n", limits.new);
+							printf("	Limit of development:	%u \n", limits.yeni);
 							if (gamemode_played != Contact) {
 								printf("	Limit in total:		%u \n", limits.at_all);
 							}
 						}
 					} else if (menuoperator == 5){
 
-						get_hints (level, Sf_permutations, gamemode_played, Field, geben, w, d, e, m, n, information_code, Opague_o, Growth_players, AOP, Allocation_o, number_of_players);
+						get_hints (level, Sf_permutations, gamemode_played, Field, geben, w, d, e, m, n, information_code, Opague_o, Growth_players, AOP, sfc, number_of_players, single_option_representives);
 
-						//show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, hint, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);		//teste die destroy-funktion für Spielfelder, done
+						//show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, hint, m, n, gamemode_played, information_code, geben, Growth_players, 0, sfc);		//teste die destroy-funktion für Spielfelder, done
 					} else if (menuoperator == 6){
 
 						if (suprise == 0) {
 							for (unsigned int i=1; i<m-1; i+=1){
 								for (unsigned int j=1; j<n-1; j+=1){
 
-									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, geben, i, j, Field[0][i][j]);
+									set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, geben, i, j, Field[0][i][j]);
 
 									if (Journey_o.characterization != 0){
-										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Journey_o.field, geben, i, j, Journey_o.field[0][i][j]);
+										set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Journey_o.field, geben, i, j, Journey_o.field[0][i][j]);
 									}
 								}
 							}
@@ -3141,9 +3157,9 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 										for (unsigned int j=1; j<n-1; j+=1){
 											if (Field[0][i][j] != 0){
 												if (Field[0][i][j] == geben){
-													set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, Nachfolger(geben, number_of_players));
+													set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j, Nachfolger(geben, number_of_players));
 												} else if (Field[0][i][j] == Nachfolger(geben, number_of_players)){
-													set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, geben);
+													set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j, geben);
 												}
 											}
 										}
@@ -3161,10 +3177,10 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 									for (unsigned int i=1; i<m-1; i+=1){
 										for (unsigned int j=1; j<n-1; j+=1){
 											if (Field[0][i][j] == Nachfolger(geben, number_of_players)){
-												set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, 0);
+												set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j, 0);
 											}
 											if (i == (m-2)){
-												set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, geben, m-2, j, Nachfolger(geben, number_of_players));
+												set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, geben, m-2, j, Nachfolger(geben, number_of_players));
 											}
 										}
 									}
@@ -3186,13 +3202,9 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 					level[0] = 2;
 				}
 				if (gamemode_played == Rain) {		//##
-					if (Opague_o.characterization >= 1) {
-						opague_builder (Field, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
-						show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-					} else {
-						show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-					}	//show_field über menuoperator = 7 und stack und so löschen, (verschiebe menuoperator!=0 - Schleife) ,done
-
+					
+					Opague_show_controll (level, Field, Opague_o, m, n, geben, AOP, sfc, number_of_players, gamemode_played, single_option_representives.invisible, Sf_permutations, information_code, Growth_players);
+				
 					printf("\n");
 
 				}
@@ -3318,26 +3330,26 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 				for (unsigned int i=1; i<m-1; i+=1){
 					for (unsigned int j=1; j<n-1; j+=1){
 
-						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, j, Field[Vorganger(geben, number_of_players)][i][j]);
-
-						if (Allocation_o.characterization != 0) {
-							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Allocation_o.field, 0, i, j, Allocation_o.field[Vorganger(geben, number_of_players)+2][i][j]);	//+2 wegen Having_too_muchverschiebung
+						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, 0, i, j, Field[Vorganger(geben, number_of_players)][i][j]);
+						
+						if (sfc->Allocation_o.characterization != 0) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, sfc->Allocation_o.field, 0, i, j, sfc->Allocation_o.field[Vorganger(geben, number_of_players)+2][i][j]);	//+2 wegen Having_too_muchverschiebung
 						}
-
+						
+						if (sfc->Partition_o.characterization != 0) {
+							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, sfc->Partition_o.field, 0, i, j, sfc->Partition_o.field[Vorganger(geben, number_of_players)+2][i][j]);	//+2 wegen Having_too_muchverschiebung
+						}
+						
 						if (Journey_o.characterization != 0){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Journey_o.field, 0, i, j, Journey_o.field[Vorganger(geben, number_of_players)][i][j]);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Journey_o.field, 0, i, j, Journey_o.field[Vorganger(geben, number_of_players)][i][j]);
 						}
 
 					}
 				}
 
-				if (Opague_o.characterization >= 1) {
-					opague_builder (Field, Opague_o, m, n, Vorganger(geben, number_of_players), AOP, Allocation_o, number_of_players, gamemode_played);
-					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-				} else {
-					show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-				}
-
+				
+				Opague_show_controll (level, Field, Opague_o, m, n, geben, AOP, sfc, number_of_players, gamemode_played, single_option_representives.invisible, Sf_permutations, information_code, Growth_players);
+				
 				g-=1;
 				rmv->var_[geben] = 1010*geben;
 				if (gamemode_played == Ulcer) {
@@ -3351,14 +3363,18 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 
 					for (unsigned int i=1; i<m-1; i+=1){
 						for (unsigned int j=1; j<n-1; j+=1){
-							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Field, geben, i, j, Field[0][i][j]);
+							set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Field, geben, i, j, Field[0][i][j]);
 
-							if (Allocation_o.characterization != 0) {
-								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Allocation_o.field, geben+2, i, j, Allocation_o.field[0][i][j]);	//geben+2 wegen indexverschiebung
+							if (sfc->Allocation_o.characterization != 0) {
+								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, sfc->Allocation_o.field, geben+2, i, j, sfc->Allocation_o.field[0][i][j]);	//geben+2 wegen indexverschiebung
+							}
+
+							if (sfc->Partition_o.characterization != 0) {
+								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, sfc->Partition_o.field, geben+2, i, j, sfc->Partition_o.field[0][i][j]);	//geben+2 wegen indexverschiebung
 							}
 
 							if (Journey_o.characterization != 0){
-								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, Journey_o.field, geben, i, j, Journey_o.field[0][i][j]);
+								set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, Journey_o.field, geben, i, j, Journey_o.field[0][i][j]);
 							}
 						}
 					} //KI testing... warning ?
@@ -3381,32 +3397,32 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 					if (rmv->var_[geben] == Plus_){
 						rmv->numbers_of_[geben][1][0] += 1;
 						if (level[geben] == human) {
-							Plus (level, Sf_permutations, m, n, geben, Field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Opague_o, Allocation_o, single_option_representives);
+							Plus (level, Sf_permutations, m, n, geben, Field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Opague_o, sfc, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Minus_) {
 						rmv->numbers_of_[geben][1][0] += 1;
 						if (level[geben] == human) {
-							Minus (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
+							Minus (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, sfc, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Move_2) {
 						rmv->numbers_of_[geben][2][0] += 1;
 						if (level[geben] == human) {
-							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
+							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, sfc, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Move_4) {
 						rmv->numbers_of_[geben][4][0] += 1;
 						if (level[geben] == human) {
-							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
+							Move (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, sfc, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Change_) {
 						rmv->numbers_of_[geben][2][0] += 1;
 						if (level[geben] == human) {
-							Change (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, position, Allocation_o, number_of_players, single_option_representives);
+							Change (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, position, sfc, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Destroy_) {
 						rmv->numbers_of_[geben][3][0] += 1;
 						if (level[geben] == human) {
-							Destroy (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, Allocation_o, number_of_players, single_option_representives);
+							Destroy (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, sfc, number_of_players, single_option_representives);
 						}
 					} else if (rmv->var_[geben] == Boost_) {
 						rmv->numbers_of_[geben][4][0] += 1;
@@ -3523,7 +3539,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	
 				// printf("Checkpoint: development_start \n");	//test
 		
-				basic_development (Field, Field, m, n, geben, Opague_o.field, Allocation_o, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, rmv->var_[geben], evolution, &num, &g, Journey_o, limits, single_option_representives, Roses_o, position, &KI_decision, rain, evet);
+				basic_development (Field, Field, m, n, geben, Opague_o.field, sfc, Sf_permutations, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, rmv->var_[geben], evolution, &num, &g, Journey_o, limits, single_option_representives, Roses_o, position, &KI_decision, rain, evet);
 
 				// printf("Checkpoint: development_end \n");	//test
 		
@@ -3533,48 +3549,12 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		
 				// printf("Checkpoint: realize_modifications_start \n");	//test
 		
-				realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field, Opague_o, Allocation_o, Sf_permutations, ges, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, limits, evet);
+				realize_modifications (Qs, Moc_Schnatz, Moc_Quaffel, Moc_Klatscher, Field, Field, Opague_o, sfc, Sf_permutations, ges, &g, m, n, geben, number_of_players, gamemode_played, level, information_code, Growth_players, Journey_o, rain, single_option_representives, rmv, limits, evet);
 				
 				// printf("Checkpoint: realize_modifications_end \n");	//test
 		
 				// printf("6. g = %u \n", g);	//test
 	
-				// if (gamemode_played == Contact) {	// Copy from realize_modifications
-
-					// if (real == evet) {
-						// if (Opague_o.characterization >= 1) {
-							// opague_builder (Field, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
-							// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-						// } else {
-							// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-						// }
-					// }
-					// battle (m, n, Field, geben, Opague_o.field, Allocation_o, number_of_players, gamemode_played);	// Copy from realize_modifications
-				// }
-		
-				// reset_of_ges (ges, number_of_players);	// Copy from realize_modifications
-				// if (gamemode_played == Contact) {	// Copy from realize_modifications
-					// ges_counter (Field, m, n, ges, number_of_players);
-					// who_is_out (ges, number_of_players, rmv);
-
-					// for (unsigned int p=1; p<=number_of_players; p++) {
-						// if (ges[p] <= 5){
-							// rmv->numbers_of_[p][0][0] += 1;
-						// }
-					// }
-
-					// if (rmv->player_counter == (number_of_players - 1)) {
-						// for (unsigned int p=1; p<=number_of_players; p++) {
-							// if (ges[p] != p*1010) {
-								// printf("	Sieg: Spieler %u \n", p);
-							// }
-							// break;
-						// }
-						// show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-						// break;
-					// }
-				// }
-
 				if (rmv->var_[Nachfolger(geben, number_of_players)] != 1010*(Nachfolger(geben, number_of_players))) {
 					cons[geben] = rmv->use_number;
 				}
@@ -3690,7 +3670,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	printf("	Round: %u \n", rmv->round_counter);
 	printf("\n");
 
-	show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
+	show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, geben, Growth_players, 0, sfc);
 
 	printf("	\n ");
 	printf("	\n ");
@@ -3739,7 +3719,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 1\n");	//test
+	// printf("	#line 3k, 1\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (Points);
@@ -3748,7 +3728,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 2\n");	//test
+	// printf("	#line 3k, 2\n");	//test
 	// scanf("%u", &pause);	//test
 
 	int_2dim_Vektor_Destroy (dynamic_pointer_save, number_of_players+1);
@@ -3756,7 +3736,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 3\n");	//test
+	// printf("	#line 3k, 3\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (position);
@@ -3764,7 +3744,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 4\n");	//test
+	// printf("	#line 3k, 4\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (Field, m, number_of_players);
@@ -3772,7 +3752,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 5\n");	//test
+	// printf("	#line 3k, 5\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (evolution.od, m, number_of_players);
@@ -3780,7 +3760,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 6\n");	//test
+	// printf("	#line 3k, 6\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (evolution.nl, m, number_of_players);
@@ -3788,7 +3768,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 7\n");	//test
+	// printf("	#line 3k, 7\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (Opague_o.field, m, 0);
@@ -3796,7 +3776,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 8\n");	//test
+	// printf("	#line 3k, 8\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (numbers_of_, 7, number_of_players);
@@ -3805,7 +3785,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 9\n");	//test
+	// printf("	#line 3k, 9\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (stack_of_, 7, number_of_players);
@@ -3813,7 +3793,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 10\n");	//test
+	// printf("	#line 3k, 10\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (Journey_o.field, m, number_of_players);
@@ -3821,86 +3801,84 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 11\n");	//test
+	// printf("	#line 3k, 11\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (Allocation_o.field, m, number_of_players+2);
+	Spielfeld_Destroy (Partition_o.field, m, number_of_players+2);
 
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 12\n");	//test
+	// printf("	#line 3k, 12\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Spielfeld_Destroy (Sf_permutations, m, 0);
+	Spielfeld_Destroy (Roses_o.field, m, 0);
+	
+	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+	// printf("	\n ");
+	// printf("	#line 3k, 13\n");	//test
+	// scanf("%u", &pause);	//test
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_c = 1;
+		rmv->Collector_of_permutation.permutation_number_c = 1;
+	}
+	Spielfeld_Destroy (rmv->Collector_of_permutation.areas_c, rmv->Collector_of_permutation.permutation_number_c, rmv->Collector_of_permutation.amount_of_permutation_number_c-1);
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_c = 0;
+		rmv->Collector_of_permutation.permutation_number_c = 0;
+	}
 
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 13\n");	//test
-	// scanf("%u", &pause);	//test
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.amount_of_permutation_number_c = 1;
-		Collector_of_permutation.permutation_number_c = 1;
-	}
-	Spielfeld_Destroy (Collector_of_permutation.areas_c, Collector_of_permutation.permutation_number_c, Collector_of_permutation.amount_of_permutation_number_c-1);
-	Spielfeld_Destroy (rmv->Collector_of_permutation.areas_c, Collector_of_permutation.permutation_number_c, Collector_of_permutation.amount_of_permutation_number_c-1);
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.amount_of_permutation_number_c = 0;
-		Collector_of_permutation.permutation_number_c = 0;
-	}
-
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 12k, 14\n");	//test
+	// printf("	#line 3k, 14\n");	//test
 	// scanf("%u", &pause);	//test
 
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.amount_of_permutation_number_b = 1;
-		Collector_of_permutation.permutation_number_b = 1;
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_b = 1;
+		rmv->Collector_of_permutation.permutation_number_b = 1;
 	}
-	Spielfeld_Destroy (Collector_of_permutation.areas_b, Collector_of_permutation.permutation_number_b, Collector_of_permutation.amount_of_permutation_number_b-1);
-	Spielfeld_Destroy (rmv->Collector_of_permutation.areas_b, Collector_of_permutation.permutation_number_b, Collector_of_permutation.amount_of_permutation_number_b-1);
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.amount_of_permutation_number_b = 0;
-		Collector_of_permutation.permutation_number_b = 0;
+	Spielfeld_Destroy (rmv->Collector_of_permutation.areas_b, rmv->Collector_of_permutation.permutation_number_b, rmv->Collector_of_permutation.amount_of_permutation_number_b-1);
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		rmv->Collector_of_permutation.amount_of_permutation_number_b = 0;
+		rmv->Collector_of_permutation.permutation_number_b = 0;
 	}
 	
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 15\n");	//test
+	// printf("	#line 3k, 15\n");	//test
 	// scanf("%u", &pause);	//test
 
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.permutation_number_c = 1;
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.permutation_number_c = 1;
 	}
-	unsigned_int_2dim_Vektor_Destroy (Collector_of_permutation.sigmas_c, Fakultaet(Collector_of_permutation.permutation_number_c - 1));
-	unsigned_int_2dim_Vektor_Destroy (rmv->Collector_of_permutation.sigmas_c, Fakultaet(Collector_of_permutation.permutation_number_c - 1));
-	if (Collector_of_permutation.permutation_number_b == 0) {
-		Collector_of_permutation.permutation_number_c = 0;
+	unsigned_int_2dim_Vektor_Destroy (rmv->Collector_of_permutation.sigmas_c, Fakultaet(rmv->Collector_of_permutation.permutation_number_c - 1));
+	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
+		rmv->Collector_of_permutation.permutation_number_c = 0;
 	}
 
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 15.1\n");	//test
+	// printf("	#line 3k, 15.1\n");	//test
 	// scanf("%u", &pause);	//test
 
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.permutation_number_b = 1;
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		 rmv->Collector_of_permutation.permutation_number_b = 1;
 	}
-	unsigned_int_2dim_Vektor_Destroy (Collector_of_permutation.sigmas_b, Fakultaet(Collector_of_permutation.permutation_number_b - 1));
-	unsigned_int_2dim_Vektor_Destroy (rmv->Collector_of_permutation.sigmas_b, Fakultaet(Collector_of_permutation.permutation_number_b - 1));
-	if (Collector_of_permutation.permutation_number_c == 0) {
-		Collector_of_permutation.permutation_number_b = 0;
+	unsigned_int_2dim_Vektor_Destroy (rmv->Collector_of_permutation.sigmas_b, Fakultaet(rmv->Collector_of_permutation.permutation_number_b - 1));
+	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
+		 rmv->Collector_of_permutation.permutation_number_b = 0;
 	}
 
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 15.2\n");	//test
+	// printf("	#line 3k, 15.2\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (level);
@@ -3908,7 +3886,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 16\n");	//test
+	// printf("	#line 3k, 16\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (rmv->win_condition);
@@ -3916,7 +3894,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 17\n");	//test
+	// printf("	#line 3k, 17\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (rmv->var_);
@@ -3924,7 +3902,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 18\n");	//test
+	// printf("	#line 3k, 18\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (rmv->ulcer_start);
@@ -3932,7 +3910,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 19\n");	//test
+	// printf("	#line 3k, 19\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (rmv->ulcer_lifes);
@@ -3940,7 +3918,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 20\n");	//test
+	// printf("	#line 3k, 20\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (rmv->out_counter);
@@ -3948,7 +3926,7 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 21\n");	//test
+	// printf("	#line 3k, 21\n");	//test
 	// scanf("%u", &pause);	//test
 
 	unsigned_int_Vektor_Destroy (rmv->same);
@@ -3956,15 +3934,16 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 22\n");	//test
+	// printf("	#line 3k, 22\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Realize_modifications_variables_Vektor_Destroy (rmv);
+	
 
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 12k, 22.1\n");	//test
+	// printf("	#line 3k, 22.1\n");	//test
 	// scanf("%u", &pause);	//test
 
 	Moveable_objects_condition_Vektor_Destroy (Moc_Klatscher);
@@ -3974,12 +3953,12 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
 	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
 	// printf("	\n ");
-	// printf("	#line 13k, 23\n");	//test
+	// printf("	#line 3k, 23\n");	//test
 	// scanf("%u", &pause);	//test
 
 }
 
-void get_hints (unsigned int* level, Spielfeld Sf_permutations, unsigned int gamemode_played, Spielfeld Field, unsigned int geben, unsigned int w, unsigned int d, unsigned int e, unsigned int m, unsigned int n, unsigned int* information_code, Special_Fields Opague_o, Growth_Player* Growth_players, unsigned int AOP, Special_Fields Allocation_o, unsigned int number_of_players) {
+void get_hints (unsigned int* level, Spielfeld Sf_permutations, unsigned int gamemode_played, Spielfeld Field, unsigned int geben, unsigned int w, unsigned int d, unsigned int e, unsigned int m, unsigned int n, unsigned int* information_code, Special_Fields Opague_o, Growth_Player* Growth_players, unsigned int AOP, Special_Fields_Collector* sfc, unsigned int number_of_players, Single_option_representives single_option_representives) {
 
 	Spielfeld hint;
 	unsigned int b, a, menuoperator;
@@ -3992,9 +3971,9 @@ void get_hints (unsigned int* level, Spielfeld Sf_permutations, unsigned int gam
 	for (unsigned int i=1; i<(m-1); i+=1){
 		for (unsigned int j=1; j<(n-1); j+=1){
 			if (Field[0][i][j] == geben){
-				set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, geben);
+				set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, hint, 0, i, j, geben);
 			} else if (Field[0][i][j] != 0){
-				set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, bir_sey);
+				set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, hint, 0, i, j, bir_sey);
 			}
 		}
 	}
@@ -4017,7 +3996,7 @@ void get_hints (unsigned int* level, Spielfeld Sf_permutations, unsigned int gam
 						}
 					}
 					if ((a > e+1) || (a <= d)){
-						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, oeluem);
+						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, hint, 0, i, j, oeluem);
 					}
 				}
 			}
@@ -4039,20 +4018,15 @@ void get_hints (unsigned int* level, Spielfeld Sf_permutations, unsigned int gam
 						}
 					}
 					if (b == w){
-						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, Allocation_o, number_of_players, hint, 0, i, j, dogum);
+						set_Spielfeld_Eintrag (Field, geben, Opague_o.field, gamemode_played, sfc, number_of_players, hint, 0, i, j, dogum);
 					}
 				}
 			}
 		}
 	}
 
-	if (Opague_o.characterization >= 1) {
-		opague_builder (hint, Opague_o, m, n, geben, AOP, Allocation_o, number_of_players, gamemode_played);
-		show_field (number_of_players, 0, level, Sf_permutations, Opague_o.field, Opague_o.field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-	} else {
-		show_field (number_of_players, 0, level, Sf_permutations, Opague_o.field, hint, m, n, gamemode_played, information_code, geben, Growth_players, 0, Allocation_o);
-	}
-
+	Opague_show_controll (level, Field, Opague_o, m, n, geben, AOP, sfc, number_of_players, gamemode_played, single_option_representives.invisible, Sf_permutations, information_code, Growth_players);
+	
 	Spielfeld_Destroy (hint, m, 0);
 
 }
@@ -4104,13 +4078,13 @@ void About_the_game (unsigned int gamemode_played, unsigned int geben, Limits li
 	printf("	Standard actions:	(After your choice of number and not influencing each other) \n	-Development:	If it is your turn and a free square has exactly %u of yours surrounding it, you will own it.\n", w);
 	printf("	-Losses:  If it is your turn and a square of yours is surrounded by less than %u or more than %u of yours,\n			it will be set free.\n", d, e);	//10
 	if ((gamemode_played == Hunt)&&(geben == 1)) {	//If geben == 1
-		printf("	Limits:   Your development is limited by %u per round, your units in total by %u per round. \n", (limits.new+(number_of_players-3)), (limits.at_all+(2*(number_of_players-3))));
+		printf("	Limits:   Your development is limited by %u per round, your units in total by %u per round. \n", (limits.yeni+(number_of_players-3)), (limits.at_all+(2*(number_of_players-3))));
 	} else if ((gamemode_played == Ulcer)||(gamemode_played == Survive)) {
 		printf("	Limits:   This gamemode is unlimited. \n");
 	} else if (gamemode_played == Contact) {
-		printf("	Limits:   Your development is limited by %u per round. \n", limits.new);
+		printf("	Limits:   Your development is limited by %u per round. \n", limits.yeni);
 	} else {
-		printf("	Limits:   Your development is limited by %u per round, your units in total by %u per round. \n", limits.new, limits.at_all);
+		printf("	Limits:   Your development is limited by %u per round, your units in total by %u per round. \n", limits.yeni, limits.at_all);
 	}
 
 }
@@ -4123,6 +4097,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 	unsigned int* KI_decision;
 	Spielfeld Test_field;
 	Special_Fields Test_special_fields;
+	Special_Fields_Collector* Test_sfc;
 	Single_option_representives test_single_options;
 	Evolution evolution;
 	Num_num num;
@@ -4137,7 +4112,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 	input = 0;
 	gamemode_played = Tutorial;
 	limits.at_all = 100;
-	limits.new = 100;
+	limits.yeni = 100;
 	rain = 0;
 	num.bir = 0;
 	num.iki = 0;
@@ -4153,13 +4128,14 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 	Test_field = Spielfeld_Create (m, n, 1);
 	evolution.nl = Spielfeld_Create (m, n, number_of_players);
 	evolution.od = Spielfeld_Create (m, n, number_of_players);
-	Test_special_fields.field = Spielfeld_Create (m, n, number_of_players+2);;
+	Test_special_fields.field = Spielfeld_Create (m, n, number_of_players+2);
+	Test_sfc = Special_Fields_Collector_Vektor_Create (1);
 	
 	for (unsigned int p=0; p<=AOP; p++) {
 		ges[p] = 1;
 	}
 
-	start_normal (Test_field, m, n, gamemode_played, number_of_players, geben, Test_field, Test_special_fields, 0);
+	start_normal (Test_field, m, n, gamemode_played, number_of_players, geben, Test_field, Test_sfc, 0);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
@@ -4190,7 +4166,7 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 		printf(" \n");
 	}
 
-	show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+	show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 
 	input = 1;
 	while (input != 0) {
@@ -4208,10 +4184,10 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Plus: Set a square on 0405.\n");
 
-		Plus (level, Test_field, m, n, geben, Test_field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Test_special_fields, Test_special_fields, test_single_options);
+		Plus (level, Test_field, m, n, geben, Test_field, limits.at_all, gamemode_played, information_code, number_of_players, Growth_players, Test_special_fields, Test_sfc, test_single_options);
 
 		if (Test_field[0][4][5] != geben) {
 			input = 1;
@@ -4220,15 +4196,15 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Plus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Plus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Minus: Delete your square on 0605.\n");
 
-		Minus (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
+		Minus (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_sfc, number_of_players, test_single_options);
 
 		if (Test_field[0][6][5] != 0) {
 			input = 1;
@@ -4237,15 +4213,15 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Minus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Minus_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Move: Move your square on 0605 to 0604.\n");
 
-		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
+		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_sfc, number_of_players, test_single_options);
 
 		if ((Test_field[0][6][5] != 0)||(Test_field[0][6][4] != geben)) {
 			input = 1;
@@ -4254,15 +4230,15 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Change: Change your square on 0503 with the square of the enemy on 0502.\n");
 
-		Change (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players,Test_special_fields, position, Test_special_fields, number_of_players, test_single_options);
+		Change (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, position, Test_sfc, number_of_players, test_single_options);
 
 		if ((Test_field[0][5][2] != geben)||(Test_field[0][5][3] != 2)) {
 			input = 1;
@@ -4271,15 +4247,15 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Change_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Change_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Destroy: Destroy the square of the enemy on 0503.\n");
 
-		Destroy (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
+		Destroy (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_sfc, number_of_players, test_single_options);
 
 		if (Test_field[0][5][3] != 0) {
 			input = 1;
@@ -4288,25 +4264,25 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Destroy_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Destroy_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Boost: The next action of you will be a Boost, \n	that means the squares of the enemy which are touching you with at least one full side will count as your own squares according to the development, not for the decision which squares of yours have to die.	?0?\n");
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Boost_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Boost_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Move: Move your square on 0703 to 0603.\n");
 
-		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_special_fields, number_of_players, test_single_options);
+		Move (level, Test_field, m, n, geben, Test_field, gamemode_played, information_code, Growth_players, Test_special_fields, Test_sfc, number_of_players, test_single_options);
 
 		if ((Test_field[0][7][3] != 0)||(Test_field[0][6][3] != geben)) {
 			input = 1;
@@ -4315,68 +4291,68 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 			input = 0;
 		}
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Move_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	2-new: The next action of you will be a 2-new, means you are getting dead squares which have 2 instead of 3 squares of yours in its surrounding.	?0?\n");
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
 	w = 2;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_2, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	w = 3;
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	Revive: The next action of you will be a Revive, means the squares of yours that died and have no squares in its surrounding, which were owned by you before and are still living, will be yours again.	?0?\n");
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Revive_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, Revive_, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	4/5-new: The next action of you will be a 4/5-new, means you are getting dead squares which have 4 or 5 instead of 3 squares of yours in its surrounding.	?0?\n");
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
 	w = 4;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_4_5, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, new_4_5, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	w = 3;
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	4-max: The next action of you will be a 4-max, means squares of yours can have up to 4 instead of 3 squares of yours in its surrounding and will still survive.	?0?\n");
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
 	e = 4;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, max_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, max_4, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	e = 3;
 
 	input = 1;
 	while (input != 0) {
-		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+		show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 		printf("	1-min: The next action of you will be a 1-min, means squares of yours can have down to 1 instead of 2 squares of yours in its surrounding and will still survive.	?0?\n");
 		input = get_unsigned_numeric_input_with_not_more_than_1_letter ();
 		printf(" \n");
 	}
 	d = 1;
-	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_special_fields, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, min_1, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
+	basic_development (Test_field, Test_field, m, n, geben, Test_field, Test_sfc, Test_field, ges, Growth_players, number_of_players, gamemode_played, information_code, level, w, d, e, min_1, evolution, &num, &g, Test_special_fields, limits, test_single_options, Test_special_fields, position, KI_decision, rain, hayir);
 	synchronisation_Test_field (Test_field, m, n, 1, 0);
 	d = 2;
 
-	show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_special_fields);
+	show_field (number_of_players, 0, level, Test_field, Test_field, Test_field, m, n, gamemode_played, information_code, geben, Growth_players, 0, Test_sfc);
 	printf(" \n");
 
 	Spielfeld_Destroy (evolution.nl, m, number_of_players);
