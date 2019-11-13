@@ -9,13 +9,13 @@
 #include <windows.h>
 #endif
 
-
-#include "Growth_all_Def.h"
-#include "Growth_all_Vektor.h"
-
 // #define VERBOSE
 // #define Contact_mistake_search
 // #define Quidditch_mistake_search
+
+
+#include "Growth_all_Def.h"
+#include "Growth_all_Vektor.h"
 
 Spielfeld Spielfeld_Create (unsigned int m, unsigned int n, unsigned int number_of_players) {
 	Spielfeld Spiel;
@@ -65,6 +65,15 @@ Moveable_objects_condition* Moveable_objects_condition_Vektor_Create (unsigned i
 
 	Vektor_counter += 1;
 
+	return Vektor;
+}
+
+Special_Fields_Collector* Special_Fields_Collector_Vektor_Create (unsigned int length) {
+	Special_Fields_Collector* Vektor;
+	Vektor = calloc(length, sizeof(Special_Fields_Collector));
+
+	Vektor_counter += 1;
+	
 	return Vektor;
 }
 
@@ -221,6 +230,13 @@ void unsigned_int_Vektor_Destroy (unsigned int* Vektor) {
 }
 
 void Realize_modifications_variables_Vektor_Destroy (Realize_modifications_variables* Vektor) {
+	free(Vektor);
+	Vektor = NULL;
+
+	Vektor_counter -= 1;
+}
+
+void Special_Fields_Collector_Vektor_Destroy (Special_Fields_Collector* Vektor) {
 	free(Vektor);
 	Vektor = NULL;
 
