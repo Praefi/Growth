@@ -12,15 +12,19 @@
 #include <windows.h>
 #endif
 
-void basic_development (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, Evolution, Num_num*, unsigned int*, Special_Fields, Limits, Single_option_representives, Special_Fields, unsigned int*, unsigned int*, unsigned int, unsigned int);
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
 
-void new_life (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Evolution, Spielfeld, Special_Fields, unsigned int);	//checklist
-void old_dying (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int, Special_Fields, Spielfeld, unsigned int, Special_Fields);	//checklist
+void basic_development (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields_Collector*, Spielfeld, unsigned int*, Growth_Player*, unsigned int, unsigned int, unsigned int*, unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, Evolution, Num_num*, unsigned int*, Special_Fields, Limits, Single_option_representives, Special_Fields, unsigned int*, unsigned int*, unsigned int, unsigned int);
+
+void new_life (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Evolution, Spielfeld, Special_Fields_Collector*, unsigned int);	//checklist
+void old_dying (Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Spielfeld, unsigned int, Special_Fields_Collector*, Spielfeld, unsigned int, Special_Fields);	//checklist
 
 
-void change (Spielfeld, unsigned int*, Spielfeld, Spielfeld, Evolution, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Special_Fields, Spielfeld, unsigned int*, Growth_Player*, Single_option_representives, Special_Fields);
+void change (Spielfeld, unsigned int*, Spielfeld, Spielfeld, Evolution, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Special_Fields_Collector*, Spielfeld, unsigned int*, Growth_Player*, Single_option_representives, Special_Fields);
 
 
-void Having_too_much (unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, Evolution, Limits, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, unsigned*, unsigned int);	//checklist
+void Having_too_much (unsigned int*, unsigned int, unsigned int, unsigned int, unsigned int, Evolution, Limits, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields_Collector*, unsigned*, unsigned int);	//checklist
 
 #endif
