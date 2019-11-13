@@ -10,6 +10,10 @@
 #endif
 
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
 #include "Growth_all_Def.h"
 #include "Growth_all_Vektor.h"
 #include "Growth_all_set.h"
