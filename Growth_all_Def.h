@@ -12,8 +12,14 @@
 #include <windows.h>
 #endif
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
 extern unsigned int letters_4;
 extern unsigned int letters_2;
+
+extern unsigned int AOP;
 
 extern unsigned int Liz_max;
 extern unsigned int anything; //Die Variable für alles Mögliche
@@ -165,11 +171,16 @@ enum objects {
 	
 };
 
-enum winning_options {
+enum show_field_lines {
+	number_edge_line = 1,
+	frame_lines = 2,
+	square_containing_beginning = 3,
+	square_containing_ending = 4,
+};
 
+enum winning_options {
 	kazanacak = 1,
 	biri_kazanacak = 2,
-
 };
 
 enum ulcer_start_values {	//ulcer
@@ -245,8 +256,9 @@ enum options {
 	oSpreading = 20,
 	oInvisible = 21,
 	oRoses = 22,
+	oPartition = 23,
 
-	oBack = 25,		//synchronisiere mit oBack, tivialerweise! Last value +3
+	oBack = 26,		//synchronisiere mit oBack, tivialerweise! Last value +3
 
 	Numberofplayers = oBack-1,	//Numberofplayers immer (fast) zuletzt
 	KI = oBack-2,	//Numberofplayers immer (fast) zuvorletzt
@@ -318,8 +330,13 @@ typedef struct Special_Fields_t {	//allocation, opague, journey
 	unsigned int characterization;
 } Special_Fields;
 
+typedef struct Special_Fields_Collector_t {	//allocation, partition
+	Special_Fields Allocation_o;
+	Special_Fields Partition_o;
+} Special_Fields_Collector;
+
 typedef struct Limits_t {	//square-limits
-	unsigned int new;
+	unsigned int yeni;
 	unsigned int at_all;
 	unsigned int at_all_saver;
 } Limits;
@@ -401,6 +418,11 @@ void reset_of_ges (unsigned int*, unsigned int);
 
 
 unsigned int Zufall (unsigned int, unsigned int);
+
+
+void neue_Zeilen (unsigned int);
+void neue_Leerzeichen (unsigned int);
+void neue_Tabs (unsigned int);
 
 
 #endif
