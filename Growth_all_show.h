@@ -12,7 +12,13 @@
 #include <windows.h>
 #endif
 
-void show_field (unsigned int, unsigned int, unsigned int*, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Growth_Player*, unsigned int, Special_Fields);	//checklist
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
+void show_field (unsigned int, unsigned int, unsigned int*, Spielfeld, Spielfeld, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int*, unsigned int, Growth_Player*, unsigned int, Special_Fields_Collector*);	//checklist
+
+void Nummerierung_show_field (unsigned int, unsigned int, unsigned int, unsigned int);
 
 
 void show_whose_turn (unsigned int, unsigned int, unsigned int*, Growth_Player*, unsigned int*, unsigned int);
