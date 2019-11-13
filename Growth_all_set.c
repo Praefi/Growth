@@ -10,11 +10,15 @@
 #endif
 
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
 #include "Growth_all_Def.h"
 #include "Growth_all_set.h"
 
 
-void set_Spielfeld_Eintrag (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields Allocation_o, unsigned int number_of_players, Spielfeld Spiel, unsigned int first, unsigned int i, unsigned int j, unsigned int Eintrag) {
+void set_Spielfeld_Eintrag (Spielfeld Field, unsigned int geben, Spielfeld Opague_o_field, unsigned int gamemode_played, Special_Fields_Collector* sfc, unsigned int number_of_players, Spielfeld Spiel, unsigned int first, unsigned int i, unsigned int j, unsigned int Eintrag) {
 
 	// if ((Field[first][i][j] == 11)&&(Eintrag != 11)) {	//test
 		// printf("	Fehler: Heart wird in Field nicht trivial überschrieben	i=%u	j=%u \n", i, j);
@@ -28,7 +32,7 @@ void set_Spielfeld_Eintrag (Spielfeld Field, unsigned int geben, Spielfeld Opagu
 		// printf("ok.1 ");	//test
 	// }
 
-	if ((Spiel == Allocation_o.field)&&(first == 1)&&(Eintrag != 0)) {	//Addieren statt ersetzen in Allocation[1], da die Summe an Abzügen gezählt werden muss, außer beim Reset (Eintrag == 0).
+	if ((Spiel == sfc->Allocation_o.field)&&(first == 1)&&(Eintrag != 0)) {	//Addieren statt ersetzen in Allocation[1], da die Summe an Abzügen gezählt werden muss, außer beim Reset (Eintrag == 0).
 		Spiel[first][i][j] += Eintrag;
 
 		// printf("set_Spielfeld_Eintrag ok.2 \n");	//test
@@ -43,28 +47,26 @@ void set_Spielfeld_Eintrag (Spielfeld Field, unsigned int geben, Spielfeld Opagu
 		// }
 	}
 
-	if (Allocation_o.characterization != 0) {
-
+	if (sfc->Allocation_o.characterization != 0) {
 		// printf("set_Spielfeld_Eintrag ok.4 \n");
-
 		if (((Eintrag != 0)&&(Eintrag <= number_of_players))||((gamemode_played == Hunt)&&(Eintrag == 11))) {
 			if (Spiel == Opague_o_field) {
 				if (Eintrag == geben) {
-					Allocation_o.field[2][i][j] = Allocation_o.field[0][i][j];
+					sfc->Allocation_o.field[2][i][j] = sfc->Allocation_o.field[0][i][j];
 				} else {
-					Allocation_o.field[2][i][j] = 1;
+					sfc->Allocation_o.field[2][i][j] = 1;
 				}
 			} else if ((Spiel == Field)&&(first == 0)) {
-				Allocation_o.field[0][i][j] = 1;
+				sfc->Allocation_o.field[0][i][j] = 1;
 			}
 
 			// printf("set_Spielfeld_Eintrag ok.5 \n");
 
 		} else {	//Eintrag is not a player
 			if (Spiel == Opague_o_field) {
-				Allocation_o.field[2][i][j] = 0;
+				sfc->Allocation_o.field[2][i][j] = 0;
 			} else if ((Spiel == Field)&&(first == 0)) {
-				Allocation_o.field[0][i][j] = 0;
+				sfc->Allocation_o.field[0][i][j] = 0;
 			}
 
 			// printf("set_Spielfeld_Eintrag ok.6 \n");
@@ -72,8 +74,51 @@ void set_Spielfeld_Eintrag (Spielfeld Field, unsigned int geben, Spielfeld Opagu
 		}
 	}
 
+	if (sfc->Partition_o.characterization != 0) {
+		// printf("set_Spielfeld_Eintrag ok.7 \n");
+		if (((Eintrag != 0)&&(Eintrag <= number_of_players))||((gamemode_played == Hunt)&&(Eintrag == 11))) {
+			if (Spiel == Opague_o_field) {
+				if (Eintrag == geben) {
+					sfc->Partition_o.field[2][i][j] = sfc->Partition_o.field[0][i][j];
+				} else {
+					sfc->Partition_o.field[2][i][j] = 1;
+				}
+			} else if ((Spiel == Field)&&(first == 0)) {
+				unsigned int partition_counter;
+				partition_counter = 0;
+				
+				for (unsigned int h=i-1; h<=i+1; h++) {
+					for (unsigned int k=j-1; k<=j+1; k++) {
+						if ((sfc->Partition_o.field[1][h][k] != 0)&&((Field[0][h][k] == Eintrag)||(Field[0][h][k] == 0))) {
+							partition_counter += (sfc->Partition_o.field[1][h][k]);
+						}
+					}
+				}
+				if (partition_counter == 0) {
+					partition_counter = 1;
+				}
+				if (sfc->Partition_o.characterization == 1) {
+					sfc->Partition_o.field[0][i][j] = partition_counter;
+				} else {
+					sfc->Partition_o.field[0][i][j] = ((partition_counter-1)%(sfc->Partition_o.characterization)) +1;	//partition_counter >= 1.
+				}
+			}
+
+			// printf("set_Spielfeld_Eintrag ok.8 \n");
+
+		} else {	//Eintrag is not a player
+			if (Spiel == Opague_o_field) {
+				sfc->Partition_o.field[2][i][j] = 0;
+			} else if ((Spiel == Field)&&(first == 0)) {
+				sfc->Partition_o.field[0][i][j] = 0;
+			}
+
+			// printf("set_Spielfeld_Eintrag ok.9 \n");
+
+		}
+	}
 	// if (Spiel != Field) {
-		// printf("ok.7 ");	//test
+		// printf("ok.10 ");	//test
 	// }
 }
 
