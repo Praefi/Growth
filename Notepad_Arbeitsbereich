@@ -14,6 +14,7 @@
             <File name="Growth_all_get.h" />
             <File name="Growth_all_Initialisierung.h" />
             <File name="Growth_all_KI.h" />
+            <File name="Growth_all_opague.h" />
             <File name="Growth_all_options_specials.h" />
             <File name="Growth_all_set.h" />
             <File name="Growth_all_show.h" />
@@ -29,6 +30,7 @@
             <File name="Growth_all_get.c" />
             <File name="Growth_all_Initialisierung.c" />
             <File name="Growth_all_KI.c" />
+            <File name="Growth_all_opague.c" />
             <File name="Growth_all_options_specials.c" />
             <File name="Growth_all_set.c" />
             <File name="Growth_all_show.c" />
