@@ -9,15 +9,15 @@
 #include <windows.h>
 #endif
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
 
 #include "Growth_all_Def.h"
 #include "Growth_all_set.h"
 #include "Growth_all_show.h"
 #include "Growth_all_Initialisierung.h"
-
-// #define VERBOSE
-// #define Contact_mistake_search
-// #define Quidditch_mistake_search
 
 void unsigned_int_array_null_initialisierung (unsigned int* array, unsigned int bueyuekluek) {
 	for (unsigned int p=0; p<=bueyuekluek; p++) {
@@ -46,7 +46,7 @@ void Initialisierung (unsigned int gamemode_played, unsigned int* information_co
 
 }
 
-unsigned int Initialisierung_limits_new (unsigned int gamemode_played) {	//checklist
+unsigned int Initialisierung_limits_yeni (unsigned int gamemode_played) {	//checklist
 	unsigned int Ausgabe;
 	Ausgabe = 0;
 
@@ -175,7 +175,7 @@ void Initialisierung_Arrays_2 (unsigned int AOP, unsigned int* pere, unsigned in
 	// printf("ulcer_start[1] = %u \n", ulcer_start[1]);	//test
 }
 
-void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int geben, Spielfeld Opague_o_field, Special_Fields Allocation_o, unsigned int single_option_representives_inverted){	//checklist
+void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int geben, Spielfeld Opague_o_field, Special_Fields_Collector* sfc, unsigned int single_option_representives_inverted){	//checklist
 
 	if (gamemode_played == Tutorial){
 		Field[0][4][1] = 2;		//Spieler 2
@@ -583,15 +583,15 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 	} else if (gamemode_played == Ulcer) {
 		for (unsigned int i=1; i<=(m-2); i+=1) {
 			if (i%3 != 0) {
-				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, i, 3, 1);
+				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, i, 3, 1);
 			}
 		}
 		for (unsigned int j=1; j<=(n-2); j+=1) {
 			if (j%3 != 0) {
-				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, 3, j, 1);
+				set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, 3, j, 1);
 			}
 		}
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, 5, 5, 1);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, 5, 5, 1);
 
 	} else if (gamemode_played == Dynamic) {
 		unsigned int m_2, n_2;
@@ -796,29 +796,29 @@ void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int
 		// set_triangle_unten_rechts (single_option_representives_inverted, Field, 2, m-5, 2);
 		
 		for (unsigned int j=(n-1)/2 -2; j<=(n-1)/2 +2; j+=2) {	//Torringe
-			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, 1, j, Torring_1);
-			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, m-2, j, Torring_2);
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, 1, j, Torring_1);
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, m-2, j, Torring_2);
 		}
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 -1, (n-1)/2, Klatscher);	//Quidditch Bälle
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2, (n-1)/2, Quaffel);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +1, (n-1)/2, Schnatz);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +2, (n-1)/2, Klatscher);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 -1, (n-1)/2, Klatscher);	//Quidditch Bälle
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2, (n-1)/2, Quaffel);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +1, (n-1)/2, Schnatz);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +2, (n-1)/2, Klatscher);
 		
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, 1+2, (n-1)/2, Hueter_1);	//Team_1
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 -1, 2, Jaeger_1);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 -1, n-3, Jaeger_1);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 -2, 5, Treiber_1);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 -2, n-6, Treiber_1);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 -3, (n-1)/2 +1, Jaeger_1);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 -4, (n-1)/2 -2, Sucher_1);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, 1+2, (n-1)/2, Hueter_1);	//Team_1
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 -1, 2, Jaeger_1);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 -1, n-3, Jaeger_1);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 -2, 5, Treiber_1);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 -2, n-6, Treiber_1);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 -3, (n-1)/2 +1, Jaeger_1);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 -4, (n-1)/2 -2, Sucher_1);
 		
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)-2, (n-1)/2, Hueter_2);	//Team_2
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +2, 2, Jaeger_2);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +2, n-3, Jaeger_2);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +3, 5, Treiber_2);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +3, n-6, Treiber_2);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +4, (n-1)/2 -1, Jaeger_2);
-		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, Allocation_o, number_of_players, Field, 0, (m-2)/2 +5, (n-1)/2 +2, Sucher_2);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)-2, (n-1)/2, Hueter_2);	//Team_2
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +2, 2, Jaeger_2);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +2, n-3, Jaeger_2);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +3, 5, Treiber_2);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +3, n-6, Treiber_2);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +4, (n-1)/2 -1, Jaeger_2);
+		set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, (m-2)/2 +5, (n-1)/2 +2, Sucher_2);
 	}
 }
 
