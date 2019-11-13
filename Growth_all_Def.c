@@ -9,12 +9,12 @@
 #include <windows.h>
 #endif
 
-
-#include "Growth_all_Def.h"
-
 // #define VERBOSE
 // #define Contact_mistake_search
 // #define Quidditch_mistake_search
+
+
+#include "Growth_all_Def.h"
 
 
 unsigned int minimum (unsigned int a, unsigned int b) {
@@ -147,4 +147,22 @@ unsigned int Zufall (unsigned int start, unsigned int amount) {
 	number = ((counter + rand())%amount)+start;
 	
 	return number;
+}
+
+void neue_Zeilen (unsigned int anzahl) {
+	for (unsigned int a=1; a<=anzahl; a++) {
+		printf("\n");
+	}
+}
+
+void neue_Leerzeichen (unsigned int anzahl) {
+	for (unsigned int a=1; a<=anzahl; a++) {
+		printf(" ");
+	}
+}
+
+void neue_Tabs (unsigned int anzahl) {
+	for (unsigned int a=1; a<=anzahl; a++) {
+		printf("	");
+	}
 }
