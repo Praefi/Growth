@@ -21,7 +21,7 @@
 	e) increase NOSV for same
 	
 	
-3.1 List of FUNCTIONS to complete: decision_max_maker, Having_too_much, get_how_many_ways_of_keeping, Initialisierung_limits_at_all, Initialisierung_limits_new, Initialisierung_m, Initialisierung_n, show_statistics, Plus, Minus, Move, Change, Destroy, reset_ges, who_is_out, opague_builder
+3.1 List of FUNCTIONS to complete: decision_max_maker, Having_too_much, get_how_many_ways_of_keeping, Initialisierung_limits_at_all, Initialisierung_limits_yeni, Initialisierung_m, Initialisierung_n, show_statistics, Plus, Minus, Move, Change, Destroy, reset_ges, who_is_out, opague_builder
 
 
 3.2 List of FUNCTIONS maybe needing an update: show_field, old_dying, new_life, Revive, Boost
