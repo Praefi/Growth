@@ -12,6 +12,7 @@
 #include <windows.h>
 #endif
 
+
 // #define VERBOSE
 // #define Contact_mistake_search
 // #define Quidditch_mistake_search
@@ -19,8 +20,7 @@
 void playing_a_game (unsigned int*, unsigned int*, unsigned int, time_t, unsigned int*, unsigned int, Quidditch_setup*);
 
 
-
-void get_hints (unsigned int*, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Special_Fields, Growth_Player*, unsigned int, Special_Fields, unsigned int);	//menu
+void get_hints (unsigned int*, Spielfeld, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int*, Special_Fields, Growth_Player*, unsigned int, Special_Fields_Collector*, unsigned int, Single_option_representives);	//menu
 
 void About_the_game (unsigned int, unsigned int, Limits, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);	//menu
 
@@ -171,6 +171,6 @@ void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned
 // Duell (gamemode), go on
 // every player gets cards with abilities, development on enemies is not forbidden anymore.
 
-
+//Spielstände speichern, go on
 
 #endif
