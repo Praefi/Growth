@@ -12,6 +12,10 @@
 #include <windows.h>
 #endif
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
 
 unsigned int get_m (unsigned int, unsigned int);
 unsigned int get_n (unsigned int, unsigned int);
