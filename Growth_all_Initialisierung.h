@@ -12,11 +12,15 @@
 #include <windows.h>
 #endif
 
+// #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
 void Initialisierung (unsigned int, unsigned int*);
 
 
 unsigned int Initialisierung_limits_at_all (unsigned int);	//checklist
-unsigned int Initialisierung_limits_new (unsigned int);	//checklist
+unsigned int Initialisierung_limits_yeni (unsigned int);	//checklist
 
 
 unsigned int Initialisierung_m (unsigned int);	//checklist
@@ -32,7 +36,7 @@ void Initialisierung_Arrays_2 (unsigned int, unsigned int*, unsigned int*, unsig
 
 
 
-void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields, unsigned int);	//checklist
+void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields_Collector*, unsigned int);	//checklist
 
 
 #endif
