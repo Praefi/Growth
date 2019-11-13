@@ -10,17 +10,26 @@
 #endif
 
 
-#include "Growth_all_Def.h"
-#include "Growth_all_visual.h"
-#include "Growth_all_show.h"
-
 // #define VERBOSE
 // #define Contact_mistake_search
 // #define Quidditch_mistake_search
 
-void show_field (unsigned int number_of_players, unsigned int invisible, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Opague_o_field, Spielfeld Spiel, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Growth_Player* Growth_players, unsigned int auswerter, Special_Fields Allocation_o){	//checklist
-	unsigned int allocation_choice;
-	allocation_choice = 0;
+#include "Growth_all_Def.h"
+#include "Growth_all_visual.h"
+#include "Growth_all_show.h"
+
+// // #define VERBOSE
+// #define Contact_mistake_search
+// #define Quidditch_mistake_search
+
+void show_field (unsigned int number_of_players, unsigned int invisible, unsigned int* level, Spielfeld Sf_permutations, Spielfeld Opague_o_field, Spielfeld Spiel, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int* information_code, unsigned int geben, Growth_Player* Growth_players, unsigned int auswerter, Special_Fields_Collector* sfc){	//checklist
+
+	unsigned int allocation_choice, partition_choice, field_show_counter, section_counter;
+	
+	allocation_choice = 0;	//0 = normal field, 2 = opague with no information about allocation except geben.
+	partition_choice = 0;	//0 = normal field, 2 = opague with no information about partition except geben.
+	field_show_counter = 0;
+	section_counter = 0;
 
 	#ifdef VERBOSE
 	printf("show_field ok.1 \n"); //test
@@ -30,85 +39,62 @@ void show_field (unsigned int number_of_players, unsigned int invisible, unsigne
 		//number_of_players increased go on (done?)
 		if (Spiel == Opague_o_field) {
 			allocation_choice = 2;
+			partition_choice = 2;
 		}
-
-		printf("\n");
-
-		printf("      ");
-		for (unsigned int p=1; p<=n-2; p+=1){		//Nummerierung
-			if (p%7 == 0) {
-				set_terminal_color (cBROWN);
-			}
-			if (p<10){
-				printf("%u  ", p);
-			} else {
-				printf("%u ", p);
-			}
-			set_terminal_color (cNORMAL);
+		
+		neue_Zeilen (1);
+		field_show_counter = 1;
+		section_counter = number_edge_line;
+		
+		Nummerierung_show_field (field_show_counter, section_counter, n, 0);
+		
+		if (sfc->Partition_o.characterization != 0) {
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
-		printf("   ");	//üc bosluk
-
-		if (Allocation_o.characterization != 0) {
-			printf("		");	//two tabs
-			printf("    ");	//dört bosluk
-			for (unsigned int p=1; p<=n-2; p+=1){
-				if (p<10){
-					printf("%u  ", p);
-				} else {
-					printf("%u ", p);
-				}
-			}
-			printf("   ");	//üc bosluk
+		// if (sfc->Partition_o.characterization != 0) {	//test
+			// Nummerierung_show_field (field_show_counter, section_counter, n, 0);
+		// }
+		if (sfc->Allocation_o.characterization != 0) {
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
-
 		if (Sf_permutations[0][1][1] != 0) {
-			printf("		");	//two tabs
-			printf("    ");	//dört bosluk
-			for (unsigned int p=1; p<=n-2; p+=1){
-				if (p<10){
-					printf("%u  ", p);
-				} else {
-					printf("%u ", p);
-				}
-			}
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
 
-		printf("\n");
-
+		neue_Zeilen (1);
+		
 		for (unsigned int i=1; i<m-1; i+=1){
-
-			printf("     +");
-			for (unsigned int t=1; t<=n-2; t+=1){		//Zwischenzeilen
-				printf("--+");
+			
+			field_show_counter = 1;
+			section_counter = frame_lines;
+			Nummerierung_show_field (field_show_counter, section_counter, n, i);
+			
+			if (sfc->Partition_o.characterization != 0) {
+				field_show_counter += 1;
+				Nummerierung_show_field (field_show_counter, section_counter, n, i);
 			}
-			printf("   ");	//üc bosluk
-
-			if (Allocation_o.characterization != 0) {
-				printf("	");	//two tabs
-				printf("     +");
-				for (unsigned int t=1; t<=n-2; t+=1){
-					printf("--+");
-				}
-				printf("   ");	//üc bosluk
+			// if (sfc->Partition_o.characterization != 0) {	//test
+				// Nummerierung_show_field (field_show_counter, section_counter, n, 0);
+			// }
+			if (sfc->Allocation_o.characterization != 0) {
+				field_show_counter += 1;
+				Nummerierung_show_field (field_show_counter, section_counter, n, i);
 			}
-
 			if (Sf_permutations[0][1][1] != 0) {
-				printf("	");	//two tabs
-				printf("     +");
-				for (unsigned int t=1; t<=n-2; t+=1){
-					printf("--+");
-				}
+				field_show_counter += 1;
+				Nummerierung_show_field (field_show_counter, section_counter, n, i);
 			}
-
-			printf("\n");
+			
+			neue_Zeilen (1);	//square_containing
 
 			for (unsigned int v=1; v<=2; v+=1){		//Doppel-Ausführung, ab 10 wird korrigiert, bis 99 gültig
-
-				if (i<10){
-					printf("   %u |", i);
-				} else {
-					printf("  %u |", i);
-				}
+				field_show_counter = 1;
+				section_counter = square_containing_beginning;
+				Nummerierung_show_field (field_show_counter, section_counter, n, i);
+				
 				for (unsigned int j=1; j<n-1; j+=1){	//Haupzeilen
 					
 					Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
@@ -274,34 +260,83 @@ void show_field (unsigned int number_of_players, unsigned int invisible, unsigne
 					set_terminal_color (cNORMAL);
 					printf("|");
 				}
-
-				if (i<10){
-					printf(" %u ", i);
-				} else {
-					printf(" %u", i);
-				}
-
-				if ((Allocation_o.characterization == 0)&&(Sf_permutations[0][1][1] == 0)) {	//only if no field is following
-					printf("\n");
-				}
-				if (Allocation_o.characterization != 0) {	//a second field
-					printf("	");	//one tab(s)
-					
-					if (i<10){
-						printf("    %u |", i);
-					} else {
-						printf("   %u |", i);
-					}
+				
+				section_counter = square_containing_ending;
+				Nummerierung_show_field (field_show_counter, section_counter, n, i);
+				
+				if (sfc->Partition_o.characterization != 0) {	//another field
+					field_show_counter += 1;
+					section_counter = square_containing_beginning;
+					Nummerierung_show_field (field_show_counter, section_counter, n, i);
 					
 					for (unsigned int j=1; j<n-1; j+=1){
 						
-						Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
+						if ((invisible == 0)||(Spiel[auswerter][i][j] == geben)) {
+							Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
+							
+							if ((sfc->Partition_o.field[partition_choice][i][j] < 10)&&(sfc->Partition_o.field[partition_choice][i][j] != 0)) {
+								printf("0%u", sfc->Partition_o.field[partition_choice][i][j]);
+							} else if (sfc->Partition_o.field[partition_choice][i][j] >= 10) {
+								printf("%u", sfc->Partition_o.field[partition_choice][i][j]);
+							} else {	//no partition possible for objects
+								printf("  ");
+							}
+						} else {
+							printf("  ");
+						}
+
+						set_terminal_color (cNORMAL);
+						printf("|");
+					}
+					
+					section_counter = square_containing_ending;
+					Nummerierung_show_field (field_show_counter, section_counter, n, i);
+				}
+				// if (sfc->Partition_o.characterization != 0) {	//test
+					// section_counter = square_containing_beginning;
+					// Nummerierung_show_field (field_show_counter, section_counter, n, i);
+					
+					// for (unsigned int j=1; j<n-1; j+=1){
 						
-						if ((Allocation_o.field[allocation_choice][i][j] < 10)&&(Allocation_o.field[allocation_choice][i][j] != 0)) {
-							printf("0%u", Allocation_o.field[allocation_choice][i][j]);
-						} else if ((Allocation_o.field[allocation_choice][i][j] >= 10)&&(Allocation_o.field[allocation_choice][i][j] != 0)) {	//last one can be left
-							printf("%u", Allocation_o.field[allocation_choice][i][j]);
-						} else {	//no allocation possible for objects
+						// if ((invisible == 0)||(Spiel[auswerter][i][j] == geben)) {
+							// Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
+							
+							// if ((sfc->Partition_o.field[1][i][j] < 10)&&(sfc->Partition_o.field[1][i][j] != 0)) {
+								// printf("0%u", sfc->Partition_o.field[1][i][j]);
+							// } else if (sfc->Partition_o.field[partition_choice][i][j] >= 10) {
+								// printf("%u", sfc->Partition_o.field[partition_choice][i][j]);
+							// } else {	//no partition possible for objects
+								// printf("  ");
+							// }
+						// } else {
+							// printf("  ");
+						// }
+
+						// set_terminal_color (cNORMAL);
+						// printf("|");
+					// }
+					
+					// section_counter = square_containing_ending;
+					// Nummerierung_show_field (field_show_counter, section_counter, n, i);
+				// }
+				if (sfc->Allocation_o.characterization != 0) {	//another field
+					
+					field_show_counter += 1;
+					section_counter = square_containing_beginning;
+					Nummerierung_show_field (field_show_counter, section_counter, n, i);
+					
+					for (unsigned int j=1; j<n-1; j+=1){
+						if ((invisible == 0)||(Spiel[auswerter][i][j] == geben)) {
+							Square_color_interpretation (Growth_players, geben, number_of_players, Spiel[auswerter][i][j]);
+							
+							if ((sfc->Allocation_o.field[allocation_choice][i][j] < 10)&&(sfc->Allocation_o.field[allocation_choice][i][j] != 0)) {
+								printf("0%u", sfc->Allocation_o.field[allocation_choice][i][j]);
+							} else if (sfc->Allocation_o.field[allocation_choice][i][j] >= 10) {
+								printf("%u", sfc->Allocation_o.field[allocation_choice][i][j]);
+							} else {	//no allocation possible for objects
+								printf("  ");
+							}
+						} else {
 							printf("  ");
 						}
 
@@ -309,25 +344,15 @@ void show_field (unsigned int number_of_players, unsigned int invisible, unsigne
 						printf("|");
 					}
 
-					if (i<10){
-						printf(" %u ", i);
-					} else {
-						printf(" %u", i);
-					}
-
-					if (Sf_permutations[0][1][1] == 0) {	//only if no field is following
-						printf("\n");
-					}
+					section_counter = square_containing_ending;
+					Nummerierung_show_field (field_show_counter, section_counter, n, i);
 
 				}
-				if (Sf_permutations[0][1][1] != 0) {	//a third field
-					printf("	");	//one tab(s)
-
-					if (i<10){
-						printf("    %u |", i);
-					} else {
-						printf("   %u |", i);
-					}
+				if (Sf_permutations[0][1][1] != 0) {	//another field
+					
+					field_show_counter += 1;
+					section_counter = square_containing_beginning;
+					Nummerierung_show_field (field_show_counter, section_counter, n, i);
 					
 					for (unsigned int j=1; j<n-1; j+=1){
 						
@@ -335,7 +360,7 @@ void show_field (unsigned int number_of_players, unsigned int invisible, unsigne
 					
 						if ((Sf_permutations[0][i][j] < 10)&&(Sf_permutations[0][i][j] != 0)) {
 							printf("0%u", Sf_permutations[0][i][j]);
-						} else if ((Sf_permutations[0][i][j] >= 10)&&(Sf_permutations[0][i][j] != 0)) {	//last one can be left
+						} else if (Sf_permutations[0][i][j] >= 10) {
 							printf("%u", Sf_permutations[0][i][j]);
 						} else {
 							printf("  ");
@@ -347,87 +372,138 @@ void show_field (unsigned int number_of_players, unsigned int invisible, unsigne
 
 					}
 
-					if (i<10){
-						printf(" %u ", i);
-					} else {
-						printf(" %u", i);
-					}
-
-				//if () {	//only if no field is following
-					printf("\n");
-				//}
-
+					section_counter = square_containing_ending;
+					Nummerierung_show_field (field_show_counter, section_counter, n, i);
 				}
+				
+				neue_Zeilen (1);
 			}
 		}
-
-		printf("     +");
-		for (unsigned int t=1; t<=n-2; t+=1){		//Endzeile
-			printf("--+");
+		
+		field_show_counter = 1;
+		section_counter = frame_lines;
+		Nummerierung_show_field (field_show_counter, section_counter, n, 0);
+		
+		if (sfc->Partition_o.characterization != 0) {
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
-		printf("   ");	//üc bosluk
-
-		if (Allocation_o.characterization != 0) {
-			printf("	");	//one tab(s)
-			printf("     +");
-			for (unsigned int t=1; t<=n-2; t+=1){
-				printf("--+");
-			}
-			printf("   ");	//üc bosluk
+		// if (sfc->Partition_o.characterization != 0) {	//test
+			// Nummerierung_show_field (field_show_counter, section_counter, n, 0);
+		// }
+		if (sfc->Allocation_o.characterization != 0) {
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
-
 		if (Sf_permutations[0][1][1] != 0) {
-			printf("	");	//one tab(s)
-			printf("     +");
-			for (unsigned int t=1; t<=n-2; t+=1){
-				printf("--+");
-			}
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
 
-		printf("\n");
-		printf("      ");
-		for (unsigned int q=1; q<=n-2; q+=1){		//Nummerierung
-			if (q<10){
-				printf("%u  ", q);
-			} else {
-				printf("%u ", q);
-			}
+		neue_Zeilen (1);
+		field_show_counter = 1;
+		section_counter = number_edge_line;
+		
+		Nummerierung_show_field (field_show_counter, section_counter, n, 0);
+		
+		if (sfc->Partition_o.characterization != 0) {
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
-		printf("   ");	//üc bosluk
-
-		if (Allocation_o.characterization != 0) {
-			printf("		");	//two tab(s)
-			printf("    ");	//dört bosluk
-			for (unsigned int q=1; q<=n-2; q+=1){		//Nummerierung
-				if (q<10){
-				printf("%u  ", q);
-				} else {
-				printf("%u ", q);
-				}
-			}
-			printf("   ");	//üc bosluk
+		// if (sfc->Partition_o.characterization != 0) {	//test
+			// Nummerierung_show_field (field_show_counter, section_counter, n, 0);
+		// }
+		if (sfc->Allocation_o.characterization != 0) {
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
-
 		if (Sf_permutations[0][1][1] != 0) {
-			printf("		");	//two tab(s)
-			printf("    ");	//dört bosluk
-			for (unsigned int q=1; q<=n-2; q+=1){		//Nummerierung
-				if (q<10){
-					printf("%u  ", q);
-				} else {
-					printf("%u ", q);
-				}
-			}
+			field_show_counter += 1;
+			Nummerierung_show_field (field_show_counter, section_counter, n, 0);
 		}
 
-		printf("\n");
-		printf("\n");
+		neue_Zeilen (2);
 
 		#ifdef VERBOSE
 		printf("\n");	//test
 		printf("	information_code: [0]=%u,	[1]=%u,	[2]=%u,	[3]=%u,	\n", information_code[0], information_code[1], information_code[2], information_code[3]);
 		printf("\n");
 		#endif
+	}
+}
+
+void Nummerierung_show_field (unsigned int field_show_counter, unsigned int section_counter, unsigned int n, unsigned int i) {	//contains design
+	
+	unsigned int minimum_left_edge_start_distance, field_tab_distance;
+	
+	minimum_left_edge_start_distance = 2;
+	field_tab_distance = 1;
+	
+	if (section_counter == number_edge_line) {
+		if (field_show_counter == 1) {
+			neue_Leerzeichen (minimum_left_edge_start_distance);
+			neue_Leerzeichen (4);
+			
+			for (unsigned int p=1; p<=n-2; p+=1){
+				if (p%7 == 0) {
+					set_terminal_color (cBROWN);
+				}
+				if (p<10){
+					printf("%u  ", p);
+				} else {
+					printf("%u ", p);
+				}
+				set_terminal_color (cNORMAL);
+			}
+			
+			neue_Leerzeichen (4);
+		} else {	//following fields
+			neue_Tabs (field_tab_distance);
+			neue_Leerzeichen (4);
+			
+			for (unsigned int p=1; p<=n-2; p+=1){
+				if (p<10){
+					printf("%u  ", p);
+				} else {
+					printf("%u ", p);
+				}
+			}
+			
+			neue_Leerzeichen (4);
+		}
+		
+	} else if (section_counter == frame_lines) {
+		if (field_show_counter == 1) {
+			neue_Leerzeichen (minimum_left_edge_start_distance);
+		} else {	//following fields
+			neue_Tabs (field_tab_distance);
+		}
+		neue_Leerzeichen (3);
+		printf("+");	//the first +.
+		for (unsigned int t=1; t<=n-2; t+=1){
+			printf("--+");
+		}
+		neue_Leerzeichen (3);
+		
+	} else if (section_counter == square_containing_beginning) {
+		if (field_show_counter == 1) {
+			neue_Leerzeichen (minimum_left_edge_start_distance);
+		} else {	//following fields
+			neue_Tabs (field_tab_distance);
+		}
+		if (i<10){
+			printf(" %u |", i);
+		} else {
+			printf("%u |", i);
+		}
+		
+	} else if (section_counter == square_containing_ending) {
+		if (i<10){		//toplumda üc
+			printf(" %u ", i);
+		} else {
+			printf(" %u", i);
+		}
+		
 	}
 }
 
