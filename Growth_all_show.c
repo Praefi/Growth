@@ -436,7 +436,7 @@ void Nummerierung_show_field (unsigned int field_show_counter, unsigned int sect
 	
 	unsigned int minimum_left_edge_start_distance, field_tab_distance;
 	
-	minimum_left_edge_start_distance = 2;
+	minimum_left_edge_start_distance = 6;
 	field_tab_distance = 1;
 	
 	if (section_counter == number_edge_line) {
@@ -701,7 +701,7 @@ void show_the_numbers (unsigned int gamemode_played, unsigned int w, unsigned in
 		printf("	%u-min: A square of yours will survive even by only %u of your squares surrounding it.\n", d-1, d-1);
 	}
 
-	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Sand)) {	//mehr-gamemode_played
+	if ((gamemode_played == Classic)||(gamemode_played == Collect)||(gamemode_played == Fall)||(gamemode_played == Fight)||(gamemode_played == Race)||(gamemode_played == Arena)||(gamemode_played == Ulcer)||(gamemode_played == Sand)||(gamemode_played == Duell)) {	//mehr-gamemode_played
 		printf("	Change: A square of yours and a near-by square of your enemy will change positions.\n");
 		printf("	Destroy: Delete a near-by square of your enemy.\n");
 		printf("	Boost: Use all near-by squares of your enemy as your own for the development according to dead squares.\n");
