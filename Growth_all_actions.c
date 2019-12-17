@@ -134,7 +134,7 @@ void Minus (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, unsi
 			printf("	you made a mistake, try again: \n");
 			
 			Opague_show_controll (level, Field, Opague_o, m, n, geben, AOP, sfc, number_of_players, gamemode_played, single_option_representives.invisible, Sf_permutations, information_code, Growth_players);
-				
+			
 			Minus (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, sfc, number_of_players, single_option_representives);
 		} else if (Field[0][Zeile][Spalte] != geben){
 			printf("	you made a mistake, try again: \n");
@@ -1410,7 +1410,7 @@ void Destroy (unsigned int* level, Spielfeld Sf_permutations, unsigned int m, un
 				} else if ((gamemode_played == Hunt)&&(Field[0][fremde_Zeile][fremde_Spalte] != geben_destroy)){
 					printf("	you made a mistake, try again: \n");
 					Destroy (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, sfc, number_of_players, single_option_representives);
-				} else if (((gamemode_played == Classic)||(gamemode_played == Contact)||(gamemode_played == Fight)||(gamemode_played == Sand)||(gamemode_played == Survive)||(gamemode_played == Arena))&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben))){
+				} else if (((gamemode_played == Classic)||(gamemode_played == Contact)||(gamemode_played == Fight)||(gamemode_played == Sand)||(gamemode_played == Survive)||(gamemode_played == Arena)||(gamemode_played == Duell))&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben))){
 					printf("	you made a mistake, try again: \n");
 					Destroy (level, Sf_permutations, m, n, geben, Field, gamemode_played, information_code, Growth_players, Opague_o, sfc, number_of_players, single_option_representives);
 				} else if ((gamemode_played == Collect)&&((Field[0][fremde_Zeile][fremde_Spalte] == 0)||(Field[0][fremde_Zeile][fremde_Spalte] == geben)||(Field[0][fremde_Zeile][fremde_Spalte] == To_collect))){
@@ -1549,3 +1549,4 @@ void Boost (Spielfeld Spiel, unsigned int geben, Spielfeld Field, unsigned int m
 	}
 
 }
+
