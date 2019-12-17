@@ -15,6 +15,7 @@
 
 
 #include "Growth_all_Def.h"
+#include "Growth_all_Vektor.h"
 #include "Growth_all_set.h"
 #include "Growth_all_show.h"
 #include "Growth_all_Initialisierung.h"
@@ -173,6 +174,137 @@ void Initialisierung_Arrays_2 (unsigned int AOP, unsigned int* pere, unsigned in
 	}
 	ulcer_start[1] = existing;
 	// printf("ulcer_start[1] = %u \n", ulcer_start[1]);	//test
+}
+
+void Duell_specials_Initialisation (Duell_Specials* Duell_specials, unsigned int number_of_players) {
+	
+	Duell_specials->number_of_abilities = 0;
+	Duell_specials->list_of_taken_abilities = Spielfeld_Create (Duell_specials->number_of_abilities, 9, number_of_players+1);
+	Duell_specials->list_of_all_abilities = unsigned_int_2dim_Vektor_Create (reloader+1, lowest_value+1);
+	
+}
+
+void Initialisierung_Duell_abilities (unsigned int** list_of_all_abilities) {
+	
+	list_of_all_abilities[small_explosion][effected_squares] = gc_selectable;
+	list_of_all_abilities[small_explosion][reload_time] = gc_selectable;
+	list_of_all_abilities[small_explosion][duration] = 0;
+	list_of_all_abilities[small_explosion][reach] = near_by;
+	list_of_all_abilities[small_explosion][delay] = gc_selectable;
+	list_of_all_abilities[small_explosion][beginning_value] = 0;
+	list_of_all_abilities[small_explosion][lowest_value] = 0;
+	
+	list_of_all_abilities[big_explosion][effected_squares] = gc_selectable;
+	list_of_all_abilities[big_explosion][reload_time] = gc_selectable;
+	list_of_all_abilities[big_explosion][duration] = 0;
+	list_of_all_abilities[big_explosion][reach] = surrounding;
+	list_of_all_abilities[big_explosion][delay] = gc_selectable;
+	list_of_all_abilities[big_explosion][beginning_value] = 0;
+	list_of_all_abilities[big_explosion][lowest_value] = 0;
+	
+	list_of_all_abilities[translation][effected_squares] = gc_one;
+	list_of_all_abilities[translation][reload_time] = gc_selectable;
+	list_of_all_abilities[translation][duration] = 0;
+	list_of_all_abilities[translation][reach] = gc_selectable;
+	list_of_all_abilities[translation][delay] = 0;
+	list_of_all_abilities[translation][beginning_value] = 0;
+	list_of_all_abilities[translation][lowest_value] = 0;
+	
+	list_of_all_abilities[loosing_five][effected_squares] = gc_own;
+	list_of_all_abilities[loosing_five][reload_time] = gc_selectable;
+	list_of_all_abilities[loosing_five][duration] = gc_selectable;
+	list_of_all_abilities[loosing_five][reach] = 0;
+	list_of_all_abilities[loosing_five][delay] = 0;
+	list_of_all_abilities[loosing_five][beginning_value] = 0;
+	list_of_all_abilities[loosing_five][lowest_value] = 0;
+	
+	list_of_all_abilities[loosing_zero][effected_squares] = gc_other;
+	list_of_all_abilities[loosing_zero][reload_time] = gc_selectable;
+	list_of_all_abilities[loosing_zero][duration] = gc_selectable;
+	list_of_all_abilities[loosing_zero][reach] = 0;
+	list_of_all_abilities[loosing_zero][delay] = 0;
+	list_of_all_abilities[loosing_zero][beginning_value] = 0;
+	list_of_all_abilities[loosing_zero][lowest_value] = 0;
+	
+	list_of_all_abilities[sacrifice][effected_squares] = gc_selectable;
+	list_of_all_abilities[sacrifice][reload_time] = 0;
+	list_of_all_abilities[sacrifice][duration] = 0;
+	list_of_all_abilities[sacrifice][reach] = 0;
+	list_of_all_abilities[sacrifice][delay] = 0;
+	list_of_all_abilities[sacrifice][beginning_value] = 0;
+	list_of_all_abilities[sacrifice][lowest_value] = 0;
+	
+	list_of_all_abilities[switch_squares][effected_squares] = gc_all;
+	list_of_all_abilities[switch_squares][reload_time] = 0;
+	list_of_all_abilities[switch_squares][duration] = 0;
+	list_of_all_abilities[switch_squares][reach] = 0;
+	list_of_all_abilities[switch_squares][delay] = 0;
+	list_of_all_abilities[switch_squares][beginning_value] = 30;
+	list_of_all_abilities[switch_squares][lowest_value] = 10;
+	
+	list_of_all_abilities[invictable][effected_squares] = gc_selectable;
+	list_of_all_abilities[invictable][reload_time] = gc_selectable;
+	list_of_all_abilities[invictable][duration] = gc_selectable;
+	list_of_all_abilities[invictable][reach] = 0;
+	list_of_all_abilities[invictable][delay] = 0;
+	list_of_all_abilities[invictable][beginning_value] = 0;
+	list_of_all_abilities[invictable][lowest_value] = 0;
+	
+	list_of_all_abilities[gravity][effected_squares] = gc_all;
+	list_of_all_abilities[gravity][reload_time] = 10;
+	list_of_all_abilities[gravity][duration] = 0;
+	list_of_all_abilities[gravity][reach] = 0;
+	list_of_all_abilities[gravity][delay] = 0;
+	list_of_all_abilities[gravity][beginning_value] = 0;
+	list_of_all_abilities[gravity][lowest_value] = 0;
+	
+	list_of_all_abilities[invertation][effected_squares] = gc_own;
+	list_of_all_abilities[invertation][reload_time] = 5;
+	list_of_all_abilities[invertation][duration] = 0;
+	list_of_all_abilities[invertation][reach] = 0;
+	list_of_all_abilities[invertation][delay] = 0;
+	list_of_all_abilities[invertation][beginning_value] = 0;
+	list_of_all_abilities[invertation][lowest_value] = 0;
+	
+	list_of_all_abilities[disappearing_touches][effected_squares] = gc_all;
+	list_of_all_abilities[disappearing_touches][reload_time] = 5;
+	list_of_all_abilities[disappearing_touches][duration] = 0;
+	list_of_all_abilities[disappearing_touches][reach] = 0;
+	list_of_all_abilities[disappearing_touches][delay] = 0;
+	list_of_all_abilities[disappearing_touches][beginning_value] = 0;
+	list_of_all_abilities[disappearing_touches][lowest_value] = 0;
+	
+	list_of_all_abilities[pull][effected_squares] = gc_other;
+	list_of_all_abilities[pull][reload_time] = 10;
+	list_of_all_abilities[pull][duration] = 0;
+	list_of_all_abilities[pull][reach] = 0;
+	list_of_all_abilities[pull][delay] = 0;
+	list_of_all_abilities[pull][beginning_value] = 0;
+	list_of_all_abilities[pull][lowest_value] = 0;
+	
+	list_of_all_abilities[keeping_half_of_it][effected_squares] = gc_all;
+	list_of_all_abilities[keeping_half_of_it][reload_time] = 10;
+	list_of_all_abilities[keeping_half_of_it][duration] = 0;
+	list_of_all_abilities[keeping_half_of_it][reach] = 0;
+	list_of_all_abilities[keeping_half_of_it][delay] = 0;
+	list_of_all_abilities[keeping_half_of_it][beginning_value] = 0;
+	list_of_all_abilities[keeping_half_of_it][lowest_value] = 0;
+	
+	list_of_all_abilities[massive_block][effected_squares] = gc_own;
+	list_of_all_abilities[massive_block][reload_time] = 20;
+	list_of_all_abilities[massive_block][duration] = 0;
+	list_of_all_abilities[massive_block][reach] = 0;
+	list_of_all_abilities[massive_block][delay] = 0;
+	list_of_all_abilities[massive_block][beginning_value] = 0;
+	list_of_all_abilities[massive_block][lowest_value] = 0;
+	
+	list_of_all_abilities[reloader][effected_squares] = 0;
+	list_of_all_abilities[reloader][reload_time] = 15;
+	list_of_all_abilities[reloader][duration] = 0;
+	list_of_all_abilities[reloader][reach] = 0;
+	list_of_all_abilities[reloader][delay] = 0;
+	list_of_all_abilities[reloader][beginning_value] = 0;
+	list_of_all_abilities[reloader][lowest_value] = 0;
 }
 
 void start_normal (Spielfeld Field, unsigned int m, unsigned int n, unsigned int gamemode_played, unsigned int number_of_players, unsigned int geben, Spielfeld Opague_o_field, Special_Fields_Collector* sfc, unsigned int single_option_representives_inverted){	//checklist
