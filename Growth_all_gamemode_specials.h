@@ -77,4 +77,15 @@ void Initialisierung_Qoa (Quidditch_object_abilities*);
 void Initialisierung_Qta (Quidditch_team_abilities*);
 void Initialisierung_Moc (Moveable_objects_condition*, Moveable_objects_condition*, Moveable_objects_condition*, unsigned int, unsigned int);
 
+
+
+void Duell_ability_choice (Growth_Player*, unsigned int, Duell_Specials*);
+void choose_the_Duell_ability_grade (Duell_Specials*, unsigned int, unsigned int, Growth_Player*);
+
+void Duell_ability_number_converter (unsigned int);
+void Duell_ability_number_condition_converter (unsigned int);
+
+void show_Duell_ability_list (Duell_Specials*);
+void Duell_ability_attribute_interpretation (unsigned int);
+
 #endif
