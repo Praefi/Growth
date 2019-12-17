@@ -188,11 +188,70 @@ enum ulcer_start_values {	//ulcer
 	existing = 1,
 };
 
+enum surroundings {
+	near_by = 0,
+	surrounding = 1,
+};
+
 enum Houses_of_Hogwarts {	//Quidditch, 1&2 are default
 	HGryffindor = 3,
 	HHufflepuff = 4,
 	HRavenclaw = 5,
 	HSlytherin = 6,
+};
+
+enum ability_list {	//Duell
+	effected_squares = 0,	//always the first argument!
+	
+	reload_time = 1,
+	duration = 2,
+	reach = 3,
+	delay = 4,
+	
+	beginning_value = 5,	//always the two last arguments!
+	lowest_value = 6,
+};
+
+enum grade_conditions {	//Duell
+	gc_all = 1111,	//always the first
+	
+	gc_one = 2222,
+	gc_own = 3333,
+	gc_other = 4444,
+	gc_selectable = 5555,
+};
+
+enum taken_abilities {	//Duell
+	ability_id = 0,
+	i_grade = 1,
+	j_grade = 2,
+	k_grade = 3,
+	reload_situation = 4,
+	previous_reload_situation = 5,
+	reload_info = 6,
+	previous_reload_info = 7,
+	still_active = 8,
+	played_in_round = 9,
+};
+
+enum names_of_abilities {	//Duell
+	small_explosion = 0,	//always the first argument!
+	
+	big_explosion = 1,
+	translation = 2,
+	loosing_five = 3,
+	loosing_zero = 4,
+	sacrifice = 5,
+	switch_squares = 6,
+	invictable = 7,
+	gravity = 8,
+	invertation = 9,
+	disappearing_touches = 10,
+	pull = 11,
+	keeping_half_of_it = 12,
+	massive_block = 13,
+	
+	reloader = 14,	//reloader always the last!
 };
 
 // NOT-TODO Zahlen hinter enums sind uennoetig, nein, sind sie nicht, weil sonst ungewollte Überschneidungen auftreten
@@ -291,6 +350,12 @@ typedef struct player_t {	//player
 	unsigned int id;
 	Color color;
 } Growth_Player;
+
+typedef struct Duell_Specials_t {	//player
+	unsigned int number_of_abilities;	//0<number_of_abilities<10
+	Spielfeld list_of_taken_abilities;
+	unsigned int** list_of_all_abilities;
+} Duell_Specials;
 
 typedef struct Quidditch_team_abilities_t {	//Qta
 	unsigned int Jaeger_fly_distance;		//normal: 5
