@@ -637,7 +637,9 @@ void old_dying (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n
 						}
 					}
 				}
-
+				
+				// printf("	a=%u	w=%u	d=%u	e=%u	\n", a, w, d, e);	//test
+				
 				if ((gamemode_played != Arena)&&(gamemode_played != Ulcer)) {
 					if ((a < d+1) || (a > e+1)){		//d=2, d=1, e=3, e=4, +1 wegen des Steines selbst, da er mitgezählt wird
 						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, temp_old_dying, 0, i, j, 101*geben);		//Code für das Eleminieren
@@ -845,25 +847,26 @@ void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Sp
 	#ifdef VERBOSE
 	printf("change ok.1 \n"); //test
 	#endif
-	
-	for (unsigned int i=1; i<=m-2; i++) {
-		for (unsigned int j=1; j<=n-2; j++) {
-			if ((Spiel[0][i][j] >= Roses_0)&&(Spiel[0][i][j] <= Roses_6)) {
-				for (unsigned int h=0; h<=2; h++) {
-					for (unsigned int k=0; k<=2; k++) {
-						if (Spiel[0][i-1+h][j-1+k] == geben) {
-							b += 1;
+	if (Roses_o.characterization != 0) {
+		for (unsigned int i=1; i<=m-2; i++) {
+			for (unsigned int j=1; j<=n-2; j++) {
+				if ((Spiel[0][i][j] >= Roses_0)&&(Spiel[0][i][j] <= Roses_6)) {
+					for (unsigned int h=0; h<=2; h++) {
+						for (unsigned int k=0; k<=2; k++) {
+							if (Spiel[0][i-1+h][j-1+k] == geben) {
+								b += 1;
+							}
 						}
 					}
+					if (b == Spiel[0][i][j]-Roses_0) {	//Look at the Definition of Roses_0 until Roses_6
+						set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Spiel, 0, i, j, 0);
+					}
+					b = 0;
 				}
-				if (b == Spiel[0][i][j]-Roses_0) {	//Look at the Definition of Roses_0 until Roses_6
-					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Spiel, 0, i, j, 0);
-				}
-				b = 0;
 			}
 		}
+		b = 0;
 	}
-	b = 0;
 	
 	for (unsigned int i=1; i<m-1; i+=1){
 		for (unsigned int j=1; j<n-1; j+=1){
@@ -932,7 +935,7 @@ void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Sp
 
 					a = 0;
 				}
-			} else if (Spiel[0][i][j] == 0){
+			} else if ((Spiel[0][i][j] == 0)||((gamemode_played == Duell)&&(evolution.nl[geben][i][j] == geben))){
 				if (evolution.nl[geben][i][j] == geben){
 					set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Spiel, 0, i, j, geben);
 				}
@@ -959,7 +962,7 @@ void change (Spielfeld Spiel, unsigned int* level, Spielfeld Sf_permutations, Sp
 		for (unsigned int j=1; j<n-1; j+=1){
 			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, evolution.od, geben, i, j, 0);
 			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, evolution.nl, geben, i, j, 0);
-			// set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, sfc->Allocation_o.field, 1, i, j, 0);	//KI testing... warning	//Ausnahme für += Realisierung im 0-Fall
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, sfc->Allocation_o.field, 1, i, j, 0);
 		}
 	}
 
@@ -1126,7 +1129,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 			}
 		}
 		if (ind == 1) {
-			if ((gamemode_played == Dynamic)||(gamemode_played == Fight)||(gamemode_played == Classic)) {
+			if ((gamemode_played == Dynamic)||(gamemode_played == Fall)||(gamemode_played == Classic)) {
 				ober = 80;
 			} else if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Contact)) {
 				ober = 90;
@@ -1134,7 +1137,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 				ober = 87;
 			} else if (gamemode_played == Race) {
 				ober = 85+(n-4);
-			} else if (gamemode_played == Fight) {
+			} else if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
 				ober = 105;
 			} else if (gamemode_played == Collect) {
 				ober = 85;
@@ -1144,7 +1147,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 
 		} else if (ind == 2) {
 			if ((gamemode_played == Dynamic)||(gamemode_played == Hunt)||(gamemode_played == Contact)) {
-				ober = m+n;
+				ober = m+n+20;
 			} else if ((gamemode_played == Arena)) {
 				ober = 10;
 			} else if ((gamemode_played == Sand)) {
@@ -1196,7 +1199,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 									}
 								}
 							}
-							if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Collect)||(gamemode_played == Sand)||(gamemode_played == Contact)||(gamemode_played == Classic)||(gamemode_played == Quidditch)) {
+							if ((gamemode_played == Arena)||(gamemode_played == Hunt)||(gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Collect)||(gamemode_played == Sand)||(gamemode_played == Contact)||(gamemode_played == Classic)||(gamemode_played == Quidditch)||(gamemode_played == Duell)) {
 								for (unsigned int h=i-1; h<=i+1; h+=1){		//Stört feindliche Wachstumsmöglichkeiten?
 									for (unsigned int k=j-1; k<=j+1; k+=1){
 										if ((h>0)&&(h<(m-1))&&(k>0)&&(k<(n-1))){
@@ -1208,7 +1211,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 								}
 								if (a != 3){
 									Having_too_much_Wert += 10;
-									if (gamemode_played == Fight) {
+									if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
 										Having_too_much_Wert += 10;	//erneut +10
 									}
 								}
@@ -1293,7 +1296,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 							}
 							b = 0;
 
-							if ((gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Fall)||(gamemode_played == Collect)) {
+							if ((gamemode_played == Rain)||(gamemode_played == Race)||(gamemode_played == Fight)||(gamemode_played == Fall)||(gamemode_played == Collect||(gamemode_played == Duell))) {
 								if (keep == 1) {
 									Having_too_much_Wert += (6-i);	//stack_overflow? not causing troubles
 								} else if (keep == 2) {
@@ -1307,7 +1310,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 								}
 							} else if (gamemode_played == Hunt) {
 								if ((i+1 != heart_i)&&(i-1 != heart_i)&&(j-1 != heart_j)&&(j+1 != heart_j)){
-									Having_too_much_Wert += 10;
+									Having_too_much_Wert += 20;
 								}
 							} else if (gamemode_played == Rain) {
 
@@ -1337,7 +1340,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 								}
 
 							} else if (gamemode_played == Fight) {
-								if ((Field[0][i+1][j] <= number_of_players)&&(Field[0][i][j+1] <= number_of_players)&&(Field[0][i][j-1] <= number_of_players)&&(Field[0][i-1][j] <= number_of_players)&&(Field[0][i+1][j] != geben)&&(Field[0][i][j+1] != geben)&&(Field[0][i][j-1] != geben)&&(Field[0][i-1][j] != geben)) {
+								if (((Field[0][i+1][j] > number_of_players)||(Field[0][i+1][j] == geben)||(Field[0][i+1][j] == 0))&&((Field[0][i][j+1] > number_of_players)||(Field[0][i][j+1] == geben)||(Field[0][i+1][j] == 0))&&((Field[0][i][j-1] > number_of_players)||(Field[0][i][j-1] == geben)||(Field[0][i+1][j] == 0))&&((Field[0][i-1][j] > number_of_players)||(Field[0][i-1][j] == geben)||(Field[0][i+1][j] == 0))) {
 									Having_too_much_Wert += 10;
 								}
 							} else if (gamemode_played == Fall) {
@@ -1498,7 +1501,7 @@ void Having_too_much (unsigned int* KI_decision, unsigned int ent, unsigned int 
 									ober = 87;
 								} else if (gamemode_played == Race) {
 									ober = 85+(n-4);
-								} else if (gamemode_played == Fight) {
+								} else if ((gamemode_played == Fight)||(gamemode_played == Duell)) {
 									ober = 105;
 								} else if (gamemode_played == Collect) {
 									ober = 85;
