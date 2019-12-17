@@ -2539,7 +2539,7 @@ void Move_of_a_Quidditch_player (Spielfeld Field, unsigned int geben, Spielfeld 
 			short_cut = hayir;
 			
 			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, Zeile_alt, Spalte_alt, geben);	//Changing of the positions
-			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, Zeile_neu, Spalte_neu, Team_member);	//the order is important for Sweet Escape!
+			set_Spielfeld_Eintrag (Field, geben, Opague_o_field, gamemode_played, sfc, number_of_players, Field, 0, Zeile_neu, Spalte_neu, Team_member);	//the order is important for Sweet escape!
 			
 			direction_indicator = 0;
 			while ((Zeile_alt + direction_indicator*unutma_i-direction_indicator != Zeile_neu)||(Spalte_alt + direction_indicator*unutma_j-direction_indicator != Spalte_neu)) {	//"||(direction_indicator <= fly_distance)" deleted, Schnatz/Quaffel-Regelungen beim Durchqueren/Mitnehmen.
@@ -3122,4 +3122,181 @@ void Initialisierung_Moc (Moveable_objects_condition* Moc_Quaffel, Moveable_obje
 	Moc_Klatscher[1].j = (n-1)/2;
 	
 }
+
+
+
+
+void Duell_ability_choice (Growth_Player* Growth_players, unsigned int number_of_players, Duell_Specials* Duell_specials) {
+	for (unsigned int p=1; p<=number_of_players; p++) {
+		show_Duell_ability_list (Duell_specials);
+		
+		set_terminal_color (Growth_players[p].color);
+		printf("	Player %u", p);
+		set_terminal_color (cNORMAL);
+		printf(", choose your abilities:\n\n");
+		
+		for (unsigned int q=1; q<=Duell_specials->number_of_abilities; q++) {
+			printf("	Which ability should be your %u. out of %u? \n", q, Duell_specials->number_of_abilities);
+			
+			Duell_specials->list_of_taken_abilities[p][q][0] = reloader+1;
+			while (Duell_specials->list_of_taken_abilities[p][q][0] > reloader) {
+				Duell_specials->list_of_taken_abilities[p][q][0] = get_unsigned_numeric_input_with_not_more_than_2_letters();
+			}
+			
+			choose_the_Duell_ability_grade (Duell_specials, p, q, Growth_players);
+		}
+	}
+}
+
+void choose_the_Duell_ability_grade (Duell_Specials* Duell_specials, unsigned int p, unsigned int q, Growth_Player* Growth_players) {
+	if ((Duell_specials->list_of_taken_abilities[p][q][0] == small_explosion)||(Duell_specials->list_of_taken_abilities[p][q][0] == big_explosion)) {
+		set_terminal_color (Growth_players[p].color);
+		printf("	Player %u", p);
+		set_terminal_color (cNORMAL);
+		printf(", choose your i-Grade:		(managing the number of effected squares, delay, reload-time)\n\n");
+		
+		Duell_specials->list_of_taken_abilities[p][q][1] = 0;
+		while ((Duell_specials->list_of_taken_abilities[p][q][1] == 0)||(Duell_specials->list_of_taken_abilities[p][q][1] > 9)) {
+			Duell_specials->list_of_taken_abilities[p][q][1] = get_unsigned_numeric_input_with_not_more_than_1_letter();
+		}
+		neue_Zeilen (2);
+		
+	} else if ((Duell_specials->list_of_taken_abilities[p][q][0] == loosing_five)||(Duell_specials->list_of_taken_abilities[p][q][0] == loosing_zero)) {
+		set_terminal_color (Growth_players[p].color);
+		printf("	Player %u", p);
+		set_terminal_color (cNORMAL);
+		printf(", choose your i-Grade:		(managing the duration, reload-time)\n\n");
+		
+		Duell_specials->list_of_taken_abilities[p][q][1] = 0;
+		while ((Duell_specials->list_of_taken_abilities[p][q][1] == 0)||(Duell_specials->list_of_taken_abilities[p][q][1] > 9)) {
+			Duell_specials->list_of_taken_abilities[p][q][1] = get_unsigned_numeric_input_with_not_more_than_1_letter();
+		}
+		neue_Zeilen (2);
+		
+	} else if (Duell_specials->list_of_taken_abilities[p][q][0] == translation) {
+		set_terminal_color (Growth_players[p].color);
+		printf("	Player %u", p);
+		set_terminal_color (cNORMAL);
+		printf(", choose your i-Grade:		(managing the reach, reload-time)\n\n");
+		
+		Duell_specials->list_of_taken_abilities[p][q][1] = 0;
+		while ((Duell_specials->list_of_taken_abilities[p][q][1] == 0)||(Duell_specials->list_of_taken_abilities[p][q][1] > 9)) {
+			Duell_specials->list_of_taken_abilities[p][q][1] = get_unsigned_numeric_input_with_not_more_than_1_letter();
+		}
+		neue_Zeilen (2);
+		
+	} else if (Duell_specials->list_of_taken_abilities[p][q][0] == invictable) {
+		set_terminal_color (Growth_players[p].color);
+		printf("	Player %u", p);
+		set_terminal_color (cNORMAL);
+		printf(", choose your i-Grade:		(managing the number of effected squares, reload-time)\n\n");
+		
+		Duell_specials->list_of_taken_abilities[p][q][1] = 0;
+		while ((Duell_specials->list_of_taken_abilities[p][q][1] == 0)||(Duell_specials->list_of_taken_abilities[p][q][1] > 9)) {
+			Duell_specials->list_of_taken_abilities[p][q][1] = get_unsigned_numeric_input_with_not_more_than_1_letter();
+		}
+		neue_Zeilen (2);
+		
+		set_terminal_color (Growth_players[p].color);
+		printf("	Player %u", p);
+		set_terminal_color (cNORMAL);
+		printf(", choose your j-Grade:		(managing the duration, reload-time)\n\n");
+		
+		Duell_specials->list_of_taken_abilities[p][q][2] = 0;
+		while ((Duell_specials->list_of_taken_abilities[p][q][2] == 0)||(Duell_specials->list_of_taken_abilities[p][q][2] > 9)) {
+			Duell_specials->list_of_taken_abilities[p][q][2] = get_unsigned_numeric_input_with_not_more_than_1_letter();
+		}
+		neue_Zeilen (2);
+		
+	}
+}
+	
+void Duell_ability_number_converter (unsigned int ability_id_number) {
+	if (ability_id_number == small_explosion) {
+		printf("small explosion");
+	} else if (ability_id_number == big_explosion) {
+		printf("big explosion");
+	} else if (ability_id_number == translation) {
+		printf("translation");
+	} else if (ability_id_number == loosing_five) {
+		printf("loosing five");
+	} else if (ability_id_number == loosing_zero) {
+		printf("loosing zero");
+	} else if (ability_id_number == sacrifice) {
+		printf("sacrifice");
+	} else if (ability_id_number == switch_squares) {
+		printf("switch squares");
+	} else if (ability_id_number == invictable) {
+		printf("invictable");
+	} else if (ability_id_number == gravity) {
+		printf("gravity");
+	} else if (ability_id_number == invertation) {
+		printf("invertation");
+	} else if (ability_id_number == disappearing_touches) {
+		printf("disappearing touches");
+	} else if (ability_id_number == pull) {
+		printf("pull");
+	} else if (ability_id_number == keeping_half_of_it) {
+		printf("keeping half of it");
+	} else if (ability_id_number == massive_block) {
+		printf("massive block");
+	} else if (ability_id_number == reloader) {
+		printf("reloader");
+	}
+}
+
+void Duell_ability_number_condition_converter (unsigned int ability_condition) {
+	if (ability_condition == effected_squares) {
+		printf("effected squares");
+	} else if (ability_condition == reload_time) {
+		printf("reload time");
+	} else if (ability_condition == duration) {
+		printf("duration");
+	} else if (ability_condition == reach) {
+		printf("reach");
+	} else if (ability_condition == delay) {
+		printf("delay");
+	} else if (ability_condition == beginning_value) {
+		printf("beginning value");
+	} else if (ability_condition == lowest_value) {
+		printf("lowest value");
+	}
+}
+	
+void show_Duell_ability_list (Duell_Specials* Duell_specials) {
+	for (unsigned int p=small_explosion; p<=reloader; p++) {
+		printf("	%u. ", p);
+		Duell_ability_number_converter (p);
+		printf(":	");
+		
+		for (unsigned int q=effected_squares; q<=lowest_value; q++) {
+			if (p != 1) {
+				printf(",	");
+			}
+			
+			Duell_ability_number_condition_converter (q);
+			printf(" = ");
+			Duell_ability_attribute_interpretation (Duell_specials->list_of_all_abilities[p][q]);
+		}
+		printf(".");
+		neue_Zeilen(2);
+	}
+}
+
+void Duell_ability_attribute_interpretation (unsigned int value) {
+	if (value == gc_all) {
+		printf("all squares");
+	} else if (value == gc_one) {
+		printf("one of the own squares");
+	} else if (value == gc_own) {
+		printf("all own squares");
+	} else if (value == gc_other) {
+		printf("all except the own squares");
+	} else if (value == gc_selectable) {
+		printf("depends on the grades");
+	} else {
+		printf("%u", value);
+	}
+}
+
 
