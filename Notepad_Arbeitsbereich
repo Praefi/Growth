@@ -38,4 +38,12 @@
             <File name="Growth_all_visual.c" />
         </Folder>
     </Project>
+    <Project name="NUMBER-THUNDER">
+        <Folder name="Sonstige Dateien">
+            <File name="C:\Users\Kjell\Desktop\GitHub\Number_thunder\NUMBER_THUNDER.mak" />
+        </Folder>
+        <Folder name="C-Dateien">
+            <File name="C:\Users\Kjell\Desktop\GitHub\Number_thunder\NUMBER_THUNDER.c" />
+        </Folder>
+    </Project>
 </NotepadPlus>
