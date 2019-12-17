@@ -150,8 +150,8 @@ void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned
 // Genimo_ve_flagrate (gamemode), go on
 // touching an object will let it evolve like one step of a wave, possible to destroy it accross. Reach the mid. Difficulty handle through number of objects in each quarter.
 
-// partition (option), go on
-// every square gets a (number%x)+1, if you get a new square, it gets the sum of the evolving squares mod x (+1). Touching a square of the enemy with a lower number than the number of your square, you will own the square of the enemy.
+// partition (option), done
+// every square gets a ((number-1)%x)+1, if you get a new square, it gets ((the sum of the evolving squares -1) mod x) +1. Touching a square of the enemy with a lower number than the number of your square, you will own the square of the enemy.
 
 // Supernova (gamemode), frozen
 // avoid the blackholes flying accross the field caused by gravity and pulling your squares and so on. Mass of square: 1. Mass of blackholes: 5. Fusion with blackhole(): Mass-Addition. timestep t = 1. Destroy on blackholes: reduce the mass with 1. Count all impacts and use it for new accelaration, add this value to the speed (t=1). After every round a timestep. Sort (binary) the speed according to length (sqrt(x*x+y*y)), most speed at first. Collosion: half of speed-difference plus and minus, after that next square with highest speed.
@@ -160,7 +160,7 @@ void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned
 // Search for gold, silver and copper on a Kubik, donating squares of yours to dig, played with Allocation.
 
 // Creatures (gamemode), go on
-// Be a vampire, werewolf, dwarf, goblin, human, troll, dragon, elf.
+// Be a vampire, werewolf, dwarf, goblin, human, troll, dragon, elf, fairy.
 
 // Circle (gamemode), go on
 // reach the mid as a team while the squares are moved in a circle, radial static points.
@@ -171,6 +171,10 @@ void synchronisation_Test_field (Spielfeld, unsigned int, unsigned int, unsigned
 // Duell (gamemode), go on
 // every player gets cards with abilities, development on enemies is not forbidden anymore.
 
-//Spielstände speichern, go on
+// envelope (option), go on
+// Set a distence of the surrounding, like 1 = normal 8, 2 = bigger 16, ... , i = 8*i for 0<i<max(m, n)
+
+// Spielstände speichern, go on
+
 
 #endif
