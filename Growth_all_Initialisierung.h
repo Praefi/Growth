@@ -34,7 +34,8 @@ void int_array_null_initialisierung (int*, unsigned int);
 void Initialisierung_Arrays_1 (unsigned int, unsigned int*, unsigned int*, unsigned int*);
 void Initialisierung_Arrays_2 (unsigned int, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*, unsigned int*);
 
-
+void Duell_specials_Initialisation (Duell_Specials*, unsigned int);
+void Initialisierung_Duell_abilities (unsigned int**);
 
 void start_normal (Spielfeld, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, Spielfeld, Special_Fields_Collector*, unsigned int);	//checklist
 
