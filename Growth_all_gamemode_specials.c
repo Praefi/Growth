@@ -996,7 +996,7 @@ void battle (Spielfeld Spiel, unsigned int m, unsigned int n, Spielfeld Field, u
 
 								// printf("battle ok.2.1 \n"); //test
 
-								chain_temp = Spielfeld_Create (m, n, 0);
+								chain_temp = Spielfeld_Create (m, n, 0);	//Bei mehreren Kontakten wird die Zusammenhangskomponente mehrmals gezählt
 
 								// printf("battle ok.2.0.5 \n"); //test
 
@@ -1111,7 +1111,7 @@ void chain_count (Spielfeld Spiel, unsigned int i, unsigned int j, Spielfeld Fie
 			}
 		}
 	}
-}
+}	//auf Breitensuche umstellen wegen des Rekursionsproblemes in C
 
 void touch (Spielfeld Spiel, Spielfeld Field, unsigned int m, unsigned int n, unsigned int geben, Spielfeld evolution_nl, Special_Fields_Collector* sfc, Spielfeld Opague_o_field, unsigned int number_of_players, unsigned int gamemode_played){
 	unsigned int value_found;
@@ -3126,7 +3126,7 @@ void Initialisierung_Moc (Moveable_objects_condition* Moc_Quaffel, Moveable_obje
 
 
 
-void Duell_ability_choice (Growth_Player* Growth_players, unsigned int number_of_players, Duell_Specials* Duell_specials) {
+void Duell_ability_choice (Growth_Player* Growth_players, unsigned int number_of_players, Duell_Specials* Duell_specials) {	//go on
 	for (unsigned int p=1; p<=number_of_players; p++) {
 		show_Duell_ability_list (Duell_specials);
 		
@@ -3135,8 +3135,8 @@ void Duell_ability_choice (Growth_Player* Growth_players, unsigned int number_of
 		set_terminal_color (cNORMAL);
 		printf(", choose your abilities:\n\n");
 		
-		for (unsigned int q=1; q<=Duell_specials->number_of_abilities; q++) {
-			printf("	Which ability should be your %u. out of %u? \n", q, Duell_specials->number_of_abilities);
+		for (unsigned int q=0; q<Duell_specials->number_of_abilities; q++) {
+			printf("	Which ability should be your %u. out of %u? \n", q+1, Duell_specials->number_of_abilities);
 			
 			Duell_specials->list_of_taken_abilities[p][q][0] = reloader+1;
 			while (Duell_specials->list_of_taken_abilities[p][q][0] > reloader) {
@@ -3151,7 +3151,7 @@ void Duell_ability_choice (Growth_Player* Growth_players, unsigned int number_of
 void choose_the_Duell_ability_grade (Duell_Specials* Duell_specials, unsigned int p, unsigned int q, Growth_Player* Growth_players) {
 	if ((Duell_specials->list_of_taken_abilities[p][q][0] == small_explosion)||(Duell_specials->list_of_taken_abilities[p][q][0] == big_explosion)) {
 		set_terminal_color (Growth_players[p].color);
-		printf("	Player %u", p);
+		printf("		Player %u", p);
 		set_terminal_color (cNORMAL);
 		printf(", choose your i-Grade:		(managing the number of effected squares, delay, reload-time)\n\n");
 		
@@ -3163,7 +3163,7 @@ void choose_the_Duell_ability_grade (Duell_Specials* Duell_specials, unsigned in
 		
 	} else if ((Duell_specials->list_of_taken_abilities[p][q][0] == loosing_five)||(Duell_specials->list_of_taken_abilities[p][q][0] == loosing_zero)) {
 		set_terminal_color (Growth_players[p].color);
-		printf("	Player %u", p);
+		printf("		Player %u", p);
 		set_terminal_color (cNORMAL);
 		printf(", choose your i-Grade:		(managing the duration, reload-time)\n\n");
 		
@@ -3175,7 +3175,7 @@ void choose_the_Duell_ability_grade (Duell_Specials* Duell_specials, unsigned in
 		
 	} else if (Duell_specials->list_of_taken_abilities[p][q][0] == translation) {
 		set_terminal_color (Growth_players[p].color);
-		printf("	Player %u", p);
+		printf("		Player %u", p);
 		set_terminal_color (cNORMAL);
 		printf(", choose your i-Grade:		(managing the reach, reload-time)\n\n");
 		
@@ -3185,9 +3185,21 @@ void choose_the_Duell_ability_grade (Duell_Specials* Duell_specials, unsigned in
 		}
 		neue_Zeilen (2);
 		
+	} else if (Duell_specials->list_of_taken_abilities[p][q][0] == sacrifice) {
+		set_terminal_color (Growth_players[p].color);
+		printf("		Player %u", p);
+		set_terminal_color (cNORMAL);
+		printf(", choose your i-Grade:		(managing the the number of effected squares)\n\n");
+		
+		Duell_specials->list_of_taken_abilities[p][q][1] = 0;
+		while ((Duell_specials->list_of_taken_abilities[p][q][1] == 0)||(Duell_specials->list_of_taken_abilities[p][q][1] > 9)) {
+			Duell_specials->list_of_taken_abilities[p][q][1] = get_unsigned_numeric_input_with_not_more_than_1_letter();
+		}
+		neue_Zeilen (2);
+		
 	} else if (Duell_specials->list_of_taken_abilities[p][q][0] == invictable) {
 		set_terminal_color (Growth_players[p].color);
-		printf("	Player %u", p);
+		printf("		Player %u", p);
 		set_terminal_color (cNORMAL);
 		printf(", choose your i-Grade:		(managing the number of effected squares, reload-time)\n\n");
 		
@@ -3198,7 +3210,7 @@ void choose_the_Duell_ability_grade (Duell_Specials* Duell_specials, unsigned in
 		neue_Zeilen (2);
 		
 		set_terminal_color (Growth_players[p].color);
-		printf("	Player %u", p);
+		printf("		Player %u", p);
 		set_terminal_color (cNORMAL);
 		printf(", choose your j-Grade:		(managing the duration, reload-time)\n\n");
 		
@@ -3264,13 +3276,14 @@ void Duell_ability_number_condition_converter (unsigned int ability_condition) {
 }
 	
 void show_Duell_ability_list (Duell_Specials* Duell_specials) {
+	neue_Zeilen(2);
 	for (unsigned int p=small_explosion; p<=reloader; p++) {
-		printf("	%u. ", p);
+		printf("%u. ", p);
 		Duell_ability_number_converter (p);
 		printf(":	");
 		
 		for (unsigned int q=effected_squares; q<=lowest_value; q++) {
-			if (p != 1) {
+			if (q != 0) {
 				printf(",	");
 			}
 			
@@ -3281,6 +3294,7 @@ void show_Duell_ability_list (Duell_Specials* Duell_specials) {
 		printf(".");
 		neue_Zeilen(2);
 	}
+	neue_Zeilen(2);
 }
 
 void Duell_ability_attribute_interpretation (unsigned int value) {
@@ -3294,6 +3308,10 @@ void Duell_ability_attribute_interpretation (unsigned int value) {
 		printf("all except the own squares");
 	} else if (value == gc_selectable) {
 		printf("depends on the grades");
+	} else if (value == near_by) {
+		printf("near-by");
+	} else if (value == surrounding) {
+		printf("surrounding");
 	} else {
 		printf("%u", value);
 	}

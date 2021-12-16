@@ -178,9 +178,24 @@ void Initialisierung_Arrays_2 (unsigned int AOP, unsigned int* pere, unsigned in
 
 void Duell_specials_Initialisation (Duell_Specials* Duell_specials, unsigned int number_of_players) {
 	
-	Duell_specials->number_of_abilities = 0;
-	Duell_specials->list_of_taken_abilities = Spielfeld_Create (Duell_specials->number_of_abilities, 9, number_of_players+1);
+	Duell_specials->list_of_taken_abilities = Spielfeld_Create (Duell_specials->number_of_abilities, played_in_round+1, number_of_players);
+	
+	for (unsigned int p=0; p<=number_of_players; p++) {
+		for (unsigned int i=0; i<Duell_specials->number_of_abilities; i++) {
+			for (unsigned int j=0; j<=played_in_round; j++) {
+				Duell_specials->list_of_taken_abilities[p][i][j] = 0;
+			}
+		}
+	}
+	
+	
 	Duell_specials->list_of_all_abilities = unsigned_int_2dim_Vektor_Create (reloader+1, lowest_value+1);
+	
+	for (unsigned int i=0; i<=reloader; i++) {
+		for (unsigned int j=0; j<=lowest_value; j++) {
+			Duell_specials->list_of_all_abilities[i][j] = 0;
+		}
+	}
 	
 }
 

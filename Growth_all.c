@@ -10,9 +10,10 @@
 #include <windows.h>
 #endif
 
-// #define VERBOSE
-// #define Contact_mistake_search
-// #define Quidditch_mistake_search
+#define VERBOSE
+#define Contact_mistake_search
+#define Quidditch_mistake_search
+#define Aufraeumphase_mistake_search
 
 #include "Growth_all_Def.h"
 #include "Growth_all_Vektor.h"
@@ -299,7 +300,7 @@ int main (void) {
 
 					// enum: gamemode_played[done], (traps, bombs, waves, done), in menu (about the game, limits, hints, numbers), beginningmenu done   //go on
 
-					printf("	%u. Tutorial\n	%u. Classic\n	%u. Collect\n	%u. Contact\n	%u. Fall\n	%u. Fight\n	%u. Hunt\n	%u. Race\n	%u. Rain\n	%u. Arena\n   	%u. Ulcer\n    	%u. Dynamic\n     	%u. Survive\n     	%u. Sand\n     	%u. Quidditch\n  \n", Tutorial, Classic, Collect, Contact, Fall, Fight, Hunt, Race, Rain, Arena, Ulcer, Dynamic, Survive, Sand, Quidditch);	//mehr-gamemode_played
+					printf("	%u. Tutorial\n	%u. Classic\n	%u. Collect\n	%u. Contact\n	%u. Fall\n	%u. Fight\n	%u. Hunt\n	%u. Race\n	%u. Rain\n	%u. Arena\n   	%u. Ulcer\n    	%u. Dynamic\n     	%u. Survive\n     	%u. Sand\n     	%u. Quidditch\n     	%u. Duell\n  \n", Tutorial, Classic, Collect, Contact, Fall, Fight, Hunt, Race, Rain, Arena, Ulcer, Dynamic, Survive, Sand, Quidditch, Duell);	//mehr-gamemode_played
 					gamemode_played = get_unsigned_numeric_input_with_not_more_than_2_letters ();
 					printf("\n");
 					//Players?
@@ -1950,7 +1951,7 @@ int main (void) {
 			// scanf("%u", &pause);	//test
 			// printf("	#line 2k, before same \n");	//test
 
-			//Startmenü, Ende
+			// Startmenü, Ende
 
 			same[0] = 0;
 			same[1] = m;
@@ -2085,12 +2086,15 @@ int main (void) {
 	}
 
 	unsigned_int_Vektor_Destroy (same);
-
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 1k, 23\n");	//test
-	// scanf("%u", &pause);	//test
+	
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 1k, 24\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
+	
 
 	return 0;
 }
@@ -2159,6 +2163,8 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 	Moveable_objects_condition* Moc_Klatscher;	//Quidditch balls
 	Moveable_objects_condition* Moc_Quaffel;
 	Moveable_objects_condition* Moc_Schnatz;
+	
+	// Duell_Specials* Duell_specials;	// not working yet, deactivated anywhere
 	
 	rmv = Realize_modifications_variables_Vektor_Create(1);
 	sfc = Special_Fields_Collector_Vektor_Create (1);
@@ -2616,33 +2622,38 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		}
 	}
 	
+	
 	if (gamemode_played == Duell) {
 		
 		// unsigned int number_of_abilities;	//0<number_of_abilities<10
 		// Spielfeld list_of_taken_abilities;
 		// unsigned int* list_of_all_abilities;
-	
-		Duell_Specials* Duell_specials;
 		
+		// Duell_specials->number_of_abilities = 0;
+		// while (Duell_specials->number_of_abilities == 0) {
+			// printf("	With how many abilities do you want to play? (0<x<10)\n");
+			// Duell_specials->number_of_abilities = get_unsigned_numeric_input_with_not_more_than_1_letter ();
+		// }
+		// printf("	Duell_specials:  number_of_abilities\n");	//test
 		
-		while (Duell_specials->number_of_abilities == 0) {
-			printf("	With how many abilities do you want to play? (0<x<10)\n");
-			Duell_specials->number_of_abilities = get_unsigned_numeric_input_with_not_more_than_1_letter ();
-		}
+		// Duell_specials_Initialisation (Duell_specials, number_of_players);
+		// printf("	Duell_specials:  Initialisierung\n");	//test
 		
-		Duell_specials_Initialisation (Duell_specials, number_of_players);
+		// Initialisierung_Duell_abilities (Duell_specials->list_of_all_abilities);
+		// printf("	Duell_specials:  Initialisierung abilities\n");	//test
 		
-		Initialisierung_Duell_abilities (Duell_specials->list_of_all_abilities);
-		
-		Duell_ability_choice (Growth_players, number_of_players, Duell_specials);
-		
+		// Duell_ability_choice (Growth_players, number_of_players, Duell_specials);
+		// printf("	Duell_specials:  ability-choice\n");	//test
+	} else {
+		// Duell_specials->number_of_abilities = 3;
+		// Duell_specials_Initialisation (Duell_specials, number_of_players);
 	}
 	
 	if (gamemode_played == Rain) {
 		show_field (number_of_players, single_option_representives.invisible, level, Sf_permutations, Opague_o.field, Field, m, n, gamemode_played, information_code, 0, Growth_players, 0, sfc);	// geben mit 0 ersetzt
 	}
 
-	// printf("gamemode_played = %u \n", gamemode_played);	//test
+	printf("gamemode_played = %u \n", gamemode_played);	//test
 	
 	while (g != 0) {	//start of the turns
 
@@ -3735,117 +3746,148 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 
 	// Aufräumphase !!!
 
-
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+	#endif
+	
 	int_Vektor_Destroy (dynamic_pointer);
-
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 1\n");	//test
-	// scanf("%u", &pause);	//test
-
+	
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 1\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
+	
 	unsigned_int_Vektor_Destroy (Points);
 	unsigned_int_Vektor_Destroy (rmv->Points);
 	
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 2\n");	//test
-	// scanf("%u", &pause);	//test
+	// unsigned_int_2dim_Vektor_Destroy (Duell_specials->list_of_all_abilities, reloader+1);
+	
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 2\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	int_2dim_Vektor_Destroy (dynamic_pointer_save, number_of_players+1);
-
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 3\n");	//test
-	// scanf("%u", &pause);	//test
+	
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 3\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (position);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 4\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 4\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (Field, m, number_of_players);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 5\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 5\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (evolution.od, m, number_of_players);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 6\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 6\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (evolution.nl, m, number_of_players);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 7\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 7\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (Opague_o.field, m, 0);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 8\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 8\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (numbers_of_, 7, number_of_players);
 	Spielfeld_Destroy (rmv->numbers_of_, 7, number_of_players);
 	
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 9\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 9\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (stack_of_, 7, number_of_players);
-
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 10\n");	//test
-	// scanf("%u", &pause);	//test
+	// Spielfeld_Destroy (Duell_specials->list_of_taken_abilities, Duell_specials->number_of_abilities, number_of_players);
+	
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 10\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (Journey_o.field, m, number_of_players);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 11\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 11\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (sfc->Allocation_o.field, m, number_of_players+2);
 	Spielfeld_Destroy (sfc->Partition_o.field, m, number_of_players+2);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 12\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 12\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Spielfeld_Destroy (Sf_permutations, m, 0);
 	Spielfeld_Destroy (Roses_o.field, m, 0);
 	
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 13\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 13\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
+	
 	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
 		rmv->Collector_of_permutation.amount_of_permutation_number_c = 1;
 		rmv->Collector_of_permutation.permutation_number_c = 1;
@@ -3856,11 +3898,13 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		rmv->Collector_of_permutation.permutation_number_c = 0;
 	}
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 14\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 14\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
 		rmv->Collector_of_permutation.amount_of_permutation_number_b = 1;
@@ -3872,11 +3916,13 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		rmv->Collector_of_permutation.permutation_number_b = 0;
 	}
 	
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 15\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 15\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	if (rmv->Collector_of_permutation.permutation_number_b == 0) {
 		rmv->Collector_of_permutation.permutation_number_c = 1;
@@ -3886,11 +3932,13 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		rmv->Collector_of_permutation.permutation_number_c = 0;
 	}
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 15.1\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 15.1\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	if (rmv->Collector_of_permutation.permutation_number_c == 0) {
 		rmv->Collector_of_permutation.permutation_number_b = 1;
@@ -3900,86 +3948,110 @@ void playing_a_game (unsigned int* same, unsigned int* position, unsigned int AO
 		rmv->Collector_of_permutation.permutation_number_b = 0;
 	}
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 15.2\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 15.2\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (level);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 16\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 16\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (rmv->win_condition);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 17\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 17\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (rmv->var_);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 18\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 18\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (rmv->ulcer_start);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 19\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 19\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (rmv->ulcer_lifes);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 20\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 20\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (rmv->out_counter);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 21\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 21\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	unsigned_int_Vektor_Destroy (rmv->same);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 22\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 22\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Realize_modifications_variables_Vektor_Destroy (rmv);
 	Special_Fields_Collector_Vektor_Destroy (sfc);
 
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 22.1\n");	//test
-	// scanf("%u", &pause);	//test
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 22.1\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
 
 	Moveable_objects_condition_Vektor_Destroy (Moc_Klatscher);
 	Moveable_objects_condition_Vektor_Destroy (Moc_Quaffel);
 	Moveable_objects_condition_Vektor_Destroy (Moc_Schnatz);
 	
-	// printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
-	// printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
-	// printf("	\n ");
-	// printf("	#line 3k, 23\n");	//test
-	// scanf("%u", &pause);	//test
+	// free(Duell_specials);
+	// Duell_specials = NULL;
+	
+	#ifdef Aufraeumphase_mistake_search
+		printf("	Existing Fields: %d \n ", Spielfeld_counter);	//test
+		printf("	Existing Vektors: %d \n ", Vektor_counter);	//test
+		printf("	\n ");
+		printf("	#line 3k, 23\n");	//test
+		scanf("%u", &pause);	//test
+	#endif
+
 
 }
 
@@ -4383,6 +4455,9 @@ void Time_for_a_Tutorial (unsigned int AOP, unsigned int* level, unsigned int* i
 	Spielfeld_Destroy (evolution.nl, m, number_of_players);
 	Spielfeld_Destroy (evolution.od, m, number_of_players);
 	Spielfeld_Destroy (Test_field, m, 1);
+	Spielfeld_Destroy (Test_special_fields.field, m, number_of_players+2);
+	unsigned_int_Vektor_Destroy (KI_decision);
+	Special_Fields_Collector_Vektor_Destroy (Test_sfc);
 }
 
 void synchronisation_Test_field (Spielfeld Test_field, unsigned int m, unsigned int n, unsigned int to, unsigned int from) {

@@ -16,6 +16,8 @@
 // #define Contact_mistake_search
 // #define Quidditch_mistake_search
 
+//Aktionen nicht rekursiv neu beginnen lassen
+
 void Plus (unsigned int*, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int, unsigned int*, unsigned int, Growth_Player*, Special_Fields, Special_Fields_Collector*, Single_option_representives);	//checklist
 void Minus (unsigned int*, Spielfeld, unsigned int, unsigned int, unsigned int, Spielfeld, unsigned int, unsigned int*, Growth_Player*, Special_Fields, Special_Fields_Collector*, unsigned int, Single_option_representives);	//checklist
 

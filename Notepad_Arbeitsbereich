@@ -46,4 +46,26 @@
             <File name="C:\Users\Kjell\Desktop\GitHub\Number_thunder\NUMBER_THUNDER.c" />
         </Folder>
     </Project>
+    <Project name="Orleos_Invasion">
+        <Folder name="Sonstige Dateien">
+            <File name="C:\Users\Kjell\Desktop\GitHub\Orleos_Invasion\Orleos_Invasion.mak" />
+        </Folder>
+        <Folder name="C-Dateien">
+            <File name="C:\Users\Kjell\Desktop\GitHub\Orleos_Invasion\Orleos_Invasion.c" />
+        </Folder>
+    </Project>
+    <Project name="Agrar_Master">
+        <Folder name="Sonstige Dateien">
+            <File name="C:\Users\Kjell\Desktop\GitHub\Agrar_Master\Agrar_Master.mak" />
+            <File name="C:\Users\Kjell\Desktop\GitHub\Agrar_Master\Agrar_Master_Spielregeln.txt" />
+        </Folder>
+        <Folder name="C-Dateien">
+            <File name="C:\Users\Kjell\Desktop\GitHub\Agrar_Master\Agrar_Master_functions.c" />
+            <File name="C:\Users\Kjell\Desktop\GitHub\Agrar_Master\Agrar_Master.c" />
+        </Folder>
+        <Folder name="H-Dateien">
+            <File name="C:\Users\Kjell\Desktop\GitHub\Agrar_Master\Agrar_Master_functions.h" />
+            <File name="C:\Users\Kjell\Desktop\GitHub\Agrar_Master\Agrar_Master.h" />
+        </Folder>
+    </Project>
 </NotepadPlus>

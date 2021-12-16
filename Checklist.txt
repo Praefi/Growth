@@ -25,3 +25,19 @@
 
 
 3.2 List of FUNCTIONS maybe needing an update: show_field, old_dying, new_life, Revive, Boost
+
+\\ the following content is a new organisation of Growth, in order to make it faster and easier to expand
+
+1. use int instead of unsigned int
+
+2. design new classes:
+	a) Field (List of all fields): identifier, field (array of strings), copy_of_field, heigth, weidth, 
+	b) Player: Color, identifier, choice_of_number, development_number, dying_region_up, dying_region_down, gamemode_adds(ability, points, lives), number_of_living_blocks,
+	c) gamemode: identifier, objects, variables, 
+	d) modification (list of active modification): identifier, variables, objects
+	e) object: identifier, string
+	
+3. enums:
+	
+	
+

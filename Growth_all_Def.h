@@ -189,8 +189,8 @@ enum ulcer_start_values {	//ulcer
 };
 
 enum surroundings {
-	near_by = 0,
-	surrounding = 1,
+	near_by = 12345,
+	surrounding = 67890,
 };
 
 enum Houses_of_Hogwarts {	//Quidditch, 1&2 are default
